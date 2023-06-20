@@ -27293,6 +27293,9 @@ body.dark-mode ::-webkit-scrollbar-thumb,body.dark-mode :hover::-webkit-scrollba
     background-color: rgba(5,195,251,.1)!important
 }
 
+
+
+
 .dark-mode .shadow-primary {
     box-shadow: 0 7px 30px var(--primary03)!important
 }

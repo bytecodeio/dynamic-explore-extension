@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect} from "react";
 import { useLocation } from 'react-router-dom';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import {Link} from 'react-router-dom';
 import EmbedTable from "../EmbedTable";
@@ -12,7 +14,7 @@ const SlideOut = () => {
 
 
 const [showMenu, setShowMenu] = React.useState();
-
+ const [startDate, setStartDate] = useState(new Date());
 
 
 // const wrapperRef = React.useRef(null);
@@ -212,9 +214,9 @@ const [showMenu, setShowMenu] = React.useState();
 
 
 
-<div class="text-center services-statistics landing-statistics row">
+<div class="text-center services-statistics  row">
 <div class="row base">
-<div class="col-lg-4 col-md-6">
+<div class="col-lg-4 col-md-6 landing-statistics">
 <div class="row top">
 
 <div class="col-lg-7 col-md-6">
@@ -235,13 +237,15 @@ const [showMenu, setShowMenu] = React.useState();
 
 
 
+</div>
 
-<div class="row">
+
+{/*<div class="row">
 
 <div className="text-dark card-body">
 <div className="statistics-info">
-<div className="row">
-    <div class="col-lg-12">
+<div className="row base">
+    <div class="col-lg-7">
         <div class="mt-0">
             <div class="text-dark">
                 <div class="services-statistics my-5">
@@ -291,20 +295,7 @@ const [showMenu, setShowMenu] = React.useState();
 
                         </div>
 
-                        <div class="position-relative d-flex align-items-center">
 
-                        <div className="row d-flex align-items-center">
-                        <div class="col-lg-4">
-                        <p className="small mb-0">Top % Products</p>
-
-                        </div>
-                        <div class="col-lg-7">
-                        <input placeholder="" type="search" class="form-control small" />
-
-                        </div>
-                        </div>
-
-                        </div>
 
 
                     </div>
@@ -313,6 +304,112 @@ const [showMenu, setShowMenu] = React.useState();
         </div>
     </div>
 
+
+
+
+
+
+</div>
+</div>
+</div>
+
+
+
+</div>*/}
+
+
+
+
+
+</div>
+
+
+
+<div class="col-lg-4 landing-statistics">
+
+<div class="row">
+
+<div className="text-dark card-body">
+<div className="statistics-info">
+<div className="row base">
+    <div class="col-lg-7">
+        <div class="mt-0">
+            <div class="text-dark">
+                <div class="services-statistics my-5">
+                    <div class="text-center row across">
+
+                            <div class="card">
+                                <div class="p-0 card-body">
+                                    <div class="counter-status">
+                                        <div class="counter-icon bg-primary-transparent box-shadow-primary">
+
+                                        <i class="fal fa-bookmark text-primary fs-23"></i>
+                                        </div>
+                                        <p class="mb-2 mt-0 fw-semibold">Bookmarks</p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="card">
+                                <div class="p-0 card-body">
+                                    <div class="counter-status">
+                                        <div class="counter-icon counter bg-secondary-transparent box-shadow-secondary">
+
+                                      <i class="fas fa-circle"><h6 class="numberCounter">17</h6></i>
+
+                                        </div>
+                                        <p class="mb-2 mt-0 fw-semibold">Invoice Count</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="p-0 card-body">
+                                    <div class="counter-status">
+                                        <div class="counter-icon bg-success-transparent box-shadow-success">
+                                        <i class="fal fa-undo text-success fs-23"></i>
+
+
+
+                                        </div>
+                                            <p class="mb-2 mt-0 fw-semibold">Restore Default</p>
+                                    </div>
+                                </div>
+
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+  <div class="col-lg-5">
+    <div class="position-relative d-flex align-items-center">
+
+
+
+
+    <input placeholder="Top % Products" type="search" class="form-control small" />
+
+
+
+
+    </div>
+
+</div>
+
+
+
 </div>
 </div>
 </div>
@@ -322,24 +419,83 @@ const [showMenu, setShowMenu] = React.useState();
 </div>
 
 
-</div>
-
-
-
-
-
 
 </div>
 
 
+<div class="col-lg-4">
+<div class="column">
+
+<div class="col-lg-12 col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title h5">Date Filters</div>
+
+        </div>
+        <div class="card-body p-5">
+
+        <div class="d-flex flex-wrap">
+
+    <Form.Group  controlId="formBasicCheckbox15">
+      <Form.Check  type="radio" label="MTD" name="filters" />
+    </Form.Group>
+
+    <Form.Group controlId="formBasicCheckbox16">
+      <Form.Check  type="radio" label="Prev Month" name="filters" />
+    </Form.Group>
+
+    <Form.Group controlId="formBasicCheckbox17">
+      <Form.Check type="radio" label="QTD" name="filters"/>
+    </Form.Group>
+
+    <Form.Group controlId="formBasicCheckbox18">
+      <Form.Check type="radio" label="Prev QTR" name="filters"/>
+    </Form.Group>
+
+
+
+    <Form.Group controlId="formBasicCheckbox19">
+      <Form.Check type="radio" label="YTD" name="filters"/>
+    </Form.Group>
+
+
+
+    <Form.Group controlId="formBasicCheckbox20">
+      <Form.Check type="radio" label="Prev Year" name="filters"/>
+    </Form.Group>
+
+
+
+    <Form.Group controlId="formBasicCheckbox21">
+      <Form.Check type="radio" label="All Years" name="filters"/>
+    </Form.Group>
+
+
+
+</div>
+
+        </div>
+    </div>
+</div>
+
+
+{/*<div class="d-flex">
+
+<div class="columnStart mr2">
+<p className="small">Start Date</p>
+<Form.Control type="date"/>
+</div>
+<div class="columnStart">
+<p className="small">End Date</p>
+<Form.Control type="date"  />
+</div>
+</div>*/}
 
 
 
 
-<div class="col-lg-6">
 
-
-
+</div>
 </div>
 </div>
     </div>
@@ -694,7 +850,7 @@ const [showMenu, setShowMenu] = React.useState();
                     <div class="col-md-12">
                     <div class="card">
 
-                  
+
                     <div class="card-body">
                     <div class="row">
                     <div class="col-md-10">
