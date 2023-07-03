@@ -856,7 +856,7 @@ const [showMenu, setShowMenu] = React.useState();
                     <div class="col-md-10">
                         <div class="content_wrapper border tab-content">
                             <div role="tabpanel" id="right-tabs-example-tabpane-first" aria-labelledby="right-tabs-example-tab-first" class="fade tab_content tab-pane active show">
-                  <EmbedTable/>
+                            <EmbedTable/>
                             </div>
                             <div role="tabpanel" id="right-tabs-example-tabpane-second" aria-labelledby="right-tabs-example-tab-second" class="fade tab_content tab-pane">
                                 <p>

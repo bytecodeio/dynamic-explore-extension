@@ -24,6 +24,8 @@ const InnerTableTabs = () => {
       <Container fluid className="padding-0 innerTab">
         <Tabs defaultActiveKey="product-movement" className="inner" fill>
           <Tab eventKey="product-movement" title="Product Movement Details">
+
+          
             <EmbedTable queryId={queryId} />
           </Tab>
           <Tab eventKey="top" title="Top Product View">

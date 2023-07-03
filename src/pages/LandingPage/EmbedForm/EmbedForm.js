@@ -5,10 +5,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 
-import "../../../styles2.css";
 import "../../../styles.css";
 import SlideOut from "./nav/SlideOut";
+
+import SideForm from "./nav/Form.js";
 import ProductMovement from "./ProductMovement";
+
+
+import Dashboard from "./Dashboard";
 import ToTopButton from './ToTopButton.js';
 import NavbarMain from "./NavbarMain";
 import HowTo from "./helpers/HowTo";
@@ -28,23 +32,51 @@ const [show, setShow] = useState(false);
     <>
 <NavbarMain/>
 
+<Container fluid className="mt-50 padding-0">
+    <div className="largePadding">
+     <div id="nav2">
+      <Tabs
+      defaultActiveKey="dashboard"
+      className="mb-0"
+      fill
+      >
+      <Tab eventKey="dashboard" title="Dashboard">
+
+      <Dashboard/>
+      </Tab>
+
+      <Tab eventKey="product-movement" title="Product Movement Report">
+      <ProductMovement/>
+      </Tab>
+      <Tab eventKey="invoice" title="Invoice Report">
+
+      </Tab>
+      <Tab eventKey="auto-sub" title="Auto-Sub Report">
+
+      </Tab>
+      <Tab eventKey="id" title="Inflation/Deflation Report">
+
+      </Tab>
+    </Tabs>
+    </div>
+  </div>
 
 
 
 
 
+</Container>
+<ToTopButton />
+
+<SideForm/>
+
+
+<footer>
+<img src="https://www.cardinalhealth.com/content/dam/corp/web/logos/logo_footer.png"/>
 
 
 
-       <SlideOut/>
-
-
-
-
-
-
-  <ToTopButton />
-
+</footer>
         </>
         )
       };

@@ -58,7 +58,7 @@ justify-content: center;
 }
 
 .landing-title {
-    background: linear-gradient(90deg,transparent,#6c5ffc,transparent);
+    background: linear-gradient(90deg,transparent,#045A96,transparent);
     height: 1px;
     margin: 0 auto;
     width: 70px!important;
@@ -15154,7 +15154,7 @@ img {
 }
 
 .landing-top-header .top .nav li a.active {
-    color: #6c5ffc
+    color: #045A96
 }
 
 @media(max-width: 992px) {
@@ -15182,7 +15182,7 @@ img {
 .landing-top-header .nav-pills .nav-link.active,.nav-pills .show>.nav-link {
     background-color: transparent;
     font-weight: 700;
-    color: #6c5ffc
+    color: #045A96
 }
 
 .logo-demo {
@@ -15383,7 +15383,7 @@ img {
     position: absolute;
     content: "";
     height: 8px;
-    border: 2px solid #6c5ffc;
+    border: 2px solid #045A96;
     margin: 0 auto;
     transform: rotate(45deg);
     width: 8px;
@@ -15609,7 +15609,7 @@ img {
 }
 
 .landing-page .landing-title {
-    background: linear-gradient(90deg,transparent,#6c5ffc,transparent);
+    background: linear-gradient(90deg,transparent,#045A96,transparent);
     height: 1px;
     margin: 0 auto;
     width: 70px!important;
@@ -15765,11 +15765,11 @@ img {
 }
 
 .landing-page #faqs .card.bg-primary-transparent .card-header {
-    -webkit-border-start: 5px solid #6c5ffc;
-    border-inline-start:5px solid #6c5ffc}
+    -webkit-border-start: 5px solid #045A96;
+    border-inline-start:5px solid #045A96}
 
 .landing-page #faqs .card.bg-primary-transparent .card-header .card-options-collapse i {
-    background-color: #6c5ffc
+    background-color: #045A96
 }
 
 .landing-page #faqs .card.bg-primary-transparent .card-header a:hover {
@@ -15777,8 +15777,8 @@ img {
 }
 
 .landing-page #faqs .card.bg-primary-transparent .card-body {
-    -webkit-border-start: 5px solid #6c5ffc;
-    border-inline-start:5px solid #6c5ffc;border-radius: 0 0 7px 7px
+    -webkit-border-start: 5px solid #045A96;
+    border-inline-start:5px solid #045A96;border-radius: 0 0 7px 7px
 }
 
 .landing-page #faqs .card.bg-secondary-transparent .card-header {
@@ -15893,7 +15893,7 @@ img {
     height: 35px;
     width: 35px;
     background-color: #fff;
-    border: 1px solid #6c5ffc;
+    border: 1px solid #045A96;
     font-size: 14px;
     line-height: 2.3
 }
@@ -90943,7 +90943,7 @@ a.bg-primary:focus,a.bg-primary:hover,button.bg-primary:focus,button.bg-primary:
 }
 
 .btn.dropdown-toggle.btn-primary~.dropdown-menu .dropdown-plus-title {
-    border-color: #6c5ffc!important
+    border-color: #045A96!important
 }
 
 .alert-primary {
@@ -91795,11 +91795,11 @@ div.conv-form-wrapper div#messages div.message.from {
 }
 
 .onoffswitch2-checkbox:checked+.onoffswitch2-label {
-    background-color: #6c5ffc
+    background-color: #045A96
 }
 
 .onoffswitch2-checkbox:checked+.onoffswitch-label2,.onoffswitch2-checkbox:checked+.onoffswitch2-label:before {
-    border-color: #6c5ffc
+    border-color: #045A96
 }
 
 .onoffswitch2-checkbox:checked+.onoffswitch2-label:before {
@@ -93113,7 +93113,7 @@ div.conv-form-wrapper div#messages div.message.from {
     --primary005: rgba(var(--primary-rgb),0.05);
     --dark-body: #292e4a;
     --dark-border: #30314e;
-    --transparent-primary: #6c5ffc;
+    --transparent-primary: #045A96;
     --transparent-bg-rgb: 88,76,217;
     --transparent-body: rgb(var(--transparent-bg-rgb));
     --transparent-theme: rgba(0,0,0,.2);
@@ -93136,7 +93136,7 @@ div.conv-form-wrapper div#messages div.message.from {
     --white: #fff;
     --gray: #6c757d;
     --gray-dark: #343a40;
-    --primary: #6c5ffc;
+    --primary: #045A96;
     --secondary: #6c757d;
     --success: #28a745;
     --info: #17a2b8;
@@ -96176,7 +96176,7 @@ svg g text {
 }
 
 .product-sale.nav.nav-pills .nav-item .nav-link.active {
-    color: #6c5ffc!important;
+    color: #045A96!important;
     background: transparent!important
 }
 

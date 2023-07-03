@@ -51,11 +51,18 @@ const NavbarMain = ({showMenu,setShowMenu}) => {
   return (
 <Container fluid className="padding-0">
 
+<div className="inner_page_block white_option"></div>
+
 
     <Navbar collapseOnSelect expand="lg">
       <Container fluid>
 
+      <a href="" target="_blank" class="mneg5">
 
+
+      </a>
+
+      <div className="white-logo"></div>
 
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -69,19 +76,12 @@ const NavbarMain = ({showMenu,setShowMenu}) => {
 
         <Navbar.Text>
 
+
         <a className="dark-layout" onClick={handleClick}>
-          <i className={faClass ? 'fal fa-moon' : 'fal fa-sun'}></i>
+          <i className={faClass ? 'far fa-moon' : 'far fa-sun'}></i>
           </a>
 
-        <a class="message position-relative"><i class="fal fa-comment-alt"></i><span class="pulse-danger"></span></a>
-
-
-        <a>
-          <i class="fal fa-user me-1"></i>
-          </a>
-          <a>
-      <i class="fal fa-cog fa-spin"></i>
-      </a>
+            <i class="fal fa-user me-1 blue"></i><a href="#login" className="me-2 blue">{message}</a>
         </Navbar.Text>
       </Nav>
     </Navbar.Collapse>
