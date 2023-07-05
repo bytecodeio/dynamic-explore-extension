@@ -7,29 +7,20 @@ import "bootstrap/dist/js/bootstrap.min.js";
 
 import "../../../styles.css";
 import EmbedTable from "./EmbedTable";
-import QueryTwo from "./QueryTwo";
 
-const InnerTableTabs = () => {
-  const [queryId, setQueryId] = useState();
-  const { core40SDK: sdk } = useContext(ExtensionContext);
 
-  useEffect(() => {
-    sdk.ok(sdk.dashboard("Y5mgkGp6GY2w9YcwK1bGP3")).then((res) => {
-      console.log("queryId", res.dashboard_elements[0].query.id);
-      setQueryId(res.dashboard_elements[0].query.id);
-    });
-  }, []);
+const queryDashboardId = "";
+
+const InnerTableTabs = ({ productMovementVisQid }) => {
   return (
     <Container fluid className="padding-0">
       <Container fluid className="padding-0 innerTab">
         <Tabs defaultActiveKey="product-movement" className="inner" fill>
           <Tab eventKey="product-movement" title="Product Movement Details">
-
-          
-            <EmbedTable queryId={queryId} />
+            <EmbedTable queryId={productMovementVisQid} />
           </Tab>
           <Tab eventKey="top" title="Top Product View">
-        <QueryTwo/>
+
           </Tab>
 
           <Tab eventKey="custom" title="Custom Subtotaling">

@@ -71,12 +71,7 @@ const [show, setShow] = useState(false);
 <SideForm/>
 
 
-<footer>
-<img src="https://www.cardinalhealth.com/content/dam/corp/web/logos/logo_footer.png"/>
 
-
-
-</footer>
         </>
         )
       };

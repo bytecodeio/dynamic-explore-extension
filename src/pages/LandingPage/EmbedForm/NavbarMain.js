@@ -42,12 +42,6 @@ const NavbarMain = ({showMenu,setShowMenu}) => {
      document.body.classList.toggle('dark-mode');
    };
 
-
-
-
-
-
-
   return (
 <Container fluid className="padding-0">
 
@@ -63,7 +57,6 @@ const NavbarMain = ({showMenu,setShowMenu}) => {
       </a>
 
       <div className="white-logo"></div>
-
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
