@@ -38,6 +38,9 @@ const Fields = ({ fieldOptions, selectedFields, setSelectedFields }) => {
             </div>
 
 
+            // set value to name
+
+
 
   );
 };

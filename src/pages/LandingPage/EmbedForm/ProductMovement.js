@@ -35,6 +35,21 @@ const ProductMovement = () => {
   const [selectedFields, setSelectedFields] = useState([]);
   const [productMovementVisQid, setProductMovementVisQid] = useState();
 
+
+const [defaults, setDefaults] = useState(
+  {
+    // selectedFields:
+    // selectedFilters:
+    // queryId:
+  }
+)
+
+  function handleClearAll() {
+    // setSelectedFields(defaults.selectedFields)
+    // setSelectedFilters(defaults.selectedFilters)
+    // setQueryId(defaults.queryId)
+  }
+
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
   useState(true);
@@ -94,12 +109,19 @@ const ProductMovement = () => {
       const lookmlFields = [...dimensions, ...filters, ...measures];
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
+      //
+      // console.log("all stuff", lookmlFields)
+      //
 
-      console.log("fields stuff", lookmlFields)
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
       const _fieldOptions = fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
-      // debugger;
+
+      console.log("fields", _fieldOptions)
+
+      console.log("filters", _filterOptions)
+
+      debugger;
       const defaultFilterSelections = Object.fromEntries(
       _filterOptions.map((filter) => [filter.name, "N/A"])
       );
@@ -183,6 +205,9 @@ const ProductMovement = () => {
     }
   }, [isFetchingDefaultDashboard, isFetchingLookmlFields]);
 
+
+
+
   const [active, setActive] = useState(false);
 
   const [faClass, setFaClass] = useState(true);
@@ -234,6 +259,14 @@ const ProductMovement = () => {
         filters[filter] = selectedFilters[filter];
       }
     }
+
+    //loop through date filters, if yes then add filter
+    // if radio button equals yes, then add to equal object
+
+    // if radio button is selected then set filters['sdt_......'] = 'Yes'
+    // filters[''] = 'Yes'
+
+    // take button selected state and add dateFitler below with key of selected state = "yes"
 
     const { visConfig } = await sdk.ok(sdk.query_for_slug(prevVisQid));
     const { client_id } = await sdk.ok(
@@ -636,7 +669,14 @@ const ProductMovement = () => {
           <Button active>
 
             <Form.Group  controlId="formBasicCheckbox15">
-              <Form.Check  type="radio" label="MTD" name="filters" />
+              <Form.Check
+              type="radio"
+              label="MTD"
+              name="filters"
+              // value={name}
+              // checked={selectedFields.includes(fieldOption.name)}
+
+              />
             </Form.Group>
 
           </Button>
