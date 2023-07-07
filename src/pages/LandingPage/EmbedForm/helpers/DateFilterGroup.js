@@ -17,7 +17,7 @@ export const DateFilterGroup = ({dateFilterOptions, setSelectedDateFilter, selec
         <ButtonGroup>
             {dateFilterOptions?.map(filter => {
                 return (
-                    <Button active={selectedDateFilter === filter['name']? true:false} id={filter['name']} type="radio" name="filters" onClick={handleSelection}>
+                    <Button key={filter['description']} active={selectedDateFilter === filter['name']? true:false} id={filter['name']} type="radio" name="filters" onClick={handleSelection}>
                         {filter['label_short'].replace('(Yes / No)','')}
                     </Button> 
                 )
