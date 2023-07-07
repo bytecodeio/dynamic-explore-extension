@@ -7,5 +7,6 @@ export const PRODUCT_MOVEMENT_VIS_DASHBOARD_ID =
 
 export const LOOKML_FIELD_TAGS = {
   filter: "filter: product_movement",
+  date_filter:"date filter",
   productMovementField: "field: product_movement",
 };
