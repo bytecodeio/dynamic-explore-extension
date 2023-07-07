@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
-
 import { Button, Form, Modal } from "react-bootstrap";
 
 const Fields = ({ fieldOptions, selectedFields, setSelectedFields, isDefault, setIsDefault, updateBtn, setUpdateBtn }) => {

@@ -23,6 +23,8 @@ import Filters from "./helpers/Filters";
 import SlideOut from "./nav/SlideOut";
 
 import EmbedTable from "./EmbedTable";
+import { DateFilterGroup } from "./helpers/DateFilterGroup";
+import { sortDateFilterList } from "../../../utils/globalFunctions";
 const ProductMovement = () => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
 
@@ -32,6 +34,7 @@ const ProductMovement = () => {
     selectedFilters
   );
   const [selectedFields, setSelectedFields] = useState([]);
+  const [selectedDateFilter, setSelectedDateFilter] = useState("");
   const [productMovementVisQid, setProductMovementVisQid] = useState();
   const defaultChecked = true;
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
@@ -83,6 +86,7 @@ const ProductMovement = () => {
   const [isFetchingLookmlFields, setIsFetchingLookmlFields] = useState(true);
   const [fieldOptions, setFieldOptions] = useState([]);
   const [filterOptions, setFilterOptions] = useState([]);
+  const [dateFilterOptions, setDateFilterOptions] = useState([]);
 
   useEffect(() => {
     function groupFieldsByTags(fields) {
@@ -123,13 +127,28 @@ const ProductMovement = () => {
 
       console.log("filters", _filterOptions)
 
-      debugger;
+      //debugger;
+      const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
+      // debugger;
       const defaultFilterSelections = Object.fromEntries(
         _filterOptions.map((filter) => [filter.name, "N/A"])
       );
 
+      const defaultDateFilterSelections = _dateFilterOptions?.find(filter => {
+        if (filter['default_filter_value']) {     
+          console.log(filter['default_filter_value'])     
+          return filter['default_filter_value'].toUpperCase() === "YES"
+        }
+      });
+      console.log("default date filter",defaultDateFilterSelections)
+      if (defaultDateFilterSelections != undefined) {
+        console.log("inside",defaultDateFilterSelections)
+        setSelectedDateFilter(defaultDateFilterSelections['name'])
+      }
+
       setFilterOptions(_filterOptions);
       setFieldOptions(_fieldOptions);
+      setDateFilterOptions(sortDateFilterList(_dateFilterOptions))
       setSelectedFilters(defaultFilterSelections);
       setIsFetchingLookmlFields(false);
     }
@@ -262,13 +281,9 @@ const ProductMovement = () => {
       }
     }
 
-    //loop through date filters, if yes then add filter
-    // if radio button equals yes, then add to equal object
-
-    // if radio button is selected then set filters['sdt_......'] = 'Yes'
-    // filters[''] = 'Yes'
-
-    // take button selected state and add dateFitler below with key of selected state = "yes"
+    if (selectedDateFilter != "") {
+      filters[selectedDateFilter] = 'Yes'
+    }
 
     const { visConfig } = await sdk.ok(sdk.query_for_slug(prevVisQid));
     const { client_id } = await sdk.ok(
@@ -686,67 +701,7 @@ const ProductMovement = () => {
 
 
       <div class="wrapFilters">
-
-      <ButtonGroup>
-      <Button active>
-
-      <Form.Group controlId="formBasicCheckbox15">
-      <Form.Check
-      type="radio"
-      label="MTD"
-      name="filters"
-      // value={name}
-      // checked={selectedFields.includes(fieldOption.name)}
-
-      />
-      </Form.Group>
-
-      </Button>
-      <Button>
-
-      <Form.Group controlId="formBasicCheckbox16">
-      <Form.Check type="radio" label="Prev Month" name="filters" />
-      </Form.Group>
-
-      </Button>
-      <Button>
-
-      <Form.Group controlId="formBasicCheckbox17">
-      <Form.Check type="radio" label="QTD" name="filters" />
-      </Form.Group>
-
-      </Button>
-      <Button>
-
-      <Form.Group controlId="formBasicCheckbox18">
-      <Form.Check type="radio" label="Prev QTR" name="filters" />
-      </Form.Group>
-
-      </Button>
-      <Button>
-
-      <Form.Group controlId="formBasicCheckbox19">
-      <Form.Check type="radio" label="YTD" name="filters" />
-      </Form.Group>
-
-      </Button>
-      <Button>
-
-      <Form.Group controlId="formBasicCheckbox20">
-      <Form.Check type="radio" label="Prev Year" name="filters" />
-      </Form.Group>
-
-      </Button>
-      <Button>
-
-      <Form.Group controlId="formBasicCheckbox21">
-      <Form.Check type="radio" label="All Years" name="filters" />
-      </Form.Group>
-
-      </Button>
-      </ButtonGroup>
-
-
+        <DateFilterGroup dateFilterOptions={dateFilterOptions} setSelectedDateFilter={setSelectedDateFilter} selectedDateFilter={selectedDateFilter}/>
       </div>
 
 
