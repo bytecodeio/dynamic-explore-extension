@@ -11,11 +11,11 @@ const FilterDropdown = ({ handleChange, label, name, options, value }) => {
         onChange={(e) => handleChange(name, e.target.value)}
         value={value}
       >
-        <option key="N/A">N/A</option>
+        <option key="N/A">"N/A"</option>
         {options?.map((optionText) => (
-          <option key={optionText}>{optionText}</option>
+          <option key={optionText}> {optionText}</option>
         ))}
-      </Form.Select>
+      </Form.Select >
     </>
   );
 };
@@ -26,6 +26,8 @@ const Filters = ({
   filterSuggestions,
   selectedFilters,
   setSelectedFilters,
+  isDefault,
+  setIsDefault,
 }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -42,29 +44,29 @@ const Filters = ({
   return (
     <div>
 
-          {isLoading ? (
-            <Spinner />
-          ) : (
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        < div class="wrapFilters">
+          {filterOptions.map((filterOption) => (
+            < div className="one" key={filterOption.name} >
+              <Form.Group>
+                <FilterDropdown
+                  handleChange={handleFilterSelection}
+                  label={filterOption.label_short}
+                  name={filterOption.name}
+                  options={filterSuggestions[filterOption.name]}
+                  value={isDefault ? selectedFilters[filterOption.name] : 'N/A'}
+                />
+              </Form.Group>
+            </div>
+          ))}
+        </div>
 
-          <div class="wrapFilters">
-                {filterOptions.map((filterOption) => (
-                  <div className="one" key={filterOption.name}>
-                    <Form.Group>
-                      <FilterDropdown
-                        handleChange={handleFilterSelection}
-                        label={filterOption.label_short}
-                        name={filterOption.name}
-                        options={filterSuggestions[filterOption.name]}
-                        value={selectedFilters[filterOption.name]}
-                      />
-                    </Form.Group>
-                  </div>
-                ))}
-              </div>
+      )
+      }
 
-          )}
-
-    </div>
+    </div >
   );
 };
 
