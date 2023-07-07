@@ -24,17 +24,17 @@ import SlideOut from "./nav/SlideOut";
 
 import EmbedTable from "./EmbedTable";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
-import { sortDateFilterList } from "../../../utils/globalFunctions";
-const ProductMovement = () => {
-  const { core40SDK: sdk } = useContext(ExtensionContext);
+import { CurrentSelection } from "./helpers/CurrentSelection";
 
-  const [selectedFilters, setSelectedFilters] = useState({});
+
+const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,dateFilterOptions,fieldOptions,isFetchingLookmlFields,selectedDateFilter, setSelectedDateFilter}) => {
+  const { core40SDK: sdk } = useContext(ExtensionContext);
+  
   console.log(
     "🚀 ~ file: ProductMovement.js:40 ~ ProductMovement ~ selectedFilters:",
     selectedFilters
   );
   const [selectedFields, setSelectedFields] = useState([]);
-  const [selectedDateFilter, setSelectedDateFilter] = useState("");
   const [productMovementVisQid, setProductMovementVisQid] = useState();
   const defaultChecked = true;
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
@@ -79,84 +79,6 @@ const ProductMovement = () => {
       fetchDefaultFieldsAndFilters();
     } catch (e) {
       console.error("Error fetching default dashboard", e);
-    }
-  }, []);
-
-  // Fetch filter and field options by tag from LookML view on load
-  const [isFetchingLookmlFields, setIsFetchingLookmlFields] = useState(true);
-  const [fieldOptions, setFieldOptions] = useState([]);
-  const [filterOptions, setFilterOptions] = useState([]);
-  const [dateFilterOptions, setDateFilterOptions] = useState([]);
-
-  useEffect(() => {
-    function groupFieldsByTags(fields) {
-      const fieldsByTag = {};
-      fields.forEach((field) => {
-        field.tags.forEach((tag) => {
-          if (fieldsByTag[tag] === undefined) {
-            fieldsByTag[tag] = [field];
-          } else {
-            fieldsByTag[tag].push(field);
-          }
-        });
-      });
-      return fieldsByTag;
-    }
-
-    async function fetchLookmlFields() {
-
-      const {
-        fields: { dimensions, filters, measures },
-      } = await sdk.ok(
-        sdk.lookml_model_explore(LOOKER_MODEL, LOOKER_EXPLORE, "fields")
-      );
-
-
-      const lookmlFields = [...dimensions, ...filters, ...measures];
-      const fieldsByTag = groupFieldsByTags(lookmlFields);
-
-      //
-      // console.log("all stuff", lookmlFields)
-      //
-
-
-      const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
-      const _fieldOptions = fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
-
-      console.log("fields", _fieldOptions)
-
-      console.log("filters", _filterOptions)
-
-      //debugger;
-      const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
-      // debugger;
-      const defaultFilterSelections = Object.fromEntries(
-        _filterOptions.map((filter) => [filter.name, "N/A"])
-      );
-
-      const defaultDateFilterSelections = _dateFilterOptions?.find(filter => {
-        if (filter['default_filter_value']) {     
-          console.log(filter['default_filter_value'])     
-          return filter['default_filter_value'].toUpperCase() === "YES"
-        }
-      });
-      console.log("default date filter",defaultDateFilterSelections)
-      if (defaultDateFilterSelections != undefined) {
-        console.log("inside",defaultDateFilterSelections)
-        setSelectedDateFilter(defaultDateFilterSelections['name'])
-      }
-
-      setFilterOptions(_filterOptions);
-      setFieldOptions(_fieldOptions);
-      setDateFilterOptions(sortDateFilterList(_dateFilterOptions))
-      setSelectedFilters(defaultFilterSelections);
-      setIsFetchingLookmlFields(false);
-    }
-
-    try {
-      fetchLookmlFields();
-    } catch (e) {
-      console.error("Error fetching Looker filters and fields", e);
     }
   }, []);
 
@@ -358,93 +280,8 @@ const ProductMovement = () => {
       <Accordion.Header>Current Selections</Accordion.Header>
       <Accordion.Body>
       <div class="wrapFilters">
-
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox">
-      <Form.Check type="checkbox" label="Taxes & Fees" />
-      </Form.Group>
+        <CurrentSelection selectedDateFilter={selectedDateFilter} selectedFilters={selectedFilters}/>
       </div>
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox2">
-      <Form.Check type="checkbox" label="Account Name Selector" />
-      </Form.Group>
-      </div>
-
-
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox3">
-      <Form.Check type="checkbox" label="Top %" />
-      </Form.Group>
-      </div>
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox4">
-      <Form.Check type="checkbox" label="Invoice Date" />
-      </Form.Group>
-      </div>
-
-
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox2">
-      <Form.Check type="checkbox" label="Selector" />
-      </Form.Group>
-      </div>
-
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox2">
-      <Form.Check type="checkbox" label="Including MMS" />
-      </Form.Group>
-      </div>
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox4">
-      <Form.Check type="checkbox" label="Invoice Date" />
-      </Form.Group>
-      </div>
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox3">
-      <Form.Check type="checkbox" label="Including KP" />
-      </Form.Group>
-      </div>
-
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox">
-      <Form.Check type="checkbox" label="Taxes & Fees" />
-      </Form.Group>
-      </div>
-
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox4">
-      <Form.Check type="checkbox" label="Invoice Date" />
-      </Form.Group>
-      </div>
-
-
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox2">
-      <Form.Check type="checkbox" label="Name Selector" />
-      </Form.Group>
-      </div>
-
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox2">
-      <Form.Check type="checkbox" label="Including MMS" />
-      </Form.Group>
-      </div>
-
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox3">
-      <Form.Check type="checkbox" label="Top %" />
-      </Form.Group>
-      </div>
-      <div className="one">
-      <Form.Group controlId="formBasicCheckbox4">
-      <Form.Check type="checkbox" label="Invoice Date" />
-      </Form.Group>
-      </div>
-
-
-
-      </div>
-
       </Accordion.Body>
       </Accordion.Item>
 
@@ -702,7 +539,7 @@ const ProductMovement = () => {
 
       <div class="wrapFilters">
         <DateFilterGroup dateFilterOptions={dateFilterOptions} setSelectedDateFilter={setSelectedDateFilter} selectedDateFilter={selectedDateFilter}/>
-      </div>
+      </div> 
 
 
       <Row className="mt-3">

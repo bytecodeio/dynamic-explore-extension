@@ -11,7 +11,7 @@ const FilterDropdown = ({ handleChange, label, name, options, value }) => {
         onChange={(e) => handleChange(name, e.target.value)}
         value={value}
       >
-        <option key="N/A">"N/A"</option>
+        <option key="N/A">N/A</option>
         {options?.map((optionText) => (
           <option key={optionText}> {optionText}</option>
         ))}
