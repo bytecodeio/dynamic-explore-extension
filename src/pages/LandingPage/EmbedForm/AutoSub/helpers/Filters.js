@@ -42,14 +42,12 @@ const Filters = ({
   }
 
   return (
-    <div>
 
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        < div class="wrapFilters">
+
+
+        <div class="wrapFilters">
           {filterOptions.map((filterOption) => (
-            < div className="one" key={filterOption.name} >
+            <div className="one" key={filterOption.name} >
               <Form.Group>
                 <FilterDropdown
                   handleChange={handleFilterSelection}
@@ -63,10 +61,6 @@ const Filters = ({
           ))}
         </div>
 
-      )
-      }
-
-    </div >
   );
 };
 

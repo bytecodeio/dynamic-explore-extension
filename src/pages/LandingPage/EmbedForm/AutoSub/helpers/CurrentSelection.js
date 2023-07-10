@@ -4,9 +4,10 @@ import { useEffect } from "react";
 
 export const CurrentSelection = ({selectedDateFilter, selectedFilters}) => {
     const [currentSelection, setCurrentSelection] = useState([])
+
     useEffect(() => {
         let currentSelectionObj = {};
-        if (selectedDateFilter !== "") {            
+        if (selectedDateFilter !== "") {
             currentSelectionObj[selectedDateFilter] = 'Yes'
         }
 
@@ -18,13 +19,19 @@ export const CurrentSelection = ({selectedDateFilter, selectedFilters}) => {
         setCurrentSelection(currentSelectionObj)
     },[selectedDateFilter,selectedFilters])
 
+
+
     return (
         <>
+        <h3 className="blue">Current Selections</h3>
+
+            <div class="wrapFields">
             {Object.keys(currentSelection)?.map((selection) => {
                 return(
-                    <div key={selection} className="one">{selection} : {currentSelection[selection]}</div>
+                    <div key={selection} className="one"><p>{selection} : {currentSelection[selection]}</p></div>
                 )
             })}
+            </div>
         </>
     )
 }

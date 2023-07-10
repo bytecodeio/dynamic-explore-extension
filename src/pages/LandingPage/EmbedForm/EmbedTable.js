@@ -4,7 +4,7 @@ import { ExtensionContext } from "@looker/extension-sdk-react";
 import styled from "styled-components";
 import { connection, scratch_schema } from "../../../utils/writebackConfig";
 import { values } from "lodash";
-// import QueryTwo from "./QueryTwo";
+
 import { Spinner } from "react-bootstrap";
 
 const EmbedTable = ({ queryId }) => {

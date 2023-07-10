@@ -5,9 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 import "../../../styles.css";
-import ProductMovement from "./ProductMovement";
-import GetGlossary from "./helpers/GetGlossary";
-import HowTo from "./helpers/HowTo";
+
+
 import { EmbedExplore } from "../EmbedExplore/EmbedExplore";
 import { EmbedMultiExplores } from "../EmbedMultiExplores/EmbedMultiExplores";
 import { ExtensionContext } from "@looker/extension-sdk-react";
@@ -33,8 +32,6 @@ const NavbarMain = ({showMenu,setShowMenu}) => {
     initialize();
   }, []);
 
-
-
   const [faClass, setFaClass] = useState(true);
 
   const handleClick = () => {
@@ -44,15 +41,12 @@ const NavbarMain = ({showMenu,setShowMenu}) => {
 
   return (
 <Container fluid className="padding-0">
-
 <div className="inner_page_block white_option"></div>
-
 
     <Navbar collapseOnSelect expand="lg">
       <Container fluid>
 
       <a href="" target="_blank" class="mneg5">
-
 
       </a>
 
@@ -61,14 +55,10 @@ const NavbarMain = ({showMenu,setShowMenu}) => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-
-
           </Nav>
           <Nav className="align-items-center">
 
-
         <Navbar.Text>
-
 
         <a className="dark-layout" onClick={handleClick}>
           <i className={faClass ? 'far fa-moon' : 'far fa-sun'}></i>
@@ -80,10 +70,6 @@ const NavbarMain = ({showMenu,setShowMenu}) => {
     </Navbar.Collapse>
   </Container>
 </Navbar>
-
-
-
-
 
 </Container>
 )
