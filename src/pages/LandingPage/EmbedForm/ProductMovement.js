@@ -25,9 +25,11 @@ import SlideOut from "./nav/SlideOut";
 import EmbedTable from "./EmbedTable";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
+import { DateRangeSelector } from "./helpers/DateRangeSelector";
 
 
-const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,dateFilterOptions,fieldOptions,isFetchingLookmlFields,selectedDateFilter, setSelectedDateFilter}) => {
+const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,dateFilterOptions,fieldOptions,isFetchingLookmlFields,selectedDateFilter
+  , setSelectedDateFilter,setSelectedDateRangeStart,setSelectedDateRangeEnd,selectedDateRangeStart,selectedDateRangeEnd,currentNavTab}) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   
   console.log(
@@ -35,10 +37,17 @@ const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,date
     selectedFilters
   );
   const [selectedFields, setSelectedFields] = useState([]);
+  const [defaultFields, setDefaultFields] = useState([])
   const [productMovementVisQid, setProductMovementVisQid] = useState();
   const defaultChecked = true;
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
+
+  useEffect(() => {
+    if (currentNavTab == "product-movement") {
+      handleVisUpdate()
+    }    
+  },[currentNavTab])
 
 
   const [defaults, setDefaults] = useState(
@@ -69,6 +78,7 @@ const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,date
         "🚀 ~ file: ProductMovement.js:55 ~ fetchDefaultFieldsAndFilters ~ dashboard_elements:",
         dashboard_elements
       );
+      setDefaultFields(fields);
       setSelectedFields(fields);
       if (filters) setSelectedFilters(filters);
       setProductMovementVisQid(client_id);
@@ -230,6 +240,7 @@ const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,date
   async function handleRestoreDefault() {
     setIsDefaultProduct(defaultChecked);
     setUpdateButtonClicked(true)
+    setSelectedFields(defaultFields)
   };
 
 
@@ -406,15 +417,15 @@ const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,date
       <Accordion.Body>
 
       <Filters
-      isLoading={isFetchingFilterSuggestions}
-      filterOptions={filterOptions}
-      filterSuggestions={filterSuggestions}
-      selectedFilters={selectedFilters}
-      setSelectedFilters={setSelectedFilters}
-      isDefault={isDefaultProduct}
-      setIsDefault={setIsDefaultProduct}
-      updateBtn={updateButtonClicked}
-      setUpdateBtn={setUpdateButtonClicked}
+        isLoading={isFetchingFilterSuggestions}
+        filterOptions={filterOptions}
+        filterSuggestions={filterSuggestions}
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+        isDefault={isDefaultProduct}
+        setIsDefault={setIsDefaultProduct}
+        updateBtn={updateButtonClicked}
+        setUpdateBtn={setUpdateButtonClicked}
       />
 
       </Accordion.Body>
@@ -430,14 +441,13 @@ const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,date
 
 
       <Fields
-      fieldOptions={fieldOptions}
-      selectedFields={selectedFields}
-      setSelectedFields={setSelectedFields}
-      isDefault={isDefaultProduct}
-      setIsDefault={setIsDefaultProduct}
-      updateBtn={updateButtonClicked}
-      setUpdateBtn={setUpdateButtonClicked}
-
+        fieldOptions={fieldOptions}
+        selectedFields={selectedFields}
+        setSelectedFields={setSelectedFields}
+        isDefault={isDefaultProduct}
+        setIsDefault={setIsDefaultProduct}
+        updateBtn={updateButtonClicked}
+        setUpdateBtn={setUpdateButtonClicked}
       />
 
       </Accordion.Body>
@@ -510,7 +520,7 @@ const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,date
 
       <Button onClick={handleClearAll} className="btn">
 
-      Clear All
+        Clear All
 
       </Button>
 
@@ -563,18 +573,12 @@ const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,date
 
       </Col>
       <Col xs={12} md={6}>
-      <div class="d-flex">
-
-      <div class="columnStart mr2">
-      <p className="small">Start Date</p>
-      <Form.Control type="date" />
-      </div>
-      <div class="columnStart">
-      <p className="small">End Date</p>
-      <Form.Control type="date" />
-      </div>
-      </div>
-
+        <DateRangeSelector            
+          setSelectedDateRangeStart={setSelectedDateRangeStart}
+          setSelectedDateRangeEnd={setSelectedDateRangeEnd}
+          selectedDateRangeStart={selectedDateRangeStart}
+          selectedDateRangeEnd={selectedDateRangeEnd}
+          />
       </Col>
 
       </Row>

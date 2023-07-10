@@ -34,6 +34,8 @@ import { sortDateFilterList } from "../../../utils/globalFunctions";
 export const EmbedForm = ({saveClicked, setSaveClicked}) => {
 const { core40SDK: sdk } = useContext(ExtensionContext);
 
+const [currentNavTab, setCurrentNavTab] = useState("dashboard")
+
 
 //Create states for global variables
 const [isFetchingLookmlFields, setIsFetchingLookmlFields] = useState(true);
@@ -84,6 +86,9 @@ useEffect(() => {
 
     console.log(_dateRangeStart)
     console.log(_dateRangeEnd)
+
+    const _dateStartName = _dateRangeStart[0]['name']
+    const _dateEndName = _dateRangeEnd[0]['name']
     
     const defaultFilterSelections = Object.fromEntries(
       _filterOptions.map((filter) => [filter.name, "N/A"])
@@ -106,11 +111,11 @@ useEffect(() => {
 
     let defaultDateStart = await getValues(_dateRangeStart)
     console.log(defaultDateStart)
-    setSelectedDateRangeStart(defaultDateStart[0])
+    setSelectedDateRangeStart(defaultDateStart[0][_dateStartName])
 
     let defaultDateEnd = await getValues(_dateRangeEnd)
     console.log(defaultDateEnd)
-    setSelectedDateRangeStart(defaultDateEnd[0])
+    setSelectedDateRangeEnd(defaultDateEnd[0][_dateEndName])
 
     setFilterOptions(_filterOptions);
     setProductMovementFields(_productMovementfieldOptions);
@@ -128,7 +133,13 @@ useEffect(() => {
   }
 }, []);
 
+useEffect(() => {
+  console.log("start", selectedDateRangeStart)
+  console.log("end", selectedDateRangeEnd)
+},[selectedDateRangeEnd,selectedDateRangeStart])
+
 const getValues = (dimension) => {
+  console.log(dimension)
     return sdk.ok(
       sdk.run_inline_query({
         result_format: "json",
@@ -149,7 +160,8 @@ const getValues = (dimension) => {
     <div className="largePadding">
      <div id="nav2">
       <Tabs
-      defaultActiveKey="dashboard"
+      defaultActiveKey={currentNavTab}
+      onSelect={(k) => setCurrentNavTab(k)}
       className="mb-0"
       fill
       >
@@ -160,6 +172,7 @@ const getValues = (dimension) => {
 
       <Tab eventKey="product-movement" title="Product Movement Report">
         <ProductMovement 
+          currentNavTab={currentNavTab}
           selectedFilters={selectedFilters} 
           setSelectedFilters={setSelectedFilters}
           filterOptions={filterOptions}
@@ -168,6 +181,10 @@ const getValues = (dimension) => {
           isFetchingLookmlFields={isFetchingLookmlFields}
           setSelectedDateFilter={setSelectedDateFilter}
           selectedDateFilter={selectedDateFilter}
+          setSelectedDateRangeStart={setSelectedDateRangeStart}
+          setSelectedDateRangeEnd={setSelectedDateRangeEnd}
+          selectedDateRangeStart={selectedDateRangeStart}
+          selectedDateRangeEnd={selectedDateRangeEnd}
         />
       </Tab>
       <Tab eventKey="invoice" title="Invoice Report">
