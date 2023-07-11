@@ -7,7 +7,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import "../../../styles.css";
 import SideForm from "./nav/Form.js";
 import ProductMovement from "./ProductMovement/ProductMovement";
-import Dashboard from "./Dashboard/Dashboard";
+import PurchasesReview from "./PurchasesReview/PurchasesReview";
 import InvoiceReport from "./InvoiceReport/InvoiceReport";
 import AutoSub from "./AutoSub/AutoSub";
 import InflationDeflation from "./InflationDeflation/InflationDeflation";
@@ -18,7 +18,7 @@ import { EmbedExplore } from "../EmbedExplore/EmbedExplore";
 import { EmbedMultiExplores } from "../EmbedMultiExplores/EmbedMultiExplores";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 
-import InnerTableTabs from "./InnerTableTabs";
+// import InnerTableTabs from "./InnerTableTabs";
 import { connection, scratch_schema } from "../../../utils/writebackConfig";
 
 import {
@@ -87,7 +87,7 @@ useEffect(() => {
 
     const _dateStartName = _dateRangeStart[0]['name']
     const _dateEndName = _dateRangeEnd[0]['name']
-    
+
     const defaultFilterSelections = Object.fromEntries(
       _filterOptions.map((filter) => [filter.name, "N/A"])
     );
@@ -163,9 +163,9 @@ const getValues = (dimension) => {
       className="mb-0"
       fill
       >
-      <Tab eventKey="dashboard" title="Dashboard">
+      <Tab eventKey="dashboard" title="Purchases Review">
 
-      <Dashboard
+      <PurchasesReview
         selectedFilters={selectedFilters}
         setSelectedFilters={setSelectedFilters}
         filterOptions={filterOptions}
@@ -178,9 +178,9 @@ const getValues = (dimension) => {
       </Tab>
 
       <Tab eventKey="product-movement" title="Product Movement Report">
-        <ProductMovement 
+        <ProductMovement
           currentNavTab={currentNavTab}
-          selectedFilters={selectedFilters} 
+          selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
           filterOptions={filterOptions}
           dateFilterOptions={dateFilterOptions}

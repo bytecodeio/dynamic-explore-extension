@@ -11,7 +11,7 @@ import { ExtensionContext } from "@looker/extension-sdk-react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import "../../../../styles.css";
-import InnerTableTabs from "../InnerTableTabs";
+import AutoSubTable from "../AutoSubTable";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
 import DateContainer from "./helpers/DateContainer";
@@ -349,7 +349,9 @@ const AutoSub = ({selectedFilters, setSelectedFilters,filterOptions,dateFilterOp
 
       <Row className="mt-3 mb-3">
         <Col md={12}>
-          <InnerTableTabs productMovementVisQid={productMovementVisQid} />
+
+                <AutoSubTable productMovementVisQid={productMovementVisQid} />
+
         </Col>
       </Row>
 

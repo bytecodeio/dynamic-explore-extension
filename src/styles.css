@@ -1,18 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;600;700;900&family=Roboto:wght@300;600;700;&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&display=swap');
-
 @import url('http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300ita‌​lic,400italic,500,500italic,700,700italic,900italic,900');
-
-
-
 @import url("https://kit-pro.fontawesome.com/releases/v5.15.1/css/pro.min.css");
 
 body, html{
   font-family: 'Roboto', sans-serif !important;
   color:#282f53;
   background:#f4f6f6;
-
   overflow-x: hidden;
 }
 
@@ -27,7 +21,6 @@ body, html{
 }
 
 h1, h2, h3, span, p, h5, h6{
-
   font-family: 'Roboto', sans-serif;
 }
 
@@ -130,8 +123,6 @@ p{
 .tab-pane {
   padding: 0em 3em;
 }
-
-
 
 .dark-mode .nav-pills{
   background: #2a2a4a;
@@ -317,8 +308,6 @@ a{
 
 .modal-header{
   border-bottom: none;
-
-
 }
 
 .modal-footer{
@@ -445,7 +434,7 @@ a:hover{
 }
 
 p{
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .diagonal {
@@ -4611,12 +4600,14 @@ a.white:hover{
 .tab-content{
   margin-top: 0px !important;
   background: white !important;
-  min-height: 105vh;
-  padding-top:1em
+  min-height: 100vh;
+  padding-top:1em;
+
+  padding-bottom: 24vh;
 }
 
 .innerTab .tab-content{
-  min-height: 50vh !important;
+  min-height: 480px !important;
 }
 
 .highlight {
@@ -5490,6 +5481,19 @@ footer img{
 
 .tab-content iframe{
   max-height: 580px
+}
+
+.smallerHeight iframe{
+  max-height:250px;
+}
+
+.middleHeight iframe{
+  max-height:400px;
+}
+
+
+.hHKWKP{
+  min-height: unset !important
 }
 
 /* dark mode start */
