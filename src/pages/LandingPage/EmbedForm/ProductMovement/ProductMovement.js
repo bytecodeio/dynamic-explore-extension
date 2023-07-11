@@ -20,8 +20,10 @@ import AccountGroups from "./helpers/AccountGroups";
 import EmbedTable from "../EmbedTable";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
+import { DateRangeSelector } from "./helpers/DateRangeSelector";
 
-const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,dateFilterOptions,fieldOptions,isFetchingLookmlFields,selectedDateFilter, setSelectedDateFilter}) => {
+const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filterOptions,dateFilterOptions,fieldOptions,isFetchingLookmlFields,selectedDateFilter, setSelectedDateFilter,setSelectedDateRangeStart,
+  setSelectedDateRangeEnd,selectedDateRangeStart,selectedDateRangeEnd}) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
 
   const [slide, setSlide] = useState();
@@ -40,6 +42,12 @@ const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,date
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
   const [defaults, setDefaults] = useState({})
   function handleClearAll() {}
+
+  useEffect(() => {
+    if (currentNavTab == "product-movement") {
+      handleVisUpdate()
+    }
+  },[currentNavTab])
 
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
@@ -342,7 +350,7 @@ const ProductMovement = ({selectedFilters, setSelectedFilters,filterOptions,date
             <DateFilterGroup dateFilterOptions={dateFilterOptions} setSelectedDateFilter={setSelectedDateFilter} selectedDateFilter={selectedDateFilter}/>
           </div>
 
-          <DateContainer/>
+          <DateRangeSelector selectedDateRangeStart={selectedDateRangeStart} selectedDateRangeEnd={selectedDateRangeEnd} setSelectedDateRangeEnd={setSelectedDateRangeEnd} setSelectedDateRangeStart={setSelectedDateRangeStart}/>
 
       </Col>
       </Row>
