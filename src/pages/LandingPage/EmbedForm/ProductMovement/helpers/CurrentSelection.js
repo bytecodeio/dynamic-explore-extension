@@ -28,10 +28,18 @@ export const CurrentSelection = ({selectedDateFilter, selectedFilters}) => {
             <div class="wrapFields">
             {Object.keys(currentSelection)?.map((selection) => {
                 return(
-                    <div key={selection} className="one"><p>{selection} : {currentSelection[selection]}</p></div>
+
+                    <div className="d-flex align-items-center" key={selection}>
+                    <p className="mb-0">{selection} : {currentSelection[selection]}</p>
+
+                    <i class="fal fa-trash-undo red"></i>
+                    </div>
+
                 )
             })}
+
             </div>
+
         </>
     )
 }

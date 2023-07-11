@@ -38,7 +38,7 @@ const EmbedTable = ({ queryId }) => {
 
 const Explore = styled.div`
   width: 100%;
-  min-height: 600px;
+  min-height: unset;
   & > iframe {
     width: 100%;
     height: 100%;

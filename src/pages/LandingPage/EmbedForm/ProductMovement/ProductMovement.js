@@ -11,7 +11,7 @@ import { ExtensionContext } from "@looker/extension-sdk-react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import "../../../../styles.css";
-import InnerTableTabs from "../InnerTableTabs";
+import ProductTable from "../ProductTable";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
 import DateContainer from "./helpers/DateContainer";
@@ -357,7 +357,7 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
 
       <Row className="mt-3 mb-3">
         <Col md={12}>
-          <InnerTableTabs productMovementVisQid={productMovementVisQid} />
+          <ProductTable productMovementVisQid={productMovementVisQid} />
         </Col>
       </Row>
 
