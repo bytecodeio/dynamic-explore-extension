@@ -2722,13 +2722,32 @@ a{
 }
 
 #slideOut1 .form-check label{
-  text-align:left
+  text-align:left;
+      margin-left: -2em;
+      font-size: 13px !important
 }
 
 #slideOut1 legend.fontZero{
   font-size: 0px !important
 }
 
+
+#slideOut1 .one .form-check label {
+    text-align: left;
+    margin-left: 0em;
+    font-size: 15px !important;
+    margin-top: 0em;
+    color:black
+}
+
+.fa-trash-undo.red{
+  font-size:20px;
+  margin-left:1em
+}
+
+.fa-trash-undo.red:hover{
+  cursor:pointer;
+}
 
 /* @media (max-width:767px){
 .noMobile{

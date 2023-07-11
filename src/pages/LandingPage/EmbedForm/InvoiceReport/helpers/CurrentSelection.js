@@ -22,16 +22,24 @@ export const CurrentSelection = ({selectedDateFilter, selectedFilters}) => {
 
 
     return (
-        <>
-        <h3 className="blue">Current Selections</h3>
+      <>
+      <h3 className="blue">Current Selections</h3>
 
-            <div class="wrapFields">
-            {Object.keys(currentSelection)?.map((selection) => {
-                return(
-                    <div key={selection} className="one"><p>{selection} : {currentSelection[selection]}</p></div>
-                )
-            })}
-            </div>
-        </>
+          <div class="wrapFields">
+          {Object.keys(currentSelection)?.map((selection) => {
+              return(
+
+                  <div className="d-flex align-items-center" key={selection}>
+                  <p className="mb-0">{selection} : {currentSelection[selection]}</p>
+
+                  <i class="fal fa-trash-undo red"></i>
+                  </div>
+
+              )
+          })}
+
+          </div>
+
+      </>
     )
 }
