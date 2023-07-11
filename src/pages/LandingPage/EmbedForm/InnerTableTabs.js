@@ -24,7 +24,7 @@ const InnerTableTabs = ({ productMovementVisQid }) => {
           </Tab>
 
           <Tab eventKey="custom" title="Custom Subtotaling">
-            <p>sdiubsvivdsb</p>
+
           </Tab>
         </Tabs>
       </Container>

@@ -4,18 +4,16 @@ import { BrowserRouter as Router, Switch, Route,  } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
-
 import "../../../styles.css";
-import SlideOut from "./nav/SlideOut";
-
 import SideForm from "./nav/Form.js";
-import ProductMovement from "./ProductMovement";
-
-
-import Dashboard from "./Dashboard";
+import ProductMovement from "./ProductMovement/ProductMovement";
+import Dashboard from "./Dashboard/Dashboard";
+import InvoiceReport from "./InvoiceReport/InvoiceReport";
+import AutoSub from "./AutoSub/AutoSub";
+import InflationDeflation from "./InflationDeflation/InflationDeflation";
 import ToTopButton from './ToTopButton.js';
 import NavbarMain from "./NavbarMain";
-import HowTo from "./helpers/HowTo";
+import Footer from "./Footer.js";
 import { EmbedExplore } from "../EmbedExplore/EmbedExplore";
 import { EmbedMultiExplores } from "../EmbedMultiExplores/EmbedMultiExplores";
 import { ExtensionContext } from "@looker/extension-sdk-react";
@@ -76,7 +74,7 @@ useEffect(() => {
     const lookmlFields = [...dimensions, ...filters, ...measures];
     const fieldsByTag = groupFieldsByTags(lookmlFields);
 
-    const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];    
+    const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
     const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
 
     const _productMovementfieldOptions = fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
@@ -95,8 +93,8 @@ useEffect(() => {
     );
 
     const defaultDateFilterSelections = _dateFilterOptions?.find(filter => {
-      if (filter['suggestions']) {     
-        console.log(filter['suggestions'])     
+      if (filter['suggestions']) {
+        console.log(filter['suggestions'])
         return filter['suggestions'].find(s => {
           return s.toUpperCase() === "YES"
         })
@@ -104,7 +102,7 @@ useEffect(() => {
     });
 
     console.log(defaultDateFilterSelections)
-    
+
     if (defaultDateFilterSelections != undefined) {
       setSelectedDateFilter(defaultDateFilterSelections['name'])
     }
@@ -167,7 +165,16 @@ const getValues = (dimension) => {
       >
       <Tab eventKey="dashboard" title="Dashboard">
 
-      {/* <Dashboard/> */}
+      <Dashboard
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+        filterOptions={filterOptions}
+        dateFilterOptions={dateFilterOptions}
+        fieldOptions={productMovementFields}
+        isFetchingLookmlFields={isFetchingLookmlFields}
+        setSelectedDateFilter={setSelectedDateFilter}
+        selectedDateFilter={selectedDateFilter}
+      />
       </Tab>
 
       <Tab eventKey="product-movement" title="Product Movement Report">
@@ -189,27 +196,54 @@ const getValues = (dimension) => {
       </Tab>
       <Tab eventKey="invoice" title="Invoice Report">
 
+      <InvoiceReport
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+        filterOptions={filterOptions}
+        dateFilterOptions={dateFilterOptions}
+        fieldOptions={productMovementFields}
+        isFetchingLookmlFields={isFetchingLookmlFields}
+        setSelectedDateFilter={setSelectedDateFilter}
+        selectedDateFilter={selectedDateFilter}
+      />
+
       </Tab>
       <Tab eventKey="auto-sub" title="Auto-Sub Report">
+      <AutoSub
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+        filterOptions={filterOptions}
+        dateFilterOptions={dateFilterOptions}
+        fieldOptions={productMovementFields}
+        isFetchingLookmlFields={isFetchingLookmlFields}
+        setSelectedDateFilter={setSelectedDateFilter}
+        selectedDateFilter={selectedDateFilter}
+      />
 
       </Tab>
       <Tab eventKey="id" title="Inflation/Deflation Report">
+
+      <InflationDeflation
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+        filterOptions={filterOptions}
+        dateFilterOptions={dateFilterOptions}
+        fieldOptions={productMovementFields}
+        isFetchingLookmlFields={isFetchingLookmlFields}
+        setSelectedDateFilter={setSelectedDateFilter}
+        selectedDateFilter={selectedDateFilter}
+      />
 
       </Tab>
     </Tabs>
     </div>
   </div>
 
-
-
-
-
 </Container>
 <ToTopButton />
 
 <SideForm/>
-
-
+<Footer/>
 
         </>
         )
