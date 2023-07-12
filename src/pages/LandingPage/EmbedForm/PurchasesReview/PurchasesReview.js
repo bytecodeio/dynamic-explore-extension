@@ -29,7 +29,7 @@ import { CurrentSelection } from "./helpers/CurrentSelection";
 
 const PurchasesReview = ({selectedFilters, setSelectedFilters,filterOptions,dateFilterOptions,fieldOptions,isFetchingLookmlFields,selectedDateFilter, setSelectedDateFilter}) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
-
+  const wrapperRef = useRef(null);
   const [slide, setSlide] = useState();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -193,6 +193,18 @@ const PurchasesReview = ({selectedFilters, setSelectedFilters,filterOptions,date
     setUpdateButtonClicked(true)
   };
 
+  useEffect((e) => {
+   document.addEventListener("click", handleClickOutside, false);
+   return () => {
+   document.removeEventListener("click", handleClickOutside, false);
+   };
+ }, []);
+
+ const handleClickOutside = event => {
+   if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+     setShow3(false);
+   }
+ };
 
   return (
     <Container fluid>
@@ -200,7 +212,7 @@ const PurchasesReview = ({selectedFilters, setSelectedFilters,filterOptions,date
       <Spinner />
     ) : (
       <>
-      <div id="slideOut3" className={show3 ? "show3" : ""}>
+      <div id="slideOut3" className={show3 ? "show3" : ""} ref={wrapperRef}>
       <div className="slideOutTab3">
         <div id="one3" className="openTab bottomShadow" role="button" tabindex="0" onClick={() => setShow3(true)}>
           <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
@@ -339,7 +351,8 @@ const PurchasesReview = ({selectedFilters, setSelectedFilters,filterOptions,date
 
       <Row>
       <Col xs={12} md={5}>
-          <CurrentSelection selectedDateFilter={selectedDateFilter} selectedFilters={selectedFilters}/>
+      <CurrentSelection selectedDateFilter={selectedDateFilter} selectedFilters={selectedFilters} selectedFields={selectedFields} fieldOptions={fieldOptions}
+      setSelectedFields={setSelectedFields} filterOptions={filterOptions} setSelectedFilters={setSelectedFilters} selectedDateFilter={selectedDateFilter} dateFilterOptions={dateFilterOptions}/>
           <p className="mt-5">Total Spend: <span className="highlight large">$3,298</span></p>
       </Col>
 
