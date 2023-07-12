@@ -77,6 +77,10 @@ export const CurrentSelection = ({selectedDateFilter, selectedFilters, setSelect
                 return(
                   <div className="theOptions" key={selection}>
 
+
+                  {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+
+
                     <p className="mb-0">{currentSelection[selection].label_short}</p>
 
                     <i onClick={() => removeField(currentSelection[selection].name)} class="fal fa-trash-undo red"></i>
