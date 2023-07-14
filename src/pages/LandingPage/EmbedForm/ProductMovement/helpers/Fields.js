@@ -18,6 +18,7 @@ const Fields = ({ fieldOptions, selectedFields, setSelectedFields, isDefault, se
   return (
     <div class="wrapFilters">
       {fieldOptions.map((fieldOption) => (
+
         <div className="one" key={fieldOption.name}>
           <Form.Group>
             <Form.Check

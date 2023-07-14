@@ -18,7 +18,6 @@ function SideForm(props) {
 
     };
 
-
   useEffect((e) => {
 
    document.addEventListener("click", handleClickOutside, false);
@@ -31,22 +30,18 @@ function SideForm(props) {
 
  const handleClickOutside = event => {
    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-
-     setShow(false);
+   setShow(false);
 
    }
-
    else {
-
    }
  };
 
-
   return (
 
+  <div>
 
 
-    <div>
 
   <div id="slideOut1" className={show ? "show" : ""} ref={wrapperRef}>
     <div className="slideOutTab1">
@@ -93,11 +88,7 @@ function SideForm(props) {
 
 
       </div>
-
-
-        </div>
-
-
+  </div>
 
         <div className="modal-content info" style={show2 ? { display: "block" } : { display: "none" }}>
           <div className="modal-header">
@@ -114,21 +105,14 @@ function SideForm(props) {
           <HowTo/>
 
           </div>
-
-
-            </div>
-
+        </div>
 
       </div>
-
-
   </div>
 
 
   );
 }
-
-
 
 
 export default SideForm;

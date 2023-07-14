@@ -1,11 +1,9 @@
-
-
 import React from "react";
 import { useState } from "react";
 import { Form, Row, Col } from 'react-bootstrap';
 
 
-const DateContainer = ( {setSelectedDateRangeStart,setSelectedDateRangeEnd,selectedDateRangeStart,selectedDateRangeEnd} ) => {
+const DateRangeSelector = ( {setSelectedDateRangeStart,setSelectedDateRangeEnd,selectedDateRangeStart,selectedDateRangeEnd} ) => {
 
   const onDateSelection = (e, type) => {
       if (type == "start") {
@@ -37,4 +35,4 @@ const DateContainer = ( {setSelectedDateRangeStart,setSelectedDateRangeEnd,selec
   );
 };
 
-export default DateContainer;
+export default DateRangeSelector;
