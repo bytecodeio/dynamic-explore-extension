@@ -360,11 +360,13 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
       </Col>
 
       <Col xs={12} md={7}>
-          <div class="wrapFilters">
-            <DateFilterGroup dateFilterOptions={dateFilterOptions} setSelectedDateFilter={setSelectedDateFilter} selectedDateFilter={selectedDateFilter}/>
-          </div>
+
 
           <DateRangeSelector selectedDateRangeStart={selectedDateRangeStart} selectedDateRangeEnd={selectedDateRangeEnd} setSelectedDateRangeEnd={setSelectedDateRangeEnd} setSelectedDateRangeStart={setSelectedDateRangeStart}/>
+
+
+          <DateFilterGroup dateFilterOptions={dateFilterOptions} setSelectedDateFilter={setSelectedDateFilter} selectedDateFilter={selectedDateFilter}/>
+
 
       </Col>
       </Row>

@@ -13,10 +13,10 @@ export const DateRangeSelector = ({setSelectedDateRangeStart,setSelectedDateRang
 
 return(
   <Row className="mt-3">
-      <Col xs={12} md={7}>
-        <p className="mt-0 mb-5">The <span className="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in descending order by units, filtering for controlled substances, and filtering by type or customize your report with over 40 available fields.</p>
+      <Col xs={12} md={12}>
+        <p className="mt-0 mb-2">The <span className="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in descending order by units, filtering for controlled substances, and filtering by type or customize your report with over 40 available fields.</p>
       </Col>
-      <Col xs={12} md={5}>
+      <Col xs={12} md={7}>
       <div class="d-flex">
           <div class="columnStart mr2">
               <p className="small">Start Date</p>
