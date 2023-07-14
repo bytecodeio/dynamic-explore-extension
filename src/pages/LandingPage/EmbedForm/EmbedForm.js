@@ -17,6 +17,7 @@ import Footer from "./Footer.js";
 import { EmbedExplore } from "../EmbedExplore/EmbedExplore";
 import { EmbedMultiExplores } from "../EmbedMultiExplores/EmbedMultiExplores";
 import { ExtensionContext } from "@looker/extension-sdk-react";
+import moment from 'moment'
 
 // import InnerTableTabs from "./InnerTableTabs";
 import { connection, scratch_schema } from "../../../utils/writebackConfig";
@@ -48,6 +49,7 @@ const [filterOptions, setFilterOptions] = useState([]);
 const [dateFilterOptions, setDateFilterOptions] = useState([]);
 const [dateRangeStart, setDateRangeStart] = useState("");
 const [dateRangeEnd, setDateRangeEnd] = useState("")
+const [dateRange, setDateRange] = useState("")
 
 // Initialize the states
 useEffect(() => {
@@ -80,15 +82,9 @@ useEffect(() => {
 
     const _productMovementfieldOptions = fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
 
-    const _dateRangeStart = fieldsByTag[LOOKML_FIELD_TAGS.dateRangeStart];
-    const _dateRangeEnd = fieldsByTag[LOOKML_FIELD_TAGS.dateRangeEnd];
     const _dateRange = fieldsByTag[LOOKML_FIELD_TAGS.dateRange];
 
     console.log("date range",_dateRange)
-
-    const _dateStartName = _dateRangeStart[0]['name']
-    const _dateEndName = _dateRangeEnd[0]['name']
-    const _dateRangeName = _dateRange[0]['name']
 
     const defaultFilterSelections = Object.fromEntries(
       _filterOptions.map((filter) => [filter.name, "N/A"])
@@ -109,24 +105,13 @@ useEffect(() => {
       setSelectedDateFilter(defaultDateFilterSelections['name'])
     }
 
-    let defaultDateStart = await getValues(_dateRangeStart)
-    console.log(defaultDateStart)
-    setSelectedDateRangeStart(defaultDateStart[0][_dateStartName])
-
-    let defaultDateEnd = await getValues(_dateRangeEnd)
-    console.log(defaultDateEnd)
-    setSelectedDateRangeEnd(defaultDateEnd[0][_dateEndName])
-
-    let defaultDateRange= await getValues(_dateRange)
-    console.log(defaultDateRange)
-    setSelectedDateRange(defaultDateRange[0][_dateRangeName])
+    setSelectedDateRange(getDefaultDateRange())
 
     setFilterOptions(_filterOptions);
     setProductMovementFields(_productMovementfieldOptions);
     setDateFilterOptions(sortDateFilterList(_dateFilterOptions))
     setSelectedFilters(defaultFilterSelections);
-    setDateRangeStart(_dateRangeStart);
-    setDateRangeEnd(_dateRangeEnd);
+    setDateRange(_dateRange[0])
     setIsFetchingLookmlFields(false);
   }
 
@@ -138,9 +123,15 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  console.log("start", selectedDateRangeStart)
-  console.log("end", selectedDateRangeEnd)
-},[selectedDateRangeEnd,selectedDateRangeStart])
+  console.log("range", selectedDateRange)
+},[selectedDateRange])
+
+const getDefaultDateRange = () => {
+  let prevMonth = moment().subtract(1, "month");
+  let startOfMonth = prevMonth.startOf('month').format('YYYY-MM-DD').toString();
+  let endOfMonth = prevMonth.endOf('month').format('YYYY-MM-DD').toString();
+  return  `${startOfMonth} to ${endOfMonth}`
+}
 
 const getValues = (dimension) => {
   console.log(dimension)
@@ -194,10 +185,9 @@ const getValues = (dimension) => {
           isFetchingLookmlFields={isFetchingLookmlFields}
           setSelectedDateFilter={setSelectedDateFilter}
           selectedDateFilter={selectedDateFilter}
-          setSelectedDateRangeStart={setSelectedDateRangeStart}
-          setSelectedDateRangeEnd={setSelectedDateRangeEnd}
-          selectedDateRangeStart={selectedDateRangeStart}
-          selectedDateRangeEnd={selectedDateRangeEnd}
+          setSelectedDateRange={setSelectedDateRange}
+          selectedDateRange={selectedDateRange}
+          dateRange={dateRange}
         />
       </Tab>
       <Tab eventKey="invoice" title="Invoice Report">

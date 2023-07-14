@@ -22,7 +22,7 @@ import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 
-const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, filterOptions, dateFilterOptions, fieldOptions, isFetchingLookmlFields, selectedDateFilter, setSelectedDateFilter, setSelectedDateRangeStart, setSelectedDateRangeEnd, selectedDateRangeStart, selectedDateRangeEnd}) => {
+const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, filterOptions, dateFilterOptions, fieldOptions, isFetchingLookmlFields, selectedDateFilter, setSelectedDateFilter,selectedDateRange, setSelectedDateRange, dateRange}) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
   const [slide, setSlide] = useState();
@@ -180,7 +180,12 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
 
       if (selectedDateFilter != "") {
         filters[selectedDateFilter] = 'Yes'
+      } else {
+        if (selectedDateRange) {
+          filters[dateRange['name']] = selectedDateRange
+        }
       }
+      console.log("filters", filters)
 
       if (isFilterChanged) {
         updateInnerTabFilters(filters)
@@ -415,7 +420,7 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
       <Col xs={12} md={7}>
 
 
-          <DateRangeSelector selectedDateRangeStart={selectedDateRangeStart} selectedDateRangeEnd={selectedDateRangeEnd} setSelectedDateRangeEnd={setSelectedDateRangeEnd} setSelectedDateRangeStart={setSelectedDateRangeStart} setSelectedDateFilter={setSelectedDateFilter}/>
+          <DateRangeSelector selectedDateRange={selectedDateRange} setSelectedDateRange={setSelectedDateRange} setSelectedDateFilter={setSelectedDateFilter}/>
 
 
           <DateFilterGroup dateFilterOptions={dateFilterOptions} setSelectedDateFilter={setSelectedDateFilter} selectedDateFilter={selectedDateFilter}/>
