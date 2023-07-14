@@ -10,5 +10,6 @@ export const LOOKML_FIELD_TAGS = {
   date_filter:"date filter",
   productMovementField: "field: product_movement",
   dateRangeStart: "date range start",
-  dateRangeEnd: "date range end"
+  dateRangeEnd: "date range end",
+  dateRange: "date range"
 };

@@ -8,7 +8,6 @@ export const DateFilterGroup = ({dateFilterOptions, setSelectedDateFilter, selec
 
     const handleSelection = (e) => {
         setSelectedDateFilter(e.target.id)
-
     }
 
     useEffect(() => {

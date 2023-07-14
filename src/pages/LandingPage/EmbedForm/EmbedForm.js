@@ -41,6 +41,7 @@ const [selectedFilters, setSelectedFilters] = useState({});
 const [selectedDateFilter, setSelectedDateFilter] = useState("");
 const [selectedDateRangeStart, setSelectedDateRangeStart] = useState();
 const [selectedDateRangeEnd, setSelectedDateRangeEnd] = useState();
+const [selectedDateRange, setSelectedDateRange] = useState();
 
 const [productMovementFields, setProductMovementFields] = useState([]);
 const [filterOptions, setFilterOptions] = useState([]);
@@ -81,12 +82,13 @@ useEffect(() => {
 
     const _dateRangeStart = fieldsByTag[LOOKML_FIELD_TAGS.dateRangeStart];
     const _dateRangeEnd = fieldsByTag[LOOKML_FIELD_TAGS.dateRangeEnd];
+    const _dateRange = fieldsByTag[LOOKML_FIELD_TAGS.dateRange];
 
-    console.log(_dateRangeStart)
-    console.log(_dateRangeEnd)
+    console.log("date range",_dateRange)
 
     const _dateStartName = _dateRangeStart[0]['name']
     const _dateEndName = _dateRangeEnd[0]['name']
+    const _dateRangeName = _dateRange[0]['name']
 
     const defaultFilterSelections = Object.fromEntries(
       _filterOptions.map((filter) => [filter.name, "N/A"])
@@ -114,6 +116,10 @@ useEffect(() => {
     let defaultDateEnd = await getValues(_dateRangeEnd)
     console.log(defaultDateEnd)
     setSelectedDateRangeEnd(defaultDateEnd[0][_dateEndName])
+
+    let defaultDateRange= await getValues(_dateRange)
+    console.log(defaultDateRange)
+    setSelectedDateRange(defaultDateRange[0][_dateRangeName])
 
     setFilterOptions(_filterOptions);
     setProductMovementFields(_productMovementfieldOptions);
