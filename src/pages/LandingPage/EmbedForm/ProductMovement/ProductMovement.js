@@ -22,10 +22,9 @@ import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 
-const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filterOptions,dateFilterOptions,fieldOptions,isFetchingLookmlFields,selectedDateFilter, setSelectedDateFilter,setSelectedDateRangeStart,
-  setSelectedDateRangeEnd,selectedDateRangeStart,selectedDateRangeEnd}) => {
+const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, filterOptions, dateFilterOptions, fieldOptions, isFetchingLookmlFields, selectedDateFilter, setSelectedDateFilter, setSelectedDateRangeStart, setSelectedDateRangeEnd, selectedDateRangeStart, selectedDateRangeEnd}) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
-
+  const wrapperRef = useRef(null);
   const [slide, setSlide] = useState();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -195,6 +194,19 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
     setUpdateButtonClicked(true)
   };
 
+  useEffect((e) => {
+   document.addEventListener("click", handleClickOutside, false);
+   return () => {
+   document.removeEventListener("click", handleClickOutside, false);
+   };
+ }, []);
+
+ const handleClickOutside = event => {
+   if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+     setShow3(false);
+   }
+ };
+
 
   return (
     <Container fluid>
@@ -202,7 +214,7 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
       <Spinner />
     ) : (
       <>
-      <div id="slideOut3" className={show3 ? "show3" : ""}>
+      <div id="slideOut3" className={show3 ? "show3" : ""} ref={wrapperRef}>
       <div className="slideOutTab3">
         <div id="one3" className="openTab bottomShadow" role="button" tabindex="0" onClick={() => setShow3(true)}>
           <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
@@ -341,7 +353,9 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
 
       <Row>
       <Col xs={12} md={5}>
-          <CurrentSelection selectedDateFilter={selectedDateFilter} selectedFilters={selectedFilters}/>
+          <CurrentSelection selectedDateFilter={selectedDateFilter} selectedFilters={selectedFilters} selectedFields={selectedFields} fieldOptions={fieldOptions}
+          setSelectedFields={setSelectedFields} filterOptions={filterOptions} setSelectedFilters={setSelectedFilters} selectedDateFilter={selectedDateFilter} dateFilterOptions={dateFilterOptions}/>
+
           <p className="mt-5">Total Invoice: <span className="highlight large">17</span></p>
       </Col>
 

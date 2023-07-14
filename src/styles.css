@@ -561,6 +561,39 @@ legend {
 
 }
 
+.theOptions{
+  position: relative;
+    display: flex;
+    min-height: 0rem;
+    padding-left: 0rem;
+    padding: 0.1rem .25rem;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #E7F5F7;
+    margin-bottom: 0.2em;
+
+}
+
+.theOptions p{
+  font-size:15px;
+}
+
+.wrapOptions{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+ grid-column-gap: 6px;
+}
+
+.fa-trash-undo.red{
+  font-size:17px;
+
+}
+
+.fa-trash-undo.red:hover{
+  cursor:pointer;
+}
+
+
 .tooltip-inner {
   background-color: #fff;
   color: #000;
@@ -2740,14 +2773,7 @@ a{
     color:black
 }
 
-.fa-trash-undo.red{
-  font-size:20px;
-  margin-left:1em
-}
 
-.fa-trash-undo.red:hover{
-  cursor:pointer;
-}
 
 /* @media (max-width:767px){
 .noMobile{
