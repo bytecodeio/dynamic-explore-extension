@@ -11,7 +11,7 @@ import { ExtensionContext } from "@looker/extension-sdk-react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import "../../../../styles.css";
-import ProductTable from "../ProductTable";
+import InnerTableTabs from "../InnerTableTabs";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
 import DateContainer from "./helpers/DateContainer";
@@ -41,11 +41,15 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
   const [defaults, setDefaults] = useState({})
+  const [tabList, setTabList] = useState([])
+  const [currentInnerTab, setCurrentInnerTab] = useState(0);
+  const [isFilterChanged, setIsFilterChanged] = useState(false)
   function handleClearAll() {}
 
   useEffect(() => {
     if (currentNavTab == "product-movement") {
-      handleVisUpdate()
+      setIsFilterChanged(true);
+      handleTabVisUpdate();
     }
   },[currentNavTab])
 
@@ -57,12 +61,18 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
       const { dashboard_elements } = await sdk.ok(
         sdk.dashboard(PRODUCT_MOVEMENT_VIS_DASHBOARD_ID, "dashboard_elements")
       );
+        console.log("dash el", dashboard_elements)
+      dashboard_elements?.map((t) => {
+        let {client_id} = t['result_maker']['query']
+        setTabList(prev=> [...prev, {'title':t['title'], 'query':client_id, 'default_fields':[...t.result_maker.query['fields']], 'selected_fields':[...t.result_maker.query['fields']]}])
+      })
+
       const { client_id, fields, filters } =
       dashboard_elements[0].result_maker.query;
 
       setSelectedFields(fields);
       if (filters) setSelectedFilters(filters);
-      setProductMovementVisQid(client_id);
+      //setProductMovementVisQid(client_id);
       setIsFetchingDefaultDashboard(false);
     }
 
@@ -155,34 +165,68 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
     </Tooltip>
   );
 
-  // Handle run button click
-  async function handleVisUpdate() {
-    const prevVisQid = productMovementVisQid;
-    setProductMovementVisQid();
-    // remove filters with a value of "N/A"
-    const filters = {};
-    for (const filter in selectedFilters) {
-      if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
-        filters[filter] = selectedFilters[filter];
+    // Handle run button click
+    async function handleTabVisUpdate() {
+      let tabs = [...tabList]
+      let currentTab = tabs[currentInnerTab]
+      const prevVisQid = currentTab['query'];
+      console.log(prevVisQid)
+      // remove filters with a value of "N/A"
+      const filters = {};
+      for (const filter in selectedFilters) {
+        if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
+          filters[filter] = selectedFilters[filter];
+        }
       }
+
+      if (selectedDateFilter != "") {
+        filters[selectedDateFilter] = 'Yes'
+      }
+
+      if (isFilterChanged) {
+        updateInnerTabFilters(filters)
+      }
+
+      
+      const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
+      console.log(vis_config)
+      const { client_id } = await sdk.ok(
+        sdk.create_query({
+          model: LOOKER_MODEL,
+          view: LOOKER_EXPLORE,
+          fields: currentTab['selected_fields'],
+          filters,
+          vis_config,
+        })
+      );
+      console.log(client_id)
+      tabs[currentInnerTab]['query'] = client_id;
+      setTabList(tabs)
     }
 
-    if (selectedDateFilter != "") {
-      filters[selectedDateFilter] = 'Yes'
-    }
-
-    const { visConfig } = await sdk.ok(sdk.query_for_slug(prevVisQid));
-    const { client_id } = await sdk.ok(
-      sdk.create_query({
-        model: LOOKER_MODEL,
-        view: LOOKER_EXPLORE,
-        fields: selectedFields,
-        filters,
-        visConfig,
+    const updateInnerTabFilters = async (filters) => {
+      console.log("update inner",tabList)
+      let fullTabList = [...tabList]
+      fullTabList.map(async (t,i) => {
+        if (i != currentInnerTab) {
+          const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(t['query']));
+          
+          const { client_id } = await sdk.ok(
+            sdk.create_query({
+              model: LOOKER_MODEL,
+              view: LOOKER_EXPLORE,
+              fields: fields,
+              filters,
+              vis_config,
+            })
+          );
+          console.log(client_id)
+          fullTabList[i]['query'] = client_id;
+          setTabList(fullTabList)
+        }
       })
-    );
-    setProductMovementVisQid(client_id);
-  }
+      setIsFilterChanged(false)
+    }
 
   async function handleClearAll() {
     setIsDefaultProduct(false);
@@ -193,6 +237,10 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
   async function handleRestoreDefault() {
     setIsDefaultProduct(defaultChecked);
     setUpdateButtonClicked(true)
+    let tabs = [...tabList];
+    let currentTab = tabs[currentInnerTab];
+    currentTab['selected_fields'] = currentTab['default_fields'];
+    setTabList(tabs);
   };
 
 
@@ -265,6 +313,7 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
                   setIsDefault={setIsDefaultProduct}
                   updateBtn={updateButtonClicked}
                   setUpdateBtn={setUpdateButtonClicked}
+                  setIsFilterChanged={setIsFilterChanged}
                   />
               </Accordion.Body>
             </Accordion.Item>
@@ -278,10 +327,13 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
               <Accordion.Body>
                   <Fields
                   fieldOptions={fieldOptions}
-                  selectedFields={selectedFields}
-                  setSelectedFields={setSelectedFields}
-                  isDefault={isDefaultProduct}
-                  setIsDefault={setIsDefaultProduct}
+                  setTabList={setTabList}
+                  tabList={tabList}
+                  currentInnerTab={currentInnerTab}
+                  // selectedFields={selectedFields}
+                  // setSelectedFields={setSelectedFields}
+                  // isDefault={isDefaultProduct}
+                  // setIsDefault={setIsDefaultProduct}
                   updateBtn={updateButtonClicked}
                   setUpdateBtn={setUpdateButtonClicked}
 
@@ -314,7 +366,8 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
             <input placeholder="Search Filter" type="search" class="form-control" />
             <input placeholder="Top % Products" type="search" class="form-control" />
             <Button
-            onClick={handleVisUpdate}
+              onClick={handleTabVisUpdate}
+           // onClick={handleVisUpdate}
             className="btn mw200">
             Submit Values
             </Button>
@@ -350,14 +403,14 @@ const ProductMovement = ({currentNavTab,selectedFilters, setSelectedFilters,filt
             <DateFilterGroup dateFilterOptions={dateFilterOptions} setSelectedDateFilter={setSelectedDateFilter} selectedDateFilter={selectedDateFilter}/>
           </div>
 
-          <DateRangeSelector selectedDateRangeStart={selectedDateRangeStart} selectedDateRangeEnd={selectedDateRangeEnd} setSelectedDateRangeEnd={setSelectedDateRangeEnd} setSelectedDateRangeStart={setSelectedDateRangeStart}/>
+          <DateRangeSelector selectedDateRangeStart={selectedDateRangeStart} selectedDateRangeEnd={selectedDateRangeEnd} setSelectedDateRangeEnd={setSelectedDateRangeEnd} setSelectedDateRangeStart={setSelectedDateRangeStart} setSelectedDateFilter={setSelectedDateFilter}/>
 
       </Col>
       </Row>
 
       <Row className="mt-3 mb-3">
         <Col md={12}>
-          <ProductTable productMovementVisQid={productMovementVisQid} />
+          <InnerTableTabs tabs={tabList} setSelectedFields={setSelectedFields} currentInnerTab={currentInnerTab} setCurrentInnerTab={setCurrentInnerTab}/>
         </Col>
       </Row>
 
