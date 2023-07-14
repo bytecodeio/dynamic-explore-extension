@@ -1,15 +1,30 @@
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { Form, Row, Col } from 'react-bootstrap';
-export const DateRangeSelector = ({setSelectedDateRangeStart,setSelectedDateRangeEnd,selectedDateRangeStart,selectedDateRangeEnd,setSelectedDateFilter}) => {
+export const DateRangeSelector = ({setSelectedDateRange,selectedDateRange,setSelectedDateFilter}) => {
+    useEffect(() => {
+        console.log("split date",splitSelectedDateRange())
+    },[selectedDateRange])
     const onDateSelection = (e, type) => {
         if (type == "start") {
-            setSelectedDateRangeStart(e.target.value)
+            let splitDate = splitSelectedDateRange()
+            splitDate[0] = e.target.value;
+            setSelectedDateRange(splitDate.join(" to "))
         }
         if (type == "end") {
-            setSelectedDateRangeEnd(e.target.value)
+            let splitDate = splitSelectedDateRange()
+            splitDate[1] = e.target.value;
+            setSelectedDateRange(splitDate.join(" to "))
         }
         setSelectedDateFilter("")
+    }
+
+    const splitSelectedDateRange = () => {
+        if (selectedDateRange) {
+           return selectedDateRange.split(" to ") 
+        } 
+        return ['','']        
     }
 
 return(
@@ -21,11 +36,11 @@ return(
       <div class="d-flex">
           <div class="columnStart mr2">
               <p className="small">Start Date</p>
-              <Form.Control type="date" value={selectedDateRangeStart} onChange={(e) => onDateSelection(e,'start')}/>
+              <Form.Control type="date" value={splitSelectedDateRange()[0]} onChange={(e) => onDateSelection(e,'start')}/>
           </div>
           <div class="columnStart">
               <p className="small">End Date</p>
-              <Form.Control type="date" value={selectedDateRangeEnd} onChange={(e) => onDateSelection(e,'end')}/>
+              <Form.Control type="date" value={splitSelectedDateRange()[1]} onChange={(e) => onDateSelection(e,'end')}/>
           </div>
       </div>
       </Col>
