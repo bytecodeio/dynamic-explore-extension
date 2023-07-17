@@ -1,14 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Tab, Tabs } from "react-bootstrap";
-import SideForm from "./pages/LandingPage/EmbedForm/nav/Form.js";
-import PurchasesReview from "./pages/LandingPage/EmbedForm/PurchasesReview/PurchasesReview";
-import InflationDeflation from "./pages/LandingPage/EmbedForm/InflationDeflation/InflationDeflation";
-import ToTopButton from "./pages/LandingPage/EmbedForm/ToTopButton.js";
-import NavbarMain from "./pages/LandingPage/EmbedForm/NavbarMain";
-import Footer from "./pages/LandingPage/EmbedForm/Footer.js";
+import SideForm from "./components/nav/Form.js";
+import PurchasesReview from "./pageTemplates/PurchasesReview/PurchasesReview";
+import InflationDeflation from "./pageTemplates/InflationDeflation/InflationDeflation";
+import ToTopButton from "./components/ToTopButton.js";
+import NavbarMain from "./components/NavbarMain";
+import Footer from "./components/Footer.js";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import moment from "moment";
-import Template1 from "./pages/LandingPage/EmbedForm/Components/Template1/Template1";
+import Template1 from "./pageTemplates/Template1/Template1";
 
 import {
   LOOKER_MODEL,
