@@ -5,6 +5,7 @@ import { hot } from "react-hot-loader/root";
 
 import { NewTable } from "./pages/NewTable/NewTable";
 import { LandingPage } from "./pages/LandingPage/LandingPage";
+import './styles.css'
 
 
 export const App =  hot(() => {
