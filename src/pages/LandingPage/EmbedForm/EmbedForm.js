@@ -190,6 +190,42 @@ const getDefaultDateRange = () => {
         />
       </Tab>
       <Tab eventKey="invoice" title="Invoice Report">
+        <Template1
+          currentNavTab={currentNavTab}
+          selectedFilters={selectedFilters}
+          setSelectedFilters={setSelectedFilters}
+          filterOptions={filterOptions}
+          dateFilterOptions={dateFilterOptions}
+          fieldOptions={productMovementFields}
+          isFetchingLookmlFields={isFetchingLookmlFields}
+          setSelectedDateFilter={setSelectedDateFilter}
+          selectedDateFilter={selectedDateFilter}
+          setSelectedDateRange={setSelectedDateRange}
+          selectedDateRange={selectedDateRange}
+          dateRange={dateRange}
+          dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
+          tabKey={"invoice"}
+        />
+      </Tab>
+      <Tab eventKey="auto-sub" title="Auto-Sub Report">
+        <Template1
+          currentNavTab={currentNavTab}
+          selectedFilters={selectedFilters}
+          setSelectedFilters={setSelectedFilters}
+          filterOptions={filterOptions}
+          dateFilterOptions={dateFilterOptions}
+          fieldOptions={productMovementFields}
+          isFetchingLookmlFields={isFetchingLookmlFields}
+          setSelectedDateFilter={setSelectedDateFilter}
+          selectedDateFilter={selectedDateFilter}
+          setSelectedDateRange={setSelectedDateRange}
+          selectedDateRange={selectedDateRange}
+          dateRange={dateRange}
+          dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
+          tabKey={"auto-sub"}
+        />
+      </Tab>
+      {/* <Tab eventKey="invoice" title="Invoice Report">
 
       <InvoiceReport
         selectedFilters={selectedFilters}
@@ -202,8 +238,8 @@ const getDefaultDateRange = () => {
         selectedDateFilter={selectedDateFilter}
       />
 
-      </Tab>
-      <Tab eventKey="auto-sub" title="Auto-Sub Report">
+      </Tab> */}
+      {/* <Tab eventKey="auto-sub" title="Auto-Sub Report">
       <AutoSub
         selectedFilters={selectedFilters}
         setSelectedFilters={setSelectedFilters}
@@ -215,7 +251,7 @@ const getDefaultDateRange = () => {
         selectedDateFilter={selectedDateFilter}
       />
 
-      </Tab>
+      </Tab> */}
       <Tab eventKey="id" title="Inflation/Deflation Report">
 
       <InflationDeflation
