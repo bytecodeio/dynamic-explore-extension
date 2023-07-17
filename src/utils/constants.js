@@ -1,5 +1,5 @@
 export const LOOKER_MODEL = "rebecca_thompson_project";
-export const LOOKER_EXPLORE = "order_items";
+export const LOOKER_EXPLORE = "sdt_all_dates";
 
 export const PRODUCT_MOVEMENT_VIS_DASHBOARD_ID =
   // "rebecca_thompson_project::product_movement_details";

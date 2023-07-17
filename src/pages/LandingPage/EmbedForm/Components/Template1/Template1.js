@@ -409,19 +409,12 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
       <Col xs={12} md={5}>
           <CurrentSelection selectedDateFilter={selectedDateFilter} selectedFilters={selectedFilters} selectedFields={selectedFields} fieldOptions={fieldOptions}
           setSelectedFields={setSelectedFields} filterOptions={filterOptions} setSelectedFilters={setSelectedFilters} dateFilterOptions={dateFilterOptions}/>
-
           <p className="mt-5">Total Invoice: <span className="highlight large">17</span></p>
       </Col>
 
       <Col xs={12} md={7}>
-
-
           <DateRangeSelector selectedDateRange={selectedDateRange} setSelectedDateRange={setSelectedDateRange} setSelectedDateFilter={setSelectedDateFilter}/>
-
-
           <DateFilterGroup dateFilterOptions={dateFilterOptions} setSelectedDateFilter={setSelectedDateFilter} selectedDateFilter={selectedDateFilter}/>
-
-
       </Col>
       </Row>
 
