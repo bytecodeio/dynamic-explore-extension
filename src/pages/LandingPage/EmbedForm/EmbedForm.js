@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Switch, Route,  } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
-import "../../../styles.css";
 import SideForm from "./nav/Form.js";
 import ProductMovement from "./ProductMovement/ProductMovement";
 import PurchasesReview from "./PurchasesReview/PurchasesReview";
@@ -14,10 +13,9 @@ import InflationDeflation from "./InflationDeflation/InflationDeflation";
 import ToTopButton from './ToTopButton.js';
 import NavbarMain from "./NavbarMain";
 import Footer from "./Footer.js";
-import { EmbedExplore } from "../EmbedExplore/EmbedExplore";
-import { EmbedMultiExplores } from "../EmbedMultiExplores/EmbedMultiExplores";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import moment from 'moment'
+import Template1 from './Components/Template1/Template1'
 
 // import InnerTableTabs from "./InnerTableTabs";
 import { connection, scratch_schema } from "../../../utils/writebackConfig";
@@ -25,7 +23,8 @@ import { connection, scratch_schema } from "../../../utils/writebackConfig";
 import {
   LOOKER_MODEL,
   LOOKER_EXPLORE,
-  LOOKML_FIELD_TAGS
+  LOOKML_FIELD_TAGS,
+  PRODUCT_MOVEMENT_VIS_DASHBOARD_ID
 } from "../../../utils/constants";
 
 import { sortDateFilterList } from "../../../utils/globalFunctions";
@@ -40,15 +39,11 @@ const [currentNavTab, setCurrentNavTab] = useState("dashboard")
 const [isFetchingLookmlFields, setIsFetchingLookmlFields] = useState(true);
 const [selectedFilters, setSelectedFilters] = useState({});
 const [selectedDateFilter, setSelectedDateFilter] = useState("");
-const [selectedDateRangeStart, setSelectedDateRangeStart] = useState();
-const [selectedDateRangeEnd, setSelectedDateRangeEnd] = useState();
 const [selectedDateRange, setSelectedDateRange] = useState();
 
 const [productMovementFields, setProductMovementFields] = useState([]);
 const [filterOptions, setFilterOptions] = useState([]);
 const [dateFilterOptions, setDateFilterOptions] = useState([]);
-const [dateRangeStart, setDateRangeStart] = useState("");
-const [dateRangeEnd, setDateRangeEnd] = useState("")
 const [dateRange, setDateRange] = useState("")
 
 // Initialize the states
@@ -133,20 +128,6 @@ const getDefaultDateRange = () => {
   return  `${startOfMonth} to ${endOfMonth}`
 }
 
-const getValues = (dimension) => {
-  console.log(dimension)
-    return sdk.ok(
-      sdk.run_inline_query({
-        result_format: "json",
-        body: {
-          model: LOOKER_MODEL,
-          view: dimension[0]['view'],
-          fields: [dimension[0]['name']],
-        },
-      })
-    );
-}
-
     return (
     <>
 <NavbarMain/>
@@ -174,7 +155,7 @@ const getValues = (dimension) => {
       />
       </Tab>
 
-      <Tab eventKey="product-movement" title="Product Movement Report">
+      {/* <Tab eventKey="product-movement2" title="Product Movement Report">
         <ProductMovement
           currentNavTab={currentNavTab}
           selectedFilters={selectedFilters}
@@ -188,6 +169,24 @@ const getValues = (dimension) => {
           setSelectedDateRange={setSelectedDateRange}
           selectedDateRange={selectedDateRange}
           dateRange={dateRange}
+        />
+      </Tab> */}
+      <Tab eventKey="product-movement" title="Product Movement Report">
+        <Template1
+          currentNavTab={currentNavTab}
+          selectedFilters={selectedFilters}
+          setSelectedFilters={setSelectedFilters}
+          filterOptions={filterOptions}
+          dateFilterOptions={dateFilterOptions}
+          fieldOptions={productMovementFields}
+          isFetchingLookmlFields={isFetchingLookmlFields}
+          setSelectedDateFilter={setSelectedDateFilter}
+          selectedDateFilter={selectedDateFilter}
+          setSelectedDateRange={setSelectedDateRange}
+          selectedDateRange={selectedDateRange}
+          dateRange={dateRange}
+          dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
+          tabKey={"product-movement"}
         />
       </Tab>
       <Tab eventKey="invoice" title="Invoice Report">
