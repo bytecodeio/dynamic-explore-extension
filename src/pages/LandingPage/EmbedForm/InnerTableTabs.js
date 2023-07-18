@@ -9,7 +9,7 @@ import "../../../styles.css";
 import EmbedTable from "./EmbedTable";
 
 const InnerTableTabs = ({ tabs, setSelectedFields, currentInnerTab,setCurrentInnerTab }) => {
- 
+
 
   const handleTabChange = (event) => {
     setCurrentInnerTab(event)

@@ -22,7 +22,7 @@ import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 
-const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, filterOptions, dateFilterOptions, fieldOptions, isFetchingLookmlFields, selectedDateFilter, setSelectedDateFilter,selectedDateRange, setSelectedDateRange, dateRange}) => {
+const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, filterOptions, dateFilterOptions, fieldOptions, isFetchingLookmlFields, selectedDateFilter, setSelectedDateFilter,selectedDateRange, setSelectedDateRange, dateRange,  showMenu, setShowMenu, slideIt }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
   const [slide, setSlide] = useState();
@@ -43,6 +43,7 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
   const [tabList, setTabList] = useState([])
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false)
+
   function handleClearAll() {}
 
   useEffect(() => {
@@ -158,6 +159,9 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
     }, 600);
   };
 
+
+
+
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
        These are the filters you use to query data. Select the accordions individually below to choose the different filter options inside. Once you are done you can choose the "Submit Values" button to update the data.
@@ -191,7 +195,7 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
         updateInnerTabFilters(filters)
       }
 
-      
+
       const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
       console.log(vis_config)
       const { client_id } = await sdk.ok(
@@ -214,7 +218,7 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
       fullTabList.map(async (t,i) => {
         if (i != currentInnerTab) {
           const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(t['query']));
-          
+
           const { client_id } = await sdk.ok(
             sdk.create_query({
               model: LOOKER_MODEL,
@@ -256,7 +260,8 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
 
  const handleClickOutside = event => {
    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-     setShow3(false);
+     // setShow3(true);
+     // slideIt()
    }
  };
 
@@ -267,9 +272,10 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
       <Spinner />
     ) : (
       <>
-      <div id="slideOut3" className={show3 ? "show3" : ""} ref={wrapperRef}>
+      <div id="slideOut3" className={show3 ? "" : "show3"} ref={wrapperRef}>
       <div className="slideOutTab3">
-        <div id="one3" className="openTab bottomShadow" role="button" tabindex="0" onClick={() => setShow3(true)}>
+        <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
+        onClick={() => {setShow3(false);slideIt();}}>
           <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
           <p className="m-0"><span className="noMobile">Product Filters</span></p>
         </div>
@@ -284,13 +290,19 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
           ><p className="pb-1">Filter Options <i class="fal fa-info-circle red"></i></p>
           </OverlayTrigger>
         <div className="closeThisPlease" id="close1">
-          <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1" onClick={() => setShow3(false)}>
+          <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1"
+
+          onClick={() => {setShow3(true);slideIt();}}>
+          {/*onClick={() => setShow3(false)}>*/}
           &#10005;
           </Button>
         </div>
 
         </div>
       <div className="modal-body">
+
+
+
       <Accordion defaultActiveKey={0} className="mt-3 mb-3">
     <Row>
       <Col xs={12} md={12}>
@@ -376,41 +388,44 @@ const ProductMovement = ({currentNavTab, selectedFilters, setSelectedFilters, fi
       </Col>
     </Row>
   </Accordion>
+
+  <div className="d-flex flex-column justify-content-center align-items-center mt-3 mb-3">
+      {/*<input placeholder="Search Filter" type="search" class="form-control" />*/}
+      {/*<input placeholder="Top % Products" type="search" class="form-control" />*/}
+      <Button
+        onClick={handleTabVisUpdate}
+     // onClick={handleVisUpdate}
+      className="btn">
+      Submit Values
+      </Button>
+
+ </div>
+
+<div className="lineAcross"></div>
+
+<div className="d-flex flex-column justify-content-between mt-3 pt-3">
+    <Button onClick={handleRestoreDefault} className="btn-clear">
+    Restore Default <i class="fal fa-undo"></i>
+    </Button>
+    <Button className="btn-clear">
+    Print <i class="fal fa-print"></i>
+    </Button>
+    <Button onClick={handleClearAll} className="btn">
+    Clear All
+    </Button>
+    </div>
       </div>
 
-    <div className="modal-footer">
-        <div className="d-flex justify-content-center align-items-center mt-3 mb-3">
-            <input placeholder="Search Filter" type="search" class="form-control" />
-            <input placeholder="Top % Products" type="search" class="form-control" />
-            <Button
-              onClick={handleTabVisUpdate}
-           // onClick={handleVisUpdate}
-            className="btn mw200">
-            Submit Values
-            </Button>
 
-       </div>
-
-      <div className="lineAcross"></div>
-
-      <div className="d-flex justify-content-between mt-3 pt-3">
-          <Button onClick={handleRestoreDefault} className="btn-clear">
-          Restore Default <i class="fal fa-undo"></i>
-          </Button>
-          <Button className="btn-clear">
-          Print <i class="fal fa-print"></i>
-          </Button>
-          <Button onClick={handleClearAll} className="btn">
-          Clear All
-          </Button>
-          </div>
-        </div>
       </div>
 
       </div>
 
       <Row>
       <Col xs={12} md={5}>
+
+{/*<p onClick={() => slideIt()}>slide</p>*/}
+
           <CurrentSelection selectedDateFilter={selectedDateFilter} selectedFilters={selectedFilters} selectedFields={selectedFields} fieldOptions={fieldOptions}
           setSelectedFields={setSelectedFields} filterOptions={filterOptions} setSelectedFilters={setSelectedFilters} dateFilterOptions={dateFilterOptions}/>
 

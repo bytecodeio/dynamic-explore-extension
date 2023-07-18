@@ -6,6 +6,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 
 import "../../../styles.css";
 import SideForm from "./nav/Form.js";
+import TopNav from "./nav/TopNav.js";
 import ProductMovement from "./ProductMovement/ProductMovement";
 import PurchasesReview from "./PurchasesReview/PurchasesReview";
 import InvoiceReport from "./InvoiceReport/InvoiceReport";
@@ -30,7 +31,7 @@ import {
 
 import { sortDateFilterList } from "../../../utils/globalFunctions";
 
-export const EmbedForm = ({saveClicked, setSaveClicked}) => {
+export const EmbedForm = ({ saveClicked, setSaveClicked}) => {
 const { core40SDK: sdk } = useContext(ExtensionContext);
 
 const [currentNavTab, setCurrentNavTab] = useState("dashboard")
@@ -50,6 +51,14 @@ const [dateFilterOptions, setDateFilterOptions] = useState([]);
 const [dateRangeStart, setDateRangeStart] = useState("");
 const [dateRangeEnd, setDateRangeEnd] = useState("")
 const [dateRange, setDateRange] = useState("")
+const [showMenu, setShowMenu] = useState();
+
+
+
+const slideIt = () =>{
+  setShowMenu(!showMenu)
+}
+
 
 // Initialize the states
 useEffect(() => {
@@ -151,8 +160,13 @@ const getValues = (dimension) => {
     <>
 <NavbarMain/>
 
-<Container fluid className="mt-50 padding-0">
-    <div className="largePadding">
+<Container fluid className="mt-50 padding-0 position-relative">
+
+<TopNav/>
+
+
+
+    <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
      <div id="nav2">
       <Tabs
       defaultActiveKey={currentNavTab}
@@ -188,6 +202,7 @@ const getValues = (dimension) => {
           setSelectedDateRange={setSelectedDateRange}
           selectedDateRange={selectedDateRange}
           dateRange={dateRange}
+          slideIt={slideIt}
         />
       </Tab>
       <Tab eventKey="invoice" title="Invoice Report">
@@ -236,6 +251,8 @@ const getValues = (dimension) => {
   </div>
 
 </Container>
+
+
 <ToTopButton />
 
 <SideForm/>

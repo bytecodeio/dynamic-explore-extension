@@ -89,7 +89,7 @@ export const CurrentSelection = ({selectedDateFilter, selectedFilters, setSelect
       return(
         <div className="dateChoice" key={selection}>
         {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-        <p className="mb-0 blue heavy">{currentSelection[selection].label_short.replace(/\s*\(.*?\)\s*/g, '')}</p>
+        <p className="mb-0 blue">{currentSelection[selection].label_short.replace(/\s*\(.*?\)\s*/g, '')}</p>
 
         </div>
 
@@ -106,9 +106,9 @@ export const CurrentSelection = ({selectedDateFilter, selectedFilters, setSelect
         {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
 
 
-        <p className="mb-0">{selection.replace(/\s*\(.*?\)\s*/g, '')}: {filterSelection[selection].value}</p>
+        <p className="mb-0 blue">{selection.replace(/\s*\(.*?\)\s*/g, '')}: {filterSelection[selection].value}</p>
 
-        <i onClick={() => removeField(filterSelection[selection].name)} class="fal fa-times red"></i>
+        <i onClick={() => removeField(filterSelection[selection].name)} class="fal fa-times blue"></i>
 
         </div>
 
