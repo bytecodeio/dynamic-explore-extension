@@ -9,6 +9,7 @@ import Footer from "./components/Footer.js";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import moment from "moment";
 import Template1 from "./pageTemplates/Template1/Template1";
+import TopNav from './components/nav/TopNav.js'
 
 import {
   LOOKER_MODEL,
@@ -34,6 +35,11 @@ export const Main = () => {
   const [filterOptions, setFilterOptions] = useState([]);
   const [dateFilterOptions, setDateFilterOptions] = useState([]);
   const [dateRange, setDateRange] = useState("");
+  const [showMenu, setShowMenu] = useState();
+
+  const slideIt = () =>{
+    setShowMenu(!showMenu)
+  }
 
   // Initialize the states
   useEffect(() => {
@@ -119,7 +125,8 @@ export const Main = () => {
       <NavbarMain />
 
       <Container fluid className="mt-50 padding-0">
-        <div className="largePadding">
+      <TopNav/>
+        <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
           <div id="nav2">
             <Tabs
               defaultActiveKey={currentNavTab}
@@ -155,6 +162,7 @@ export const Main = () => {
                   dateRange={dateRange}
                   dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
                   tabKey={"product-movement"}
+                  slideIt={slideIt}
                 />
               </Tab>
               <Tab eventKey="invoice" title="Invoice Report">
@@ -173,6 +181,7 @@ export const Main = () => {
                   dateRange={dateRange}
                   dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
                   tabKey={"invoice"}
+                  slideIt={slideIt}
                 />
               </Tab>
               <Tab eventKey="auto-sub" title="Auto-Sub Report">
@@ -191,6 +200,7 @@ export const Main = () => {
                   dateRange={dateRange}
                   dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
                   tabKey={"auto-sub"}
+                  slideIt={slideIt}
                 />
               </Tab>
               <Tab eventKey="id" title="Inflation/Deflation Report">

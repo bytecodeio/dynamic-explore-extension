@@ -38,6 +38,7 @@ const Template1 = ({
   dateRange,
   tabKey,
   dashboardId,
+  slideIt
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -283,7 +284,7 @@ const Template1 = ({
 
   const handleClickOutside = (event) => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      setShow3(false);
+      //setShow3(false);
     }
   };
 
@@ -300,7 +301,7 @@ const Template1 = ({
                 className="openTab bottomShadow"
                 role="button"
                 tabindex="0"
-                onClick={() => setShow3(true)}
+                onClick={() => {setShow3(false);slideIt();}}
               >
                 <p className="black m-0 mb-2">
                   <i class="far fa-bars"></i>
@@ -328,7 +329,7 @@ const Template1 = ({
                     className="close"
                     data-dismiss="modal"
                     id="closeThisPlease1"
-                    onClick={() => setShow3(false)}
+                    onClick={() => {setShow3(true);slideIt();}}
                   >
                     &#10005;
                   </Button>
