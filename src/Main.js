@@ -205,6 +205,7 @@ export const Main = () => {
               </Tab>
               <Tab eventKey="id" title="Inflation/Deflation Report">
                 <InflationDeflation
+                  currentNavTab={currentNavTab}
                   selectedFilters={selectedFilters}
                   setSelectedFilters={setSelectedFilters}
                   filterOptions={filterOptions}
@@ -213,6 +214,12 @@ export const Main = () => {
                   isFetchingLookmlFields={isFetchingLookmlFields}
                   setSelectedDateFilter={setSelectedDateFilter}
                   selectedDateFilter={selectedDateFilter}
+                  setSelectedDateRange={setSelectedDateRange}
+                  selectedDateRange={selectedDateRange}
+                  dateRange={dateRange}
+                  upperDashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
+                  lowerDashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
+                  tabKey={"id"}
                 />
               </Tab>
             </Tabs>

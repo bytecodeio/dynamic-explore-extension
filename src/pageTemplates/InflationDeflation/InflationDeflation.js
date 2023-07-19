@@ -10,21 +10,22 @@ import {
   Tooltip,
 } from "react-bootstrap";
 
-import {
-  LOOKER_MODEL,
-  LOOKER_EXPLORE,
-  PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
-} from "../../utils/constants";
+import { LOOKER_MODEL, LOOKER_EXPLORE } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.min.js";
+import InnerTableTabs from "../../components/InnerTableTabs";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
-import DateContainer from "./helpers/DateContainer";
 import Rx from "./helpers/Rx";
 import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
+import { DateRangeSelector } from "./helpers/DateRangeSelector";
+import EmbedTable from "../../components/EmbedTable";
 
 const InflationDeflation = ({
+  currentNavTab,
   selectedFilters,
   setSelectedFilters,
   filterOptions,
@@ -33,6 +34,12 @@ const InflationDeflation = ({
   isFetchingLookmlFields,
   selectedDateFilter,
   setSelectedDateFilter,
+  selectedDateRange,
+  setSelectedDateRange,
+  dateRange,
+  tabKey,
+  lowerDashboardId,
+  upperDashboardId
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -51,7 +58,18 @@ const InflationDeflation = ({
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
   const [defaults, setDefaults] = useState({});
+  const [tabList, setTabList] = useState([]);
+  const [currentInnerTab, setCurrentInnerTab] = useState(0);
+  const [isFilterChanged, setIsFilterChanged] = useState(false);
+  const [upperVis, setUpperVis] = useState()
   function handleClearAll() {}
+
+  useEffect(() => {
+    if (currentNavTab == tabKey) {
+      setIsFilterChanged(true);
+      handleTabVisUpdate();
+    }
+  }, [currentNavTab]);
 
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
@@ -59,14 +77,30 @@ const InflationDeflation = ({
   useEffect(() => {
     async function fetchDefaultFieldsAndFilters() {
       const { dashboard_elements } = await sdk.ok(
-        sdk.dashboard(PRODUCT_MOVEMENT_VIS_DASHBOARD_ID, "dashboard_elements")
+        sdk.dashboard(lowerDashboardId, "dashboard_elements")
       );
+      console.log("dash el", dashboard_elements);
+      dashboard_elements?.map((t) => {
+        let { client_id } = t["result_maker"]["query"];
+        setTabList((prev) => [
+          ...prev,
+          {
+            title: t["title"],
+            query: client_id,
+            default_fields: [...t.result_maker.query["fields"]],
+            selected_fields: [...t.result_maker.query["fields"]],
+          },
+        ]);
+      });
+
+      await getUpperVis();
+
       const { client_id, fields, filters } =
         dashboard_elements[0].result_maker.query;
 
       setSelectedFields(fields);
       if (filters) setSelectedFilters(filters);
-      setProductMovementVisQid(client_id);
+      //setProductMovementVisQid(client_id);
       setIsFetchingDefaultDashboard(false);
     }
 
@@ -76,6 +110,14 @@ const InflationDeflation = ({
       console.error("Error fetching default dashboard", e);
     }
   }, []);
+
+  const getUpperVis = async () => {
+    const { dashboard_elements } = await sdk.ok(
+      sdk.dashboard(upperDashboardId, "dashboard_elements")
+    );
+    console.log("dash el", dashboard_elements);
+    setUpperVis(dashboard_elements[0].result_maker.query.client_id)
+  }
 
   // Fetch the suggestions for each filter field, after fetching all filter fields
   const [isFetchingFilterSuggestions, setIsFetchingFilterSuggestions] =
@@ -162,9 +204,11 @@ const InflationDeflation = ({
   );
 
   // Handle run button click
-  async function handleVisUpdate() {
-    const prevVisQid = productMovementVisQid;
-    setProductMovementVisQid();
+  async function handleTabVisUpdate() {
+    let tabs = [...tabList];
+    let currentTab = tabs[currentInnerTab];
+    const prevVisQid = currentTab["query"];
+    console.log(prevVisQid);
     // remove filters with a value of "N/A"
     const filters = {};
     for (const filter in selectedFilters) {
@@ -175,20 +219,78 @@ const InflationDeflation = ({
 
     if (selectedDateFilter != "") {
       filters[selectedDateFilter] = "Yes";
+    } else {
+      if (selectedDateRange) {
+        filters[dateRange["name"]] = selectedDateRange;
+      }
+    }
+    console.log("filters", filters);
+
+    if (isFilterChanged) {
+      updateInnerTabFilters(filters);
+      updateUpperVizFilters(filters)
     }
 
-    const { visConfig } = await sdk.ok(sdk.query_for_slug(prevVisQid));
+    const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
+    console.log(vis_config);
     const { client_id } = await sdk.ok(
       sdk.create_query({
         model: LOOKER_MODEL,
         view: LOOKER_EXPLORE,
-        fields: selectedFields,
+        fields: currentTab["selected_fields"],
         filters,
-        visConfig,
+        vis_config,
       })
     );
-    setProductMovementVisQid(client_id);
+    console.log(client_id);
+    tabs[currentInnerTab]["query"] = client_id;
+    setTabList(tabs);
   }
+
+  const updateInnerTabFilters = async (filters) => {
+    console.log("update inner", tabList);
+    let fullTabList = [...tabList];
+    fullTabList.map(async (t, i) => {
+      if (i != currentInnerTab) {
+        const { vis_config, fields } = await sdk.ok(
+          sdk.query_for_slug(t["query"])
+        );
+
+        const { client_id } = await sdk.ok(
+          sdk.create_query({
+            model: LOOKER_MODEL,
+            view: LOOKER_EXPLORE,
+            fields: fields,
+            filters,
+            vis_config,
+          })
+        );
+        console.log(client_id);
+        fullTabList[i]["query"] = client_id;
+        setTabList(fullTabList);
+      }
+    });
+    setIsFilterChanged(false);
+  };
+  const updateUpperVizFilters = async (filters) => {
+    console.log("update upper", upperVis);
+    let prevVisId = upperVis;
+    const { vis_config, fields } = await sdk.ok(
+      sdk.query_for_slug(prevVisId)
+    );
+
+    const { client_id } = await sdk.ok(
+      sdk.create_query({
+        model: LOOKER_MODEL,
+        view: LOOKER_EXPLORE,
+        fields: fields,
+        filters,
+        vis_config,
+      })
+    );
+    console.log(client_id);
+    setUpperVis(client_id);
+  };
 
   async function handleClearAll() {
     setIsDefaultProduct(false);
@@ -199,7 +301,12 @@ const InflationDeflation = ({
   async function handleRestoreDefault() {
     setIsDefaultProduct(defaultChecked);
     setUpdateButtonClicked(true);
+    let tabs = [...tabList];
+    let currentTab = tabs[currentInnerTab];
+    currentTab["selected_fields"] = currentTab["default_fields"];
+    setTabList(tabs);
   }
+
   useEffect((e) => {
     document.addEventListener("click", handleClickOutside, false);
     return () => {
@@ -232,11 +339,7 @@ const InflationDeflation = ({
                   <i class="far fa-bars"></i>
                 </p>
                 <p className="m-0">
-                  <span className="noMobile">
-                    Inflation/
-                    <br />
-                    Deflation Filters
-                  </span>
+                  <span className="noMobile">Product Filters</span>
                 </p>
               </div>
             </div>
@@ -300,6 +403,7 @@ const InflationDeflation = ({
                                 setIsDefault={setIsDefaultProduct}
                                 updateBtn={updateButtonClicked}
                                 setUpdateBtn={setUpdateButtonClicked}
+                                setIsFilterChanged={setIsFilterChanged}
                               />
                             </Accordion.Body>
                           </Accordion.Item>
@@ -311,10 +415,13 @@ const InflationDeflation = ({
                             <Accordion.Body>
                               <Fields
                                 fieldOptions={fieldOptions}
-                                selectedFields={selectedFields}
-                                setSelectedFields={setSelectedFields}
-                                isDefault={isDefaultProduct}
-                                setIsDefault={setIsDefaultProduct}
+                                setTabList={setTabList}
+                                tabList={tabList}
+                                currentInnerTab={currentInnerTab}
+                                // selectedFields={selectedFields}
+                                // setSelectedFields={setSelectedFields}
+                                // isDefault={isDefaultProduct}
+                                // setIsDefault={setIsDefaultProduct}
                                 updateBtn={updateButtonClicked}
                                 setUpdateBtn={setUpdateButtonClicked}
                               />
@@ -346,7 +453,11 @@ const InflationDeflation = ({
                     type="search"
                     class="form-control"
                   />
-                  <Button onClick={handleVisUpdate} className="btn mw200">
+                  <Button
+                    onClick={handleTabVisUpdate}
+                    // onClick={handleVisUpdate}
+                    className="btn mw200"
+                  >
                     Submit Values
                   </Button>
                 </div>
@@ -378,29 +489,37 @@ const InflationDeflation = ({
                 setSelectedFields={setSelectedFields}
                 filterOptions={filterOptions}
                 setSelectedFilters={setSelectedFilters}
-                selectedDateFilter={selectedDateFilter}
                 dateFilterOptions={dateFilterOptions}
               />
-              <p className="mt-5">
+              <p className="mt-5 mb-5">
                 Total Invoice: <span className="highlight large">17</span>
+                <EmbedTable queryId={upperVis}/>
               </p>
             </Col>
 
             <Col xs={12} md={7}>
-              <div class="wrapFilters">
-                <DateFilterGroup
-                  dateFilterOptions={dateFilterOptions}
-                  setSelectedDateFilter={setSelectedDateFilter}
-                  selectedDateFilter={selectedDateFilter}
-                />
-              </div>
-
-              <DateContainer />
+              <DateRangeSelector
+                selectedDateRange={selectedDateRange}
+                setSelectedDateRange={setSelectedDateRange}
+                setSelectedDateFilter={setSelectedDateFilter}
+              />
+              <DateFilterGroup
+                dateFilterOptions={dateFilterOptions}
+                setSelectedDateFilter={setSelectedDateFilter}
+                selectedDateFilter={selectedDateFilter}
+              />
             </Col>
           </Row>
 
           <Row className="mt-3 mb-3">
-            <Col md={12}></Col>
+            <Col md={12}>
+              <InnerTableTabs
+                tabs={tabList}
+                setSelectedFields={setSelectedFields}
+                currentInnerTab={currentInnerTab}
+                setCurrentInnerTab={setCurrentInnerTab}
+              />
+            </Col>
           </Row>
         </>
       )}
