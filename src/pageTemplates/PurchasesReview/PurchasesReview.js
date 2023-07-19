@@ -7,6 +7,8 @@ import {
   OverlayTrigger,
   Row,
   Spinner,
+  Tab,
+  Tabs,
   Tooltip,
 } from "react-bootstrap";
 
@@ -16,12 +18,6 @@ import {
   PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
 } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
-import PurchasesTable1 from "../../components/PurchasesTable/PurchasesTable1";
-import PurchasesTable2 from "../../components/PurchasesTable/PurchasesTable2";
-import PurchasesTable3 from "../../components/PurchasesTable/PurchasesTable3";
-import PurchasesTable4 from "../../components/PurchasesTable/PurchasesTable4";
-import PurchasesTable5 from "../../components/PurchasesTable/PurchasesTable5";
-import PurchasesTable6 from "../../components/PurchasesTable/PurchasesTable6";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
 import DateContainer from "./helpers/DateContainer";
@@ -29,6 +25,7 @@ import Rx from "./helpers/Rx";
 import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
+import EmbedTable from "../../components/EmbedTable";
 
 const PurchasesReview = ({
   selectedFilters,
@@ -42,11 +39,6 @@ const PurchasesReview = ({
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
-  const [slide, setSlide] = useState();
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const [showModal, setShowModal] = useState(false);
   const [show3, setShow3] = useState();
   const [active, setActive] = useState(false);
   const [faClass, setFaClass] = useState(true);
@@ -56,7 +48,6 @@ const PurchasesReview = ({
   const defaultChecked = true;
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
-  const [defaults, setDefaults] = useState({});
   function handleClearAll() {}
 
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
@@ -404,11 +395,24 @@ const PurchasesReview = ({
 
           <Row className="mt-3 mb-3">
             <Col md={4}>
-              <PurchasesTable1 productMovementVisQid={productMovementVisQid} />
-              <PurchasesTable2 productMovementVisQid={productMovementVisQid} />
+              <Container fluid className="padding-0 innerTab smallerHeight">
+                <EmbedTable queryId={productMovementVisQid} />
+              </Container>
+              <Container fluid className="padding-0 innerTab smallerHeight">
+                <EmbedTable queryId={productMovementVisQid} />
+              </Container>
             </Col>
             <Col md={8}>
-              <PurchasesTable3 productMovementVisQid={productMovementVisQid} />
+              <Container fluid className="padding-0 innerTab middleHeight">
+                <Tabs defaultActiveKey="comparison" className="inner" fill>
+                  <Tab eventKey="comparison" title="Trade/Generic Name">
+                    <EmbedTable queryId={productMovementVisQid} />
+                  </Tab>
+                  <Tab eventKey="AHFS/Fineline" title="AHFS/Fineline"></Tab>
+                  <Tab eventKey="GPI" title="GPI"></Tab>
+                  <Tab eventKey="manufacturer" title="Manufacturer"></Tab>
+                </Tabs>
+              </Container>
             </Col>
           </Row>
 
@@ -419,12 +423,25 @@ const PurchasesReview = ({
                 use the <span className="highlight">Fast Change</span> chart to
                 review values.
               </p>
-              <PurchasesTable5 productMovementVisQid={productMovementVisQid} />
-              <PurchasesTable6 productMovementVisQid={productMovementVisQid} />
+              <Container fluid className="padding-0 innerTab smallerHeight">
+                <EmbedTable queryId={productMovementVisQid} />
+              </Container>
+              <Container fluid className="padding-0 innerTab smallerHeight">
+                <EmbedTable queryId={productMovementVisQid} />
+              </Container>
             </Col>
 
             <Col md={8}>
-              <PurchasesTable4 productMovementVisQid={productMovementVisQid} />
+              <Container fluid className="padding-0 innerTab">
+                <Tabs defaultActiveKey="comparison" className="inner" fill>
+                  <Tab eventKey="comparison" title="Monthly Comparison">
+                    <EmbedTable queryId={productMovementVisQid} />
+                  </Tab>
+                  <Tab eventKey="summary" title="Monthly Summary"></Tab>
+                  <Tab eventKey="invoice" title="Invoice Summary"></Tab>
+                  <Tab eventKey="price" title="Top Price Change"></Tab>
+                </Tabs>
+              </Container>
             </Col>
           </Row>
         </>
