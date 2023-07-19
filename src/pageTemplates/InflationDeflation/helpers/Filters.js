@@ -28,6 +28,7 @@ const Filters = ({
   setSelectedFilters,
   isDefault,
   setIsDefault,
+  setIsFilterChanged
 }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -39,6 +40,7 @@ const Filters = ({
       newFilters[filterName] = newValue;
       return newFilters;
     });
+    setIsFilterChanged(true)
   }
 
   return (

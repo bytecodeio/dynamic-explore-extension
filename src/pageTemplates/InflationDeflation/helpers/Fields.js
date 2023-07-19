@@ -1,30 +1,42 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
-const Fields = ({ fieldOptions, selectedFields, setSelectedFields, isDefault, setIsDefault, updateBtn, setUpdateBtn }) => {
+const Fields = ({ fieldOptions, setTabList, tabList, currentInnerTab, updateBtn, setUpdateBtn }) => {
 
 
   function handleFieldSelection(fieldName) {
     setUpdateBtn(false)
-    setSelectedFields((prev) => {
-      if (prev.includes(fieldName)) {
-        return prev.filter((selectedFilter) => selectedFilter !== fieldName);
-      } else {
-        return [...prev, fieldName];
-      }
-    });
+    let tabs = [...tabList];
+    let currentTab = tabs[currentInnerTab];
+    console.log(currentTab)
+     if (currentTab['selected_fields'].includes(fieldName)) {
+        let index = currentTab['selected_fields'].indexOf(fieldName);
+        currentTab['selected_fields'].splice(index,1)
+     } else {
+       currentTab['selected_fields'].push(fieldName)
+     }
+     setTabList(tabs)
+
+    // setSelectedFields((prev) => {
+    //   if (prev.includes(fieldName)) {
+    //     return prev.filter((selectedFilter) => selectedFilter !== fieldName);
+    //   } else {
+    //     return [...prev, fieldName];
+    //   }
+    // });
   }
 
   return (
     <div class="wrapFilters">
       {fieldOptions.map((fieldOption) => (
+
         <div className="one" key={fieldOption.name}>
           <Form.Group>
             <Form.Check
               type="checkbox"
               className=""
               label={fieldOption.label_short}
-              checked={updateBtn ? isDefault : selectedFields.includes(fieldOption.name)}
+              checked={tabList[currentInnerTab]['selected_fields'].includes(fieldOption.name)}
               name="Fields"
               value={fieldOption.fields}
               onClick={() => handleFieldSelection(fieldOption.name)}
