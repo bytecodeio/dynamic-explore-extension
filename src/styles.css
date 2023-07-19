@@ -768,8 +768,13 @@ a:hover{
   background: black
 }
 
-
-
+.dark-mode h5 {
+  color:white
+}
+.dark-mode #slideOut1 .form-check label,
+.dark-mode #slideOut1 .one .form-check label{
+    color:white
+}
 
 .card {
   display: flex;
@@ -5391,7 +5396,8 @@ a.white:hover{
 }
 
 .show3  .modal-body{
-  max-height: 630px;
+  /* max-height: 630px; */
+  max-height: 592px;
   overflow-y: auto;
 }
 .show3  .modal-header .close:hover{
@@ -5413,12 +5419,11 @@ a.white:hover{
 
 .show3  .modal-footer .form-control,
 .show3  .modal-body .form-control{
-  min-width: unset;
+
   padding: 0.85em;
-  /* max-width: 192px; */
-  /* margin: 0em 0.25em; */
-  margin-left: 0.5em;
-  max-width: 193px;
+  min-width: 100%;
+  margin: 0.5em 0em;
+
 
 }
 
@@ -6477,6 +6482,11 @@ opacity:1
   z-index: 99999999999999 !important;
 }
 
+
+.showRight {
+  right: 0px !important;
+  z-index: 99999999999999 !important;
+}
 
 
 

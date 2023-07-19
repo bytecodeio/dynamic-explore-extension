@@ -43,7 +43,7 @@ function SideForm(props) {
 
 
 
-  <div id="slideOut1" className={show ? "show" : ""} ref={wrapperRef}>
+  <div id="slideOut1" className={show ? "showRight" : ""} ref={wrapperRef}>
     <div className="slideOutTab1">
       <div id="one1" className="openTab bottomShadow" role="button" tabindex="0"  onClick={() => setShow(true)}>
 
