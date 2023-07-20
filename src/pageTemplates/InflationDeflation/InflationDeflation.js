@@ -486,10 +486,13 @@ const InflationDeflation = ({
                 setSelectedFilters={setSelectedFilters}
                 dateFilterOptions={dateFilterOptions}
               />
-              <p className="mt-5 mb-5">
-                Total Invoice: <span className="highlight large">17</span>
+              <div className="mt-5 mb-5">
+                <p>
+                  Total Invoice: <span className="highlight large">17</span>
+                </p>
+
                 <EmbedTable queryId={upperVis} />
-              </p>
+              </div>
             </Col>
 
             <Col xs={12} md={7}>
