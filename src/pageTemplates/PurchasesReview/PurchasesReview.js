@@ -223,7 +223,7 @@ const PurchasesReview = ({
                 id="one3"
                 className="openTab bottomShadow"
                 role="button"
-                tabindex="0"
+                tabIndex="0"
                 onClick={() => setShow3(true)}
               >
                 <p className="black m-0 mb-2">

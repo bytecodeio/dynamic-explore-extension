@@ -39,7 +39,7 @@ const InflationDeflation = ({
   dateRange,
   tabKey,
   lowerDashboardId,
-  upperDashboardId
+  upperDashboardId,
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -61,7 +61,7 @@ const InflationDeflation = ({
   const [tabList, setTabList] = useState([]);
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
-  const [upperVis, setUpperVis] = useState()
+  const [upperVis, setUpperVis] = useState();
   function handleClearAll() {}
 
   useEffect(() => {
@@ -116,8 +116,8 @@ const InflationDeflation = ({
       sdk.dashboard(upperDashboardId, "dashboard_elements")
     );
     console.log("dash el", dashboard_elements);
-    setUpperVis(dashboard_elements[0].result_maker.query.client_id)
-  }
+    setUpperVis(dashboard_elements[0].result_maker.query.client_id);
+  };
 
   // Fetch the suggestions for each filter field, after fetching all filter fields
   const [isFetchingFilterSuggestions, setIsFetchingFilterSuggestions] =
@@ -228,7 +228,7 @@ const InflationDeflation = ({
 
     if (isFilterChanged) {
       updateInnerTabFilters(filters);
-      updateUpperVizFilters(filters)
+      updateUpperVizFilters(filters);
     }
 
     const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
@@ -275,9 +275,7 @@ const InflationDeflation = ({
   const updateUpperVizFilters = async (filters) => {
     console.log("update upper", upperVis);
     let prevVisId = upperVis;
-    const { vis_config, fields } = await sdk.ok(
-      sdk.query_for_slug(prevVisId)
-    );
+    const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(prevVisId));
 
     const { client_id } = await sdk.ok(
       sdk.create_query({
@@ -332,7 +330,7 @@ const InflationDeflation = ({
                 id="one3"
                 className="openTab bottomShadow"
                 role="button"
-                tabindex="0"
+                tabIndex="0"
                 onClick={() => setShow3(true)}
               >
                 <p className="black m-0 mb-2">
@@ -493,7 +491,7 @@ const InflationDeflation = ({
               />
               <p className="mt-5 mb-5">
                 Total Invoice: <span className="highlight large">17</span>
-                <EmbedTable queryId={upperVis}/>
+                <EmbedTable queryId={upperVis} />
               </p>
             </Col>
 

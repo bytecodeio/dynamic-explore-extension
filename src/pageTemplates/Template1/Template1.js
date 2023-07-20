@@ -1,5 +1,39 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import { Accordion, AccordionButton, AccordionCollapse, AccordionContext, Button, ButtonGroup, ButtonToolbar, CloseButton, Col, Collapse, Container, Form, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, FormText, Image, InputGroup, Overlay, OverlayTrigger, Row, Spinner, Tab, TabContainer, TabContent, TabPane, Table, Tabs, ToggleButton, ToggleButtonGroup, Tooltip } from 'react-bootstrap';
+import {
+  Accordion,
+  AccordionButton,
+  AccordionCollapse,
+  AccordionContext,
+  Button,
+  ButtonGroup,
+  ButtonToolbar,
+  CloseButton,
+  Col,
+  Collapse,
+  Container,
+  Form,
+  FormCheck,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  FormSelect,
+  FormText,
+  Image,
+  InputGroup,
+  Overlay,
+  OverlayTrigger,
+  Row,
+  Spinner,
+  Tab,
+  TabContainer,
+  TabContent,
+  TabPane,
+  Table,
+  Tabs,
+  ToggleButton,
+  ToggleButtonGroup,
+  Tooltip,
+} from "react-bootstrap";
 import { LOOKER_MODEL, LOOKER_EXPLORE } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -12,7 +46,23 @@ import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
-const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOptions, dateFilterOptions, fieldOptions, isFetchingLookmlFields, selectedDateFilter, setSelectedDateFilter, selectedDateRange, setSelectedDateRange, dateRange, tabKey, dashboardId, slideIt}) => {
+const Template1 = ({
+  currentNavTab,
+  selectedFilters,
+  setSelectedFilters,
+  filterOptions,
+  dateFilterOptions,
+  fieldOptions,
+  isFetchingLookmlFields,
+  selectedDateFilter,
+  setSelectedDateFilter,
+  selectedDateRange,
+  setSelectedDateRange,
+  dateRange,
+  tabKey,
+  dashboardId,
+  slideIt,
+}) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
   const [slide, setSlide] = useState();
@@ -267,29 +317,52 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
         <Spinner />
       ) : (
         <>
-        <div id="slideOut3" className={show3 ? "" : "show3"} ref={wrapperRef}>
-        <div className="slideOutTab3">
-          <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
-          onClick={() => {setShow3(false);slideIt();}}>
-            <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
-            <p className="m-0"><span className="noMobile">Product Filters</span></p>
+          <div id="slideOut3" className={show3 ? "" : "show3"} ref={wrapperRef}>
+            <div className="slideOutTab3">
+              <div
+                id="one3"
+                className="openTab bottomShadow"
+                role="button"
+                tabIndex="0"
+                onClick={() => {
+                  setShow3(false);
+                  slideIt();
+                }}
+              >
+                <p className="black m-0 mb-2">
+                  <i class="far fa-bars"></i>
+                </p>
+                <p className="m-0">
+                  <span className="noMobile">Product Filters</span>
+                </p>
               </div>
             </div>
 
             <div className="modal-content">
               <div className="modal-header">
-              <OverlayTrigger
-                placement="right"
-                overlay={renderTooltip}
-                className="tooltipHover">
-                  <p className="pb-1">Filter Options <i class="fal fa-info-circle red"></i></p>
-              </OverlayTrigger>
+                <OverlayTrigger
+                  placement="right"
+                  overlay={renderTooltip}
+                  className="tooltipHover"
+                >
+                  <p className="pb-1">
+                    Filter Options <i class="fal fa-info-circle red"></i>
+                  </p>
+                </OverlayTrigger>
                 <div className="closeThisPlease" id="close1">
-                <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1"
-                  onClick={() => {setShow3(true);slideIt();}}>
-                  {/*onClick={() => setShow3(false)}>*/}
-                  &#10005;
-                </Button>
+                  <Button
+                    role="button"
+                    className="close"
+                    data-dismiss="modal"
+                    id="closeThisPlease1"
+                    onClick={() => {
+                      setShow3(true);
+                      slideIt();
+                    }}
+                  >
+                    {/*onClick={() => setShow3(false)}>*/}
+                    &#10005;
+                  </Button>
                 </div>
               </div>
               <div className="modal-body">
@@ -366,35 +439,35 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
                 </Accordion>
 
                 <div className="d-flex flex-column justify-content-center align-items-center mt-3 mb-3">
+                  <Button onClick={handleTabVisUpdate} className="btn">
+                    Submit Values
+                  </Button>
+                  <input
+                    placeholder="Top % Products"
+                    type="search"
+                    class="form-control"
+                  />
+                  <input
+                    placeholder="Search Filter"
+                    type="search"
+                    class="form-control"
+                  />
+                </div>
 
+                <div className="lineAcross"></div>
 
-                    <Button
-                      onClick={handleTabVisUpdate}
-                      className="btn">Submit Values
-                    </Button>
-                    <input placeholder="Top % Products" type="search" class="form-control" />
-                    <input placeholder="Search Filter" type="search" class="form-control" />
-
-               </div>
-
-              <div className="lineAcross"></div>
-
-              <div className="d-flex flex-column justify-content-between mt-3 pt-3">
+                <div className="d-flex flex-column justify-content-between mt-3 pt-3">
                   <Button onClick={handleRestoreDefault} className="btn-clear">
                     Restore Default <i class="fal fa-undo"></i>
                   </Button>
-                    <Button
-                    className="btn-clear">Print <i class="fal fa-print"></i>
-                   </Button>
-                  <Button
-                    onClick={handleClearAll} className="btn">Clear All
+                  <Button className="btn-clear">
+                    Print <i class="fal fa-print"></i>
                   </Button>
-                  </div>
-
-
+                  <Button onClick={handleClearAll} className="btn">
+                    Clear All
+                  </Button>
+                </div>
               </div>
-
-
             </div>
           </div>
 
