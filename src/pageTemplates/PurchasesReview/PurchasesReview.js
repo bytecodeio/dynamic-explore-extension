@@ -7,6 +7,8 @@ import {
   OverlayTrigger,
   Row,
   Spinner,
+  Tab,
+  Tabs,
   Tooltip,
 } from "react-bootstrap";
 
@@ -16,12 +18,6 @@ import {
   PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
 } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
-import PurchasesTable1 from "../../components/PurchasesTable/PurchasesTable1";
-import PurchasesTable2 from "../../components/PurchasesTable/PurchasesTable2";
-import PurchasesTable3 from "../../components/PurchasesTable/PurchasesTable3";
-import PurchasesTable4 from "../../components/PurchasesTable/PurchasesTable4";
-import PurchasesTable5 from "../../components/PurchasesTable/PurchasesTable5";
-import PurchasesTable6 from "../../components/PurchasesTable/PurchasesTable6";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
 import DateContainer from "./helpers/DateContainer";
@@ -29,6 +25,7 @@ import Rx from "./helpers/Rx";
 import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
+import EmbedTable from "../../components/EmbedTable";
 
 const PurchasesReview = ({
   selectedFilters,
@@ -42,21 +39,12 @@ const PurchasesReview = ({
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
-  const [slide, setSlide] = useState();
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const [showModal, setShowModal] = useState(false);
   const [show3, setShow3] = useState();
-  const [active, setActive] = useState(false);
-  const [faClass, setFaClass] = useState(true);
-  const [toggle, setToggle] = useState(true);
   const [selectedFields, setSelectedFields] = useState([]);
   const [productMovementVisQid, setProductMovementVisQid] = useState();
   const defaultChecked = true;
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
-  const [defaults, setDefaults] = useState({});
   function handleClearAll() {}
 
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
@@ -149,16 +137,6 @@ const PurchasesReview = ({
     }
   }, [isFetchingDefaultDashboard, isFetchingLookmlFields]);
 
-  const handleClick = () => {
-    setToggle(!toggle);
-
-    setTimeout(() => {
-      setActive(!active);
-
-      setFaClass(!faClass);
-    }, 600);
-  };
-
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       These are the filters you use to query data. Select the accordions
@@ -232,11 +210,11 @@ const PurchasesReview = ({
                 id="one3"
                 className="openTab bottomShadow"
                 role="button"
-                tabindex="0"
+                tabIndex="0"
                 onClick={() => setShow3(true)}
               >
                 <p className="black m-0 mb-2">
-                  <i class="far fa-bars"></i>
+                  <i className="far fa-bars"></i>
                 </p>
                 <p className="m-0">
                   <span className="noMobile">Purchases Filters</span>
@@ -252,7 +230,7 @@ const PurchasesReview = ({
                   className="tooltipHover"
                 >
                   <p className="pb-1">
-                    Filter Options <i class="fal fa-info-circle red"></i>
+                    Filter Options <i className="fal fa-info-circle red"></i>
                   </p>
                 </OverlayTrigger>
                 <div className="closeThisPlease" id="close1">
@@ -342,12 +320,12 @@ const PurchasesReview = ({
                   <input
                     placeholder="Search Filter"
                     type="search"
-                    class="form-control"
+                    className="form-control"
                   />
                   <input
                     placeholder="Top % Products"
                     type="search"
-                    class="form-control"
+                    className="form-control"
                   />
                   <Button onClick={handleVisUpdate} className="btn mw200">
                     Submit Values
@@ -358,10 +336,10 @@ const PurchasesReview = ({
 
                 <div className="d-flex justify-content-between mt-3 pt-3">
                   <Button onClick={handleRestoreDefault} className="btn-clear">
-                    Restore Default <i class="fal fa-undo"></i>
+                    Restore Default <i className="fal fa-undo"></i>
                   </Button>
                   <Button className="btn-clear">
-                    Print <i class="fal fa-print"></i>
+                    Print <i className="fal fa-print"></i>
                   </Button>
                   <Button onClick={handleClearAll} className="btn">
                     Clear All
@@ -390,7 +368,7 @@ const PurchasesReview = ({
             </Col>
 
             <Col xs={12} md={7}>
-              <div class="wrapFilters">
+              <div className="wrapFilters">
                 <DateFilterGroup
                   dateFilterOptions={dateFilterOptions}
                   setSelectedDateFilter={setSelectedDateFilter}
@@ -404,11 +382,24 @@ const PurchasesReview = ({
 
           <Row className="mt-3 mb-3">
             <Col md={4}>
-              <PurchasesTable1 productMovementVisQid={productMovementVisQid} />
-              <PurchasesTable2 productMovementVisQid={productMovementVisQid} />
+              <Container fluid className="padding-0 innerTab smallerHeight">
+                <EmbedTable queryId={productMovementVisQid} />
+              </Container>
+              <Container fluid className="padding-0 innerTab smallerHeight">
+                <EmbedTable queryId={productMovementVisQid} />
+              </Container>
             </Col>
             <Col md={8}>
-              <PurchasesTable3 productMovementVisQid={productMovementVisQid} />
+              <Container fluid className="padding-0 innerTab middleHeight">
+                <Tabs defaultActiveKey="comparison" className="inner" fill>
+                  <Tab eventKey="comparison" title="Trade/Generic Name">
+                    <EmbedTable queryId={productMovementVisQid} />
+                  </Tab>
+                  <Tab eventKey="AHFS/Fineline" title="AHFS/Fineline"></Tab>
+                  <Tab eventKey="GPI" title="GPI"></Tab>
+                  <Tab eventKey="manufacturer" title="Manufacturer"></Tab>
+                </Tabs>
+              </Container>
             </Col>
           </Row>
 
@@ -419,12 +410,25 @@ const PurchasesReview = ({
                 use the <span className="highlight">Fast Change</span> chart to
                 review values.
               </p>
-              <PurchasesTable5 productMovementVisQid={productMovementVisQid} />
-              <PurchasesTable6 productMovementVisQid={productMovementVisQid} />
+              <Container fluid className="padding-0 innerTab smallerHeight">
+                <EmbedTable queryId={productMovementVisQid} />
+              </Container>
+              <Container fluid className="padding-0 innerTab smallerHeight">
+                <EmbedTable queryId={productMovementVisQid} />
+              </Container>
             </Col>
 
             <Col md={8}>
-              <PurchasesTable4 productMovementVisQid={productMovementVisQid} />
+              <Container fluid className="padding-0 innerTab">
+                <Tabs defaultActiveKey="comparison" className="inner" fill>
+                  <Tab eventKey="comparison" title="Monthly Comparison">
+                    <EmbedTable queryId={productMovementVisQid} />
+                  </Tab>
+                  <Tab eventKey="summary" title="Monthly Summary"></Tab>
+                  <Tab eventKey="invoice" title="Invoice Summary"></Tab>
+                  <Tab eventKey="price" title="Top Price Change"></Tab>
+                </Tabs>
+              </Container>
             </Col>
           </Row>
         </>

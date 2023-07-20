@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 
-
-function Footer(props) {
+function Footer() {
   return (
     <footer>
-      <img className="img-fluid mt-4" src="https://ixd-studio.wesdemo.com/wesinfo/images/white-logo.png" />
-  </footer>
-
+      <img
+        className="img-fluid mt-4"
+        src="https://ixd-studio.wesdemo.com/wesinfo/images/white-logo.png"
+      />
+    </footer>
   );
 }
-
 
 export default Footer;

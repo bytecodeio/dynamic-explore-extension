@@ -3,11 +3,8 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 
 const NavbarMain = () => {
-  const { extensionSDK, core40SDK } = useContext(ExtensionContext);
+  const { core40SDK } = useContext(ExtensionContext);
   const [message, setMessage] = useState();
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   useEffect(() => {
     const initialize = async () => {
@@ -35,7 +32,7 @@ const NavbarMain = () => {
 
       <Navbar collapseOnSelect expand="lg">
         <Container fluid>
-          <a href="" target="_blank" class="mneg5"></a>
+          <a href="" target="_blank" className="mneg5"></a>
 
           <div className="white-logo"></div>
 
@@ -48,7 +45,7 @@ const NavbarMain = () => {
                   <i className={faClass ? "far fa-moon" : "far fa-sun"}></i>
                 </a>
 
-                <i class="fal fa-user me-1 blue"></i>
+                <i className="fal fa-user me-1 blue"></i>
                 <a href="#login" className="me-2 blue">
                   {message}
                 </a>
