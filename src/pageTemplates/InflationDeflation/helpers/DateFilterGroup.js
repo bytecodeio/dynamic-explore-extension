@@ -45,7 +45,7 @@ export const DateFilterGroup = ({
                     id={filter["name"]}
                     type="radio"
                     name="filters"
-                    onClick={handleSelection}
+                    onChange={handleSelection}
                     label={filter["label_short"].replace("(Yes / No)", "")}
                   />
                 </Form.Group>

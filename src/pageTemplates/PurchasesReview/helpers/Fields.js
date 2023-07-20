@@ -37,7 +37,7 @@ const Fields = ({
               }
               name="Fields"
               value={fieldOption.fields}
-              onClick={() => handleFieldSelection(fieldOption.name)}
+              onChange={() => handleFieldSelection(fieldOption.name)}
             />
           </Form.Group>
         </div>
