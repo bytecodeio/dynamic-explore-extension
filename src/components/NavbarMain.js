@@ -35,7 +35,7 @@ const NavbarMain = () => {
 
       <Navbar collapseOnSelect expand="lg">
         <Container fluid>
-          <a href="" target="_blank" class="mneg5"></a>
+          <a href="" target="_blank" className="mneg5"></a>
 
           <div className="white-logo"></div>
 
@@ -48,7 +48,7 @@ const NavbarMain = () => {
                   <i className={faClass ? "far fa-moon" : "far fa-sun"}></i>
                 </a>
 
-                <i class="fal fa-user me-1 blue"></i>
+                <i className="fal fa-user me-1 blue"></i>
                 <a href="#login" className="me-2 blue">
                   {message}
                 </a>

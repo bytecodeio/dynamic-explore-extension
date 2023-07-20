@@ -342,7 +342,7 @@ const ProductMovement = ({
                 }}
               >
                 <p className="black m-0 mb-2">
-                  <i class="far fa-bars"></i>
+                  <i className="far fa-bars"></i>
                 </p>
                 <p className="m-0">
                   <span className="noMobile">Product Filters</span>
@@ -358,7 +358,7 @@ const ProductMovement = ({
                   className="tooltipHover"
                 >
                   <p className="pb-1">
-                    Filter Options <i class="fal fa-info-circle red"></i>
+                    Filter Options <i className="fal fa-info-circle red"></i>
                   </p>
                 </OverlayTrigger>
                 <div className="closeThisPlease" id="close1">
@@ -451,8 +451,8 @@ const ProductMovement = ({
                 </Accordion>
 
                 <div className="d-flex flex-column justify-content-center align-items-center mt-3 mb-3">
-                  {/*<input placeholder="Search Filter" type="search" class="form-control" />*/}
-                  {/*<input placeholder="Top % Products" type="search" class="form-control" />*/}
+                  {/*<input placeholder="Search Filter" type="search" className="form-control" />*/}
+                  {/*<input placeholder="Top % Products" type="search" className="form-control" />*/}
                   <Button
                     onClick={handleTabVisUpdate}
                     // onClick={handleVisUpdate}
@@ -466,10 +466,10 @@ const ProductMovement = ({
 
                 <div className="d-flex flex-column justify-content-between mt-3 pt-3">
                   <Button onClick={handleRestoreDefault} className="btn-clear">
-                    Restore Default <i class="fal fa-undo"></i>
+                    Restore Default <i className="fal fa-undo"></i>
                   </Button>
                   <Button className="btn-clear">
-                    Print <i class="fal fa-print"></i>
+                    Print <i className="fal fa-print"></i>
                   </Button>
                   <Button onClick={handleClearAll} className="btn">
                     Clear All

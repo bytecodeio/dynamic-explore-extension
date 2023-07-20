@@ -330,7 +330,7 @@ const Template1 = ({
                 }}
               >
                 <p className="black m-0 mb-2">
-                  <i class="far fa-bars"></i>
+                  <i className="far fa-bars"></i>
                 </p>
                 <p className="m-0">
                   <span className="noMobile">Product Filters</span>
@@ -346,7 +346,7 @@ const Template1 = ({
                   className="tooltipHover"
                 >
                   <p className="pb-1">
-                    Filter Options <i class="fal fa-info-circle red"></i>
+                    Filter Options <i className="fal fa-info-circle red"></i>
                   </p>
                 </OverlayTrigger>
                 <div className="closeThisPlease" id="close1">
@@ -445,12 +445,12 @@ const Template1 = ({
                   <input
                     placeholder="Top % Products"
                     type="search"
-                    class="form-control"
+                    className="form-control"
                   />
                   <input
                     placeholder="Search Filter"
                     type="search"
-                    class="form-control"
+                    className="form-control"
                   />
                 </div>
 
@@ -458,10 +458,10 @@ const Template1 = ({
 
                 <div className="d-flex flex-column justify-content-between mt-3 pt-3">
                   <Button onClick={handleRestoreDefault} className="btn-clear">
-                    Restore Default <i class="fal fa-undo"></i>
+                    Restore Default <i className="fal fa-undo"></i>
                   </Button>
                   <Button className="btn-clear">
-                    Print <i class="fal fa-print"></i>
+                    Print <i className="fal fa-print"></i>
                   </Button>
                   <Button onClick={handleClearAll} className="btn">
                     Clear All

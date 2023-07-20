@@ -125,21 +125,21 @@ function SideForm(props) {
             onClick={() => setShow(true)}
           >
             <p className="black">
-              <i class="fal fa-book"></i>&nbsp;
+              <i className="fal fa-book"></i>&nbsp;
               <span className="noMobile">Glossary</span>
             </p>
           </div>
 
           <div
             id="two"
-            class="openTab bottomShadow"
+            className="openTab bottomShadow"
             data-dismiss="modal"
             aria-controls="right-nav-contact"
             onClick={handleClick2}
           >
-            <p class="black">
-              <i aria-hidden="true" class="fal fa-info-circle"></i>&nbsp;
-              <span class="noMobile">How To</span>
+            <p className="black">
+              <i aria-hidden="true" className="fal fa-info-circle"></i>&nbsp;
+              <span className="noMobile">How To</span>
             </p>
           </div>
         </div>

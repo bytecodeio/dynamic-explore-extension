@@ -24,7 +24,7 @@ function ToTopButton() {
     <div>
       {isVisible && (
         <button className="scroll-top" onClick={scrollToTop}>
-          <i class="fal fa-angle-up"></i>
+          <i className="fal fa-angle-up"></i>
         </button>
       )}
     </div>

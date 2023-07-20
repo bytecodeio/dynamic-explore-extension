@@ -31,8 +31,8 @@ function TopNav(props) {
             tabIndex="0"
             onClick={() => setShow5(true)}
           >
-            <p class="blue">
-              <i aria-hidden="true" class="far fa-arrow-left"></i> View All
+            <p className="blue">
+              <i aria-hidden="true" className="far fa-arrow-left"></i> View All
               Reports
             </p>
           </div>
@@ -49,7 +49,7 @@ function TopNav(props) {
                 id="closeThisPlease1"
                 onClick={() => setShow5(false)}
               >
-                <i class="fal fa-angle-double-left"></i>
+                <i className="fal fa-angle-double-left"></i>
               </Button>
             </div>
           </div>

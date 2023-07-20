@@ -15,7 +15,7 @@ const FilterDropdown = ({ handleChange, label, name, options, value }) => {
         {options?.map((optionText) => (
           <option key={optionText}> {optionText}</option>
         ))}
-      </Form.Select >
+      </Form.Select>
     </>
   );
 };
@@ -42,25 +42,21 @@ const Filters = ({
   }
 
   return (
-
-
-
-        <div class="wrapFilters">
-          {filterOptions.map((filterOption) => (
-            <div className="one" key={filterOption.name} >
-              <Form.Group>
-                <FilterDropdown
-                  handleChange={handleFilterSelection}
-                  label={filterOption.label_short}
-                  name={filterOption.name}
-                  options={filterSuggestions[filterOption.name]}
-                  value={isDefault ? selectedFilters[filterOption.name] : 'N/A'}
-                />
-              </Form.Group>
-            </div>
-          ))}
+    <div className="wrapFilters">
+      {filterOptions.map((filterOption) => (
+        <div className="one" key={filterOption.name}>
+          <Form.Group>
+            <FilterDropdown
+              handleChange={handleFilterSelection}
+              label={filterOption.label_short}
+              name={filterOption.name}
+              options={filterSuggestions[filterOption.name]}
+              value={isDefault ? selectedFilters[filterOption.name] : "N/A"}
+            />
+          </Form.Group>
         </div>
-
+      ))}
+    </div>
   );
 };
 
