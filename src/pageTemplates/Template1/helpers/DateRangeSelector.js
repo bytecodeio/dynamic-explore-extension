@@ -1,10 +1,11 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Row, Col } from 'react-bootstrap';
-export const DateRangeSelector = ({setSelectedDateRange,selectedDateRange,setSelectedDateFilter}) => {
+export const DateRangeSelector = ({ setSelectedDateRange, selectedDateRange, setSelectedDateFilter }) => {
+
+
+
     useEffect(() => {
-        console.log("split date",splitSelectedDateRange())
+        console.log("split date", splitSelectedDateRange())
     },[selectedDateRange])
     const onDateSelection = (e, type) => {
         if (type == "start") {
@@ -22,17 +23,19 @@ export const DateRangeSelector = ({setSelectedDateRange,selectedDateRange,setSel
 
     const splitSelectedDateRange = () => {
         if (selectedDateRange) {
-           return selectedDateRange.split(" to ") 
-        } 
-        return ['','']        
+           return selectedDateRange.split(" to ")
+        }
+        return ['','']
     }
 
+
 return(
-  <Row className="mt-3">
-      <Col xs={12} md={12}>
+
+  <Row className="mt-3 fullW">
+      <Col md={12} lg={12}>
         <p className="mt-0 mb-2">The <span className="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in descending order by units, filtering for controlled substances, and filtering by type or customize your report with over 40 available fields.</p>
       </Col>
-      <Col xs={12} md={7}>
+      <Col md={12} lg={7}>
       <div class="d-flex">
           <div class="columnStart mr2">
               <p className="small">Start Date</p>

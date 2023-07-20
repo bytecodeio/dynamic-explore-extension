@@ -554,6 +554,13 @@ p{
   display:flex;
   flex-wrap: wrap
 }
+
+.grid2 .one.radio {
+  min-width: 6em;
+}
+
+
+
 .counter-status p{
   font-size: 12px;
   line-height: normal;
@@ -592,12 +599,11 @@ legend {
   background: #DFEEF6;
   border-radius: 1rem;
   opacity: .9;
-  padding: 0.4em .65em;
+  padding: 0.4em .35em;
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 100px;
-
+  max-width:220px
 }
 
 .dateChoice p{
@@ -605,6 +611,9 @@ legend {
   font-weight: 400 !important
 }
 
+.dateChoice.short{
+  max-width: 100px
+}
 
 .theOptions{
   position: relative;
@@ -618,7 +627,7 @@ legend {
 
   justify-content: space-between;
   align-items: center;
-  margin-bottom: .25rem
+  margin-bottom: .25rem;
 
 }
 
@@ -773,7 +782,7 @@ a:hover{
 }
 .dark-mode #slideOut1 .form-check label,
 .dark-mode #slideOut1 .one .form-check label{
-    color:white
+  color:white
 }
 
 .card {
@@ -5131,6 +5140,7 @@ a.white:hover{
 
   z-index: 0;
   top: 288px;
+  top:221px
 }
 
 #slideOut3p,
@@ -5242,14 +5252,13 @@ a.white:hover{
 }
 
 
-
-
-
 .show .modal-content{
 
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1) !important;
 
 }
+
+
 
 
 #slideOut3legend {
@@ -5363,8 +5372,9 @@ a.white:hover{
   overflow-y: auto;
   overflow-x: hidden;
   max-width: 250px;
-
+  max-width: 345px;
 }
+
 
 #slideOut3 ::-webkit-scrollbar {
   /* width: 0px; */
@@ -5895,8 +5905,8 @@ html.dark-mode{
 
 
 .dark-mode #one5 {
-background: black;
-opacity:1
+  background: black;
+  opacity:1
 }
 
 
@@ -5967,16 +5977,16 @@ opacity:1
 }
 
 .dark-mode  #slideOut5 .accordion-header{
-    background: black !important
+  background: black !important
 }
 
 
 .dark-mode  #slideOut5 .accordion-body {
-    background: transparent !important;
+  background: transparent !important;
 
 }
 .dark-mode  #slideOut5 .accordion-body a:hover {
-    border-left: 5px solid #b13590;
+  border-left: 5px solid #b13590;
 }
 
 #slideOut5 .modal-header {
@@ -6568,4 +6578,163 @@ opacity:1
 #slideOut5 .modal-body,
 #slideOut5 .modal-content {
   padding: 0em;
+}
+
+/* elizabeth changes that I do not want */
+.across{
+  /* flex-direction: column; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin:.5em 0em
+}
+
+.across.two{
+  /* flex-direction: column; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin:.5em 0em
+}
+
+.across button,
+.across.two button{
+  width:100%
+}
+
+
+.across .form-control,
+.across.two .btn-clear{
+  min-width:40% !important;
+  width:48% !important;
+  font-size: 14px !important;
+  margin:1em .2em !important
+}
+
+.show3 .modal-body {
+  /* max-height: 630px; */
+  max-height: unset !important;
+
+}
+
+.show #slideOut3 {
+
+  top: 150px;
+}
+
+.accordion.mb-3 {
+  margin-bottom: 0rem!important;
+}
+
+.largePadding {
+  padding: 0em 5em;
+  max-width: 1900px;
+  margin: 0px auto;
+  transition: margin-inline-start .65s ease,-webkit-margin-start .45s ease;
+}
+
+
+.slideOver.largePadding {
+
+  margin-inline-start: 275px !important;
+}
+
+
+/* elizabeth changes that I do not want */
+
+
+/* tablet */
+
+@media (max-width:1024px){
+  .largePadding {
+    padding: 0em 3em;
+
+  }
+
+
+  .slideOutTab1 {
+    position: absolute;
+    top: 26%;
+  }
+
+  .show3 .modal-content{
+    max-width:215px
+  }
+
+  .slideOver.largePadding {
+    margin-inline-start: 168px !important;
+
+  }
+
+  #nav2 .nav-tabs .nav-link{
+    font-size: 15px
+  }
+  .show #slideOut3{
+    top:150px
+  }
+
+  .mneg40 {
+    margin-top: 1em;
+  }
+  .fullW .col-lg-5,
+  .fullW .col-lg-7 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .grid2 .one.radio {
+    min-width: 0em;
+  }
+
+  .fullW  p {
+    font-size: 16px;
+    margin-bottom: 1em;
+  }
+
+
+  .fullW .flex-column {
+    flex-direction: row !important;
+    justify-content: flex-start;
+    align-items: baseline;
+  }
+
+  .theOptions{
+    margin: 0em 0.5rem;
+    align-items: baseline;
+  }
+  .wrapOptions{
+    display: flex
+  }
+  .fa-times{
+    margin-left:1em
+  }
+
+}
+
+
+@media (max-width:991px){
+  #nav2 .nav-tabs .nav-link {
+    font-size: 12px;
+    padding: 0;
+  }
+
+  h3{
+    font-size: 15px
+  }
+  #nav2 .innerTab .tab-content{
+    padding:0em
+  }
+
+  .dateChoice p {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+  }
+
+
+
+  .white-logo {
+
+    position: absolute;
+    left: 0;
+  }
 }

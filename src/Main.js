@@ -144,6 +144,7 @@ export const Main = () => {
                   isFetchingLookmlFields={isFetchingLookmlFields}
                   setSelectedDateFilter={setSelectedDateFilter}
                   selectedDateFilter={selectedDateFilter}
+                
                 />
               </Tab>
               <Tab eventKey="product-movement" title="Product Movement Report">

@@ -38,6 +38,7 @@ const Fields = ({ fieldOptions, setTabList, tabList, currentInnerTab, updateBtn,
               label={fieldOption.label_short}
               checked={tabList[currentInnerTab]['selected_fields'].includes(fieldOption.name)}
               name="Fields"
+              id={fieldOption.name}
               value={fieldOption.fields}
               onClick={() => handleFieldSelection(fieldOption.name)}
             />

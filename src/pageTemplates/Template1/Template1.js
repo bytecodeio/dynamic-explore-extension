@@ -50,7 +50,7 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
       const { dashboard_elements } = await sdk.ok(
         sdk.dashboard(dashboardId, "dashboard_elements")
       );
-      console.log("dash el", dashboard_elements);
+      // console.log("dash el", dashboard_elements);
       dashboard_elements?.map((t) => {
         let { client_id } = t["result_maker"]["query"];
         setTabList((prev) => [
@@ -185,7 +185,7 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
         filters[dateRange["name"]] = selectedDateRange;
       }
     }
-    console.log("filters", filters);
+    // console.log("filters", filters);
 
     if (isFilterChanged) {
       updateInnerTabFilters(filters);
@@ -202,13 +202,13 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
         vis_config,
       })
     );
-    console.log(client_id);
+    // console.log(client_id);
     tabs[currentInnerTab]["query"] = client_id;
     setTabList(tabs);
   }
 
   const updateInnerTabFilters = async (filters) => {
-    console.log("update inner", tabList);
+    // console.log("update inner", tabList);
     let fullTabList = [...tabList];
     fullTabList.map(async (t, i) => {
       if (i != currentInnerTab) {
@@ -225,7 +225,7 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
             vis_config,
           })
         );
-        console.log(client_id);
+        // console.log(client_id);
         fullTabList[i]["query"] = client_id;
         setTabList(fullTabList);
       }
@@ -251,7 +251,7 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
   useEffect((e) => {
     document.addEventListener("click", handleClickOutside, false);
     return () => {
-      document.removeEventListener("click", handleClickOutside, false);
+    document.removeEventListener("click", handleClickOutside, false);
     };
   }, []);
 
@@ -272,7 +272,7 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
           <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
           onClick={() => {setShow3(false);slideIt();}}>
             <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
-            <p className="m-0"><span className="noMobile">Product Filters</span></p>
+            <p className="m-0"><span className="noMobile">Filter Options</span></p>
               </div>
             </div>
 
@@ -365,7 +365,7 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
                   </Row>
                 </Accordion>
 
-                <div className="d-flex flex-column justify-content-center align-items-center mt-3 mb-3">
+                <div className="across">
 
 
                     <Button
@@ -379,7 +379,7 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
 
               <div className="lineAcross"></div>
 
-              <div className="d-flex flex-column justify-content-between mt-3 pt-3">
+              <div className="across two">
                   <Button onClick={handleRestoreDefault} className="btn-clear">
                     Restore Default <i class="fal fa-undo"></i>
                   </Button>
@@ -398,8 +398,8 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
             </div>
           </div>
 
-          <Row>
-            <Col xs={12} md={5}>
+          <Row className="fullW">
+            <Col md={12} lg={5}>
               <CurrentSelection
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
@@ -409,13 +409,14 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
                 filterOptions={filterOptions}
                 setSelectedFilters={setSelectedFilters}
                 dateFilterOptions={dateFilterOptions}
+                selectedDateRange={selectedDateRange}
               />
               <p className="mt-5">
                 Total Invoice: <span className="highlight large">17</span>
               </p>
             </Col>
 
-            <Col xs={12} md={7}>
+            <Col md={12} lg={7}>
               <DateRangeSelector
                 selectedDateRange={selectedDateRange}
                 setSelectedDateRange={setSelectedDateRange}

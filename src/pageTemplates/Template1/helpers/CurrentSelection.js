@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
 
-export const CurrentSelection = ({selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions}) => {
+export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter }) => {
   const [currentSelection, setCurrentSelection] = useState([])
   const [filterSelection, setFilterSelection] = useState([])
 
@@ -25,7 +25,7 @@ export const CurrentSelection = ({selectedDateFilter, selectedFilters, setSelect
       }
     }
     setFilterSelection(filterObj)
-    //
+
     // for (const filter in selectedFields) {
     //     if (selectedFields[filter] !== "") {
     //       const option1 = fieldOptions.find(option1 => option1.name === selectedFields[filter]);
@@ -58,7 +58,7 @@ export const CurrentSelection = ({selectedDateFilter, selectedFilters, setSelect
     // }
 
     setCurrentSelection(currentSelectionObj)
-  },[selectedDateFilter, dateFilterOptions, selectedFilters, selectedFields, fieldOptions, filterOptions])
+  },[selectedDateFilter, dateFilterOptions, selectedFilters, selectedFields, fieldOptions, filterOptions, setSelectedDateRange, selectedDateRange])
 
   function removeField(fieldName) {
     setSelectedFilters((prev) => {
@@ -79,33 +79,47 @@ export const CurrentSelection = ({selectedDateFilter, selectedFilters, setSelect
 
 
 
+
   return (
     <>
     <h3 className="blue strong mt-3 mb-2">Current Selections</h3>
+
+
     <div className="d-flex flex-column">
+    {
 
+      Object.keys(currentSelection).length > 0 ? (
+        <div className="mb-2">
 
-    {Object.keys(currentSelection)?.map((selection) => {
-      return(
-        <div className="dateChoice" key={selection}>
-        {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-        <p className="mb-0 blue">{currentSelection[selection].label_short.replace(/\s*\(.*?\)\s*/g, '')}</p>
+          {Object.keys(currentSelection)?.map((selection) => {
+            return(
+              <div className="dateChoice short" key={selection}>
+              {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+              <p className="mb-0 blue">{currentSelection[selection].label_short.replace(/\s*\(.*?\)\s*/g, '')}</p>
+
+              </div>
+
+            )
+          })}
 
         </div>
 
-      )
-    })}
+      ) : (
 
+      <div className="dateChoice">
+        <p className="mb-0 blue">{selectedDateRange}</p>
+      </div>
+
+      )
+
+    }
     <div class="wrapOptions mt-3">
 
     {Object.keys(filterSelection)?.map((selection) => {
 
       return(
         <div className="theOptions" key={selection}>
-
         {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-
-
         <p className="mb-0 blue">{selection.replace(/\s*\(.*?\)\s*/g, '')}: {filterSelection[selection].value}</p>
 
         <i onClick={() => removeField(filterSelection[selection].name)} class="fal fa-times blue"></i>
@@ -115,8 +129,8 @@ export const CurrentSelection = ({selectedDateFilter, selectedFilters, setSelect
       )
     })}
 
-    </div>
-    </div>
+        </div>
+      </div>
 
     </>
   )
