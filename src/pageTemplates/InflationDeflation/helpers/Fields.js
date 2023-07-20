@@ -13,7 +13,7 @@ const Fields = ({
     setUpdateBtn(false);
     let tabs = [...tabList];
     let currentTab = tabs[currentInnerTab];
-    console.log(currentTab);
+
     if (currentTab["selected_fields"].includes(fieldName)) {
       let index = currentTab["selected_fields"].indexOf(fieldName);
       currentTab["selected_fields"].splice(index, 1);

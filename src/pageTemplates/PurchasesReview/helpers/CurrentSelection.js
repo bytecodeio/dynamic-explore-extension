@@ -47,9 +47,6 @@ export const CurrentSelection = ({
           currentSelectionObj[filter] = optionFilter;
         }
 
-        console.log("these are filters", selectedFilters);
-        console.log("filter options", filterOptions);
-
         // currentSelectionObj[filter] = selectedFilters[filter];
       }
     }

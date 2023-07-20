@@ -13,9 +13,6 @@ export const CurrentSelection = ({
 }) => {
   const [currentSelection, setCurrentSelection] = useState([]);
 
-  console.log("these are filters", selectedFilters);
-  console.log("filter options", filterOptions);
-
   useEffect(() => {
     let currentSelectionObj = {};
     if (selectedDateFilter !== "") {

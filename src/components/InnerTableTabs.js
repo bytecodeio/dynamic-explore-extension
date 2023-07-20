@@ -10,7 +10,6 @@ const InnerTableTabs = ({
 }) => {
   const handleTabChange = (event) => {
     setCurrentInnerTab(event);
-    console.log(tabs[event]);
     setSelectedFields(tabs[event]["selected_fields"]);
   };
 

@@ -7,9 +7,7 @@ export const DateRangeSelector = ({
   selectedDateRange,
   setSelectedDateFilter,
 }) => {
-  useEffect(() => {
-    console.log("split date", splitSelectedDateRange());
-  }, [selectedDateRange]);
+  useEffect(() => {}, [selectedDateRange]);
   const onDateSelection = (e, type) => {
     if (type == "start") {
       let splitDate = splitSelectedDateRange();

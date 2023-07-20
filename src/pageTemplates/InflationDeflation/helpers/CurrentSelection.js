@@ -50,7 +50,7 @@ export const CurrentSelection = ({
     //         // currentSelectionObj[filter] = selectedFields[filter];
     //     }
     //
-    //         // console.log("one", selectedFields)
+    //         //
     // }
     //
     //

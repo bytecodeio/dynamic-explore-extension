@@ -79,7 +79,7 @@ const InflationDeflation = ({
       const { dashboard_elements } = await sdk.ok(
         sdk.dashboard(lowerDashboardId, "dashboard_elements")
       );
-      console.log("dash el", dashboard_elements);
+
       dashboard_elements?.map((t) => {
         let { client_id } = t["result_maker"]["query"];
         setTabList((prev) => [
@@ -115,7 +115,7 @@ const InflationDeflation = ({
     const { dashboard_elements } = await sdk.ok(
       sdk.dashboard(upperDashboardId, "dashboard_elements")
     );
-    console.log("dash el", dashboard_elements);
+
     setUpperVis(dashboard_elements[0].result_maker.query.client_id);
   };
 
@@ -208,7 +208,7 @@ const InflationDeflation = ({
     let tabs = [...tabList];
     let currentTab = tabs[currentInnerTab];
     const prevVisQid = currentTab["query"];
-    console.log(prevVisQid);
+
     // remove filters with a value of "N/A"
     const filters = {};
     for (const filter in selectedFilters) {
@@ -224,7 +224,6 @@ const InflationDeflation = ({
         filters[dateRange["name"]] = selectedDateRange;
       }
     }
-    console.log("filters", filters);
 
     if (isFilterChanged) {
       updateInnerTabFilters(filters);
@@ -232,7 +231,7 @@ const InflationDeflation = ({
     }
 
     const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
-    console.log(vis_config);
+
     const { client_id } = await sdk.ok(
       sdk.create_query({
         model: LOOKER_MODEL,
@@ -242,13 +241,12 @@ const InflationDeflation = ({
         vis_config,
       })
     );
-    console.log(client_id);
+
     tabs[currentInnerTab]["query"] = client_id;
     setTabList(tabs);
   }
 
   const updateInnerTabFilters = async (filters) => {
-    console.log("update inner", tabList);
     let fullTabList = [...tabList];
     fullTabList.map(async (t, i) => {
       if (i != currentInnerTab) {
@@ -265,7 +263,7 @@ const InflationDeflation = ({
             vis_config,
           })
         );
-        console.log(client_id);
+
         fullTabList[i]["query"] = client_id;
         setTabList(fullTabList);
       }
@@ -273,7 +271,6 @@ const InflationDeflation = ({
     setIsFilterChanged(false);
   };
   const updateUpperVizFilters = async (filters) => {
-    console.log("update upper", upperVis);
     let prevVisId = upperVis;
     const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(prevVisId));
 
@@ -286,7 +283,7 @@ const InflationDeflation = ({
         vis_config,
       })
     );
-    console.log(client_id);
+
     setUpperVis(client_id);
   };
 

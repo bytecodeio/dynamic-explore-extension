@@ -8,22 +8,30 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import "../../../styles.css";
 import EmbedTable from "./EmbedTable";
 
-const InnerTableTabs = ({ tabs, setSelectedFields, currentInnerTab,setCurrentInnerTab }) => {
-
-
+const InnerTableTabs = ({
+  tabs,
+  setSelectedFields,
+  currentInnerTab,
+  setCurrentInnerTab,
+}) => {
   const handleTabChange = (event) => {
-    setCurrentInnerTab(event)
-    console.log(tabs[event])
-    setSelectedFields(tabs[event]['selected_fields'])
-  }
+    setCurrentInnerTab(event);
+
+    setSelectedFields(tabs[event]["selected_fields"]);
+  };
 
   return (
     <Container fluid className="padding-0">
       <Container fluid className="padding-0 innerTab">
-        <Tabs className="inner" fill activeKey={currentInnerTab} onSelect={(e) => handleTabChange(e)}>
-          {tabs?.map((t,i) => (
-            <Tab eventKey={i} title={t.title} >
-              <EmbedTable queryId={t['query']} />
+        <Tabs
+          className="inner"
+          fill
+          activeKey={currentInnerTab}
+          onSelect={(e) => handleTabChange(e)}
+        >
+          {tabs?.map((t, i) => (
+            <Tab eventKey={i} title={t.title}>
+              <EmbedTable queryId={t["query"]} />
             </Tab>
           ))}
         </Tabs>

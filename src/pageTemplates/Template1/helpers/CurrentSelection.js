@@ -39,38 +39,6 @@ export const CurrentSelection = ({
       }
     }
     setFilterSelection(filterObj);
-    //
-    // for (const filter in selectedFields) {
-    //     if (selectedFields[filter] !== "") {
-    //       const option1 = fieldOptions.find(option1 => option1.name === selectedFields[filter]);
-    //
-    //       if(option1){
-    //         currentSelectionObj[filter] = option1;
-    //       }
-    //         // currentSelectionObj[filter] = selectedFields[filter];
-    //     }
-    //
-    //         // console.log("one", selectedFields)
-    // }
-    //
-    //
-    //   for (const filter in selectedFilters) {
-    //
-    //
-    //         if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
-    //         const option1 = filterOptions.find(option1 => option1.name === selectedFilters[filter]);
-    //
-    //         if(option1){
-    //           currentSelectionObj[filter] = option1;
-    //         }
-    //
-    //       // if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
-    //       //     currentSelectionObj[filter] = selectedFilters[filter];
-    //       // }
-    //   }
-    //
-    // }
-
     setCurrentSelection(currentSelectionObj);
   }, [
     selectedDateFilter,

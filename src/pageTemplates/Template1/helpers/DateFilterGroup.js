@@ -25,10 +25,6 @@ export const DateFilterGroup = ({
     setSelectedDateFilter(e.target.id);
   };
 
-  useEffect(() => {
-    // console.log("selectedDate",selectedDateFilter)
-  }, [selectedDateFilter]);
-
   return (
     <Row>
       <Col xs={12} md={7}></Col>

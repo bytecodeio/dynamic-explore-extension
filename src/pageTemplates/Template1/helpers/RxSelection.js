@@ -13,18 +13,9 @@ export const CurrentSelection = ({
 }) => {
   const [currentSelection, setCurrentSelection] = useState([]);
 
-  console.log("these are filters", selectedFilters);
-  console.log("filter options", filterOptions);
-
   useEffect(() => {
     let currentSelectionObj = {};
     if (selectedDateFilter !== "") {
-      // const option3 = dateFilterOptions.find(option3 => option3.name === selectedDateFilter[filter]);
-      //
-      // if(option3){
-      //   currentSelectionObj[filter] = option3;
-      // }
-
       currentSelectionObj[selectedDateFilter] = "Yes";
     }
 
@@ -37,7 +28,6 @@ export const CurrentSelection = ({
         if (option1) {
           currentSelectionObj[filter] = option1;
         }
-        // currentSelectionObj[filter] = selectedFields[filter];
       }
     }
 
@@ -50,8 +40,6 @@ export const CurrentSelection = ({
         if (option2) {
           currentSelectionObj[filter] = option2;
         }
-
-        // currentSelectionObj[filter] = selectedFilters[filter];
       }
     }
 
@@ -83,10 +71,7 @@ export const CurrentSelection = ({
         {Object.keys(currentSelection)?.map((selection) => {
           return (
             <div className="theOptions" key={selection}>
-              {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-
               <p className="mb-0">{currentSelection[selection].label_short}</p>
-
               <i
                 onClick={() => removeField(currentSelection[selection].name)}
                 className="fal fa-trash-undo red"
