@@ -196,16 +196,6 @@ const Template1 = ({
     }
   }, [isFetchingDefaultDashboard, isFetchingLookmlFields]);
 
-  const handleClick = () => {
-    setToggle(!toggle);
-
-    setTimeout(() => {
-      setActive(!active);
-
-      setFaClass(!faClass);
-    }, 600);
-  };
-
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       These are the filters you use to query data. Select the accordions
