@@ -1,47 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import {
   Accordion,
-  AccordionButton,
-  AccordionCollapse,
-  AccordionContext,
   Button,
   ButtonGroup,
-  ButtonToolbar,
-  CloseButton,
   Col,
-  Collapse,
-  Container,
   Form,
-  FormCheck,
-  FormControl,
-  FormGroup,
-  FormLabel,
-  FormSelect,
-  FormText,
-  Image,
-  InputGroup,
-  Nav,
-  NavDropdown,
-  NavItem,
-  NavLink,
-  Navbar,
-  NavbarBrand,
-  Overlay,
-  OverlayTrigger,
   Row,
-  Spinner,
-  Tab,
-  TabContainer,
-  TabContent,
-  TabPane,
-  Table,
-  Tabs,
-  ToggleButton,
-  ToggleButtonGroup,
-  Tooltip,
 } from "react-bootstrap";
 
-function HowTo(props) {
+function HowTo() {
   return (
     <div>
       <h5 className="mt-3">Bookmarks</h5>

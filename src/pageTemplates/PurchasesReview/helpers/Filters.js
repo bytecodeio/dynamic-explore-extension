@@ -21,18 +21,12 @@ const FilterDropdown = ({ handleChange, label, name, options, value }) => {
 };
 
 const Filters = ({
-  isLoading,
   filterOptions,
   filterSuggestions,
   selectedFilters,
   setSelectedFilters,
   isDefault,
-  setIsDefault,
 }) => {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
   function handleFilterSelection(filterName, newValue) {
     setSelectedFilters((prevFilters) => {
       const newFilters = { ...prevFilters };

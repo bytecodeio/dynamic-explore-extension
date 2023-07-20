@@ -3,11 +3,8 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 
 const NavbarMain = () => {
-  const { extensionSDK, core40SDK } = useContext(ExtensionContext);
+  const { core40SDK } = useContext(ExtensionContext);
   const [message, setMessage] = useState();
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   useEffect(() => {
     const initialize = async () => {

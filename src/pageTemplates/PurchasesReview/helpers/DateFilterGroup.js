@@ -1,7 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
-import { Button, ButtonGroup, Form } from "react-bootstrap";
+import React from "react";
+import { Button, ButtonGroup } from "react-bootstrap";
 
 export const DateFilterGroup = ({
   dateFilterOptions,

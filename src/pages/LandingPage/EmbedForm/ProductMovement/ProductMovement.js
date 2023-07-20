@@ -1,57 +1,26 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import {
   Accordion,
-  AccordionButton,
-  AccordionCollapse,
-  AccordionContext,
   Button,
-  ButtonGroup,
-  ButtonToolbar,
-  CloseButton,
   Col,
-  Collapse,
   Container,
-  Form,
-  FormCheck,
-  FormControl,
-  FormGroup,
-  FormLabel,
-  FormSelect,
-  FormText,
-  Image,
-  InputGroup,
-  Overlay,
   OverlayTrigger,
   Row,
   Spinner,
-  Tab,
-  TabContainer,
-  TabContent,
-  TabPane,
-  Table,
-  Tabs,
-  ToggleButton,
-  ToggleButtonGroup,
   Tooltip,
 } from "react-bootstrap";
 
 import {
   LOOKER_MODEL,
   LOOKER_EXPLORE,
-  LOOKML_FIELD_TAGS,
   PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
 } from "../../../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
-import "../../../../styles.css";
 import InnerTableTabs from "../InnerTableTabs";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
-import DateContainer from "./helpers/DateContainer";
 import Rx from "./helpers/Rx";
 import AccountGroups from "./helpers/AccountGroups";
-import EmbedTable from "../EmbedTable";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
@@ -69,27 +38,15 @@ const ProductMovement = ({
   selectedDateRange,
   setSelectedDateRange,
   dateRange,
-  showMenu,
-  setShowMenu,
   slideIt,
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
-  const [slide, setSlide] = useState();
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const [showModal, setShowModal] = useState(false);
   const [show3, setShow3] = useState();
-  const [active, setActive] = useState(false);
-  const [faClass, setFaClass] = useState(true);
-  const [toggle, setToggle] = useState(true);
   const [selectedFields, setSelectedFields] = useState([]);
-  const [productMovementVisQid, setProductMovementVisQid] = useState();
   const defaultChecked = true;
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
-  const [defaults, setDefaults] = useState({});
   const [tabList, setTabList] = useState([]);
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
@@ -125,8 +82,7 @@ const ProductMovement = ({
         ]);
       });
 
-      const { client_id, fields, filters } =
-        dashboard_elements[0].result_maker.query;
+      const { fields, filters } = dashboard_elements[0].result_maker.query;
 
       setSelectedFields(fields);
       if (filters) setSelectedFilters(filters);
