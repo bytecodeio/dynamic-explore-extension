@@ -490,7 +490,6 @@ const InflationDeflation = ({
                 <p>
                   Total Invoice: <span className="highlight large">17</span>
                 </p>
-
                 <EmbedTable queryId={upperVis} />
               </div>
             </Col>
