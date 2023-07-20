@@ -24,7 +24,7 @@ const InnerTableTabs = ({
           onSelect={(e) => handleTabChange(e)}
         >
           {tabs?.map((t, i) => (
-            <Tab eventKey={i} title={t.title}>
+            <Tab eventKey={i} title={t.title} key={t.title}>
               <EmbedTable queryId={t["query"]} />
             </Tab>
           ))}

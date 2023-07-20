@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useContext, useEffect } from "react";
-import { Button, Form, Modal, Row, Col } from "react-bootstrap";
+import React from "react";
+import { Form } from "react-bootstrap";
 
 const Rx = () => {
   const Content = [
@@ -65,7 +65,7 @@ const Rx = () => {
   return (
     <div className="wrapFields">
       {Content.map((val, i) => (
-        <div className="one">
+        <div className="one" key={val.controlId}>
           <Form.Group controlId={val.controlId}>
             <Form.Check type="checkbox" label={val.label} />
           </Form.Group>

@@ -65,7 +65,7 @@ const Rx = () => {
   return (
     <div className="wrapFields">
       {Content.map((val, i) => (
-        <div className="one">
+        <div className="one" key={val.controlId}>
           <Form.Group controlId={val.controlId}>
             <Form.Check type="checkbox" label={val.label} />
           </Form.Group>
