@@ -1,21 +1,25 @@
-import React, { useState, useCallback, useContext, useEffect } from "react";
+import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
-const Fields = ({ fieldOptions, setTabList, tabList, currentInnerTab, updateBtn, setUpdateBtn }) => {
-
-
+const Fields = ({
+  fieldOptions,
+  setTabList,
+  tabList,
+  currentInnerTab,
+  updateBtn,
+  setUpdateBtn,
+}) => {
   function handleFieldSelection(fieldName) {
-    setUpdateBtn(false)
+    setUpdateBtn(false);
     let tabs = [...tabList];
     let currentTab = tabs[currentInnerTab];
-    console.log(currentTab)
-     if (currentTab['selected_fields'].includes(fieldName)) {
-        let index = currentTab['selected_fields'].indexOf(fieldName);
-        currentTab['selected_fields'].splice(index,1)
-     } else {
-       currentTab['selected_fields'].push(fieldName)
-     }
-     setTabList(tabs)
+    if (currentTab["selected_fields"].includes(fieldName)) {
+      let index = currentTab["selected_fields"].indexOf(fieldName);
+      currentTab["selected_fields"].splice(index, 1);
+    } else {
+      currentTab["selected_fields"].push(fieldName);
+    }
+    setTabList(tabs);
 
     // setSelectedFields((prev) => {
     //   if (prev.includes(fieldName)) {
@@ -27,31 +31,28 @@ const Fields = ({ fieldOptions, setTabList, tabList, currentInnerTab, updateBtn,
   }
 
   return (
-    <div class="wrapFilters">
+    <div className="wrapFilters">
       {fieldOptions.map((fieldOption) => (
-
         <div className="one" key={fieldOption.name}>
           <Form.Group>
             <Form.Check
               type="checkbox"
               className=""
               label={fieldOption.label_short}
-              checked={tabList[currentInnerTab]['selected_fields'].includes(fieldOption.name)}
+              checked={tabList[currentInnerTab]["selected_fields"].includes(
+                fieldOption.name
+              )}
               name="Fields"
               id={fieldOption.name}
               value={fieldOption.fields}
-              onClick={() => handleFieldSelection(fieldOption.name)}
+              onChange={() => handleFieldSelection(fieldOption.name)}
             />
           </Form.Group>
         </div>
       ))}
     </div>
 
-
     // set value to name
-
-
-
   );
 };
 

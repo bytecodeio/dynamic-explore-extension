@@ -1,9 +1,16 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import { Accordion, AccordionButton, AccordionCollapse, AccordionContext, Button, ButtonGroup, ButtonToolbar, CloseButton, Col, Collapse, Container, Form, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, FormText, Image, InputGroup, Overlay, OverlayTrigger, Row, Spinner, Tab, TabContainer, TabContent, TabPane, Table, Tabs, ToggleButton, ToggleButtonGroup, Tooltip } from 'react-bootstrap';
+import {
+  Accordion,
+  Button,
+  Col,
+  Container,
+  OverlayTrigger,
+  Row,
+  Spinner,
+  Tooltip,
+} from "react-bootstrap";
 import { LOOKER_MODEL, LOOKER_EXPLORE } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
 import InnerTableTabs from "../../components/InnerTableTabs";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
@@ -12,24 +19,30 @@ import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
-const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOptions, dateFilterOptions, fieldOptions, isFetchingLookmlFields, selectedDateFilter, setSelectedDateFilter, selectedDateRange, setSelectedDateRange, dateRange, tabKey, dashboardId, slideIt}) => {
+const Template1 = ({
+  currentNavTab,
+  selectedFilters,
+  setSelectedFilters,
+  filterOptions,
+  dateFilterOptions,
+  fieldOptions,
+  isFetchingLookmlFields,
+  selectedDateFilter,
+  setSelectedDateFilter,
+  selectedDateRange,
+  setSelectedDateRange,
+  dateRange,
+  tabKey,
+  dashboardId,
+  slideIt,
+}) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
-  const [slide, setSlide] = useState();
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const [showModal, setShowModal] = useState(false);
   const [show3, setShow3] = useState();
-  const [active, setActive] = useState(false);
-  const [faClass, setFaClass] = useState(true);
-  const [toggle, setToggle] = useState(true);
   const [selectedFields, setSelectedFields] = useState([]);
-  const [productMovementVisQid, setProductMovementVisQid] = useState();
   const defaultChecked = true;
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
-  const [defaults, setDefaults] = useState({});
   const [tabList, setTabList] = useState([]);
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
@@ -50,7 +63,7 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
       const { dashboard_elements } = await sdk.ok(
         sdk.dashboard(dashboardId, "dashboard_elements")
       );
-      // console.log("dash el", dashboard_elements);
+
       dashboard_elements?.map((t) => {
         let { client_id } = t["result_maker"]["query"];
         setTabList((prev) => [
@@ -146,16 +159,6 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
     }
   }, [isFetchingDefaultDashboard, isFetchingLookmlFields]);
 
-  const handleClick = () => {
-    setToggle(!toggle);
-
-    setTimeout(() => {
-      setActive(!active);
-
-      setFaClass(!faClass);
-    }, 600);
-  };
-
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       These are the filters you use to query data. Select the accordions
@@ -169,7 +172,7 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
     let tabs = [...tabList];
     let currentTab = tabs[currentInnerTab];
     const prevVisQid = currentTab["query"];
-    console.log(prevVisQid);
+
     // remove filters with a value of "N/A"
     const filters = {};
     for (const filter in selectedFilters) {
@@ -185,14 +188,13 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
         filters[dateRange["name"]] = selectedDateRange;
       }
     }
-    // console.log("filters", filters);
 
     if (isFilterChanged) {
       updateInnerTabFilters(filters);
     }
 
     const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
-    console.log(vis_config);
+
     const { client_id } = await sdk.ok(
       sdk.create_query({
         model: LOOKER_MODEL,
@@ -202,13 +204,12 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
         vis_config,
       })
     );
-    // console.log(client_id);
+
     tabs[currentInnerTab]["query"] = client_id;
     setTabList(tabs);
   }
 
   const updateInnerTabFilters = async (filters) => {
-    // console.log("update inner", tabList);
     let fullTabList = [...tabList];
     fullTabList.map(async (t, i) => {
       if (i != currentInnerTab) {
@@ -225,7 +226,7 @@ const Template1 = ({currentNavTab, selectedFilters, setSelectedFilters, filterOp
             vis_config,
           })
         );
-        // console.log(client_id);
+
         fullTabList[i]["query"] = client_id;
         setTabList(fullTabList);
       }
