@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Form, Row, Col } from 'react-bootstrap';
 export const DateRangeSelector = ({ setSelectedDateRange, selectedDateRange, setSelectedDateFilter }) => {
 
-
-
     useEffect(() => {
         console.log("split date", splitSelectedDateRange())
     },[selectedDateRange])

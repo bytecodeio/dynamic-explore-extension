@@ -31,17 +31,17 @@ export const DateFilterGroup = ({dateFilterOptions, setSelectedDateFilter, selec
                 return (
 
                     <div className="one radio">
-                    <Form.Group key={filter['description']}>
-                    <Form.Check
-                    controlId={filter['name']}
-                    checked={selectedDateFilter === filter['name']}
-                    id={filter['name']}
-                    // value={selectedDateFilter === filter['name']}
-                    type="radio"
-                    name="dateFilters"
-                    onChange={handleSelection}
-                    label={filter['label_short'].replace('(Yes / No)','')}
-                    />
+                    <Form.Group
+                    controlId={filter['name']}>
+                      <Form.Check
+                      checked={selectedDateFilter === filter['name']}
+                      id={filter['name']}
+                      value={filter['name']}
+                      type="radio"
+                      // name="dateFilters"
+                      onChange={handleSelection}
+                      label={filter['label_short'].replace('(Yes / No)','')}
+                      />
 
                     </Form.Group>
                     </div>

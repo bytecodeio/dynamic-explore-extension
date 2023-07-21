@@ -78,13 +78,11 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
   }
 
 
-
+console.log(selectedDateRange)
 
   return (
     <>
     <h3 className="blue strong mt-3 mb-2">Current Selections</h3>
-
-
     <div className="d-flex flex-column">
     {
 
@@ -107,7 +105,16 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
       ) : (
 
       <div className="dateChoice">
-        <p className="mb-0 blue">{selectedDateRange}</p>
+        {/*<p className="mb-0 blue">{selectedDateRange}</p>*/}
+
+
+        {selectedDateRange && selectedDateRange.split(" to ").map((selection) => {
+           return(
+
+               <p className="mb-0 blue">{selection}</p>
+
+           )
+         })}
       </div>
 
       )

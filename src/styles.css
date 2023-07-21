@@ -9,25 +9,20 @@ body, html{
   background:#f4f6f6;
   overflow-x: hidden;
 }
-
 .mneg5 {
   margin-top: -5px;
 }
-
 .navbar-text a, .navbar-text a:focus, .navbar-text a:hover{
   font-size: 15px;
   font-family: 'Roboto', sans-serif;
   color:#282f53;
 }
-
 h1, h2, h3, span, p, h5, h6{
   font-family: 'Roboto', sans-serif;
 }
-
 p{
   color:#27251F
 }
-
 .navbar-text {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -56,8 +51,6 @@ p{
   color:#1a1a1a !important
 }
 
-
-
 .red{
   color:#e41f35;
 }
@@ -73,7 +66,6 @@ p{
   max-width: 186px;
   position: absolute;
   top:0
-
 }
 
 .dark-mode .logo {
@@ -86,12 +78,9 @@ p{
   background-repeat: no-repeat;
   width: 40px;
   min-height: 40px;
-
   background-position: center;
   /* height: 100px; */
   background-size: cover;
-
-
 
 }
 
@@ -107,10 +96,8 @@ p{
 
   display: flex;
   align-items: center;
-
   display: flex;
   left: 0;
-
   right: 0;
   top: 0;
   padding: 1em 0em;
@@ -1070,10 +1057,11 @@ a:hover{
 
 .one.radio .form-check input {
   height: 18px;
-  left: 0;
+
   opacity: 0;
   position: absolute;
-  top: 0;
+  height: 18px;
+left: 12px;
   width: 18px;
 }
 
@@ -6537,8 +6525,6 @@ html.dark-mode{
 }
 
 
-
-
 #slideOut5 .form-check.oneQuestion input + label::before {
   border: 2px solid #045A96;
   content: "";
@@ -6586,7 +6572,13 @@ html.dark-mode{
   display: flex;
   justify-content: center;
   align-items: center;
-  margin:.5em 0em
+  margin:.5em 0em;
+  margin-top: 0;
+}
+
+.accordion-button {
+    font-size: 16px !important;
+    color: #0B66A6;
 }
 
 .across.two{
@@ -6594,7 +6586,7 @@ html.dark-mode{
   display: flex;
   justify-content: center;
   align-items: center;
-  margin:.5em 0em
+  margin: 0.9em 0em 0.5em 0em;
 }
 
 .across button,
@@ -6619,7 +6611,7 @@ html.dark-mode{
 
 .show #slideOut3 {
 
-  top: 150px;
+  top: 225px;
 }
 
 .accordion.mb-3 {
@@ -6634,18 +6626,47 @@ html.dark-mode{
 }
 
 
+.show3 .modal-body {
+    padding: 0.3em 1em 1em 1em;
+
+}
+
 .slideOver.largePadding {
 
   margin-inline-start: 275px !important;
 }
+.show3 .modal-body button {
+    width: 100%;
+    margin: 0.35em 0em;
+}
 
+.accordion-header {
+  padding: 0.2em;
+}
+
+.mt-50{
+
+}
 
 /* elizabeth changes that I do not want */
 
 
 /* tablet */
 
-@media (max-width:1024px){
+
+@media (max-width:1480px){
+  .mneg40 {
+    margin-top: 1em;
+  }
+  .fullW .col-lg-5,
+  .fullW .col-lg-7 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+}
+
+@media (max-width:1199px){
   .largePadding {
     padding: 0em 3em;
 
