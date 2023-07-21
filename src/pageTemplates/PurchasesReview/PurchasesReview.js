@@ -26,6 +26,7 @@ import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import EmbedTable from "../../components/EmbedTable";
+import TabbedVisualizations from "../../components/TabbedVisualizations";
 
 const PurchasesReview = ({
   selectedFilters,
@@ -391,14 +392,15 @@ const PurchasesReview = ({
             </Col>
             <Col md={8}>
               <Container fluid className="padding-0 innerTab middleHeight">
-                <Tabs defaultActiveKey="comparison" className="inner" fill>
+                {/* <Tabs defaultActiveKey="comparison" className="inner" fill>
                   <Tab eventKey="comparison" title="Trade/Generic Name">
                     <EmbedTable queryId={"Q40ekuA0DibEWZJcYlBOTZ"} />
                   </Tab>
                   <Tab eventKey="AHFS/Fineline" title="AHFS/Fineline"></Tab>
                   <Tab eventKey="GPI" title="GPI"></Tab>
                   <Tab eventKey="manufacturer" title="Manufacturer"></Tab>
-                </Tabs>
+                </Tabs> */}
+                <TabbedVisualizations dashboardId="rebecca_thompson_project::product_movement_report_tab" />
               </Container>
             </Col>
           </Row>
@@ -411,10 +413,10 @@ const PurchasesReview = ({
                 review values.
               </p>
               <Container fluid className="padding-0 innerTab smallerHeight">
-                <EmbedTable queryId={'HV4C3OeDOr5HaceKseTybI'} />
+                <EmbedTable queryId={"HV4C3OeDOr5HaceKseTybI"} />
               </Container>
               <Container fluid className="padding-0 innerTab smallerHeight">
-                <EmbedTable queryId={'84aPbSOrTsrbhF0ifL4zdI'} />
+                <EmbedTable queryId={"84aPbSOrTsrbhF0ifL4zdI"} />
               </Container>
             </Col>
 
@@ -422,7 +424,7 @@ const PurchasesReview = ({
               <Container fluid className="padding-0 innerTab">
                 <Tabs defaultActiveKey="comparison" className="inner" fill>
                   <Tab eventKey="comparison" title="Monthly Comparison">
-                    <EmbedTable queryId={productMovementVisQid} />
+                    <EmbedTable queryId={"2L6JPnXgKAlomDi6H39xl6"} />
                   </Tab>
                   <Tab eventKey="summary" title="Monthly Summary"></Tab>
                   <Tab eventKey="invoice" title="Invoice Summary"></Tab>
