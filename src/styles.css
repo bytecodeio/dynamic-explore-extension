@@ -542,8 +542,8 @@ p{
 }
 
 .grid2 .one.radio {
-  margin-right: 0em;
-  margin-left: 0em
+  /* margin-right: 0em;
+  margin-left: 0em */
 }
 
 
@@ -5568,6 +5568,7 @@ footer img{
 
 .middleHeight iframe{
   max-height:400px;
+  margin-bottom: 80px
 }
 
 
@@ -6662,11 +6663,6 @@ html.dark-mode{
   padding: 0.2em;
 }
 
-.mt-50{
-
-}
-
-
 
 .show3 .modal-body button  {
   width: 100%;
@@ -6675,24 +6671,10 @@ html.dark-mode{
 
 .buttons.across button  {
   width: 100%;
-  margin: 0.5em .25em;
-}
-
-.buttons{
-  margin-right:1em
+  margin: 0.5em 0em .5em .75em;
 }
 
 
-.grid2{
-
-  margin-left:-.8em;
-
-}
-
-/* .ml2{
-margin-left:3.7em;
-
-} */
 
 .mediumFont{
   font-size: 17px
