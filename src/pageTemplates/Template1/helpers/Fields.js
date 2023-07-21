@@ -43,6 +43,7 @@ const Fields = ({
                 fieldOption.name
               )}
               name="Fields"
+              id={fieldOption.name}
               value={fieldOption.fields}
               onChange={() => handleFieldSelection(fieldOption.name)}
             />

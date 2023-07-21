@@ -37,16 +37,41 @@ export const CurrentSelection = ({
         };
       }
     }
-    setFilterSelection(filterObj);
-    setCurrentSelection(currentSelectionObj);
-  }, [
-    selectedDateFilter,
-    dateFilterOptions,
-    selectedFilters,
-    selectedFields,
-    fieldOptions,
-    filterOptions,
-  ]);
+    setFilterSelection(filterObj)
+
+    // for (const filter in selectedFields) {
+    //     if (selectedFields[filter] !== "") {
+    //       const option1 = fieldOptions.find(option1 => option1.name === selectedFields[filter]);
+    //
+    //       if(option1){
+    //         currentSelectionObj[filter] = option1;
+    //       }
+    //         // currentSelectionObj[filter] = selectedFields[filter];
+    //     }
+    //
+    //         // console.log("one", selectedFields)
+    // }
+    //
+    //
+    //   for (const filter in selectedFilters) {
+    //
+    //
+    //         if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
+    //         const option1 = filterOptions.find(option1 => option1.name === selectedFilters[filter]);
+    //
+    //         if(option1){
+    //           currentSelectionObj[filter] = option1;
+    //         }
+    //
+    //       // if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
+    //       //     currentSelectionObj[filter] = selectedFilters[filter];
+    //       // }
+    //   }
+    //
+    // }
+
+    setCurrentSelection(currentSelectionObj)
+  },[selectedDateFilter, dateFilterOptions, selectedFilters, selectedFields, fieldOptions, filterOptions, setSelectedDateRange, selectedDateRange])
 
   function removeField(fieldName) {
     setSelectedFilters((prev) => {
@@ -65,34 +90,28 @@ export const CurrentSelection = ({
     // })
   }
 
+
+console.log(selectedDateRange)
+
   return (
     <>
-      <h3 className="blue strong mt-3 mb-2">Current Selections</h3>
-      <div className="d-flex flex-column">
-        {Object.keys(currentSelection)?.map((selection) => {
-          return (
-            <div className="dateChoice" key={selection}>
+    <h3 className="blue strong mt-3 mb-2">Current Selections</h3>
+    <div className="d-flex flex-column">
+    {
+
+      Object.keys(currentSelection).length > 0 ? (
+        <div className="mb-2">
+
+          {Object.keys(currentSelection)?.map((selection) => {
+            return(
+              <div className="dateChoice short" key={selection}>
               {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-              <p className="mb-0 blue">
-                {currentSelection[selection].label_short.replace(
-                  /\s*\(.*?\)\s*/g,
-                  ""
-                )}
-              </p>
-            </div>
-          );
-        })}
+              <p className="mb-0 blue">{currentSelection[selection].label_short.replace(/\s*\(.*?\)\s*/g, '')}</p>
 
-        <div className="wrapOptions mt-3">
-          {Object.keys(filterSelection)?.map((selection) => {
-            return (
-              <div className="theOptions" key={selection}>
-                {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+              </div>
 
-                <p className="mb-0 blue">
-                  {selection.replace(/\s*\(.*?\)\s*/g, "")}:{" "}
-                  {filterSelection[selection].value}
-                </p>
+            )
+          })}
 
                 <i
                   onClick={() => removeField(filterSelection[selection].name)}
@@ -102,7 +121,44 @@ export const CurrentSelection = ({
             );
           })}
         </div>
+
+      ) : (
+
+      <div className="dateChoice">
+        {/*<p className="mb-0 blue">{selectedDateRange}</p>*/}
+
+
+        {selectedDateRange && selectedDateRange.split(" to ").map((selection) => {
+           return(
+
+               <p className="mb-0 blue">{selection}</p>
+
+           )
+         })}
       </div>
+
+      )
+
+    }
+    <div class="wrapOptions mt-3">
+
+    {Object.keys(filterSelection)?.map((selection) => {
+
+      return(
+        <div className="theOptions" key={selection}>
+        {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+        <p className="mb-0 blue">{selection.replace(/\s*\(.*?\)\s*/g, '')}: {filterSelection[selection].value}</p>
+
+        <i onClick={() => removeField(filterSelection[selection].name)} class="fal fa-times blue"></i>
+
+        </div>
+
+      )
+    })}
+
+        </div>
+      </div>
+
     </>
   );
 };

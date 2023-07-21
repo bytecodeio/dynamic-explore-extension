@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;600;700;900&family=Roboto:wght@300;600;700;&display=swap');
+@import url('http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300ita‌​lic,400italic,500,500italic,600,700,700italic,900italic,900');
 @import url("https://kit-pro.fontawesome.com/releases/v5.15.1/css/pro.min.css");
 
 body,
@@ -8,33 +9,20 @@ html {
   background: #f4f6f6;
   overflow-x: hidden;
 }
-
 .mneg5 {
   margin-top: -5px;
 }
-
-.navbar-text a,
-.navbar-text a:focus,
-.navbar-text a:hover {
+.navbar-text a, .navbar-text a:focus, .navbar-text a:hover{
   font-size: 15px;
   font-family: "Roboto", sans-serif;
   color: #282f53;
 }
-
-h1,
-h2,
-h3,
-span,
-p,
-h5,
-h6 {
-  font-family: "Roboto", sans-serif;
+h1, h2, h3, span, p, h5, h6{
+  font-family: 'Roboto', sans-serif;
 }
-
-p {
-  color: #27251f;
+p{
+  color:#27251F
 }
-
 .navbar-text {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -63,8 +51,13 @@ p {
   color: #1a1a1a !important;
 }
 
+<<<<<<< HEAD
+.red{
+  color:#e41f35;
+=======
 .red {
   color: #e41f35;
+>>>>>>> main
 }
 .logo {
   background-image: url("https://ixd-studio.wesdemo.com/wesinfo/images/logo.png");
@@ -77,7 +70,7 @@ p {
   background-size: contain;
   max-width: 186px;
   position: absolute;
-  top: 0;
+  top:0
 }
 
 .dark-mode .logo {
@@ -89,10 +82,10 @@ p {
   background-repeat: no-repeat;
   width: 40px;
   min-height: 40px;
-
   background-position: center;
   /* height: 100px; */
   background-size: cover;
+
 }
 
 .mt-50 {
@@ -107,10 +100,8 @@ p {
 
   display: flex;
   align-items: center;
-
   display: flex;
   left: 0;
-
   right: 0;
   top: 0;
   padding: 1em 0em;
@@ -534,7 +525,14 @@ p {
   display: flex;
   flex-wrap: wrap;
 }
-.counter-status p {
+
+.grid2 .one.radio {
+  min-width: 6em;
+}
+
+
+
+.counter-status p{
   font-size: 12px;
   line-height: normal;
 }
@@ -569,12 +567,12 @@ legend {
 .dateChoice {
   background: #dfeef6;
   border-radius: 1rem;
-  opacity: 0.9;
-  padding: 0.4em 0.65em;
+  opacity: .9;
+  padding: 0.4em .35em;
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 100px;
+  max-width:220px
 }
 
 .dateChoice p {
@@ -582,7 +580,11 @@ legend {
   font-weight: 400 !important;
 }
 
-.theOptions {
+.dateChoice.short{
+  max-width: 100px
+}
+
+.theOptions{
   position: relative;
   background: #dfeef6;
   border-radius: 1rem;
@@ -594,7 +596,8 @@ legend {
 
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.25rem;
+  margin-bottom: .25rem;
+
 }
 
 .theOptions i:hover {
@@ -737,8 +740,8 @@ a:hover {
   color: white;
 }
 .dark-mode #slideOut1 .form-check label,
-.dark-mode #slideOut1 .one .form-check label {
-  color: white;
+.dark-mode #slideOut1 .one .form-check label{
+  color:white
 }
 
 .card {
@@ -1013,10 +1016,11 @@ a:hover {
 
 .one.radio .form-check input {
   height: 18px;
-  left: 0;
+
   opacity: 0;
   position: absolute;
-  top: 0;
+  height: 18px;
+left: 12px;
   width: 18px;
 }
 
@@ -4749,6 +4753,7 @@ a.white:hover {
 
   z-index: 0;
   top: 288px;
+  top:221px
 }
 
 #slideOut3p,
@@ -4846,9 +4851,14 @@ a.white:hover {
   box-shadow: 0 -2px 3px rgba(0, 0, 0, 0.2), 0 -4px 9px rgba(0, 0, 0, 0.15);
 }
 
-.show .modal-content {
+
+.show .modal-content{
+
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1) !important;
 }
+
+
+
 
 #slideOut3legend {
   padding: 0 !important;
@@ -4948,7 +4958,9 @@ a.white:hover {
   overflow-y: auto;
   overflow-x: hidden;
   max-width: 250px;
+  max-width: 345px;
 }
+
 
 #slideOut3 ::-webkit-scrollbar {
   /* width: 0px; */
@@ -5429,7 +5441,7 @@ html.dark-mode {
 
 .dark-mode #one5 {
   background: black;
-  opacity: 1;
+  opacity:1
 }
 
 #slideOut5 .accordion-body {
@@ -5493,14 +5505,16 @@ html.dark-mode {
   color: white !important;
 }
 
-.dark-mode #slideOut5 .accordion-header {
-  background: black !important;
+.dark-mode  #slideOut5 .accordion-header{
+  background: black !important
 }
 
-.dark-mode #slideOut5 .accordion-body {
+
+.dark-mode  #slideOut5 .accordion-body {
   background: transparent !important;
+
 }
-.dark-mode #slideOut5 .accordion-body a:hover {
+.dark-mode  #slideOut5 .accordion-body a:hover {
   border-left: 5px solid #b13590;
 }
 
@@ -5962,6 +5976,7 @@ html.dark-mode {
   font-weight: 300 !important;
 }
 
+
 #slideOut5 .form-check.oneQuestion input + label::before {
   border: 2px solid #045a96;
   content: "";
@@ -5999,4 +6014,198 @@ html.dark-mode {
 #slideOut5 .modal-body,
 #slideOut5 .modal-content {
   padding: 0em;
+}
+
+/* elizabeth changes that I do not want */
+.across{
+  /* flex-direction: column; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin:.5em 0em;
+  margin-top: 0;
+}
+
+.accordion-button {
+    font-size: 16px !important;
+    color: #0B66A6;
+}
+
+.across.two{
+  /* flex-direction: column; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.9em 0em 0.5em 0em;
+}
+
+.across button,
+.across.two button{
+  width:100%
+}
+
+
+.across .form-control,
+.across.two .btn-clear{
+  min-width:40% !important;
+  width:48% !important;
+  font-size: 14px !important;
+  margin:1em .2em !important
+}
+
+.show3 .modal-body {
+  /* max-height: 630px; */
+  max-height: unset !important;
+
+}
+
+.show #slideOut3 {
+
+  top: 225px;
+}
+
+.accordion.mb-3 {
+  margin-bottom: 0rem!important;
+}
+
+.largePadding {
+  padding: 0em 5em;
+  max-width: 1900px;
+  margin: 0px auto;
+  transition: margin-inline-start .65s ease,-webkit-margin-start .45s ease;
+}
+
+
+.show3 .modal-body {
+    padding: 0.3em 1em 1em 1em;
+
+}
+
+.slideOver.largePadding {
+
+  margin-inline-start: 275px !important;
+}
+.show3 .modal-body button {
+    width: 100%;
+    margin: 0.35em 0em;
+}
+
+.accordion-header {
+  padding: 0.2em;
+}
+
+.mt-50{
+
+}
+
+/* elizabeth changes that I do not want */
+
+
+/* tablet */
+
+
+@media (max-width:1480px){
+  .mneg40 {
+    margin-top: 1em;
+  }
+  .fullW .col-lg-5,
+  .fullW .col-lg-7 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+}
+
+@media (max-width:1199px){
+  .largePadding {
+    padding: 0em 3em;
+
+  }
+
+
+  .slideOutTab1 {
+    position: absolute;
+    top: 26%;
+  }
+
+  .show3 .modal-content{
+    max-width:215px
+  }
+
+  .slideOver.largePadding {
+    margin-inline-start: 168px !important;
+
+  }
+
+  #nav2 .nav-tabs .nav-link{
+    font-size: 15px
+  }
+  .show #slideOut3{
+    top:150px
+  }
+
+  .mneg40 {
+    margin-top: 1em;
+  }
+  .fullW .col-lg-5,
+  .fullW .col-lg-7 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .grid2 .one.radio {
+    min-width: 0em;
+  }
+
+  .fullW  p {
+    font-size: 16px;
+    margin-bottom: 1em;
+  }
+
+
+  .fullW .flex-column {
+    flex-direction: row !important;
+    justify-content: flex-start;
+    align-items: baseline;
+  }
+
+  .theOptions{
+    margin: 0em 0.5rem;
+    align-items: baseline;
+  }
+  .wrapOptions{
+    display: flex
+  }
+  .fa-times{
+    margin-left:1em
+  }
+
+}
+
+
+@media (max-width:991px){
+  #nav2 .nav-tabs .nav-link {
+    font-size: 12px;
+    padding: 0;
+  }
+
+  h3{
+    font-size: 15px
+  }
+  #nav2 .innerTab .tab-content{
+    padding:0em
+  }
+
+  .dateChoice p {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+  }
+
+
+
+  .white-logo {
+
+    position: absolute;
+    left: 0;
+  }
 }

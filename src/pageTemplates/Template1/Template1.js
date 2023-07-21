@@ -252,7 +252,7 @@ const Template1 = ({
   useEffect((e) => {
     document.addEventListener("click", handleClickOutside, false);
     return () => {
-      document.removeEventListener("click", handleClickOutside, false);
+    document.removeEventListener("click", handleClickOutside, false);
     };
   }, []);
 
@@ -268,24 +268,12 @@ const Template1 = ({
         <Spinner />
       ) : (
         <>
-          <div id="slideOut3" className={show3 ? "" : "show3"} ref={wrapperRef}>
-            <div className="slideOutTab3">
-              <div
-                id="one3"
-                className="openTab bottomShadow"
-                role="button"
-                tabIndex="0"
-                onClick={() => {
-                  setShow3(false);
-                  slideIt();
-                }}
-              >
-                <p className="black m-0 mb-2">
-                  <i className="far fa-bars"></i>
-                </p>
-                <p className="m-0">
-                  <span className="noMobile">Product Filters</span>
-                </p>
+        <div id="slideOut3" className={show3 ? "" : "show3"} ref={wrapperRef}>
+        <div className="slideOutTab3">
+          <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
+          onClick={() => {setShow3(false);slideIt();}}>
+            <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
+            <p className="m-0"><span className="noMobile">Filter Options</span></p>
               </div>
             </div>
 
@@ -389,25 +377,22 @@ const Template1 = ({
                   </Row>
                 </Accordion>
 
-                <div className="d-flex flex-column justify-content-center align-items-center mt-3 mb-3">
-                  <Button onClick={handleTabVisUpdate} className="btn">
-                    Submit Values
-                  </Button>
-                  <input
-                    placeholder="Top % Products"
-                    type="search"
-                    className="form-control"
-                  />
-                  <input
-                    placeholder="Search Filter"
-                    type="search"
-                    className="form-control"
-                  />
-                </div>
+                <div className="across">
 
                 <div className="lineAcross"></div>
 
-                <div className="d-flex flex-column justify-content-between mt-3 pt-3">
+                    <Button
+                      onClick={handleTabVisUpdate}
+                      className="btn">Submit Values
+                    </Button>
+                    <input placeholder="Top % Products" type="search" class="form-control" />
+                    <input placeholder="Search Filter" type="search" class="form-control" />
+
+               </div>
+
+              <div className="lineAcross"></div>
+
+              <div className="across two">
                   <Button onClick={handleRestoreDefault} className="btn-clear">
                     Restore Default <i className="fal fa-undo"></i>
                   </Button>
@@ -422,8 +407,8 @@ const Template1 = ({
             </div>
           </div>
 
-          <Row>
-            <Col xs={12} md={5}>
+          <Row className="fullW">
+            <Col md={12} lg={5}>
               <CurrentSelection
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
@@ -433,13 +418,14 @@ const Template1 = ({
                 filterOptions={filterOptions}
                 setSelectedFilters={setSelectedFilters}
                 dateFilterOptions={dateFilterOptions}
+                selectedDateRange={selectedDateRange}
               />
               <p className="mt-5">
                 Total Invoice: <span className="highlight large">17</span>
               </p>
             </Col>
 
-            <Col xs={12} md={7}>
+            <Col md={12} lg={7}>
               <DateRangeSelector
                 selectedDateRange={selectedDateRange}
                 setSelectedDateRange={setSelectedDateRange}
