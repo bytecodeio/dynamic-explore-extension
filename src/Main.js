@@ -39,9 +39,9 @@ export const Main = () => {
   const [dateRange, setDateRange] = useState("");
   const [showMenu, setShowMenu] = useState();
 
-  const slideIt = () =>{
-    setShowMenu(!showMenu)
-  }
+  const slideIt = (show) =>{
+     setShowMenu(show)
+   }
 
   // Initialize the states
   useEffect(() => {
@@ -165,7 +165,9 @@ export const Main = () => {
                   dateRange={dateRange}
                   dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
                   tabKey={"product-movement"}
-                  slideIt={slideIt}
+                  currentNavTab={currentNavTab}
+                  showMenu={showMenu}
+                  setShowMenu={setShowMenu}
                 />
               </Tab>
               <Tab eventKey="invoice" title="Invoice Report">
@@ -184,7 +186,8 @@ export const Main = () => {
                   dateRange={dateRange}
                   dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
                   tabKey={"invoice"}
-                  slideIt={slideIt}
+                  showMenu={showMenu}
+                  setShowMenu={setShowMenu}
                 />
               </Tab>
               <Tab eventKey="auto-sub" title="Auto-Sub Report">
@@ -203,7 +206,8 @@ export const Main = () => {
                   dateRange={dateRange}
                   dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
                   tabKey={"auto-sub"}
-                  slideIt={slideIt}
+                  showMenu={showMenu}
+                  setShowMenu={setShowMenu}
                 />
               </Tab>
               <Tab eventKey="id" title="Inflation/Deflation Report">
@@ -223,6 +227,8 @@ export const Main = () => {
                   upperDashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
                   lowerDashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
                   tabKey={"id"}
+                  showMenu={showMenu}
+                  setShowMenu={setShowMenu}
                 />
               </Tab>
             </Tabs>
