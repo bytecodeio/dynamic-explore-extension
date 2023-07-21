@@ -383,17 +383,17 @@ const PurchasesReview = ({
           <Row className="mt-3 mb-3">
             <Col md={4}>
               <Container fluid className="padding-0 innerTab smallerHeight">
-                <EmbedTable queryId={productMovementVisQid} />
+                <EmbedTable queryId={"bDiiTcGudISg0FmJpMo1oN"} />
               </Container>
               <Container fluid className="padding-0 innerTab smallerHeight">
-                <EmbedTable queryId={productMovementVisQid} />
+                <EmbedTable queryId={"jAfuYkAWe2abi6lc0gw4kM"} />
               </Container>
             </Col>
             <Col md={8}>
               <Container fluid className="padding-0 innerTab middleHeight">
                 <Tabs defaultActiveKey="comparison" className="inner" fill>
                   <Tab eventKey="comparison" title="Trade/Generic Name">
-                    <EmbedTable queryId={productMovementVisQid} />
+                    <EmbedTable queryId={"Q40ekuA0DibEWZJcYlBOTZ"} />
                   </Tab>
                   <Tab eventKey="AHFS/Fineline" title="AHFS/Fineline"></Tab>
                   <Tab eventKey="GPI" title="GPI"></Tab>
@@ -411,10 +411,10 @@ const PurchasesReview = ({
                 review values.
               </p>
               <Container fluid className="padding-0 innerTab smallerHeight">
-                <EmbedTable queryId={productMovementVisQid} />
+                <EmbedTable queryId={'HV4C3OeDOr5HaceKseTybI'} />
               </Container>
               <Container fluid className="padding-0 innerTab smallerHeight">
-                <EmbedTable queryId={productMovementVisQid} />
+                <EmbedTable queryId={'84aPbSOrTsrbhF0ifL4zdI'} />
               </Container>
             </Col>
 
