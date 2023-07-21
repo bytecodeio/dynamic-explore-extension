@@ -279,18 +279,29 @@ const Template1 = ({
 
             <div className="modal-content">
               <div className="modal-header">
-              <OverlayTrigger
-                placement="right"
-                overlay={renderTooltip}
-                className="tooltipHover">
-                  <p className="pb-1">Filter Options <i class="fal fa-info-circle red"></i></p>
-              </OverlayTrigger>
+                <OverlayTrigger
+                  placement="right"
+                  overlay={renderTooltip}
+                  className="tooltipHover"
+                >
+                  <p className="pb-1">
+                    Filter Options <i className="fal fa-info-circle red"></i>
+                  </p>
+                </OverlayTrigger>
                 <div className="closeThisPlease" id="close1">
-                <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1"
-                  onClick={() => {setShow3(true);slideIt();}}>
-                  {/*onClick={() => setShow3(false)}>*/}
-                  &#10005;
-                </Button>
+                  <Button
+                    role="button"
+                    className="close"
+                    data-dismiss="modal"
+                    id="closeThisPlease1"
+                    onClick={() => {
+                      setShow3(true);
+                      slideIt();
+                    }}
+                  >
+                    {/*onClick={() => setShow3(false)}>*/}
+                    &#10005;
+                  </Button>
                 </div>
               </div>
               <div className="modal-body">
@@ -368,6 +379,7 @@ const Template1 = ({
 
                 <div className="across">
 
+                <div className="lineAcross"></div>
 
                     <Button
                       onClick={handleTabVisUpdate}
@@ -382,20 +394,16 @@ const Template1 = ({
 
               <div className="across two">
                   <Button onClick={handleRestoreDefault} className="btn-clear">
-                    Restore Default <i class="fal fa-undo"></i>
+                    Restore Default <i className="fal fa-undo"></i>
                   </Button>
-                    <Button
-                    className="btn-clear">Print <i class="fal fa-print"></i>
-                   </Button>
-                  <Button
-                    onClick={handleClearAll} className="btn">Clear All
+                  <Button className="btn-clear">
+                    Print <i className="fal fa-print"></i>
                   </Button>
-                  </div>
-
-
+                  <Button onClick={handleClearAll} className="btn">
+                    Clear All
+                  </Button>
+                </div>
               </div>
-
-
             </div>
           </div>
 

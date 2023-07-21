@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react";
 
-export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter }) => {
-  const [currentSelection, setCurrentSelection] = useState([])
-  const [filterSelection, setFilterSelection] = useState([])
+export const CurrentSelection = ({
+  selectedDateFilter,
+  selectedFilters,
+  setSelectedFilters,
+  filterOptions,
+  fieldOptions,
+  selectedFields,
+  setSelectedFields,
+  dateFilterOptions,
+}) => {
+  const [currentSelection, setCurrentSelection] = useState([]);
+  const [filterSelection, setFilterSelection] = useState([]);
 
   useEffect(() => {
     let currentSelectionObj = {};
     if (selectedDateFilter !== "") {
-      const option3 = dateFilterOptions.find(option3 => option3.name === selectedDateFilter);
-        if(option3){
+      const option3 = dateFilterOptions.find(
+        (option3) => option3.name === selectedDateFilter
+      );
+      if (option3) {
         currentSelectionObj[selectedDateFilter] = option3;
       }
 
@@ -16,11 +27,14 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
     }
 
     let filterObj = {};
-    for(let key in selectedFilters) {
-      const option = filterOptions.find(option3 => option3.name === key);
+    for (let key in selectedFilters) {
+      const option = filterOptions.find((option3) => option3.name === key);
 
-      if(option && selectedFilters[key] !== 'N/A'){
-        filterObj[option.label_short] = {value: selectedFilters[key], name: key};
+      if (option && selectedFilters[key] !== "N/A") {
+        filterObj[option.label_short] = {
+          value: selectedFilters[key],
+          name: key,
+        };
       }
     }
     setFilterSelection(filterObj)
@@ -62,11 +76,11 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
   function removeField(fieldName) {
     setSelectedFilters((prev) => {
       let newObj = {};
-      for(const name in prev){
-        if(name !== fieldName) {
+      for (const name in prev) {
+        if (name !== fieldName) {
           newObj[name] = prev[name];
         } else {
-          newObj[name] = 'N/A';
+          newObj[name] = "N/A";
         }
       }
       return newObj;
@@ -99,6 +113,13 @@ console.log(selectedDateRange)
             )
           })}
 
+                <i
+                  onClick={() => removeField(filterSelection[selection].name)}
+                  className="fal fa-times blue"
+                ></i>
+              </div>
+            );
+          })}
         </div>
 
       ) : (
@@ -139,5 +160,5 @@ console.log(selectedDateRange)
       </div>
 
     </>
-  )
-}
+  );
+};
