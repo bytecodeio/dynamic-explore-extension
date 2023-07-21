@@ -1,13 +1,17 @@
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { Form, Row, Col } from "react-bootstrap";
+import { Form, Row, Col, Button, Container } from "react-bootstrap";
+
+import DateFilterGroup from  "./DateFilterGroup.js";
+
 export const DateRangeSelector = ({
   setSelectedDateRange,
   selectedDateRange,
   setSelectedDateFilter,
+  handleClearAll,
+  handleTabVisUpdate,
+  dateFilterOptions,
+  selectedDateFilter,
 }) => {
-  useEffect(() => {}, [selectedDateRange]);
   const onDateSelection = (e, type) => {
     if (type == "start") {
       let splitDate = splitSelectedDateRange();
@@ -29,37 +33,91 @@ export const DateRangeSelector = ({
     return ["", ""];
   };
 
+
+  const handleSelection = (e) => {
+    setSelectedDateFilter(e.target.id);
+  };
+
+
   return (
-    <Row className="mt-3">
-      <Col xs={12} md={12}>
-        <p className="mt-0 mb-2">
-          The <span className="highlight">Product Movement Dashboard</span>{" "}
-          allows viewing of top-moving products for a single account in
-          descending order by units, filtering for controlled substances, and
-          filtering by type or customize your report with over 40 available
-          fields.
-        </p>
-      </Col>
-      <Col xs={12} md={7}>
-        <div className="d-flex">
-          <div className="columnStart mr2">
-            <p className="small">Start Date</p>
-            <Form.Control
-              type="date"
-              value={splitSelectedDateRange()[0]}
-              onChange={(e) => onDateSelection(e, "start")}
-            />
-          </div>
-          <div className="columnStart">
-            <p className="small">End Date</p>
-            <Form.Control
-              type="date"
-              value={splitSelectedDateRange()[1]}
-              onChange={(e) => onDateSelection(e, "end")}
-            />
-          </div>
+    <Container>
+    <Row className="fullW mt-3">
+    <Col xs={12} md={7}>
+
+    <p className="mt-0 mb-2 mediumFont">
+    The <span className="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in
+    descending order by units, filtering for controlled substances, and
+    filtering by type or customize your report with over 40 available
+    fields.
+    </p>
+    </Col>
+
+    <Col xs={12} md={5}>
+    <div className="d-flex ml2">
+        <div className="columnStart mr2">
+          <p className="small">Start Date</p>
+          <Form.Control
+          type="date"
+          value={splitSelectedDateRange()[0]}
+          onChange={(e) => onDateSelection(e, "start")}
+          />
         </div>
-      </Col>
+        <div className="columnStart">
+          <p className="small">End Date</p>
+          <Form.Control
+          type="date"
+          value={splitSelectedDateRange()[1]}
+          onChange={(e) => onDateSelection(e, "end")}
+          />
+        </div>
+    </div>
+    </Col>
     </Row>
+
+    <Row className="fullW bottom">
+    <Col xs={12} md={7}>
+    <div className="grid2 mt-3">
+
+    {dateFilterOptions?.map(filter => {
+      return (
+
+        <div className="one radio">
+        <Form.Group
+        controlId={filter['name']}>
+          <Form.Check
+          checked={selectedDateFilter === filter['name']}
+          id={filter['name']}
+          value={filter['name']}
+          type="radio"
+          // name="dateFilters"
+          onChange={handleSelection}
+          label={filter['label_short'].replace('(Yes / No)','')}
+          />
+
+        </Form.Group>
+        </div>
+
+      )
+    })}
+    </div>
+
+    </Col>
+    <Col xs={12} md={5}>
+      <div className="buttons across">
+
+        <Button onClick={handleClearAll} className="btn-clear">
+        Clear Dates
+        </Button>
+
+        <Button
+        onClick={handleTabVisUpdate}
+        className="btn">Submit Dates
+        </Button>
+      </div>
+    </Col>
+    </Row>
+
+
+    </Container>
   );
 };

@@ -446,7 +446,7 @@ const Template1 = ({
           </Row>
 
           <Row className="mt-3 mb-3">
-            <Col md={12}>
+            <Col md={12} className="embed-responsive embed-responsive-16by9">
               <InnerTableTabs
                 tabs={tabList}
                 setSelectedFields={setSelectedFields}

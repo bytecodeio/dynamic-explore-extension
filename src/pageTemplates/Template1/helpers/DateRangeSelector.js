@@ -50,78 +50,77 @@ export const DateRangeSelector = ({
     filtering by type or customize your report with over 40 available
     fields.
     </p>
+
     </Col>
-
-
-
 
     <Col xs={12} md={5}>
     <div className="d-flex ml2">
-    <div className="columnStart mr2">
-    <p className="small">Start Date</p>
-    <Form.Control
-    type="date"
-    value={splitSelectedDateRange()[0]}
-    onChange={(e) => onDateSelection(e, "start")}
-    />
-    </div>
-    <div className="columnStart">
-    <p className="small">End Date</p>
-    <Form.Control
-    type="date"
-    value={splitSelectedDateRange()[1]}
-    onChange={(e) => onDateSelection(e, "end")}
-    />
-    </div>
+        <div className="columnStart mr2">
+          <p className="small">Start Date</p>
+          <Form.Control
+          type="date"
+          value={splitSelectedDateRange()[0]}
+          onChange={(e) => onDateSelection(e, "start")}
+          />
+        </div>
+        <div className="columnStart">
+          <p className="small">End Date</p>
+          <Form.Control
+          type="date"
+          value={splitSelectedDateRange()[1]}
+          onChange={(e) => onDateSelection(e, "end")}
+          />
+        </div>
     </div>
     </Col>
     </Row>
 
     <Row className="fullW bottom">
     <Col xs={12} md={7}>
-    <div className="grid2 mt-3">
 
-    {dateFilterOptions?.map(filter => {
-      return (
 
-        <div className="one radio">
-        <Form.Group
-        controlId={filter['name']}>
-        <Form.Check
-        checked={selectedDateFilter === filter['name']}
-        id={filter['name']}
-        value={filter['name']}
-        type="radio"
-        // name="dateFilters"
-        onChange={handleSelection}
-        label={filter['label_short'].replace('(Yes / No)','')}
-        />
+      <div className="grid2 mt-3">
+
+
+
+      {dateFilterOptions?.map(filter => {
+        return (
+
+          <div className="one radio">
+          <Form.Group
+          controlId={filter['name']}>
+            <Form.Check
+            checked={selectedDateFilter === filter['name']}
+            id={filter['name']}
+            value={filter['name']}
+            type="radio"
+            // name="dateFilters"
+            onChange={handleSelection}
+            label={filter['label_short'].replace('(Yes / No)','')}
+            />
 
         </Form.Group>
         </div>
 
       )
     })}
+
+
     </div>
-
-
 
     </Col>
+    <Col xs={12} md={5}>
+      <div className="buttons across">
 
+        <Button onClick={handleClearAll} className="btn-clear">
+        Clear Dates
+        </Button>
 
-    <Col xs={12} md={4} className="offset-lg-1">
-    <div className="buttons across">
-
-    <Button onClick={handleClearAll} className="btn-clear">
-    Clear Dates
-    </Button>
-
-
-    <Button
-    onClick={handleTabVisUpdate}
-    className="btn">Submit Dates
-    </Button>
-    </div>
+        <Button
+        onClick={handleTabVisUpdate}
+        className="btn">Submit Dates
+        </Button>
+      </div>
     </Col>
     </Row>
 
