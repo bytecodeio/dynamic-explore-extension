@@ -9,7 +9,9 @@ import Footer from "./components/Footer.js";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import moment from "moment";
 import Template1 from "./pageTemplates/Template1/Template1";
-import TopNav from './components/nav/TopNav.js'
+import TopNav from './components/nav/TopNav.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
 
 import {
   LOOKER_MODEL,
@@ -144,7 +146,7 @@ export const Main = () => {
                   isFetchingLookmlFields={isFetchingLookmlFields}
                   setSelectedDateFilter={setSelectedDateFilter}
                   selectedDateFilter={selectedDateFilter}
-                
+
                 />
               </Tab>
               <Tab eventKey="product-movement" title="Product Movement Report">
