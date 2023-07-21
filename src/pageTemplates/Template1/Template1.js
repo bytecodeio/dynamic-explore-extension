@@ -34,7 +34,8 @@ const Template1 = ({
   dateRange,
   tabKey,
   dashboardId,
-  slideIt,
+  showMenu,
+  setShowMenu
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -52,6 +53,7 @@ const Template1 = ({
     if (currentNavTab == tabKey) {
       setIsFilterChanged(true);
       handleTabVisUpdate();
+      //slideIt(show3);
     }
   }, [currentNavTab]);
 
@@ -268,10 +270,10 @@ const Template1 = ({
         <Spinner />
       ) : (
         <>
-        <div id="slideOut3" className={show3 ? "" : "show3"} ref={wrapperRef}>
+       <div id="slideOut3" className={showMenu ? "" : "show3"} ref={wrapperRef}>
         <div className="slideOutTab3">
           <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
-          onClick={() => {setShow3(false);slideIt();}}>
+             onClick={() => {setShowMenu(false);}}>
             <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
             <p className="m-0"><span className="noMobile">Filter Options</span></p>
               </div>
@@ -289,22 +291,27 @@ const Template1 = ({
                   </p>
                 </OverlayTrigger>
                 <div className="closeThisPlease" id="close1">
-                  <Button
-                    role="button"
-                    className="close"
-                    data-dismiss="modal"
-                    id="closeThisPlease1"
-                    onClick={() => {
-                      setShow3(true);
-                      slideIt();
-                    }}
-                  >
-                    {/*onClick={() => setShow3(false)}>*/}
-                    &#10005;
+                <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1"
+                   onClick={() => {setShowMenu(true);}}>
+                  {/*onClick={() => setShow3(false)}>*/}
+                  &#10005;
                   </Button>
                 </div>
               </div>
               <div className="modal-body">
+              <div className="across">
+
+                <Button onClick={handleClearAll} className="btn-clear">
+                  Clear All
+                </Button>
+
+
+                <Button
+                  onClick={handleTabVisUpdate}
+                  className="btn">Submit Filters
+                </Button>
+              </div>
+
                 <Accordion defaultActiveKey={0} className="mt-3 mb-3">
                   <Row>
                     <Col xs={12} md={12}>
@@ -379,12 +386,9 @@ const Template1 = ({
 
                 <div className="across">
 
-                <div className="lineAcross"></div>
 
-                    <Button
-                      onClick={handleTabVisUpdate}
-                      className="btn">Submit Values
-                    </Button>
+
+
                     <input placeholder="Top % Products" type="search" class="form-control" />
                     <input placeholder="Search Filter" type="search" class="form-control" />
 
@@ -399,9 +403,7 @@ const Template1 = ({
                   <Button className="btn-clear">
                     Print <i className="fal fa-print"></i>
                   </Button>
-                  <Button onClick={handleClearAll} className="btn">
-                    Clear All
-                  </Button>
+
                 </div>
               </div>
             </div>
@@ -430,12 +432,16 @@ const Template1 = ({
                 selectedDateRange={selectedDateRange}
                 setSelectedDateRange={setSelectedDateRange}
                 setSelectedDateFilter={setSelectedDateFilter}
-              />
-              <DateFilterGroup
                 dateFilterOptions={dateFilterOptions}
                 setSelectedDateFilter={setSelectedDateFilter}
                 selectedDateFilter={selectedDateFilter}
+
               />
+              {/*<DateFilterGroup
+                dateFilterOptions={dateFilterOptions}
+                setSelectedDateFilter={setSelectedDateFilter}
+                selectedDateFilter={selectedDateFilter}
+              />*/}
             </Col>
           </Row>
 
