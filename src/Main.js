@@ -36,6 +36,8 @@ export const Main = () => {
   const [productMovementFields, setProductMovementFields] = useState([]);
   const [filterOptions, setFilterOptions] = useState([]);
   const [dateFilterOptions, setDateFilterOptions] = useState([]);
+  const [quickFilter, setQuickFilter] = useState([]);
+
   const [dateRange, setDateRange] = useState("");
   const [showMenu, setShowMenu] = useState();
 
@@ -71,9 +73,17 @@ export const Main = () => {
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
       const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
+      const _quickFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
+      const _productMovementfieldOptions = fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
 
-      const _productMovementfieldOptions =
-        fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
+
+
+      console.log(fieldsByTag)
+
+        console.log(LOOKML_FIELD_TAGS.productMovementField)
+          console.log(LOOKML_FIELD_TAGS.quick_filter)
+
+          console.log(_quickFilterOptions)
 
       const _dateRange = fieldsByTag[LOOKML_FIELD_TAGS.dateRange];
 
@@ -98,6 +108,9 @@ export const Main = () => {
       setFilterOptions(_filterOptions);
       setProductMovementFields(_productMovementfieldOptions);
       setDateFilterOptions(sortDateFilterList(_dateFilterOptions));
+
+      setQuickFilter(_quickFilterOptions);
+
       setSelectedFilters(defaultFilterSelections);
       setDateRange(_dateRange[0]);
       setIsFetchingLookmlFields(false);
@@ -157,6 +170,7 @@ export const Main = () => {
                   filterOptions={filterOptions}
                   dateFilterOptions={dateFilterOptions}
                   fieldOptions={productMovementFields}
+                  quickFilterOptions={quickFilter}
                   isFetchingLookmlFields={isFetchingLookmlFields}
                   setSelectedDateFilter={setSelectedDateFilter}
                   selectedDateFilter={selectedDateFilter}

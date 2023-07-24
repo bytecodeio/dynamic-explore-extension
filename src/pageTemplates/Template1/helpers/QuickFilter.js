@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
-const Fields = ({
-  fieldOptions,
+const QuickFilter = ({
+  quickFilterOptions,
   setTabList,
   tabList,
   currentInnerTab,
@@ -28,13 +28,18 @@ const Fields = ({
     //     return [...prev, fieldName];
     //   }
     // });
-
-
   }
-  // console.log("these are fields", fieldOptions)
+
+
+    // console.log("these are quick", quickFilterOptions)
+
   return (
-    <div className="wrapFilters">
-      {fieldOptions.map((fieldOption) => (
+<div>
+    <p>hi!</p>
+
+
+    {/*<div className="wrapFilters">
+      {quickFilterOptions.map((fieldOption) => (
         <div className="one" key={fieldOption.name}>
           <Form.Group>
             <Form.Check
@@ -52,10 +57,12 @@ const Fields = ({
           </Form.Group>
         </div>
       ))}
+    </div>*/}
+
+
     </div>
 
-    // set value to name
   );
 };
 
-export default Fields;
+export default QuickFilter;

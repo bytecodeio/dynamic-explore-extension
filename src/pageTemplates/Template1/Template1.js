@@ -15,6 +15,7 @@ import InnerTableTabs from "../../components/InnerTableTabs";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
 import Rx from "./helpers/Rx";
+import QuickFilter from "./helpers/QuickFilter";
 import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
@@ -35,7 +36,8 @@ const Template1 = ({
   tabKey,
   dashboardId,
   showMenu,
-  setShowMenu
+  setShowMenu,
+  quickFilterOptions
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -327,9 +329,21 @@ const Template1 = ({
 
                         <Col xs={12} md={12}>
                           <Accordion.Item eventKey="3">
-                            <Accordion.Header>Rx</Accordion.Header>
+                            <Accordion.Header>Quick Filters</Accordion.Header>
                             <Accordion.Body>
-                              <Rx />
+                              <QuickFilter
+                              quickFilterOptions={quickFilterOptions}
+                              setTabList={setTabList}
+                              tabList={tabList}
+                              currentInnerTab={currentInnerTab}
+                              // selectedFields={selectedFields}
+                              // setSelectedFields={setSelectedFields}
+                              // isDefault={isDefaultProduct}
+                              // setIsDefault={setIsDefaultProduct}
+                              updateBtn={updateButtonClicked}
+                              setUpdateBtn={setUpdateButtonClicked}
+
+                              />
                             </Accordion.Body>
                           </Accordion.Item>
                         </Col>
