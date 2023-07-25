@@ -78,7 +78,7 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
   }
 
 
-console.log(selectedDateRange)
+
 
   return (
     <>

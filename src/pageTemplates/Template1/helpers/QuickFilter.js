@@ -30,38 +30,33 @@ const QuickFilter = ({
     // });
   }
 
-
-    // console.log("these are quick", quickFilterOptions)
-
   return (
-<div>
-    <p>hi!</p>
+    <div>
+      {console.log('quickFilterOptions in child component ', quickFilterOptions)}
+      <div className="wrapFilters">
+        {quickFilterOptions?.map((fieldOption) => (
 
 
-    {/*<div className="wrapFilters">
-      {quickFilterOptions.map((fieldOption) => (
-        <div className="one" key={fieldOption.name}>
-          <Form.Group>
-            <Form.Check
-              type="checkbox"
-              className=""
-              label={fieldOption.label_short}
-              checked={tabList[currentInnerTab]["selected_fields"].includes(
-                fieldOption.name
-              )}
-              name="Fields"
-              id={fieldOption.name}
-              value={fieldOption.fields}
-              onChange={() => handleFieldSelection(fieldOption.name)}
-            />
-          </Form.Group>
-        </div>
-      ))}
-    </div>*/}
 
+          <div className="one" key={fieldOption.name}>
 
+            {console.log(fieldOption.name)}
+            <Form.Group>
+              <Form.Check
+                type="checkbox"
+                className=""
+                label={fieldOption.label_short}
+                checked={tabList[currentInnerTab]["selected_fields"].includes(fieldOption.name)}
+                name="Fields"
+                id={fieldOption.name}
+                value={fieldOption.fields}
+                onChange={() => handleFieldSelection(fieldOption.name)}
+              />
+            </Form.Group>
+          </div>
+        ))}
+      </div>
     </div>
-
   );
 };
 

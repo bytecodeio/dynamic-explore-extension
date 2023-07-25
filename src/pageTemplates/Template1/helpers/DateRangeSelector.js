@@ -42,7 +42,7 @@ export const DateRangeSelector = ({
   return (
     <Container>
     <Row className="fullW mt-3">
-    <Col xs={12} md={7}>
+    <Col md={12} lg={9}>
 
     <p className="mt-0 mb-2 mediumFont">
     The <span className="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in
@@ -53,25 +53,17 @@ export const DateRangeSelector = ({
 
     </Col>
 
-    <Col xs={12} md={5}>
-    <div className="d-flex ml2">
-        <div className="columnStart mr2">
-          <p className="small">Start Date</p>
-          <Form.Control
-          type="date"
-          value={splitSelectedDateRange()[0]}
-          onChange={(e) => onDateSelection(e, "start")}
-          />
-        </div>
-        <div className="columnStart">
-          <p className="small">End Date</p>
-          <Form.Control
-          type="date"
-          value={splitSelectedDateRange()[1]}
-          onChange={(e) => onDateSelection(e, "end")}
-          />
-        </div>
+    <Col md={12} lg={3}>
+
+    <div className="buttons across">
+
+
+      <Button
+      onClick={handleTabVisUpdate}
+      className="btn">Update
+      </Button>
     </div>
+
     </Col>
     </Row>
 
@@ -110,17 +102,24 @@ export const DateRangeSelector = ({
 
     </Col>
     <Col xs={12} md={5}>
-      <div className="buttons across">
-
-        <Button onClick={handleClearAll} className="btn-clear">
-        Clear Dates
-        </Button>
-
-        <Button
-        onClick={handleTabVisUpdate}
-        className="btn">Submit Dates
-        </Button>
-      </div>
+    <div className="d-flex ml2">
+        <div className="columnStart mr2">
+          <p className="small">Start Date</p>
+          <Form.Control
+          type="date"
+          value={splitSelectedDateRange()[0]}
+          onChange={(e) => onDateSelection(e, "start")}
+          />
+        </div>
+        <div className="columnStart">
+          <p className="small">End Date</p>
+          <Form.Control
+          type="date"
+          value={splitSelectedDateRange()[1]}
+          onChange={(e) => onDateSelection(e, "end")}
+          />
+        </div>
+    </div>
     </Col>
     </Row>
 

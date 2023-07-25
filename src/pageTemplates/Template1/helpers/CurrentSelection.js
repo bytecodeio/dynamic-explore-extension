@@ -78,7 +78,7 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
   }
 
 
-console.log(selectedDateRange)
+// console.log(selectedDateRange)
 
   return (
     <>
@@ -120,7 +120,7 @@ console.log(selectedDateRange)
       )
 
     }
-    <div class="wrapOptions mt-3">
+    <div class="wrapOptions mt-1">
 
     {Object.keys(filterSelection)?.map((selection) => {
 
