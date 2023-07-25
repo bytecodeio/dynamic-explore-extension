@@ -32,8 +32,10 @@ export const Main = () => {
   const [selectedFilters, setSelectedFilters] = useState({});
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
   const [selectedDateRange, setSelectedDateRange] = useState();
+  const [currentInvoiceCount, setCurrentInvoiceCount] = useState("")
 
   const [productMovementFields, setProductMovementFields] = useState([]);
+  const [totalInvoiceField, setTotalInvoiceField] = useState()
   const [filterOptions, setFilterOptions] = useState([]);
   const [dateFilterOptions, setDateFilterOptions] = useState([]);
   const [dateRange, setDateRange] = useState("");
@@ -77,6 +79,8 @@ export const Main = () => {
 
       const _dateRange = fieldsByTag[LOOKML_FIELD_TAGS.dateRange];
 
+      const _totalInvoice = fieldsByTag[LOOKML_FIELD_TAGS.totalInvoices][0]
+
       const defaultFilterSelections = Object.fromEntries(
         _filterOptions.map((filter) => [filter.name, "N/A"])
       );
@@ -94,6 +98,11 @@ export const Main = () => {
       }
 
       setSelectedDateRange(getDefaultDateRange());
+      if (_totalInvoice) {
+        setTotalInvoiceField(_totalInvoice)
+        let values = await getValues(_totalInvoice)
+        setCurrentInvoiceCount(values[0][_totalInvoice['name']])
+      }      
 
       setFilterOptions(_filterOptions);
       setProductMovementFields(_productMovementfieldOptions);
@@ -121,6 +130,43 @@ export const Main = () => {
     let endOfMonth = prevMonth.endOf("month").format("YYYY-MM-DD").toString();
     return `${startOfMonth} to ${endOfMonth}`;
   };
+
+  const getValues = (field) => {
+    return sdk.ok(
+      sdk.run_inline_query({
+        result_format: "json",
+        body: {
+          model: LOOKER_MODEL,
+          view: field['view'],
+          fields: [field['name']],
+          filters: getAllFilters()
+        },
+      })
+    );
+  }
+
+  const getAllFilters = () => {
+    let filters = {};
+    for (const filter in selectedFilters) {
+      if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
+        filters[filter] = selectedFilters[filter];
+      }
+    }
+
+    if (selectedDateFilter != "") {
+      filters[selectedDateFilter] = "Yes";
+    } else {
+      if (selectedDateRange) {
+        filters[dateRange["name"]] = selectedDateRange;
+      }
+    }
+    return filters
+  }
+
+  const updateInvoiceCount = async () => {
+    let newCount = await getValues(totalInvoiceField);
+    setCurrentInvoiceCount(newCount[0][totalInvoiceField['name']])
+  }
 
   return (
     <>
@@ -165,9 +211,11 @@ export const Main = () => {
                   dateRange={dateRange}
                   dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
                   tabKey={"product-movement"}
-                  currentNavTab={currentNavTab}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
+                  currentInvoiceCount={currentInvoiceCount}
+                  updateInvoiceCount={updateInvoiceCount}
+                  getAllFilters={getAllFilters}
                 />
               </Tab>
               <Tab eventKey="invoice" title="Invoice Report">
@@ -188,6 +236,9 @@ export const Main = () => {
                   tabKey={"invoice"}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
+                  currentInvoiceCount={currentInvoiceCount}
+                  updateInvoiceCount={updateInvoiceCount}
+                  getAllFilters={getAllFilters}
                 />
               </Tab>
               <Tab eventKey="auto-sub" title="Auto-Sub Report">
@@ -208,6 +259,9 @@ export const Main = () => {
                   tabKey={"auto-sub"}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
+                  currentInvoiceCount={currentInvoiceCount}
+                  updateInvoiceCount={updateInvoiceCount}
+                  getAllFilters={getAllFilters}
                 />
               </Tab>
               <Tab eventKey="id" title="Inflation/Deflation Report">
