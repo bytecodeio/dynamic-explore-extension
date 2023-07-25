@@ -54,17 +54,22 @@ export const Main = () => {
       fields.forEach((field) => {
         // console.log('fields plural', fields);
         // console.log('field alone', field);
-        field.tags.forEach((tag) => {
-          // console.log('tag alone', tag);
-          // console.log(`fieldsByTag[${tag}] `, fieldsByTag[tag]);
-          // console.log('fieldsByTag ', fieldsByTag);
+        console.log(field.tags)
+        if (field.tags != "") {
+          field.tags.toString().split(",").forEach((tag) => {
+            tag = tag.trim()
+            // console.log('tag alone', tag);
+            // console.log(`fieldsByTag[${tag}] `, fieldsByTag[tag]);
+            // console.log('fieldsByTag ', fieldsByTag);
 
-          if (fieldsByTag[tag] === undefined) {
-            fieldsByTag[tag] = [field];
-          } else {
-            fieldsByTag[tag].push(field);
-          }
-        });
+            if (fieldsByTag[tag] === undefined) {
+              fieldsByTag[tag] = [field];
+            } else {
+              fieldsByTag[tag].push(field);
+            }
+          });
+        }
+
       });
       return fieldsByTag;
     }
@@ -81,6 +86,8 @@ export const Main = () => {
       const lookmlFields = [...dimensions, ...filters, ...measures];
       // console.log('lookmlFields ', lookmlFields);
       const fieldsByTag = groupFieldsByTags(lookmlFields);
+
+      console.log("fields", fieldsByTag)
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
       const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
