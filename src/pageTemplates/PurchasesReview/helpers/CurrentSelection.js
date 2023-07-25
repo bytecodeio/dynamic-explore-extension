@@ -73,7 +73,7 @@ export const CurrentSelection = ({
     <>
       <h3 className="blue">Current Selections</h3>
 
-        {console.log('selected fields 2', selectedFields)}
+  {console.log('fieldsOptions in Current ', fieldOptions)}
 
       <div className="wrapOptions">
         {Object.keys(currentSelection)?.map((selection) => {
