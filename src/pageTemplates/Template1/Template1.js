@@ -307,20 +307,18 @@ const Template1 = ({
                   </Button>
                 </div>
               </div>
-              <div className="modal-body">
-              <div className="across">
-
-                <Button onClick={handleClearAll} className="btn-clear">
-                  Clear All
-                </Button>
-
-
-                <Button
-                  onClick={handleTabVisUpdate}
-                  className="btn">Submit
-                </Button>
+              <div className="modal-actions">
+                <div className="across">
+                  <Button onClick={handleClearAll} className="btn-clear">
+                    Clear All
+                  </Button>
+                  <Button
+                    onClick={handleTabVisUpdate}
+                    className="btn">Submit Filters
+                  </Button>
+                </div>
               </div>
-
+              <div className="modal-body">
                 <Accordion defaultActiveKey={0} className="mt-3 mb-3">
                   <Row>
                     <Col xs={12} md={12}>
