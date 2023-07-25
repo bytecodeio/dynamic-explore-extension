@@ -6718,6 +6718,12 @@ html.dark-mode{
 
   }
 
+  .wrapOptions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 6px;
+}
+
 
   .slideOutTab1 {
     position: absolute;
