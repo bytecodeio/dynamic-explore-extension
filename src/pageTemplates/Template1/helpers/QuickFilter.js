@@ -40,7 +40,7 @@ const QuickFilter = ({
 
           <div className="one" key={fieldOption.name}>
 
-      
+
             <Form.Group>
               <Form.Check
                 type="checkbox"

@@ -38,6 +38,9 @@ const Template1 = ({
   dashboardId,
   showMenu,
   setShowMenu,
+  currentInvoiceCount,
+  updateInvoiceCount,
+  getAllFilters,
   quickFilterOptions
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
@@ -179,24 +182,27 @@ const Template1 = ({
     const prevVisQid = currentTab["query"];
 
     // remove filters with a value of "N/A"
-    const filters = {};
-    for (const filter in selectedFilters) {
-      if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
-        filters[filter] = selectedFilters[filter];
-      }
-    }
+    let filters = {};
+    // for (const filter in selectedFilters) {
+    //   if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
+    //     filters[filter] = selectedFilters[filter];
+    //   }
+    // }
 
-    if (selectedDateFilter != "") {
-      filters[selectedDateFilter] = "Yes";
-    } else {
-      if (selectedDateRange) {
-        filters[dateRange["name"]] = selectedDateRange;
-      }
-    }
+    // if (selectedDateFilter != "") {
+    //   filters[selectedDateFilter] = "Yes";
+    // } else {
+    //   if (selectedDateRange) {
+    //     filters[dateRange["name"]] = selectedDateRange;
+    //   }
+    // }
+    filters = await getAllFilters();
 
     if (isFilterChanged) {
       updateInnerTabFilters(filters);
     }
+
+    await updateInvoiceCount()
 
     const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
 
@@ -456,7 +462,7 @@ const Template1 = ({
 
 
               <p className="mt-5">
-                Total Invoice: <span className="highlight large">17</span>
+                Total Invoice: <span className="highlight large">{currentInvoiceCount}</span>
               </p>
             </Col>
 
@@ -466,7 +472,6 @@ const Template1 = ({
                 setSelectedDateRange={setSelectedDateRange}
                 setSelectedDateFilter={setSelectedDateFilter}
                 dateFilterOptions={dateFilterOptions}
-                setSelectedDateFilter={setSelectedDateFilter}
                 selectedDateFilter={selectedDateFilter}
 
               />

@@ -10,5 +10,6 @@ export const LOOKML_FIELD_TAGS = {
   date_filter:"date filter",
   productMovementField: "field: product_movement",
   dateRange: "date range",
-  quick_filter: "field: product_movement, quick_filter: product_movement"
+  quick_filter: "field: product_movement, quick_filter: product_movement",
+  totalInvoices: "total_invoices"
 };
