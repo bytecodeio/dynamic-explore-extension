@@ -15,9 +15,11 @@ import InnerTableTabs from "../../components/InnerTableTabs";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
 import Rx from "./helpers/Rx";
+import QuickFilter from "./helpers/QuickFilter";
 import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
+import { CurrentQuickFilter } from "./helpers/CurrentQuickFilter";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 const Template1 = ({
   currentNavTab,
@@ -38,7 +40,8 @@ const Template1 = ({
   setShowMenu,
   currentInvoiceCount,
   updateInvoiceCount,
-  getAllFilters
+  getAllFilters,
+  quickFilterOptions
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -314,7 +317,7 @@ const Template1 = ({
 
                 <Button
                   onClick={handleTabVisUpdate}
-                  className="btn">Submit Filters
+                  className="btn">Submit
                 </Button>
               </div>
 
@@ -322,20 +325,32 @@ const Template1 = ({
                   <Row>
                     <Col xs={12} md={12}>
                       <Row>
-                        <Col xs={12} md={12}>
+                        {/*<Col xs={12} md={12}>
                           <Accordion.Item eventKey="1">
                             <Accordion.Header>Account Groups</Accordion.Header>
                             <Accordion.Body>
                               <AccountGroups />
                             </Accordion.Body>
                           </Accordion.Item>
-                        </Col>
+                        </Col>*/}
 
                         <Col xs={12} md={12}>
                           <Accordion.Item eventKey="3">
-                            <Accordion.Header>Rx</Accordion.Header>
+                            <Accordion.Header>Quick Filters</Accordion.Header>
                             <Accordion.Body>
-                              <Rx />
+                              <QuickFilter
+                              quickFilterOptions={quickFilterOptions}
+                              setTabList={setTabList}
+                              tabList={tabList}
+                              currentInnerTab={currentInnerTab}
+                              // selectedFields={selectedFields}
+                              // setSelectedFields={setSelectedFields}
+                              // isDefault={isDefaultProduct}
+                              // setIsDefault={setIsDefaultProduct}
+                              updateBtn={updateButtonClicked}
+                              setUpdateBtn={setUpdateButtonClicked}
+
+                              />
                             </Accordion.Body>
                           </Accordion.Item>
                         </Col>
@@ -415,6 +430,8 @@ const Template1 = ({
             </div>
           </div>
 
+
+
           <Row className="fullW">
             <Col md={12} lg={5}>
               <CurrentSelection
@@ -427,7 +444,23 @@ const Template1 = ({
                 setSelectedFilters={setSelectedFilters}
                 dateFilterOptions={dateFilterOptions}
                 selectedDateRange={selectedDateRange}
+                quickFilterOptions={quickFilterOptions}
               />
+
+              <CurrentQuickFilter
+              selectedDateFilter={selectedDateFilter}
+              selectedFilters={selectedFilters}
+              selectedFields={selectedFields}
+              fieldOptions={fieldOptions}
+              setSelectedFields={setSelectedFields}
+              filterOptions={filterOptions}
+              setSelectedFilters={setSelectedFilters}
+              dateFilterOptions={dateFilterOptions}
+              selectedDateRange={selectedDateRange}
+              quickFilterOptions={quickFilterOptions}
+            />
+
+
               <p className="mt-5">
                 Total Invoice: <span className="highlight large">{currentInvoiceCount}</span>
               </p>

@@ -6605,6 +6605,10 @@ html.dark-mode{
   width:100%
 }
 
+.grid2{
+  margin-left:-.8em
+}
+
 
 .across .form-control,
 .across.two .btn-clear{

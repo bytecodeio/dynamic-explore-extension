@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
 
-export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter }) => {
+export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter, quickFilterOptions }) => {
   const [currentSelection, setCurrentSelection] = useState([])
   const [filterSelection, setFilterSelection] = useState([])
 
@@ -28,7 +28,7 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
 
     // for (const filter in selectedFields) {
     //     if (selectedFields[filter] !== "") {
-    //       const option1 = fieldOptions.find(option1 => option1.name === selectedFields[filter]);
+    //       const option1 = quickFilterOptions.find(option1 => option1.name === selectedFields[filter]);
     //
     //       if(option1){
     //         currentSelectionObj[filter] = option1;
@@ -38,8 +38,8 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
     //
     //         // console.log("one", selectedFields)
     // }
-    //
-    //
+
+
     //   for (const filter in selectedFilters) {
     //
     //
@@ -58,7 +58,7 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
     // }
 
     setCurrentSelection(currentSelectionObj)
-  },[selectedDateFilter, dateFilterOptions, selectedFilters, selectedFields, fieldOptions, filterOptions, setSelectedDateRange, selectedDateRange])
+  },[selectedDateFilter, dateFilterOptions, selectedFilters, selectedFields, fieldOptions, filterOptions, setSelectedDateRange, selectedDateRange, quickFilterOptions])
 
   function removeField(fieldName) {
     setSelectedFilters((prev) => {
@@ -80,14 +80,22 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
 
 console.log(selectedDateRange)
 
+
+// function formatCourseDate(date) {
+//   const dateObj = new Date(date + 'T00:00:00');
+//   return new Intl.DateTimeFormat('en-US').format(dateObj);
+// }
+// console.log(formatCourseDate('1995-12-17'));
+
+
   return (
     <>
-    <h3 className="blue strong mt-3 mb-2">Current Selections</h3>
+    <h3 className="blue strong mt-3">Current Selections</h3>
     <div className="d-flex flex-column">
     {
 
       Object.keys(currentSelection).length > 0 ? (
-        <div className="mb-2">
+        <div className="mb-1">
 
           {Object.keys(currentSelection)?.map((selection) => {
             return(
@@ -105,13 +113,12 @@ console.log(selectedDateRange)
       ) : (
 
       <div className="dateChoice">
-        {/*<p className="mb-0 blue">{selectedDateRange}</p>*/}
+      {/*<p className="mb-0 blue">{selectedDateRange}</p>*/}
 
 
-        {selectedDateRange && selectedDateRange.split(" to ").map((selection) => {
+        {selectedDateRange && selectedDateRange.split().map((selection) => {
            return(
-
-               <p className="mb-0 blue">{selection}</p>
+          <p className="mb-0 blue">{selection}</p>
 
            )
          })}
@@ -120,7 +127,7 @@ console.log(selectedDateRange)
       )
 
     }
-    <div class="wrapOptions mt-3">
+    <div class="wrapOptions">
 
     {Object.keys(filterSelection)?.map((selection) => {
 

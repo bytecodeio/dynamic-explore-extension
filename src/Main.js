@@ -38,19 +38,27 @@ export const Main = () => {
   const [totalInvoiceField, setTotalInvoiceField] = useState()
   const [filterOptions, setFilterOptions] = useState([]);
   const [dateFilterOptions, setDateFilterOptions] = useState([]);
+  const [quickFilter, setQuickFilter] = useState([]);
+
   const [dateRange, setDateRange] = useState("");
   const [showMenu, setShowMenu] = useState();
 
-  const slideIt = (show) =>{
-     setShowMenu(show)
-   }
+  const slideIt = (show) => {
+    setShowMenu(show)
+  }
 
   // Initialize the states
   useEffect(() => {
     function groupFieldsByTags(fields) {
       const fieldsByTag = {};
       fields.forEach((field) => {
+        // console.log('fields plural', fields);
+        // console.log('field alone', field);
         field.tags.forEach((tag) => {
+          // console.log('tag alone', tag);
+          // console.log(`fieldsByTag[${tag}] `, fieldsByTag[tag]);
+          // console.log('fieldsByTag ', fieldsByTag);
+
           if (fieldsByTag[tag] === undefined) {
             fieldsByTag[tag] = [field];
           } else {
@@ -61,6 +69,8 @@ export const Main = () => {
       return fieldsByTag;
     }
 
+
+
     const fetchLookmlFields = async () => {
       const {
         fields: { dimensions, filters, measures },
@@ -69,13 +79,24 @@ export const Main = () => {
       );
 
       const lookmlFields = [...dimensions, ...filters, ...measures];
+      // console.log('lookmlFields ', lookmlFields);
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
       const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
 
-      const _productMovementfieldOptions =
-        fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
+      const _productMovementfieldOptions = fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
+      const _quickFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
+
+
+
+      // console.log("fieldsByTag", fieldsByTag)
+      //
+      // console.log("this is field", LOOKML_FIELD_TAGS.productMovementField)
+      // console.log("this is quick", LOOKML_FIELD_TAGS.quick_filter)
+      // console.log("this is LOOKML_FIELD_TAGS", LOOKML_FIELD_TAGS)
+      //
+      // console.log('_quickFilterOptions', _quickFilterOptions)
 
       const _dateRange = fieldsByTag[LOOKML_FIELD_TAGS.dateRange];
 
@@ -107,6 +128,10 @@ export const Main = () => {
       setFilterOptions(_filterOptions);
       setProductMovementFields(_productMovementfieldOptions);
       setDateFilterOptions(sortDateFilterList(_dateFilterOptions));
+
+      setQuickFilter(_quickFilterOptions);
+
+
       setSelectedFilters(defaultFilterSelections);
       setDateRange(_dateRange[0]);
       setIsFetchingLookmlFields(false);
@@ -119,7 +144,7 @@ export const Main = () => {
     }
   }, []);
 
-  useEffect(() => {}, [selectedDateRange]);
+  useEffect(() => { }, [selectedDateRange]);
 
   const getDefaultDateRange = () => {
     let prevMonth = moment().subtract(1, "month");
@@ -171,9 +196,8 @@ export const Main = () => {
   return (
     <>
       <NavbarMain />
-
       <Container fluid className="mt-50 padding-0">
-      <TopNav/>
+        <TopNav />
         <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
           <div id="nav2">
             <Tabs
@@ -196,6 +220,7 @@ export const Main = () => {
                 />
               </Tab>
               <Tab eventKey="product-movement" title="Product Movement Report">
+                {console.log('quick filter state ', quickFilter)}
                 <Template1
                   currentNavTab={currentNavTab}
                   selectedFilters={selectedFilters}
@@ -203,6 +228,7 @@ export const Main = () => {
                   filterOptions={filterOptions}
                   dateFilterOptions={dateFilterOptions}
                   fieldOptions={productMovementFields}
+                  quickFilterOptions={quickFilter}
                   isFetchingLookmlFields={isFetchingLookmlFields}
                   setSelectedDateFilter={setSelectedDateFilter}
                   selectedDateFilter={selectedDateFilter}
@@ -290,7 +316,6 @@ export const Main = () => {
         </div>
       </Container>
       <ToTopButton />
-
       <SideForm />
       <Footer />
     </>
