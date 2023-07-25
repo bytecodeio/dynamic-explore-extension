@@ -27,6 +27,7 @@ export const CurrentQuickFilter = ({ selectedDateFilter, selectedFilters, setSel
   ]);
 
   function removeField(fieldName) {
+    console.log("field name",fieldName)
     setSelectedFields((prev) => {
       if (prev.includes(fieldName)) {
         return prev.filter((selectedFilter) => selectedFilter !== fieldName);

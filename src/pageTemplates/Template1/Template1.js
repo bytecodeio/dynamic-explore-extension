@@ -471,7 +471,7 @@ const Template1 = ({
                 setSelectedDateFilter={setSelectedDateFilter}
                 dateFilterOptions={dateFilterOptions}
                 selectedDateFilter={selectedDateFilter}
-
+                handleTabVisUpdate={handleTabVisUpdate}
               />
               {/*<DateFilterGroup
                 dateFilterOptions={dateFilterOptions}
