@@ -53,9 +53,9 @@ export const Main = () => {
         // console.log('fields plural', fields);
         // console.log('field alone', fields);
         field.tags.forEach((tag) => {
-          console.log('tag alone', tag);
-          console.log(`fieldsByTag[${tag}] `, fieldsByTag[tag]);
-          console.log('fieldsByTag ', fieldsByTag);
+          // console.log('tag alone', tag);
+          // console.log(`fieldsByTag[${tag}] `, fieldsByTag[tag]);
+          // console.log('fieldsByTag ', fieldsByTag);
 
           if (fieldsByTag[tag] === undefined) {
             fieldsByTag[tag] = [field];
@@ -75,7 +75,7 @@ export const Main = () => {
       );
 
       const lookmlFields = [...dimensions, ...filters, ...measures];
-      console.log('lookmlFields ', lookmlFields);
+      // console.log('lookmlFields ', lookmlFields);
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
@@ -86,13 +86,13 @@ export const Main = () => {
 
 
 
-      console.log("fieldsByTag", fieldsByTag)
-
-      console.log("this is field", LOOKML_FIELD_TAGS.productMovementField)
-      console.log("this is quick", LOOKML_FIELD_TAGS.quick_filter)
-      console.log("this is LOOKML_FIELD_TAGS", LOOKML_FIELD_TAGS)
-
-      console.log('_quickFilterOptions', _quickFilterOptions)
+      // console.log("fieldsByTag", fieldsByTag)
+      //
+      // console.log("this is field", LOOKML_FIELD_TAGS.productMovementField)
+      // console.log("this is quick", LOOKML_FIELD_TAGS.quick_filter)
+      // console.log("this is LOOKML_FIELD_TAGS", LOOKML_FIELD_TAGS)
+      //
+      // console.log('_quickFilterOptions', _quickFilterOptions)
 
       const _dateRange = fieldsByTag[LOOKML_FIELD_TAGS.dateRange];
 
