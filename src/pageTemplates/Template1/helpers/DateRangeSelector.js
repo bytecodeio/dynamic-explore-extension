@@ -39,6 +39,9 @@ export const DateRangeSelector = ({
   };
 
 
+  console.log(selectedDateRange)
+
+
   return (
     <Container>
     <Row className="fullW mt-3">

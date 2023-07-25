@@ -14,15 +14,15 @@ export const CurrentSelection = ({
 
   useEffect(() => {
     let currentSelectionObj = {};
-    if (selectedDateFilter !== "") {
-      // const optionDate = dateFilterOptions.find(optionDate => optionDate.name === selectedDateFilter[filter]);
-      //
-      // if(optionDate){
-      //   currentSelectionObj[filter] = "Yes";
-      // }
-
-      currentSelectionObj[selectedDateFilter] = "Yes";
-    }
+    // if (selectedDateFilter !== "") {
+    //   // const optionDate = dateFilterOptions.find(optionDate => optionDate.name === selectedDateFilter[filter]);
+    //   //
+    //   // if(optionDate){
+    //   //   currentSelectionObj[filter] = "Yes";
+    //   // }
+    //
+    //   currentSelectionObj[selectedDateFilter] = "Yes";
+    // }
 
     for (const filter in selectedFields) {
       if (selectedFields[filter] !== "") {
@@ -37,24 +37,23 @@ export const CurrentSelection = ({
       }
     }
 
-    for (const filter in selectedFilters) {
-      if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
-        const optionFilter = filterOptions.find(
-          (optionFilter) => optionFilter.name === selectedFilters[filter]
-        );
-
-        if (optionFilter) {
-          currentSelectionObj[filter] = optionFilter;
-        }
-
-        // currentSelectionObj[filter] = selectedFilters[filter];
-      }
-    }
+    // for (const filter in selectedFilters) {
+    //   if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
+    //     const optionFilter = filterOptions.find(
+    //       (optionFilter) => optionFilter.name === selectedFilters[filter]
+    //     );
+    //
+    //     if (optionFilter) {
+    //       currentSelectionObj[filter] = optionFilter;
+    //     }
+    //
+    //     // currentSelectionObj[filter] = selectedFilters[filter];
+    //   }
+    // }
 
     setCurrentSelection(currentSelectionObj);
   }, [
-    selectedDateFilter,
-    selectedFilters,
+
     selectedFields,
     fieldOptions,
     filterOptions,
@@ -73,6 +72,8 @@ export const CurrentSelection = ({
   return (
     <>
       <h3 className="blue">Current Selections</h3>
+
+        {console.log('selected fields 2', selectedFields)}
 
       <div className="wrapOptions">
         {Object.keys(currentSelection)?.map((selection) => {

@@ -51,7 +51,7 @@ export const Main = () => {
       const fieldsByTag = {};
       fields.forEach((field) => {
         // console.log('fields plural', fields);
-        // console.log('field alone', fields);
+        // console.log('field alone', field);
         field.tags.forEach((tag) => {
           // console.log('tag alone', tag);
           // console.log(`fieldsByTag[${tag}] `, fieldsByTag[tag]);
@@ -66,6 +66,8 @@ export const Main = () => {
       });
       return fieldsByTag;
     }
+
+
 
     const fetchLookmlFields = async () => {
       const {

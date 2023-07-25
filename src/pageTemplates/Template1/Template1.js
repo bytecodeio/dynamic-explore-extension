@@ -19,6 +19,7 @@ import QuickFilter from "./helpers/QuickFilter";
 import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
+import { CurrentQuickFilter } from "./helpers/CurrentQuickFilter";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 const Template1 = ({
   currentNavTab,
@@ -423,6 +424,8 @@ const Template1 = ({
             </div>
           </div>
 
+
+
           <Row className="fullW">
             <Col md={12} lg={5}>
               <CurrentSelection
@@ -435,7 +438,23 @@ const Template1 = ({
                 setSelectedFilters={setSelectedFilters}
                 dateFilterOptions={dateFilterOptions}
                 selectedDateRange={selectedDateRange}
+                quickFilterOptions={quickFilterOptions}
               />
+
+              <CurrentQuickFilter
+              selectedDateFilter={selectedDateFilter}
+              selectedFilters={selectedFilters}
+              selectedFields={selectedFields}
+              fieldOptions={fieldOptions}
+              setSelectedFields={setSelectedFields}
+              filterOptions={filterOptions}
+              setSelectedFilters={setSelectedFilters}
+              dateFilterOptions={dateFilterOptions}
+              selectedDateRange={selectedDateRange}
+              quickFilterOptions={quickFilterOptions}
+            />
+
+
               <p className="mt-5">
                 Total Invoice: <span className="highlight large">17</span>
               </p>
