@@ -123,7 +123,7 @@ export const Main = () => {
         setTotalInvoiceField(_totalInvoice)
         let values = await getValues(_totalInvoice)
         setCurrentInvoiceCount(values[0][_totalInvoice['name']])
-      }      
+      }
 
       setFilterOptions(_filterOptions);
       setProductMovementFields(_productMovementfieldOptions);

@@ -112,7 +112,7 @@ console.log(selectedDateRange)
 
       ) : (
 
-      <div className="dateChoice">
+      <div className="dateChoice mb-1">
       {/*<p className="mb-0 blue">{selectedDateRange}</p>*/}
 
 
