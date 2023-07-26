@@ -37,7 +37,7 @@ function SideForm() {
             className="openTab bottomShadow"
             role="button"
             tabIndex="0"
-            onClick={() => setShow(true)}
+            onClick={() => setShow('glossary')}
           >
             <p className="black">
               <i className="fal fa-book"></i>&nbsp;
@@ -50,7 +50,7 @@ function SideForm() {
             className="openTab bottomShadow"
             data-dismiss="modal"
             aria-controls="right-nav-contact"
-            onClick={handleClick2}
+            onClick={() => setShow('how_to')}
           >
             <p className="black">
               <i aria-hidden="true" className="fal fa-info-circle"></i>&nbsp;
@@ -61,7 +61,7 @@ function SideForm() {
 
         <div
           className="modal-content"
-          style={show2 ? { display: "none" } : { display: "block" }}
+          style={show == "glossary" ? { display: "block" } : { display: "none" }}
         >
           <div className="modal-header">
             <div className="closeThisPlease" id="close1">
@@ -72,7 +72,7 @@ function SideForm() {
                 className="close"
                 data-dismiss="modal"
                 id="closeThisPlease1"
-                onClick={() => setShow(false)}
+                onClick={() => setShow('')}
               >
                 &#10005;
               </Button>
@@ -202,7 +202,7 @@ function SideForm() {
 
         <div
           className="modal-content info"
-          style={show2 ? { display: "block" } : { display: "none" }}
+          style={show !== 'glossary' ? { display: "block" } : { display: "none" }}
         >
           <div className="modal-header">
             <div className="closeThisPlease" id="close1">
@@ -212,7 +212,7 @@ function SideForm() {
                 role="button"
                 className="close"
                 data-dismiss="modal"
-                onClick={() => setShow2(false)}
+                onClick={() => setShow('')}
               >
                 &#10005;
               </Button>

@@ -35,6 +35,7 @@
     "@styled-icons/material-outlined": "10.34.0",
     "@styled-icons/material-rounded": "10.34.0",
     "bootstrap": "^5.2.3",
+    "jquery": "^3.7.0",
     "lodash": "^4.17.21",
     "looker-extension-sdk": "^21.4.3",
     "mini-css-extract-plugin": "^2.7.6",

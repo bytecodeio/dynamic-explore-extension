@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
+import * as $ from "jquery";
+import moment from 'moment';
 
 export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter, quickFilterOptions }) => {
   const [currentSelection, setCurrentSelection] = useState([])
@@ -78,14 +80,20 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
   }
 
 
-console.log(selectedDateRange)
+//
+// selectedDateRange && selectedDateRange.split().map((selection) => {
+//   console.log(selection)
+//
+//
+//
+//  })
 
+const first = selectedDateRange.split(" to ")[0]
+const last = selectedDateRange.split(" to ")[1]
 
-// function formatCourseDate(date) {
-//   const dateObj = new Date(date + 'T00:00:00');
-//   return new Intl.DateTimeFormat('en-US').format(dateObj);
-// }
-// console.log(formatCourseDate('1995-12-17'));
+const format2 = moment(last).format('MM-DD-YYYY').toString();
+
+const format1 = moment(first).format('MM-DD-YYYY').toString();
 
 
   return (
@@ -113,15 +121,15 @@ console.log(selectedDateRange)
       ) : (
 
       <div className="dateChoice mb-1">
-      {/*<p className="mb-0 blue">{selectedDateRange}</p>*/}
+      <p className="mb-0 blue">{format1} to {format2}</p>
 
 
-        {selectedDateRange && selectedDateRange.split().map((selection) => {
+        {/*}{selectedDateRange && selectedDateRange.split().map((selection) => {
            return(
           <p className="mb-0 blue">{selection}</p>
 
            )
-         })}
+         })}*/}
       </div>
 
       )
