@@ -54,7 +54,7 @@ export const Main = () => {
       fields.forEach((field) => {
         // console.log('fields plural', fields);
         // console.log('field alone', field);
-        console.log(field.tags)
+        // console.log(field.tags)
         if (field.tags != "") {
           field.tags.toString().split(",").forEach((tag) => {
             tag = tag.trim()
@@ -87,7 +87,7 @@ export const Main = () => {
       // console.log('lookmlFields ', lookmlFields);
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
-      console.log("fields", fieldsByTag)
+      // console.log("fields", fieldsByTag)
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
       const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];

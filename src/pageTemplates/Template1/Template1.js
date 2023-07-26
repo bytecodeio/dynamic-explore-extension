@@ -314,7 +314,7 @@ const Template1 = ({
                   </Button>
                   <Button
                     onClick={handleTabVisUpdate}
-                    className="btn">Submit Filters
+                    className="btn">Submit
                   </Button>
                 </div>
               </div>
@@ -323,14 +323,14 @@ const Template1 = ({
                   <Row>
                     <Col xs={12} md={12}>
                       <Row>
-                        {/*<Col xs={12} md={12}>
+                        <Col xs={12} md={12}>
                           <Accordion.Item eventKey="1">
                             <Accordion.Header>Account Groups</Accordion.Header>
                             <Accordion.Body>
                               <AccountGroups />
                             </Accordion.Body>
                           </Accordion.Item>
-                        </Col>*/}
+                        </Col>
 
                         <Col xs={12} md={12}>
                           <Accordion.Item eventKey="3">

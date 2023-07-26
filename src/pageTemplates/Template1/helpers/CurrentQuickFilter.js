@@ -27,7 +27,6 @@ export const CurrentQuickFilter = ({ selectedDateFilter, selectedFilters, setSel
   ]);
 
   function removeField(fieldName) {
-    console.log("field name",fieldName)
     setSelectedFields((prev) => {
       if (prev.includes(fieldName)) {
         return prev.filter((selectedFilter) => selectedFilter !== fieldName);
@@ -39,10 +38,7 @@ export const CurrentQuickFilter = ({ selectedDateFilter, selectedFilters, setSel
 
   return (
     <>
-  {console.log('quickFilterOptions in Current ', quickFilterOptions)}
 
-
-    {console.log('selected fields ', selectedFields)}
 
       <div className="wrapOptions">
         {Object.keys(currentSelection)?.map((selection) => {
@@ -50,7 +46,9 @@ export const CurrentQuickFilter = ({ selectedDateFilter, selectedFilters, setSel
             <div className="theOptions" key={selection}>
               <p className="mb-0 blue">{currentSelection[selection].label_short}</p>
 
-              <i onClick={() => removeField(filterSelection[selection].name)} class="fal fa-times blue"></i>
+              
+
+              <i onClick={() => removeField(currentSelection[selection].name)} class="fal fa-times blue"></i>
             </div>
           );
         })}

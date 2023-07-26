@@ -7,6 +7,12 @@ import { Spinner } from "react-bootstrap";
 const EmbedTable = ({ queryId }) => {
   const { extensionSDK } = useContext(ExtensionContext);
 
+
+
+
+
+
+
   const embedCtrRef = useCallback(
     (el) => {
       const hostUrl = extensionSDK.lookerHostData.hostUrl;
@@ -15,7 +21,7 @@ const EmbedTable = ({ queryId }) => {
         el.innerHTML = "";
         LookerEmbedSDK.init(hostUrl);
         LookerEmbedSDK.createExploreWithUrl(
-          `${hostUrl}/embed/query/rebecca_thompson_project/order_items?qid=${queryId}&sdk=2&embed_domain=${hostUrl}&sandboxed_host=true`
+          `${hostUrl}/embed/query/rebecca_thompson_project/order_items?qid=${queryId}&sdk=2&embed_domain=${hostUrl}&sandboxed_host=true&vis={"header_background_color":"whitesmoke"}`
         )
           .appendTo(el)
           .build()
