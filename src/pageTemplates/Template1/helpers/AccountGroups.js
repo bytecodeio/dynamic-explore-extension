@@ -1,77 +1,47 @@
 import React from "react";
-import { Button, Form, Modal, Row, Col } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 
-const AccountGroups = () => {
-  const Content = [
-    {
-      controlId: "formBasicCheckbox",
-      label: "Rx",
-    },
-    {
-      controlId: "formBasicCheckbox2",
-      label: "Brand",
-    },
-    {
-      controlId: "formBasicCheckbox3",
-      label: "On Contract",
-    },
-    {
-      controlId: "formBasicCheckbox4",
-      label: "Controlled",
-    },
-    {
-      controlId: "formBasicCheckbox5",
-      label: "Source",
-    },
-    {
-      controlId: "formBasicCheckbox6",
-      label: "SPX",
-    },
+const AccountGroups = ({
+  fieldOptions,
+  setSelectedAccountGroup,
+  selectedAccountGroup
+}) => {
+  function handleFieldSelection(value) {
+    setSelectedAccountGroup((prev) => {
+      if (prev.includes(value)) {
+        return prev.filter((selectedFilter) => selectedFilter !== value);
+      } else {
+        return [...prev, value];
+      }
+    });
+  }
 
-    {
-      controlId: "formBasicCheckbox7",
-      label: "Speciality",
-    },
-    {
-      controlId: "formBasicCheckbox8",
-      label: "Non-Rx",
-    },
-    {
-      controlId: "formBasicCheckbox9",
-      label: "Generic",
-    },
-    {
-      controlId: "formBasicCheckbox10",
-      label: "Off Contract",
-    },
-    {
-      controlId: "formBasicCheckbox11",
-      label: "Non-Controlled",
-    },
-    {
-      controlId: "formBasicCheckbox12",
-      label: "Non-SOURCE",
-    },
-    {
-      controlId: "formBasicCheckbox13",
-      label: "Non-SPX",
-    },
-    {
-      controlId: "formBasicCheckbox14",
-      label: "Purchases",
-    },
-  ];
 
+  
+  // console.log("these are fields", fieldOptions)
   return (
-    <div className="wrapFields">
-      {Content.map((val, i) => (
-        <div className="one" key={val.controlId}>
-          <Form.Group controlId={val.controlId}>
-            <Form.Check type="checkbox" label={val.label} />
+    <div className="wrapFilters">
+      {fieldOptions.map((fieldOption) => (
+        <div className="one" key={fieldOption}>
+          <Form.Group>
+            <Form.Check
+              type="checkbox"
+              className=""
+              label={fieldOption}
+              checked={selectedAccountGroup.includes(
+                fieldOption
+              )}
+              name="Fields"
+              id={fieldOption}
+              value={fieldOption}
+              onChange={() => handleFieldSelection(fieldOption)}
+            />
           </Form.Group>
         </div>
       ))}
     </div>
+
+    // set value to name
   );
 };
 

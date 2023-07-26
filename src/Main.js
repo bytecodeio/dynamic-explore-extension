@@ -32,13 +32,16 @@ export const Main = () => {
   const [selectedFilters, setSelectedFilters] = useState({});
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
   const [selectedDateRange, setSelectedDateRange] = useState();
-  const [currentInvoiceCount, setCurrentInvoiceCount] = useState("")
+  const [currentInvoiceCount, setCurrentInvoiceCount] = useState("");
+  const [selectedAccountGroup, setSelectedAccountGroup] = useState([]);
 
   const [productMovementFields, setProductMovementFields] = useState([]);
   const [totalInvoiceField, setTotalInvoiceField] = useState()
   const [filterOptions, setFilterOptions] = useState([]);
   const [dateFilterOptions, setDateFilterOptions] = useState([]);
   const [quickFilter, setQuickFilter] = useState([]);
+  const [accountGroupOptions, setAccountGroupOptions] = useState([])
+  const [accountGroupField, setAccountGroupField] = useState();
 
   const [dateRange, setDateRange] = useState("");
   const [showMenu, setShowMenu] = useState();
@@ -95,6 +98,8 @@ export const Main = () => {
       const _productMovementfieldOptions = fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
       const _quickFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
 
+      const _accountGroupField = fieldsByTag[LOOKML_FIELD_TAGS.accountGroups][0];
+
 
 
       // console.log("fieldsByTag", fieldsByTag)
@@ -138,6 +143,12 @@ export const Main = () => {
 
       setQuickFilter(_quickFilterOptions);
 
+      if (_accountGroupField) {
+        setAccountGroupField(_accountGroupField);
+        let values = await getDefaultValues(_accountGroupField)
+        setAccountGroupOptions(values.splice(0, 50).map((v,i) => {return v[_accountGroupField['name']]}));
+      }     
+
 
       setSelectedFilters(defaultFilterSelections);
       setDateRange(_dateRange[0]);
@@ -177,6 +188,20 @@ export const Main = () => {
     );
   }
 
+  const getDefaultValues = (field) => {
+    return sdk.ok(
+      sdk.run_inline_query({
+        result_format: "json",
+        body: {
+          model: LOOKER_MODEL,
+          view: field['view'],
+          fields: [field['name']],
+          filters: {}
+        },
+      })
+    );
+  }
+
   const getAllFilters = () => {
     let filters = {};
     for (const filter in selectedFilters) {
@@ -191,6 +216,10 @@ export const Main = () => {
       if (selectedDateRange) {
         filters[dateRange["name"]] = selectedDateRange;
       }
+    }
+
+    if (selectedAccountGroup.length > 0) {
+      filters[accountGroupField['name']] = selectedAccountGroup.join(",")
     }
     return filters
   }
@@ -249,6 +278,10 @@ export const Main = () => {
                   currentInvoiceCount={currentInvoiceCount}
                   updateInvoiceCount={updateInvoiceCount}
                   getAllFilters={getAllFilters}
+                  setSelectedAccountGroup={setSelectedAccountGroup}
+                  accountGroupOptions={accountGroupOptions}
+                  selectedAccountGroup={selectedAccountGroup}
+                  accountGroupField={accountGroupField}
                 />
               </Tab>
               <Tab eventKey="invoice" title="Invoice Report">
@@ -272,6 +305,10 @@ export const Main = () => {
                   currentInvoiceCount={currentInvoiceCount}
                   updateInvoiceCount={updateInvoiceCount}
                   getAllFilters={getAllFilters}
+                  setSelectedAccountGroup={setSelectedAccountGroup}
+                  accountGroupOptions={accountGroupOptions}
+                  selectedAccountGroup={selectedAccountGroup}
+                  accountGroupField={accountGroupField}
                 />
               </Tab>
               <Tab eventKey="auto-sub" title="Auto-Sub Report">
@@ -295,6 +332,10 @@ export const Main = () => {
                   currentInvoiceCount={currentInvoiceCount}
                   updateInvoiceCount={updateInvoiceCount}
                   getAllFilters={getAllFilters}
+                  setSelectedAccountGroup={setSelectedAccountGroup}
+                  accountGroupOptions={accountGroupOptions}
+                  selectedAccountGroup={selectedAccountGroup}
+                  accountGroupField={accountGroupField}
                 />
               </Tab>
               <Tab eventKey="id" title="Inflation/Deflation Report">

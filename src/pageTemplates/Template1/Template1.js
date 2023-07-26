@@ -41,7 +41,11 @@ const Template1 = ({
   currentInvoiceCount,
   updateInvoiceCount,
   getAllFilters,
-  quickFilterOptions
+  quickFilterOptions,
+  setSelectedAccountGroup,
+  accountGroupOptions,
+  selectedAccountGroup,
+  accountGroupField,
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -327,7 +331,11 @@ const Template1 = ({
                           <Accordion.Item eventKey="1">
                             <Accordion.Header>Account Groups</Accordion.Header>
                             <Accordion.Body>
-                              <AccountGroups />
+                              <AccountGroups 
+                                fieldOptions={accountGroupOptions}
+                                selectedAccountGroup={selectedAccountGroup}
+                                setSelectedAccountGroup={setSelectedAccountGroup}
+                              />
                             </Accordion.Body>
                           </Accordion.Item>
                         </Col>
