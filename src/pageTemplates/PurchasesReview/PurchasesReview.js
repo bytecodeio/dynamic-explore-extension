@@ -26,6 +26,7 @@ import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import EmbedTable from "../../components/EmbedTable";
+import TabbedVisualizations from "../../components/TabbedVisualizations";
 
 const PurchasesReview = ({
   selectedFilters,
@@ -383,22 +384,15 @@ const PurchasesReview = ({
           <Row className="mt-3 mb-3">
             <Col md={4}>
               <Container fluid className="padding-0 innerTab smallerHeight">
-                <EmbedTable queryId={productMovementVisQid} />
+                <EmbedTable queryId={"bDiiTcGudISg0FmJpMo1oN"} />
               </Container>
               <Container fluid className="padding-0 innerTab smallerHeight">
-                <EmbedTable queryId={productMovementVisQid} />
+                <EmbedTable queryId={"jAfuYkAWe2abi6lc0gw4kM"} />
               </Container>
             </Col>
             <Col md={8}>
               <Container fluid className="padding-0 innerTab middleHeight">
-                <Tabs defaultActiveKey="comparison" className="inner" fill>
-                  <Tab eventKey="comparison" title="Trade/Generic Name">
-                    <EmbedTable queryId={productMovementVisQid} />
-                  </Tab>
-                  <Tab eventKey="AHFS/Fineline" title="AHFS/Fineline"></Tab>
-                  <Tab eventKey="GPI" title="GPI"></Tab>
-                  <Tab eventKey="manufacturer" title="Manufacturer"></Tab>
-                </Tabs>
+                <TabbedVisualizations dashboardId="Sb8HOOZshOqTzjZOiPuSmE" />
               </Container>
             </Col>
           </Row>
@@ -411,23 +405,16 @@ const PurchasesReview = ({
                 review values.
               </p>
               <Container fluid className="padding-0 innerTab smallerHeight">
-                <EmbedTable queryId={productMovementVisQid} />
+                <EmbedTable queryId={"HV4C3OeDOr5HaceKseTybI"} />
               </Container>
               <Container fluid className="padding-0 innerTab smallerHeight">
-                <EmbedTable queryId={productMovementVisQid} />
+                <EmbedTable queryId={"84aPbSOrTsrbhF0ifL4zdI"} />
               </Container>
             </Col>
 
             <Col md={8}>
               <Container fluid className="padding-0 innerTab">
-                <Tabs defaultActiveKey="comparison" className="inner" fill>
-                  <Tab eventKey="comparison" title="Monthly Comparison">
-                    <EmbedTable queryId={productMovementVisQid} />
-                  </Tab>
-                  <Tab eventKey="summary" title="Monthly Summary"></Tab>
-                  <Tab eventKey="invoice" title="Invoice Summary"></Tab>
-                  <Tab eventKey="price" title="Top Price Change"></Tab>
-                </Tabs>
+                <TabbedVisualizations dashboardId="rebecca_thompson_project::product_movement_report_tab" />
               </Container>
             </Col>
           </Row>
