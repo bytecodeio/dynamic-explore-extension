@@ -43,24 +43,25 @@ function HowTo() {
         using the From & To fields.
       </p>
 
-      <div className="wrapFilters mt-3">
-        <ButtonGroup>
-          <Button active>
-            <Form.Group controlId="formBasicCheckbox15">
-              <Form.Check type="radio" label="MTD" name="filters" />
-            </Form.Group>
-          </Button>
-          <Button>
-            <Form.Group controlId="formBasicCheckbox16">
-              <Form.Check type="radio" label="Prev Month" name="filters" />
-            </Form.Group>
-          </Button>
-          <Button>
-            <Form.Group controlId="formBasicCheckbox17">
-              <Form.Check type="radio" label="QTD" name="filters" />
-            </Form.Group>
-          </Button>
-        </ButtonGroup>
+      <div className="grid2 mt-3">
+      <div className="one radio">
+      <Form.Group  controlId="formBasicCheckbox15">
+        <Form.Check  type="radio" label="MTD" name="filters" />
+      </Form.Group>
+    </div>
+
+    <div className="one radio">
+      <Form.Group controlId="formBasicCheckbox17">
+        <Form.Check type="radio" label="QTD" name="filters"/>
+      </Form.Group>
+    </div>
+
+
+   <div className="one radio">
+     <Form.Group controlId="formBasicCheckbox19">
+       <Form.Check type="radio" label="YTD" name="filters"/>
+     </Form.Group>
+   </div>
       </div>
 
       <h5 className="mt-3">Make a Selection</h5>
@@ -101,8 +102,8 @@ function HowTo() {
 
       <h5 className="mt-3">Clear Selections</h5>
       <p>
-        To clear selections on a specified field, select the trashcan icon.{" "}
-        <i className="fal fa-trash-undo red"></i>
+        To clear selections on a specified field, select the X icon.
+        <i className="fal fa-times blue"></i>
       </p>
 
       <p className="mt-3">
