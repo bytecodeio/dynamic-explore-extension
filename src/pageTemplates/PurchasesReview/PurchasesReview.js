@@ -392,15 +392,7 @@ const PurchasesReview = ({
             </Col>
             <Col md={8}>
               <Container fluid className="padding-0 innerTab middleHeight">
-                {/* <Tabs defaultActiveKey="comparison" className="inner" fill>
-                  <Tab eventKey="comparison" title="Trade/Generic Name">
-                    <EmbedTable queryId={"Q40ekuA0DibEWZJcYlBOTZ"} />
-                  </Tab>
-                  <Tab eventKey="AHFS/Fineline" title="AHFS/Fineline"></Tab>
-                  <Tab eventKey="GPI" title="GPI"></Tab>
-                  <Tab eventKey="manufacturer" title="Manufacturer"></Tab>
-                </Tabs> */}
-                <TabbedVisualizations dashboardId="rebecca_thompson_project::product_movement_report_tab" />
+                <TabbedVisualizations dashboardId="Sb8HOOZshOqTzjZOiPuSmE" />
               </Container>
             </Col>
           </Row>
@@ -422,14 +414,7 @@ const PurchasesReview = ({
 
             <Col md={8}>
               <Container fluid className="padding-0 innerTab">
-                <Tabs defaultActiveKey="comparison" className="inner" fill>
-                  <Tab eventKey="comparison" title="Monthly Comparison">
-                    <EmbedTable queryId={"2L6JPnXgKAlomDi6H39xl6"} />
-                  </Tab>
-                  <Tab eventKey="summary" title="Monthly Summary"></Tab>
-                  <Tab eventKey="invoice" title="Invoice Summary"></Tab>
-                  <Tab eventKey="price" title="Top Price Change"></Tab>
-                </Tabs>
+                <TabbedVisualizations dashboardId="rebecca_thompson_project::product_movement_report_tab" />
               </Container>
             </Col>
           </Row>
