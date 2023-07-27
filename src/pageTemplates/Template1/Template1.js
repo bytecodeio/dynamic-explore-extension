@@ -250,9 +250,21 @@ const Template1 = ({
   };
 
   async function handleClearAll() {
+  console.log('handleClearAll')
     setIsDefaultProduct(false);
     setUpdateButtonClicked(true);
     setSelectedFields([]);
+    let tabs = [...tabList];
+    let currentTab = tabs[currentInnerTab];
+    currentTab["selected_fields"] = [];
+    setTabList(tabs);
+    let filters = {...selectedFilters};
+    for(let name in filters) {
+      filters[name] = 'N/A';
+    }
+    console.log('filters ', filters, selectedFilters)
+    setSelectedFilters(filters);
+    setIsFilterChanged(true);
   }
 
   async function handleRestoreDefault() {
