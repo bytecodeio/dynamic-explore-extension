@@ -103,7 +103,7 @@ function HowTo() {
       <h5 className="mt-3">Clear Selections</h5>
       <p>
         To clear selections on a specified field, select the X icon.
-        <i className="fal fa-times blue"></i>
+<div class="theOptions"><p class="mb-0 blue">Strength</p><i class="fal fa-times blue"></i></div>
       </p>
 
       <p className="mt-3">

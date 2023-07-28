@@ -1,7 +1,7 @@
 import React from "react";
+import DatePicker from "react-datepicker";
 import { Form, Row, Col, Button, Container } from "react-bootstrap";
 
-import DateFilterGroup from  "./DateFilterGroup.js";
 
 export const DateRangeSelector = ({
   setSelectedDateRange,
@@ -63,7 +63,7 @@ export const DateRangeSelector = ({
 
       <Button
       onClick={handleTabVisUpdate}
-      className="btn">Update
+      className="btn">Submit Dates
       </Button>
     </div>
 
@@ -105,9 +105,17 @@ export const DateRangeSelector = ({
 
     </Col>
     <Col xs={12} md={5}>
+
     <div className="d-flex ml2">
+
+
+
         <div className="columnStart mr2">
           <p className="small">Start Date</p>
+
+
+
+
           <Form.Control
           type="date"
           value={splitSelectedDateRange()[0]}

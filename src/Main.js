@@ -180,7 +180,7 @@ export const Main = () => {
         setAccountGroupField(_accountGroupField);
         let values = await getDefaultValues(_accountGroupField)
         setAccountGroupOptions(values.splice(0, 50).map((v,i) => {return v[_accountGroupField['name']]}));
-      }     
+      }
 
 
       setSelectedFilters(defaultFilterSelections);
@@ -295,7 +295,7 @@ export const Main = () => {
                 />
               </Tab>
               <Tab eventKey="product-movement" title="Product Movement Report">
-                {console.log('quick filter state ', quickFilter)}
+
                 <Template1
                   currentNavTab={currentNavTab}
                   selectedFilters={selectedFilters}

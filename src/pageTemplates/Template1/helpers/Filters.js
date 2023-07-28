@@ -3,17 +3,19 @@ import React, { useState } from "react";
 import { Button, Form, Modal, Spinner } from "react-bootstrap";
 
 const FilterDropdown = ({ handleChange, label, name, options, value }) => {
+  console.log('debug: options', options, value);
   return (
     <>
       <p>{label}</p>
 
       <Form.Select
+
         onChange={(e) => handleChange(name, e.target.value)}
         value={value}
         >
-        <option key="N/A">N/A</option>
+        <option key="N/A" value="N/A">N/A</option>
         {options?.map((optionText) => (
-          <option key={optionText}> {optionText}</option>
+          <option key={optionText} value={optionText}> {optionText}</option>
         ))}
       </Form.Select>
     </>
