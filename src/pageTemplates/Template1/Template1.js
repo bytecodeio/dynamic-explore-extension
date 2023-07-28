@@ -489,7 +489,7 @@ const Template1 = ({
                 quickFilterOptions={quickFilterOptions}
               />
 
-              <CurrentQuickFilter
+              {/*<CurrentQuickFilter
               selectedDateFilter={selectedDateFilter}
               selectedFilters={selectedFilters}
               selectedFields={selectedFields}
@@ -500,7 +500,7 @@ const Template1 = ({
               dateFilterOptions={dateFilterOptions}
               selectedDateRange={selectedDateRange}
               quickFilterOptions={quickFilterOptions}
-            />
+            />*/}
 
             {currentInvoiceCount != ""?
               <p className="mt-5">
