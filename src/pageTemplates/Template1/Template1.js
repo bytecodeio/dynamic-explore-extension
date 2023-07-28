@@ -21,6 +21,7 @@ import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import { CurrentQuickFilter } from "./helpers/CurrentQuickFilter";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
+import EmbedTable from "../../components/EmbedTable";
 const Template1 = ({
   currentNavTab,
   selectedFilters,
@@ -35,7 +36,7 @@ const Template1 = ({
   setSelectedDateRange,
   dateRange,
   tabKey,
-  dashboardId,
+  config,
   showMenu,
   setShowMenu,
   currentInvoiceCount,
@@ -71,9 +72,10 @@ const Template1 = ({
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
     useState(true);
   useEffect(() => {
+    console.log(config)
     async function fetchDefaultFieldsAndFilters() {
       const { dashboard_elements } = await sdk.ok(
-        sdk.dashboard(dashboardId, "dashboard_elements")
+        sdk.dashboard(config.tabbedVis1, "dashboard_elements")
       );
 
       dashboard_elements?.map((t) => {
@@ -110,7 +112,7 @@ const Template1 = ({
     useState(true);
   const [filterSuggestions, setFilterSuggestions] = useState({});
   useEffect(() => {
-    if (isFetchingLookmlFields || !filterOptions.length) {
+    if (isFetchingLookmlFields || !filterOptions?.length) {
       return;
     }
 
@@ -339,59 +341,76 @@ const Template1 = ({
                   <Row>
                     <Col xs={12} md={12}>
                       <Row>
-                        <Col xs={12} md={12}>
-                          <Accordion.Item eventKey="1">
-                            <Accordion.Header>Account Groups</Accordion.Header>
-                            <Accordion.Body>
-                              <AccountGroups 
-                                fieldOptions={accountGroupOptions}
-                                selectedAccountGroup={selectedAccountGroup}
-                                setSelectedAccountGroup={setSelectedAccountGroup}
-                              />
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Col>
+                        {/* Account Groups */}
+                        {accountGroupOptions?.length > 0?
+                          <Col xs={12} md={12}>
+                            <Accordion.Item eventKey="1">
+                              <Accordion.Header>Account Groups</Accordion.Header>
+                              <Accordion.Body>
+                                <AccountGroups 
+                                  fieldOptions={accountGroupOptions}
+                                  selectedAccountGroup={selectedAccountGroup}
+                                  setSelectedAccountGroup={setSelectedAccountGroup}
+                                />
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Col>                   
+                        :''
+                        }
 
-                        <Col xs={12} md={12}>
-                          <Accordion.Item eventKey="3">
-                            <Accordion.Header>Quick Filters</Accordion.Header>
-                            <Accordion.Body>
-                              <QuickFilter
-                              quickFilterOptions={quickFilterOptions}
-                              setTabList={setTabList}
-                              tabList={tabList}
-                              currentInnerTab={currentInnerTab}
-                              // selectedFields={selectedFields}
-                              // setSelectedFields={setSelectedFields}
-                              // isDefault={isDefaultProduct}
-                              // setIsDefault={setIsDefaultProduct}
-                              updateBtn={updateButtonClicked}
-                              setUpdateBtn={setUpdateButtonClicked}
-
-                              />
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Col>
-                        <Col xs={12} md={12}>
-                          <Accordion.Item eventKey="5">
-                            <Accordion.Header>Filters</Accordion.Header>
-                            <Accordion.Body>
-                              <Filters
-                                isLoading={isFetchingFilterSuggestions}
-                                filterOptions={filterOptions}
-                                filterSuggestions={filterSuggestions}
-                                selectedFilters={selectedFilters}
-                                setSelectedFilters={setSelectedFilters}
-                                isDefault={isDefaultProduct}
-                                setIsDefault={setIsDefaultProduct}
+                        {/* Quick Filters */}
+                        {quickFilterOptions?.length > 0?
+                          <Col xs={12} md={12}>
+                            <Accordion.Item eventKey="3">
+                              <Accordion.Header>Quick Filters</Accordion.Header>
+                              <Accordion.Body>
+                                <QuickFilter
+                                quickFilterOptions={quickFilterOptions}
+                                setTabList={setTabList}
+                                tabList={tabList}
+                                currentInnerTab={currentInnerTab}
+                                // selectedFields={selectedFields}
+                                // setSelectedFields={setSelectedFields}
+                                // isDefault={isDefaultProduct}
+                                // setIsDefault={setIsDefaultProduct}
                                 updateBtn={updateButtonClicked}
                                 setUpdateBtn={setUpdateButtonClicked}
-                                setIsFilterChanged={setIsFilterChanged}
-                              />
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Col>
 
+                                />
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Col>                        
+                        :''
+                        }
+
+
+                        {/* Filters */}
+                        {filterOptions?.length > 0?
+                          <Col xs={12} md={12}>
+                            <Accordion.Item eventKey="5">
+                              <Accordion.Header>Filters</Accordion.Header>
+                              <Accordion.Body>
+                                <Filters
+                                  isLoading={isFetchingFilterSuggestions}
+                                  filterOptions={filterOptions}
+                                  filterSuggestions={filterSuggestions}
+                                  selectedFilters={selectedFilters}
+                                  setSelectedFilters={setSelectedFilters}
+                                  isDefault={isDefaultProduct}
+                                  setIsDefault={setIsDefaultProduct}
+                                  updateBtn={updateButtonClicked}
+                                  setUpdateBtn={setUpdateButtonClicked}
+                                  setIsFilterChanged={setIsFilterChanged}
+                                />
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Col>
+                        :''
+                        }
+
+
+                        {/* Fields */}
+                        {fieldOptions?.length > 0?
                         <Col xs={12} md={12}>
                           <Accordion.Item eventKey="6">
                             <Accordion.Header>Fields</Accordion.Header>
@@ -411,7 +430,11 @@ const Template1 = ({
                             </Accordion.Body>
                           </Accordion.Item>
                         </Col>
+                        :''
+                        }
 
+
+                        {/* Bookmarks */}
                         <Col xs={12} md={12}>
                           <Accordion.Item eventKey="4">
                             <Accordion.Header>Bookmarks</Accordion.Header>
@@ -478,21 +501,28 @@ const Template1 = ({
               quickFilterOptions={quickFilterOptions}
             />
 
-
+            {currentInvoiceCount != ""?
               <p className="mt-5">
                 Total Invoice: <span className="highlight large">{currentInvoiceCount}</span>
               </p>
+              :''
+            }
             </Col>
 
             <Col md={12} lg={7}>
-              <DateRangeSelector
-                selectedDateRange={selectedDateRange}
-                setSelectedDateRange={setSelectedDateRange}
-                setSelectedDateFilter={setSelectedDateFilter}
-                dateFilterOptions={dateFilterOptions}
-                selectedDateFilter={selectedDateFilter}
-                handleTabVisUpdate={handleTabVisUpdate}
-              />
+              {/* Date Range Selector */}
+              {dateFilterOptions.length>0?              
+                <DateRangeSelector
+                  selectedDateRange={selectedDateRange}
+                  setSelectedDateRange={setSelectedDateRange}
+                  setSelectedDateFilter={setSelectedDateFilter}
+                  dateFilterOptions={dateFilterOptions}
+                  selectedDateFilter={selectedDateFilter}
+                  handleTabVisUpdate={handleTabVisUpdate}
+                />
+              :''
+              }
+
               {/*<DateFilterGroup
                 dateFilterOptions={dateFilterOptions}
                 setSelectedDateFilter={setSelectedDateFilter}
@@ -503,12 +533,16 @@ const Template1 = ({
 
           <Row className="mt-3 mb-3">
             <Col md={12} className="embed-responsive embed-responsive-16by9">
-              <InnerTableTabs
-                tabs={tabList}
-                setSelectedFields={setSelectedFields}
-                currentInnerTab={currentInnerTab}
-                setCurrentInnerTab={setCurrentInnerTab}
-              />
+              {tabList.length > 0?
+                <InnerTableTabs
+                  tabs={tabList}
+                  setSelectedFields={setSelectedFields}
+                  currentInnerTab={currentInnerTab}
+                  setCurrentInnerTab={setCurrentInnerTab}
+                />
+              :''
+              }
+
             </Col>
           </Row>
         </>

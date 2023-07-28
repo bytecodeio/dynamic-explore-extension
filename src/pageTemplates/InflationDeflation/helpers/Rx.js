@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from "react-bootstrap";
+import { Button, Form, Modal, Row, Col } from "react-bootstrap";
 
 const Rx = () => {
   const Content = [
