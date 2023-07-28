@@ -98,7 +98,12 @@ export const Main = () => {
       const _productMovementfieldOptions = fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
       const _quickFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
 
-      const _accountGroupField = fieldsByTag[LOOKML_FIELD_TAGS.accountGroups][0];
+      let _accountGroupField = undefined
+      try {
+        _accountGroupField = fieldsByTag[LOOKML_FIELD_TAGS.accountGroups][0];
+      } catch (err) {
+        console.error(`No account group field using tag ${LOOKML_FIELD_TAGS.accountGroups}`)
+      }
 
 
 
@@ -111,12 +116,23 @@ export const Main = () => {
       // console.log('_quickFilterOptions', _quickFilterOptions)
 
       const _dateRange = fieldsByTag[LOOKML_FIELD_TAGS.dateRange];
+      let _totalInvoice = undefined
+      try {
+        _totalInvoice = fieldsByTag[LOOKML_FIELD_TAGS.totalInvoices][0]
+      } catch (err) {
+        console.error(`No total invoice field with the tag ${LOOKML_FIELD_TAGS.totalInvoices}`)
+      }
+      
 
-      const _totalInvoice = fieldsByTag[LOOKML_FIELD_TAGS.totalInvoices][0]
+      let defaultFilterSelections = []
+      try {
+        defaultFilterSelections = Object.fromEntries(
+          _filterOptions.map((filter) => [filter.name, "N/A"])
+          );
+      } catch(error) {
+        console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`)
+      }
 
-      const defaultFilterSelections = Object.fromEntries(
-        _filterOptions.map((filter) => [filter.name, "N/A"])
-      );
 
       const defaultDateFilterSelections = _dateFilterOptions?.find((filter) => {
         if (filter["suggestions"]) {
@@ -131,19 +147,36 @@ export const Main = () => {
       }
 
       setSelectedDateRange(getDefaultDateRange());
-      if (_totalInvoice) {
+
+      if (_totalInvoice != undefined) {
         setTotalInvoiceField(_totalInvoice)
         let values = await getValues(_totalInvoice)
         setCurrentInvoiceCount(values[0][_totalInvoice['name']])
       }
 
-      setFilterOptions(_filterOptions);
-      setProductMovementFields(_productMovementfieldOptions);
-      setDateFilterOptions(sortDateFilterList(_dateFilterOptions));
+      if (_filterOptions) {
+        setFilterOptions(_filterOptions);
+      } else {
+        console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`)
+      }
+      
+
+      if (_productMovementfieldOptions) {
+        setProductMovementFields(_productMovementfieldOptions);
+      } else {
+        console.error(`No fields found using tag ${LOOKML_FIELD_TAGS.productMovementField}`)
+      }
+      
+
+      if (_dateFilterOptions) {
+        setDateFilterOptions(sortDateFilterList(_dateFilterOptions));
+      } else {
+        console.error(`No date filters found using tag ${LOOKML_FIELD_TAGS.date_filter}`)
+      }     
 
       setQuickFilter(_quickFilterOptions);
 
-      if (_accountGroupField) {
+      if (_accountGroupField != undefined) {
         setAccountGroupField(_accountGroupField);
         let values = await getDefaultValues(_accountGroupField)
         setAccountGroupOptions(values.splice(0, 50).map((v,i) => {return v[_accountGroupField['name']]}));
@@ -151,7 +184,13 @@ export const Main = () => {
 
 
       setSelectedFilters(defaultFilterSelections);
-      setDateRange(_dateRange[0]);
+
+      try {
+        setDateRange(_dateRange[0]);
+      } catch(error) {
+        console.error(`No date range found using tag ${LOOKML_FIELD_TAGS.dateRange}`)
+      }
+      
       setIsFetchingLookmlFields(false);
     };
 
@@ -271,7 +310,7 @@ export const Main = () => {
                   setSelectedDateRange={setSelectedDateRange}
                   selectedDateRange={selectedDateRange}
                   dateRange={dateRange}
-                  dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
+                  config={{tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}}
                   tabKey={"product-movement"}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
@@ -298,7 +337,7 @@ export const Main = () => {
                   setSelectedDateRange={setSelectedDateRange}
                   selectedDateRange={selectedDateRange}
                   dateRange={dateRange}
-                  dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
+                  config={{tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}}
                   tabKey={"invoice"}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
@@ -325,7 +364,7 @@ export const Main = () => {
                   setSelectedDateRange={setSelectedDateRange}
                   selectedDateRange={selectedDateRange}
                   dateRange={dateRange}
-                  dashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
+                  config={{tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}}
                   tabKey={"auto-sub"}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
@@ -352,11 +391,20 @@ export const Main = () => {
                   setSelectedDateRange={setSelectedDateRange}
                   selectedDateRange={selectedDateRange}
                   dateRange={dateRange}
-                  upperDashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
-                  lowerDashboardId={PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}
+                  config={{
+                    tabbedVis1:PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
+                    vis1:PRODUCT_MOVEMENT_VIS_DASHBOARD_ID
+                  }}
                   tabKey={"id"}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
+                  currentInvoiceCount={currentInvoiceCount}
+                  updateInvoiceCount={updateInvoiceCount}
+                  getAllFilters={getAllFilters}
+                  setSelectedAccountGroup={setSelectedAccountGroup}
+                  accountGroupOptions={accountGroupOptions}
+                  selectedAccountGroup={selectedAccountGroup}
+                  accountGroupField={accountGroupField}
                 />
               </Tab>
             </Tabs>

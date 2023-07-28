@@ -845,7 +845,7 @@ a:hover{
 }
 
 #slideOut3 .wrapFields{
-  display: flex;
+  /*display: flex;*/
   flex-direction: column;
   flex-wrap: wrap;
 }
@@ -856,9 +856,10 @@ a:hover{
 }
 
 .wrapFilters{
-  display: grid;
+  /*display: grid;*/
   grid-template-columns: repeat(1, 1fr);
-
+  max-height: 300px;
+  overflow: auto;
 }
 
 
@@ -5301,7 +5302,7 @@ a.white:hover{
 }
 
 #slideOut3 .wrapFilters{
-  display: flex;
+  /*display: flex;*/
   flex-direction: column;
   flex-wrap: wrap;
 
@@ -6773,6 +6774,12 @@ html.dark-mode{
 
 .across > button {
   margin: 5px;
+}
+
+.vis1-container > div > iframe {
+  max-height: unset;
+  min-height: unset;
+  height: 300px;
 }
 
 /* elizabeth changes that I do not want */

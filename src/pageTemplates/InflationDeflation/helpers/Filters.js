@@ -10,7 +10,7 @@ const FilterDropdown = ({ handleChange, label, name, options, value }) => {
       <Form.Select
         onChange={(e) => handleChange(name, e.target.value)}
         value={value}
-      >
+        >
         <option key="N/A">N/A</option>
         {options?.map((optionText) => (
           <option key={optionText}> {optionText}</option>
@@ -30,9 +30,8 @@ const Filters = ({
   setIsDefault,
   setIsFilterChanged,
 }) => {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+
+
 
   function handleFilterSelection(filterName, newValue) {
     setSelectedFilters((prevFilters) => {
