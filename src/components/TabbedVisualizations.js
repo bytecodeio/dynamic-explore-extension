@@ -9,26 +9,13 @@ import {
 } from "react-bootstrap";
 import EmbedTable from "./EmbedTable";
 import { ExtensionContext } from "@looker/extension-sdk-react";
+import { useLookerQuery } from "../hooks/useLookerQuery";
 
-const DimensionToggle = ({ dimensionToggleFields, tab }) => {
-  const tag = Object.keys(dimensionToggleFields).find((tag) =>
-    tag.toLowerCase().endsWith(tab.title.toLowerCase())
-  );
-
-  if (!tag) {
-    return <></>;
-  }
-
-  const field = dimensionToggleFields[tag][0];
-  const options = field.enumerations;
-
+const DimensionToggle = ({ handleToggle, options }) => {
   return (
     <ButtonGroup size="sm">
       {options.map((option) => (
-        <Button
-          key={option.value}
-          onClick={() => handleDimensionToggle(option.value)}
-        >
+        <Button key={option.value} onClick={() => handleToggle(option.value)}>
           {option.label}
         </Button>
       ))}
@@ -37,15 +24,45 @@ const DimensionToggle = ({ dimensionToggleFields, tab }) => {
 };
 
 const Visualization = ({ dimensionToggleFields, tab }) => {
+  const { core40SDK: sdk } = useContext(ExtensionContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [queryId, setQueryId] = useState(tab.query);
+  const [queryBody, setQueryBody] = useState();
+
+  // Dimension Toggle
+  const { getQueryBodyForSlug } = useLookerQuery();
+  const dimensionToggle = {};
+  dimensionToggle.tag = Object.keys(dimensionToggleFields).find((tag) =>
+    tag.toLowerCase().endsWith(tab.title.toLowerCase())
+  );
+  dimensionToggle.field = dimensionToggleFields[dimensionToggle.tag]?.[0];
+  dimensionToggle.options = dimensionToggle.field?.enumerations;
+
+  async function handleDimensionToggle(newValue) {
+    setIsLoading(true);
+    const newQueryBody = queryBody
+      ? { ...queryBody }
+      : await getQueryBodyForSlug(queryId);
+
+    if (!newQueryBody.filters) {
+      newQueryBody.filters = {};
+    }
+    newQueryBody.filters[dimensionToggle.field.name] = newValue;
+    const { client_id } = await sdk.ok(sdk.create_query(newQueryBody));
+    setQueryId(client_id);
+    setQueryBody(newQueryBody);
+    setIsLoading(false);
+  }
 
   return (
     <>
-      <DimensionToggle
-        dimensionToggleFields={dimensionToggleFields}
-        tab={tab}
-      />
-      <EmbedTable queryId={queryId} />
+      {!!dimensionToggle.tag && (
+        <DimensionToggle
+          handleToggle={handleDimensionToggle}
+          options={dimensionToggle.options}
+        />
+      )}
+      {isLoading ? <Spinner /> : <EmbedTable queryId={queryId} />}
     </>
   );
 };
