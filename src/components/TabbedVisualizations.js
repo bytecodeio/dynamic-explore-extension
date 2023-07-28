@@ -1,9 +1,56 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Container, Spinner, Tab, Tabs } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  Container,
+  Spinner,
+  Tab,
+  Tabs,
+} from "react-bootstrap";
 import EmbedTable from "./EmbedTable";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 
-const TabbedVisualizations = ({ dashboardId }) => {
+const DimensionToggle = ({ dimensionToggleFields, tab }) => {
+  const tag = Object.keys(dimensionToggleFields).find((tag) =>
+    tag.toLowerCase().endsWith(tab.title.toLowerCase())
+  );
+
+  if (!tag) {
+    return <></>;
+  }
+
+  const field = dimensionToggleFields[tag][0];
+  const options = field.enumerations;
+
+  return (
+    <ButtonGroup size="sm">
+      {options.map((option) => (
+        <Button
+          key={option.value}
+          onClick={() => handleDimensionToggle(option.value)}
+        >
+          {option.label}
+        </Button>
+      ))}
+    </ButtonGroup>
+  );
+};
+
+const Visualization = ({ dimensionToggleFields, tab }) => {
+  const [queryId, setQueryId] = useState(tab.query);
+
+  return (
+    <>
+      <DimensionToggle
+        dimensionToggleFields={dimensionToggleFields}
+        tab={tab}
+      />
+      <EmbedTable queryId={queryId} />
+    </>
+  );
+};
+
+const TabbedVisualizations = ({ dashboardId, dimensionToggleFields }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const [tabs, setTabs] = useState([]);
   const [error, setError] = useState("");
@@ -71,11 +118,16 @@ const TabbedVisualizations = ({ dashboardId }) => {
             activeKey={selectedTabIndex}
             onSelect={handleTabChange}
           >
-            {tabs?.map((tab, i) => (
-              <Tab eventKey={i} title={tab.title} key={tab.title}>
-                <EmbedTable queryId={tab.query} />
-              </Tab>
-            ))}
+            {tabs?.map((tab, i) => {
+              return (
+                <Tab key={tab.title} eventKey={i} title={tab.title}>
+                  <Visualization
+                    dimensionToggleFields={dimensionToggleFields}
+                    tab={tab}
+                  />
+                </Tab>
+              );
+            })}
           </Tabs>
         )}
       </Container>

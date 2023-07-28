@@ -9,9 +9,9 @@ import Footer from "./components/Footer.js";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import moment from "moment";
 import Template1 from "./pageTemplates/Template1/Template1";
-import TopNav from './components/nav/TopNav.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
+import TopNav from "./components/nav/TopNav.js";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.min.js";
 
 import {
   LOOKER_MODEL,
@@ -33,11 +33,9 @@ export const Main = () => {
   const [filterOptions, setFilterOptions] = useState([]);
 
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
-  const [quickFilter, setQuickFilter] = useState("");
 
   const [dateFilterOptions, setDateFilterOptions] = useState([]);
   const [quickFilterOptions, setQuickFilterOptions] = useState([]);
-
 
   const [selectedDateRange, setSelectedDateRange] = useState();
 
@@ -45,74 +43,93 @@ export const Main = () => {
   const [selectedAccountGroup, setSelectedAccountGroup] = useState([]);
 
   const [productMovementFields, setProductMovementFields] = useState([]);
-  const [totalInvoiceField, setTotalInvoiceField] = useState()
-
-  const [accountGroupOptions, setAccountGroupOptions] = useState([])
+  const [totalInvoiceField, setTotalInvoiceField] = useState();
+  const [quickFilter, setQuickFilter] = useState([]);
+  const [accountGroupOptions, setAccountGroupOptions] = useState([]);
   const [accountGroupField, setAccountGroupField] = useState();
+  const [dimensionToggleFields, setDimensionToggleFields] = useState({});
 
   const [dateRange, setDateRange] = useState("");
   const [showMenu, setShowMenu] = useState();
   const [keyword, setKeyword] = useState("");
 
   const slideIt = (show) => {
-    setShowMenu(show)
-  }
-
+    setShowMenu(show);
+  };
 
   const handleChangeKeyword = (e) => {
     setKeyword(e.target.value);
-  }
+  };
 
   // Initialize the states
   useEffect(() => {
     function groupFieldsByTags(fields) {
       const fieldsByTag = {};
       fields.forEach((field) => {
-
         if (field.tags != "") {
-          field.tags.toString().split(",").forEach((tag) => {
-            tag = tag.trim()
+          field.tags
+            .toString()
+            .split(",")
+            .forEach((tag) => {
+              tag = tag.trim();
 
-            if (fieldsByTag[tag] === undefined) {
-              fieldsByTag[tag] = [field];
-            } else {
-              fieldsByTag[tag].push(field);
-            }
-          });
+              if (fieldsByTag[tag] === undefined) {
+                fieldsByTag[tag] = [field];
+              } else {
+                fieldsByTag[tag].push(field);
+              }
+            });
         }
-
       });
       return fieldsByTag;
     }
 
-
-
     const fetchLookmlFields = async () => {
-      const {
-        fields: { dimensions, filters, measures },
-      } = await sdk.ok(
+      const response = await sdk.ok(
         sdk.lookml_model_explore(LOOKER_MODEL, LOOKER_EXPLORE, "fields")
       );
 
-      const lookmlFields = [...dimensions, ...filters, ...measures];
+      const {
+        fields: { dimensions, filters, measures, parameters },
+      } = response;
 
+      const lookmlFields = [
+        ...dimensions,
+        ...filters,
+        ...measures,
+        ...parameters,
+      ];
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
-      const _quickFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
 
       const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
 
-      const _productMovementfieldOptions = fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
+      const _productMovementfieldOptions =
+        fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
+      const _quickFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
+      // _dimensionToggleFields has the shape { [tag]: field }
+      // it gets populated with all the tags that are prefixed with `toggle:`
+      const _dimensionToggleFields = Object.fromEntries(
+        Object.entries(fieldsByTag).reduce((accumulator, [tag, field]) => {
+          if (tag.startsWith(LOOKML_FIELD_TAGS.togglePrefix)) {
+            accumulator.push([tag, field]);
+          }
+          return accumulator;
+        }, [])
+      );
+      if (Object.keys(_dimensionToggleFields).length) {
+        setDimensionToggleFields(_dimensionToggleFields);
+      }
 
-
-      let _accountGroupField = undefined
+      let _accountGroupField = undefined;
       try {
         _accountGroupField = fieldsByTag[LOOKML_FIELD_TAGS.accountGroups][0];
       } catch (err) {
-        console.error(`No account group field using tag ${LOOKML_FIELD_TAGS.accountGroups}`)
+        console.error(
+          `No account group field using tag ${LOOKML_FIELD_TAGS.accountGroups}`
+        );
       }
-
 
       //
       // console.log("fieldsByTag", fieldsByTag)
@@ -120,46 +137,26 @@ export const Main = () => {
       // console.log('_quickFilterOptions', _quickFilterOptions)
 
       const _dateRange = fieldsByTag[LOOKML_FIELD_TAGS.dateRange];
-
-      console.log(_dateRange)
-      let _totalInvoice = undefined
+      let _totalInvoice = undefined;
       try {
-        _totalInvoice = fieldsByTag[LOOKML_FIELD_TAGS.totalInvoices][0]
+        _totalInvoice = fieldsByTag[LOOKML_FIELD_TAGS.totalInvoices][0];
       } catch (err) {
-        console.error(`No total invoice field with the tag ${LOOKML_FIELD_TAGS.totalInvoices}`)
+        console.error(
+          `No total invoice field with the tag ${LOOKML_FIELD_TAGS.totalInvoices}`
+        );
       }
 
-
-      let defaultFilterSelections = []
+      let defaultFilterSelections = [];
       try {
         defaultFilterSelections = Object.fromEntries(
           _filterOptions.map((filter) => [filter.name, "N/A"])
-          );
-      } catch(error) {
-        console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`)
+        );
+      } catch (error) {
+        console.error(
+          `No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`
+        );
       }
 
-
-
-     //
-     //  console.log(defaultFilterSelections)
-     //
-     //  //added  QuickFilter here
-     //
-     //  let defaultQuickFilterSelections = []
-     //    try {
-     //      defaultQuickFilterSelections = Object.fromEntries(
-     //        _quickFilterOptions.map((filter) => [filter.name, "N/A"])
-     //        );
-     //    } catch(error) {
-     //      console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.quick_filter}`)
-     //    }
-     //
-     // console.log(defaultQuickFilterSelections)
-
-
-
-    //date filters
       const defaultDateFilterSelections = _dateFilterOptions?.find((filter) => {
         if (filter["suggestions"]) {
           return filter["suggestions"].find((s) => {
@@ -168,17 +165,15 @@ export const Main = () => {
         }
       });
 
-      const defaultQuickFilterSelections = _quickFilterOptions?.find((filter) => {
-        if (filter["suggestions"]) {
-          return filter["suggestions"].find((s) => {
-            return s.toUpperCase() === "YES";
-          });
+      const defaultQuickFilterSelections = _quickFilterOptions?.find(
+        (filter) => {
+          if (filter["suggestions"]) {
+            return filter["suggestions"].find((s) => {
+              return s.toUpperCase() === "YES";
+            });
+          }
         }
-      });
-
-
-
-
+      );
 
       if (defaultDateFilterSelections != undefined) {
         setSelectedDateFilter(defaultDateFilterSelections["name"]);
@@ -186,60 +181,59 @@ export const Main = () => {
 
       setSelectedDateRange(getDefaultDateRange());
 
-
       if (defaultQuickFilterSelections != undefined) {
         setQuickFilter(defaultQuickFilterSelections["name"]);
       }
 
       setSelectedDateRange(getDefaultDateRange());
 
-
-
       if (_totalInvoice != undefined) {
-        setTotalInvoiceField(_totalInvoice)
-        let values = await getValues(_totalInvoice)
-        setCurrentInvoiceCount(values[0][_totalInvoice['name']])
+        setTotalInvoiceField(_totalInvoice);
+        let values = await getValues(_totalInvoice);
+        setCurrentInvoiceCount(values[0][_totalInvoice["name"]]);
       }
 
       if (_filterOptions) {
         setFilterOptions(_filterOptions);
       } else {
-        console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`)
+        console.error(
+          `No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`
+        );
       }
 
       if (_quickFilterOptions) {
         setQuickFilterOptions(_quickFilterOptions);
       } else {
-        console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`)
+        console.error(
+          `No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`
+        );
       }
-
 
       if (_productMovementfieldOptions) {
         setProductMovementFields(_productMovementfieldOptions);
       } else {
-        console.error(`No fields found using tag ${LOOKML_FIELD_TAGS.productMovementField}`)
+        console.error(
+          `No fields found using tag ${LOOKML_FIELD_TAGS.productMovementField}`
+        );
       }
-
 
       if (_dateFilterOptions) {
         setDateFilterOptions(sortDateFilterList(_dateFilterOptions));
       } else {
-        console.error(`No date filters found using tag ${LOOKML_FIELD_TAGS.date_filter}`)
+        console.error(
+          `No date filters found using tag ${LOOKML_FIELD_TAGS.date_filter}`
+        );
       }
-
-      // setQuickFilter(_quickFilterOptions);
-
-
-
-
 
       if (_accountGroupField != undefined) {
         setAccountGroupField(_accountGroupField);
-        let values = await getDefaultValues(_accountGroupField)
-        setAccountGroupOptions(values.splice(0, 500).map((v,i) => {return v[_accountGroupField['name']]}));
-
+        let values = await getDefaultValues(_accountGroupField);
+        setAccountGroupOptions(
+          values.splice(0, 500).map((v, i) => {
+            return v[_accountGroupField["name"]];
+          })
+        );
       }
-
 
       setSelectedFilters(defaultFilterSelections);
 
@@ -247,8 +241,10 @@ export const Main = () => {
 
       try {
         setDateRange(_dateRange[0]);
-      } catch(error) {
-        console.error(`No date range found using tag ${LOOKML_FIELD_TAGS.dateRange}`)
+      } catch (error) {
+        console.error(
+          `No date range found using tag ${LOOKML_FIELD_TAGS.dateRange}`
+        );
       }
 
       setIsFetchingLookmlFields(false);
@@ -261,7 +257,7 @@ export const Main = () => {
     }
   }, []);
 
-  useEffect(() => { }, [selectedDateRange]);
+  useEffect(() => {}, [selectedDateRange]);
 
   const getDefaultDateRange = () => {
     let prevMonth = moment().subtract(1, "month");
@@ -274,34 +270,37 @@ export const Main = () => {
   };
 
   const updateDateRange = async () => {
-    let field = {...dateRange};
-    console.log(selectedDateFilter)
+    let field = { ...dateRange };
+    console.log(selectedDateFilter);
     if (selectedDateFilter != "" && Object.keys(field).length > 0) {
-      let dateFilterField = dateFilterOptions.find(df => df['name'] == selectedDateFilter)
-      console.log("date_filter field",field)
-      let filter = {}
-      filter[selectedDateFilter] = 'Yes'
-      console.log(filter)
+      let dateFilterField = dateFilterOptions.find(
+        (df) => df["name"] == selectedDateFilter
+      );
+      console.log("date_filter field", field);
+      let filter = {};
+      filter[selectedDateFilter] = "Yes";
+      console.log(filter);
       const newRange = await sdk.ok(
         sdk.run_inline_query({
           result_format: "json",
           body: {
             model: LOOKER_MODEL,
-            view: dateFilterField['view'],
-            fields: [field['name']],
+            view: dateFilterField["view"],
+            fields: [field["name"]],
             filters: filter,
-            sorts:[field['name']]
+            sorts: [field["name"]],
           },
         })
       );
-      console.log("new Range", newRange)
+      console.log("new Range", newRange);
       if (newRange.length > 0) {
-        let max = newRange.length - 1
-        setSelectedDateRange(`${newRange[0][field['name']]} to ${newRange[max][field['name']]}`)
+        let max = newRange.length - 1;
+        setSelectedDateRange(
+          `${newRange[0][field["name"]]} to ${newRange[max][field["name"]]}`
+        );
       }
     }
-
-  }
+  };
 
   const getValues = (field) => {
     return sdk.ok(
@@ -309,13 +308,13 @@ export const Main = () => {
         result_format: "json",
         body: {
           model: LOOKER_MODEL,
-          view: field['view'],
-          fields: [field['name']],
-          filters: getAllFilters()
+          view: field["view"],
+          fields: [field["name"]],
+          filters: getAllFilters(),
         },
       })
     );
-  }
+  };
 
   const getDefaultValues = (field) => {
     return sdk.ok(
@@ -323,13 +322,13 @@ export const Main = () => {
         result_format: "json",
         body: {
           model: LOOKER_MODEL,
-          view: field['view'],
-          fields: [field['name']],
-          filters: {}
+          view: field["view"],
+          fields: [field["name"]],
+          filters: {},
         },
       })
     );
-  }
+  };
 
   const getAllFilters = () => {
     let filters = {};
@@ -354,21 +353,21 @@ export const Main = () => {
     }
 
     if (selectedAccountGroup.length > 0) {
-      filters[accountGroupField['name']] = selectedAccountGroup.join(",")
+      filters[accountGroupField["name"]] = selectedAccountGroup.join(",");
     }
-    return filters
-  }
+    return filters;
+  };
 
   const updateInvoiceCount = async () => {
     let newCount = await getValues(totalInvoiceField);
-    setCurrentInvoiceCount(newCount[0][totalInvoiceField['name']])
-  }
+    setCurrentInvoiceCount(newCount[0][totalInvoiceField["name"]]);
+  };
 
   useEffect(() => {
     if (selectedDateFilter != "") {
-      updateDateRange()
-    }    
-  },[selectedDateFilter])
+      updateDateRange();
+    }
+  }, [selectedDateFilter]);
 
   return (
     <>
@@ -393,12 +392,10 @@ export const Main = () => {
                   isFetchingLookmlFields={isFetchingLookmlFields}
                   setSelectedDateFilter={setSelectedDateFilter}
                   selectedDateFilter={selectedDateFilter}
-
                   setSelectedDateRange={setSelectedDateRange}
                   selectedDateRange={selectedDateRange}
                   dateRange={dateRange}
                   currentNavTab={currentNavTab}
-
                   currentInvoiceCount={currentInvoiceCount}
                   updateInvoiceCount={updateInvoiceCount}
                   getAllFilters={getAllFilters}
@@ -409,14 +406,10 @@ export const Main = () => {
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
                   quickFilterOptions={quickFilter}
-
-
+                  dimensionToggleFields={dimensionToggleFields}
                 />
-
-
               </Tab>
               <Tab eventKey="product-movement" title="Product Movement Report">
-
                 <Template1
                   currentNavTab={currentNavTab}
                   selectedFilters={selectedFilters}
@@ -431,7 +424,7 @@ export const Main = () => {
                   setSelectedDateRange={setSelectedDateRange}
                   selectedDateRange={selectedDateRange}
                   dateRange={dateRange}
-                  config={{tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}}
+                  config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
                   tabKey={"product-movement"}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
@@ -460,7 +453,7 @@ export const Main = () => {
                   setSelectedDateRange={setSelectedDateRange}
                   selectedDateRange={selectedDateRange}
                   dateRange={dateRange}
-                  config={{tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}}
+                  config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
                   tabKey={"invoice"}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
@@ -487,7 +480,7 @@ export const Main = () => {
                   setSelectedDateRange={setSelectedDateRange}
                   selectedDateRange={selectedDateRange}
                   dateRange={dateRange}
-                  config={{tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID}}
+                  config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
                   tabKey={"auto-sub"}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
@@ -515,8 +508,8 @@ export const Main = () => {
                   selectedDateRange={selectedDateRange}
                   dateRange={dateRange}
                   config={{
-                    tabbedVis1:PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
-                    vis1:PRODUCT_MOVEMENT_VIS_DASHBOARD_ID
+                    tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
+                    vis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
                   }}
                   tabKey={"id"}
                   showMenu={showMenu}
