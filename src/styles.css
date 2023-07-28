@@ -1310,7 +1310,7 @@ button.scroll-top {
 
 
 #slideOut1 .modal-content.info{
-  background: #BBDDE6;
+  background: #efefef;
   display: none;
 
 }
@@ -1318,8 +1318,8 @@ button.scroll-top {
 
 
 
-#slideOut1 ::-webkit-scrollbar,
-#slideOut1 ::-webkit-scrollbar-thumb,
+/* #slideOut1 ::-webkit-scrollbar,
+#slideOut1 ::-webkit-scrollbar-thumb, */
 #slideOut2 ::-webkit-scrollbar,
 #slideOut2 ::-webkit-scrollbar-thumb {
 
@@ -1346,9 +1346,7 @@ button.scroll-top {
   background: linear-gradient(87.17deg, #86E0B0 -12.81%, #61D5FF 123.59%);
   transform: rotate(-90deg);
 
-
-
-  background: #BBDDE6;
+  background: #d4d4d4;
 
 }
 
@@ -1467,7 +1465,7 @@ button.scroll-top {
 
 #slideOut1 .modal-content {
   position: relative;
-  background: #BBDDE6;
+  background: #efefef;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
   border: 1px solid #999;
@@ -1481,8 +1479,8 @@ button.scroll-top {
   height: 100vh;
   width: 440px;
   margin: 0;
-  padding-left: 1.2em;
-  padding-right: 1.2em;
+  padding-left: 1em;
+  padding-right: 1em;
   padding-bottom: 6em;
   opacity: 1;
   overflow-y: auto;
@@ -5565,11 +5563,14 @@ footer img{
 }
 
 .smallerHeight iframe{
-  max-height:250px;
+  max-height: 250px;
+  min-height: 200px;
+
 }
 
 .middleHeight iframe{
   max-height:400px;
+  min-height: 390px;
   margin-bottom: 80px
 }
 
@@ -5827,8 +5828,84 @@ html.dark-mode{
 
 
 
+
 /* dark mode end */
 
+
+/* glossary */
+
+
+.showStates {
+    display: flex;
+    flex-wrap: wrap;
+
+    margin-top: 0em;
+}
+
+
+.letter {
+    color: black !important;
+    background: white;
+    border-radius: 50%;
+    border-radius: 50%;
+    display: inline-block;
+    height: 3em;
+    width: 3em;
+    margin: 0.2em 0.5em 0.2em 0.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+}
+
+.letter p {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 15px;
+}
+
+
+.filter-attr-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 0em;
+    padding-left: 0rem;
+
+}
+
+.activeLetter {
+    background-color: #e41f35;
+    color: white !important;
+}
+.activeLetter p{
+      color: white !important;
+}
+
+
+#currentLetter{
+  border: 1px solid;
+  font-weight: bold
+}
+
+#currentLetter p{
+    font-weight: bold !important
+}
+
+.absoluteSearch{
+  position: absolute;
+  right: 7px;
+  top: 13px;
+}
+
+.showDef{
+  max-height: 470px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-top:1em;
+  padding-right:.5em
+}
 
 /* topnav slideout start */
 

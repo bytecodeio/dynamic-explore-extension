@@ -251,7 +251,7 @@ const Template1 = ({
 
   async function handleClearAll() {
   console.log('handleClearAll')
-    setIsDefaultProduct(false);
+    // setIsDefaultProduct(false);
     setUpdateButtonClicked(true);
     setSelectedFields([]);
     let tabs = [...tabList];
@@ -262,8 +262,12 @@ const Template1 = ({
     for(let name in filters) {
       filters[name] = 'N/A';
     }
-    console.log('filters ', filters, selectedFilters)
     setSelectedFilters(filters);
+    // setSelectedFilters((prevFilters) => {
+    //   const newFilters = { ...prevFilters };
+    //   newFilters[filterName] = 'N/A';
+    //   return newFilters;
+    // });
     setIsFilterChanged(true);
   }
 
@@ -330,7 +334,7 @@ const Template1 = ({
                   </Button>
                   <Button
                     onClick={handleTabVisUpdate}
-                    className="btn">Submit
+                    className="btn">Submit Filters
                   </Button>
                 </div>
               </div>
@@ -343,7 +347,7 @@ const Template1 = ({
                           <Accordion.Item eventKey="1">
                             <Accordion.Header>Account Groups</Accordion.Header>
                             <Accordion.Body>
-                              <AccountGroups 
+                              <AccountGroups
                                 fieldOptions={accountGroupOptions}
                                 selectedAccountGroup={selectedAccountGroup}
                                 setSelectedAccountGroup={setSelectedAccountGroup}
@@ -425,9 +429,6 @@ const Template1 = ({
 
                 <div className="across">
 
-
-
-
                     <input placeholder="Top % Products" type="search" class="form-control" />
                     <input placeholder="Search Filter" type="search" class="form-control" />
 
@@ -465,20 +466,7 @@ const Template1 = ({
                 quickFilterOptions={quickFilterOptions}
               />
 
-              <CurrentQuickFilter
-              selectedDateFilter={selectedDateFilter}
-              selectedFilters={selectedFilters}
-              selectedFields={selectedFields}
-              fieldOptions={fieldOptions}
-              setSelectedFields={setSelectedFields}
-              filterOptions={filterOptions}
-              setSelectedFilters={setSelectedFilters}
-              dateFilterOptions={dateFilterOptions}
-              selectedDateRange={selectedDateRange}
-              quickFilterOptions={quickFilterOptions}
-            />
-
-
+          
               <p className="mt-5">
                 Total Invoice: <span className="highlight large">{currentInvoiceCount}</span>
               </p>
