@@ -77,7 +77,7 @@ const PurchasesReview = ({
     useState(true);
   const [filterSuggestions, setFilterSuggestions] = useState({});
   useEffect(() => {
-    if (isFetchingLookmlFields || !filterOptions.length) {
+    if (isFetchingLookmlFields || !filterOptions?.length) {
       return;
     }
 

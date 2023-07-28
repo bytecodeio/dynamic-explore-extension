@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
-const Fields = ({
-  fieldOptions,
+const QuickFilter = ({
+  quickFilterOptions,
   setTabList,
   tabList,
   currentInnerTab,
@@ -28,34 +28,36 @@ const Fields = ({
     //     return [...prev, fieldName];
     //   }
     // });
-
-
   }
-  // console.log("these are fields", fieldOptions)
-  return (
-    <div className="wrapFilters">
-      {fieldOptions.map((fieldOption) => (
-        <div className="one" key={fieldOption.name}>
-          <Form.Group>
-            <Form.Check
-              type="checkbox"
-              className=""
-              label={fieldOption.label_short}
-              checked={tabList[currentInnerTab]["selected_fields"].includes(
-                fieldOption.name
-              )}
-              name="Fields"
-              id={fieldOption.name}
-              value={fieldOption.fields}
-              onChange={() => handleFieldSelection(fieldOption.name)}
-            />
-          </Form.Group>
-        </div>
-      ))}
-    </div>
 
-    // set value to name
+  return (
+    <div>
+      {console.log('quickFilterOptions in child component ', quickFilterOptions)}
+      <div className="wrapFilters">
+        {quickFilterOptions?.map((fieldOption) => (
+
+
+
+          <div className="one" key={fieldOption.name}>
+
+
+            <Form.Group>
+              <Form.Check
+                type="checkbox"
+                className=""
+                label={fieldOption.label_short}
+                checked={tabList[currentInnerTab]["selected_fields"].includes(fieldOption.name)}
+                name="Fields"
+                id={fieldOption.name}
+                value={fieldOption.fields}
+                onChange={() => handleFieldSelection(fieldOption.name)}
+              />
+            </Form.Group>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
-export default Fields;
+export default QuickFilter;

@@ -9,19 +9,19 @@ import {
   Spinner,
   Tooltip,
 } from "react-bootstrap";
-
 import { LOOKER_MODEL, LOOKER_EXPLORE } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import InnerTableTabs from "../../components/InnerTableTabs";
 import Fields from "./helpers/Fields";
 import Filters from "./helpers/Filters";
 import Rx from "./helpers/Rx";
+import QuickFilter from "./helpers/QuickFilter";
 import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
+import { CurrentQuickFilter } from "./helpers/CurrentQuickFilter";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
-
 const InflationDeflation = ({
   currentNavTab,
   selectedFilters,
@@ -36,38 +36,36 @@ const InflationDeflation = ({
   setSelectedDateRange,
   dateRange,
   tabKey,
-  lowerDashboardId,
-  upperDashboardId,
+  config,
   showMenu,
-  setShowMenu
+  setShowMenu,
+  currentInvoiceCount,
+  updateInvoiceCount,
+  getAllFilters,
+  quickFilterOptions,
+  setSelectedAccountGroup,
+  accountGroupOptions,
+  selectedAccountGroup,
+  accountGroupField,
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
-  const [slide, setSlide] = useState();
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const [showModal, setShowModal] = useState(false);
   const [show3, setShow3] = useState();
-  const [active, setActive] = useState(false);
-  const [faClass, setFaClass] = useState(true);
-  const [toggle, setToggle] = useState(true);
   const [selectedFields, setSelectedFields] = useState([]);
-  const [productMovementVisQid, setProductMovementVisQid] = useState();
   const defaultChecked = true;
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
-  const [defaults, setDefaults] = useState({});
   const [tabList, setTabList] = useState([]);
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
-  const [isFilterChanged, setIsFilterChanged] = useState(false);
-  const [upperVis, setUpperVis] = useState();
+  const [isFilterChanged, setIsFilterChanged] = useState(false);  
+  const [vis1, setVis1] = useState("")
   function handleClearAll() {}
 
   useEffect(() => {
     if (currentNavTab == tabKey) {
       setIsFilterChanged(true);
-      handleTabVisUpdate();
+      //handleTabVisUpdate();
+      //slideIt(show3);
     }
   }, [currentNavTab]);
 
@@ -77,7 +75,7 @@ const InflationDeflation = ({
   useEffect(() => {
     async function fetchDefaultFieldsAndFilters() {
       const { dashboard_elements } = await sdk.ok(
-        sdk.dashboard(lowerDashboardId, "dashboard_elements")
+        sdk.dashboard(config.tabbedVis1, "dashboard_elements")  
       );
 
       dashboard_elements?.map((t) => {
@@ -93,13 +91,15 @@ const InflationDeflation = ({
         ]);
       });
 
-      await getUpperVis();
 
       const { client_id, fields, filters } =
         dashboard_elements[0].result_maker.query;
 
       setSelectedFields(fields);
       if (filters) setSelectedFilters(filters);
+
+      
+      getSingleVis(config.vis1);
       //setProductMovementVisQid(client_id);
       setIsFetchingDefaultDashboard(false);
     }
@@ -111,20 +111,21 @@ const InflationDeflation = ({
     }
   }, []);
 
-  const getUpperVis = async () => {
-    const { dashboard_elements } = await sdk.ok(
-      sdk.dashboard(upperDashboardId, "dashboard_elements")
-    );
-
-    setUpperVis(dashboard_elements[0].result_maker.query.client_id);
-  };
+  const getSingleVis = async (vis) => {
+    let { dashboard_elements } = await sdk.ok(sdk.dashboard(vis,'dashboard_elements'));
+    console.log("singleVisConsole", dashboard_elements)
+    if (dashboard_elements.length > 0) {
+      let singleVis = dashboard_elements[0]['result_maker']['query']['client_id'];
+      setVis1(singleVis)
+    }    
+  }
 
   // Fetch the suggestions for each filter field, after fetching all filter fields
   const [isFetchingFilterSuggestions, setIsFetchingFilterSuggestions] =
     useState(true);
   const [filterSuggestions, setFilterSuggestions] = useState({});
   useEffect(() => {
-    if (isFetchingLookmlFields || !filterOptions.length) {
+    if (isFetchingLookmlFields || !filterOptions?.length) {
       return;
     }
 
@@ -200,25 +201,27 @@ const InflationDeflation = ({
     const prevVisQid = currentTab["query"];
 
     // remove filters with a value of "N/A"
-    const filters = {};
-    for (const filter in selectedFilters) {
-      if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
-        filters[filter] = selectedFilters[filter];
-      }
-    }
+    let filters = {};
+    // for (const filter in selectedFilters) {
+    //   if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
+    //     filters[filter] = selectedFilters[filter];
+    //   }
+    // }
 
-    if (selectedDateFilter != "") {
-      filters[selectedDateFilter] = "Yes";
-    } else {
-      if (selectedDateRange) {
-        filters[dateRange["name"]] = selectedDateRange;
-      }
-    }
+    // if (selectedDateFilter != "") {
+    //   filters[selectedDateFilter] = "Yes";
+    // } else {
+    //   if (selectedDateRange) {
+    //     filters[dateRange["name"]] = selectedDateRange;
+    //   }
+    // }
+    filters = await getAllFilters();
 
     if (isFilterChanged) {
       updateInnerTabFilters(filters);
-      updateUpperVizFilters(filters);
     }
+
+    await updateInvoiceCount()
 
     const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
 
@@ -260,27 +263,23 @@ const InflationDeflation = ({
     });
     setIsFilterChanged(false);
   };
-  const updateUpperVizFilters = async (filters) => {
-    let prevVisId = upperVis;
-    const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(prevVisId));
-
-    const { client_id } = await sdk.ok(
-      sdk.create_query({
-        model: LOOKER_MODEL,
-        view: LOOKER_EXPLORE,
-        fields: fields,
-        filters,
-        vis_config,
-      })
-    );
-
-    setUpperVis(client_id);
-  };
 
   async function handleClearAll() {
+  console.log('handleClearAll')
     setIsDefaultProduct(false);
     setUpdateButtonClicked(true);
     setSelectedFields([]);
+    let tabs = [...tabList];
+    let currentTab = tabs[currentInnerTab];
+    currentTab["selected_fields"] = [];
+    setTabList(tabs);
+    let filters = {...selectedFilters};
+    for(let name in filters) {
+      filters[name] = 'N/A';
+    }
+    console.log('filters ', filters, selectedFilters)
+    setSelectedFilters(filters);
+    setIsFilterChanged(true);
   }
 
   async function handleRestoreDefault() {
@@ -295,13 +294,13 @@ const InflationDeflation = ({
   useEffect((e) => {
     document.addEventListener("click", handleClickOutside, false);
     return () => {
-      document.removeEventListener("click", handleClickOutside, false);
+    document.removeEventListener("click", handleClickOutside, false);
     };
   }, []);
 
   const handleClickOutside = (event) => {
     if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      setShow3(false);
+      //setShow3(false);
     }
   };
 
@@ -311,147 +310,184 @@ const InflationDeflation = ({
         <Spinner />
       ) : (
         <>
-        <div id="slideOut3" className={showMenu ? "" : "show3"} ref={wrapperRef}>
-         <div className="slideOutTab3">
-           <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
-              onClick={() => {setShowMenu(false);}}>
-             <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
-             <p className="m-0"><span className="noMobile">Filter Options</span></p>
+       <div id="slideOut3" className={showMenu ? "" : "show3"} ref={wrapperRef}>
+        <div className="slideOutTab3">
+          <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
+             onClick={() => {setShowMenu(false);}}>
+            <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
+            <p className="m-0"><span className="noMobile">Filter Options</span></p>
+              </div>
+            </div>
+
+            <div className="modal-content">
+              <div className="modal-header">
+                <OverlayTrigger
+                  placement="right"
+                  overlay={renderTooltip}
+                  className="tooltipHover"
+                >
+                  <p className="pb-1">
+                    Filter Options <i className="fal fa-info-circle red"></i>
+                  </p>
+                </OverlayTrigger>
+                <div className="closeThisPlease" id="close1">
+                <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1"
+                   onClick={() => {setShowMenu(true);}}>
+                  {/*onClick={() => setShow3(false)}>*/}
+                  &#10005;
+                  </Button>
+                </div>
+              </div>
+              <div className="modal-actions">
+                <div className="across">
+                  <Button onClick={handleClearAll} className="btn-clear">
+                    Clear All
+                  </Button>
+                  <Button
+                    onClick={handleTabVisUpdate}
+                    className="btn">Submit
+                  </Button>
+                </div>
+              </div>
+              <div className="modal-body">
+                <Accordion defaultActiveKey={0} className="mt-3 mb-3">
+                  <Row>
+                    <Col xs={12} md={12}>
+                      <Row>
+                        {/* Account Groups */}
+                        {accountGroupOptions?.length > 0?
+                          <Col xs={12} md={12}>
+                            <Accordion.Item eventKey="1">
+                              <Accordion.Header>Account Groups</Accordion.Header>
+                              <Accordion.Body>
+                                <AccountGroups 
+                                  fieldOptions={accountGroupOptions}
+                                  selectedAccountGroup={selectedAccountGroup}
+                                  setSelectedAccountGroup={setSelectedAccountGroup}
+                                />
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Col>                   
+                        :''
+                        }
+
+                        {/* Quick Filters */}
+                        {quickFilterOptions?.length > 0?
+                          <Col xs={12} md={12}>
+                            <Accordion.Item eventKey="3">
+                              <Accordion.Header>Quick Filters</Accordion.Header>
+                              <Accordion.Body>
+                                <QuickFilter
+                                quickFilterOptions={quickFilterOptions}
+                                setTabList={setTabList}
+                                tabList={tabList}
+                                currentInnerTab={currentInnerTab}
+                                // selectedFields={selectedFields}
+                                // setSelectedFields={setSelectedFields}
+                                // isDefault={isDefaultProduct}
+                                // setIsDefault={setIsDefaultProduct}
+                                updateBtn={updateButtonClicked}
+                                setUpdateBtn={setUpdateButtonClicked}
+
+                                />
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Col>                        
+                        :''
+                        }
+
+
+                        {/* Filters */}
+                        {filterOptions?.length > 0?
+                          <Col xs={12} md={12}>
+                            <Accordion.Item eventKey="5">
+                              <Accordion.Header>Filters</Accordion.Header>
+                              <Accordion.Body>
+                                <Filters
+                                  isLoading={isFetchingFilterSuggestions}
+                                  filterOptions={filterOptions}
+                                  filterSuggestions={filterSuggestions}
+                                  selectedFilters={selectedFilters}
+                                  setSelectedFilters={setSelectedFilters}
+                                  isDefault={isDefaultProduct}
+                                  setIsDefault={setIsDefaultProduct}
+                                  updateBtn={updateButtonClicked}
+                                  setUpdateBtn={setUpdateButtonClicked}
+                                  setIsFilterChanged={setIsFilterChanged}
+                                />
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Col>
+                        :''
+                        }
+
+
+                        {/* Fields */}
+                        {fieldOptions?.length > 0?
+                        <Col xs={12} md={12}>
+                          <Accordion.Item eventKey="6">
+                            <Accordion.Header>Fields</Accordion.Header>
+                            <Accordion.Body>
+                              <Fields
+                                fieldOptions={fieldOptions}
+                                setTabList={setTabList}
+                                tabList={tabList}
+                                currentInnerTab={currentInnerTab}
+                                // selectedFields={selectedFields}
+                                // setSelectedFields={setSelectedFields}
+                                // isDefault={isDefaultProduct}
+                                // setIsDefault={setIsDefaultProduct}
+                                updateBtn={updateButtonClicked}
+                                setUpdateBtn={setUpdateButtonClicked}
+                              />
+                            </Accordion.Body>
+                          </Accordion.Item>
+                        </Col>
+                        :''
+                        }
+
+
+                        {/* Bookmarks */}
+                        <Col xs={12} md={12}>
+                          <Accordion.Item eventKey="4">
+                            <Accordion.Header>Bookmarks</Accordion.Header>
+                            <Accordion.Body></Accordion.Body>
+                          </Accordion.Item>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Accordion>
+
+                <div className="across">
+
+
+
+
+                    <input placeholder="Top % Products" type="search" class="form-control" />
+                    <input placeholder="Search Filter" type="search" class="form-control" />
+
                </div>
-             </div>
 
-             <div className="modal-content">
-               <div className="modal-header">
-                 <OverlayTrigger
-                   placement="right"
-                   overlay={renderTooltip}
-                   className="tooltipHover"
-                 >
-                   <p className="pb-1">
-                     Filter Options <i className="fal fa-info-circle red"></i>
-                   </p>
-                 </OverlayTrigger>
-                 <div className="closeThisPlease" id="close1">
-                 <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1"
-                    onClick={() => {setShowMenu(true);}}>
-                   {/*onClick={() => setShow3(false)}>*/}
-                   &#10005;
-                   </Button>
-                 </div>
-               </div>
-               <div className="modal-body">
-               <div className="across">
+              <div className="lineAcross"></div>
 
-                 <Button onClick={handleClearAll} className="btn-clear">
-                   Clear All
-                 </Button>
-
-
-                 <Button
-                   onClick={handleTabVisUpdate}
-                   className="btn">Submit Filters
-                 </Button>
-               </div>
-
-                 <Accordion defaultActiveKey={0} className="mt-3 mb-3">
-                   <Row>
-                     <Col xs={12} md={12}>
-                       <Row>
-                         <Col xs={12} md={12}>
-                           <Accordion.Item eventKey="1">
-                             <Accordion.Header>Account Groups</Accordion.Header>
-                             <Accordion.Body>
-                               <AccountGroups />
-                             </Accordion.Body>
-                           </Accordion.Item>
-                         </Col>
-
-                         <Col xs={12} md={12}>
-                           <Accordion.Item eventKey="3">
-                             <Accordion.Header>Rx</Accordion.Header>
-                             <Accordion.Body>
-                               <Rx />
-                             </Accordion.Body>
-                           </Accordion.Item>
-                         </Col>
-                         <Col xs={12} md={12}>
-                           <Accordion.Item eventKey="5">
-                             <Accordion.Header>Filters</Accordion.Header>
-                             <Accordion.Body>
-                               <Filters
-                                 isLoading={isFetchingFilterSuggestions}
-                                 filterOptions={filterOptions}
-                                 filterSuggestions={filterSuggestions}
-                                 selectedFilters={selectedFilters}
-                                 setSelectedFilters={setSelectedFilters}
-                                 isDefault={isDefaultProduct}
-                                 setIsDefault={setIsDefaultProduct}
-                                 updateBtn={updateButtonClicked}
-                                 setUpdateBtn={setUpdateButtonClicked}
-                                 setIsFilterChanged={setIsFilterChanged}
-                               />
-                             </Accordion.Body>
-                           </Accordion.Item>
-                         </Col>
-
-                         <Col xs={12} md={12}>
-                           <Accordion.Item eventKey="6">
-                             <Accordion.Header>Fields</Accordion.Header>
-                             <Accordion.Body>
-                               <Fields
-                                 fieldOptions={fieldOptions}
-                                 setTabList={setTabList}
-                                 tabList={tabList}
-                                 currentInnerTab={currentInnerTab}
-                                 // selectedFields={selectedFields}
-                                 // setSelectedFields={setSelectedFields}
-                                 // isDefault={isDefaultProduct}
-                                 // setIsDefault={setIsDefaultProduct}
-                                 updateBtn={updateButtonClicked}
-                                 setUpdateBtn={setUpdateButtonClicked}
-                               />
-                             </Accordion.Body>
-                           </Accordion.Item>
-                         </Col>
-
-                         <Col xs={12} md={12}>
-                           <Accordion.Item eventKey="4">
-                             <Accordion.Header>Bookmarks</Accordion.Header>
-                             <Accordion.Body></Accordion.Body>
-                           </Accordion.Item>
-                         </Col>
-                       </Row>
-                     </Col>
-                   </Row>
-                 </Accordion>
-
-                 <div className="across">
-
-
-
-
-                     <input placeholder="Top % Products" type="search" class="form-control" />
-                     <input placeholder="Search Filter" type="search" class="form-control" />
+              <div className="across two">
+                  <Button onClick={handleRestoreDefault} className="btn-clear">
+                    Restore Default <i className="fal fa-undo"></i>
+                  </Button>
+                  <Button className="btn-clear">
+                    Print <i className="fal fa-print"></i>
+                  </Button>
 
                 </div>
+              </div>
+            </div>
+          </div>
 
-               <div className="lineAcross"></div>
 
-               <div className="across two">
-                   <Button onClick={handleRestoreDefault} className="btn-clear">
-                     Restore Default <i className="fal fa-undo"></i>
-                   </Button>
-                   <Button className="btn-clear">
-                     Print <i className="fal fa-print"></i>
-                   </Button>
 
-                 </div>
-               </div>
-             </div>
-           </div>
-
-            <Row className="fullW">
-            <Col xs={12} md={5}>
+          <Row className="fullW">
+            <Col md={12} lg={5}>
               <CurrentSelection
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
@@ -461,45 +497,68 @@ const InflationDeflation = ({
                 filterOptions={filterOptions}
                 setSelectedFilters={setSelectedFilters}
                 dateFilterOptions={dateFilterOptions}
+                selectedDateRange={selectedDateRange}
+                quickFilterOptions={quickFilterOptions}
               />
-              <div className="mt-5 mb-5">
-                <p>
-                  Total Invoice: <span className="highlight large">17</span>
-                </p>
 
-              </div>
+              <CurrentQuickFilter
+              selectedDateFilter={selectedDateFilter}
+              selectedFilters={selectedFilters}
+              selectedFields={selectedFields}
+              fieldOptions={fieldOptions}
+              setSelectedFields={setSelectedFields}
+              filterOptions={filterOptions}
+              setSelectedFilters={setSelectedFilters}
+              dateFilterOptions={dateFilterOptions}
+              selectedDateRange={selectedDateRange}
+              quickFilterOptions={quickFilterOptions}
+            />
+
+            {currentInvoiceCount != ""?
+              <p className="mt-5">
+                Total Invoice: <span className="highlight large">{currentInvoiceCount}</span>
+              </p>
+              :''
+            }
+            <div className="vis1-container">
+              <EmbedTable queryId={vis1} />
+            </div>
             </Col>
 
-            <Col xs={12} md={7}>
-            <DateRangeSelector
-              selectedDateRange={selectedDateRange}
-              setSelectedDateRange={setSelectedDateRange}
-              setSelectedDateFilter={setSelectedDateFilter}
-              dateFilterOptions={dateFilterOptions}
-              setSelectedDateFilter={setSelectedDateFilter}
-              selectedDateFilter={selectedDateFilter}
+            <Col md={12} lg={7}>
+              {/* Date Range Selector */}
+              {dateFilterOptions.length>0?              
+                <DateRangeSelector
+                  selectedDateRange={selectedDateRange}
+                  setSelectedDateRange={setSelectedDateRange}
+                  setSelectedDateFilter={setSelectedDateFilter}
+                  dateFilterOptions={dateFilterOptions}
+                  selectedDateFilter={selectedDateFilter}
+                  handleTabVisUpdate={handleTabVisUpdate}
+                />
+              :''
+              }
 
-            />
-    
+              {/*<DateFilterGroup
+                dateFilterOptions={dateFilterOptions}
+                setSelectedDateFilter={setSelectedDateFilter}
+                selectedDateFilter={selectedDateFilter}
+              />*/}
             </Col>
           </Row>
 
           <Row className="mt-3 mb-3">
-              <Col md={5}>
-                <div className="padding-0 innerTab smallerHeight embed-responsive embed-responsive-16by9">
-                <EmbedTable queryId={upperVis} />
-                </div>
-              </Col>
-          </Row>
-
-            <Row>
             <Col md={12} className="embed-responsive embed-responsive-16by9">
-              <InnerTableTabs
-                tabs={tabList}
-                setSelectedFields={setSelectedFields}
-                currentInnerTab={currentInnerTab}
-                setCurrentInnerTab={setCurrentInnerTab}
-              />
+              {tabList.length > 0?
+                <InnerTableTabs
+                  tabs={tabList}
+                  setSelectedFields={setSelectedFields}
+                  currentInnerTab={currentInnerTab}
+                  setCurrentInnerTab={setCurrentInnerTab}
+                />
+              :''
+              }
+
             </Col>
           </Row>
         </>
