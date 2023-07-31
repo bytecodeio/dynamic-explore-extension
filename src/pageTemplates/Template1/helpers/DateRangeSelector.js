@@ -39,7 +39,7 @@ export const DateRangeSelector = ({
   };
 
 
-  console.log(selectedDateRange)
+  // console.log(selectedDateRange)
 
 
   return (
@@ -112,9 +112,6 @@ export const DateRangeSelector = ({
 
         <div className="columnStart mr2">
           <p className="small">Start Date</p>
-
-
-
 
           <Form.Control
           type="date"

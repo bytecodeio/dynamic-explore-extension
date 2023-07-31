@@ -17,8 +17,8 @@ const AccountGroups = ({
   }
 
 
-  
-  // console.log("these are fields", fieldOptions)
+
+
   return (
     <div className="wrapFilters">
       {fieldOptions.map((fieldOption) => (
@@ -31,8 +31,8 @@ const AccountGroups = ({
               checked={selectedAccountGroup.includes(
                 fieldOption
               )}
-              name="Fields"
-              id={fieldOption}
+              name="accountGroups"
+              // id={fieldOption}
               value={fieldOption}
               onChange={() => handleFieldSelection(fieldOption)}
             />
