@@ -97,49 +97,45 @@ const format1 = moment(first).format('MM-DD-YYYY').toString();
 
 
   return (
-    <>
-    <h3 className="blue strong mt-3">Current Selections</h3>
-
-    <div className="d-flex justify-content-start align-items-baseline"><p>Current Date Selection:</p>&nbsp;&nbsp;
-    <div className="d-flex flex-column">
-    {
-
-      Object.keys(currentSelection).length > 0 ? (
-        <div className="mb-1">
-
-          {Object.keys(currentSelection)?.map((selection) => {
-            return(
-              <div className="dateChoice short" key={selection}>
-              {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-              <p className="mb-0 blue">{currentSelection[selection].label_short.replace(/\s*\(.*?\)\s*/g, '')}</p>
-
-              </div>
-
-            )
-          })}
-
-        </div>
-
-      ) : (
 
 
 
-      <div className="dateChoice mb-1">
-
-      <p className="mb-0 blue">{format1} to {format2}</p>
 
 
-        {/*}{selectedDateRange && selectedDateRange.split().map((selection) => {
-           return(
-          <p className="mb-0 blue">{selection}</p>
+    // {
+    //
+    //   Object.keys(currentSelection).length > 0 ? (
+    //     <div>
+    //
+    //       {Object.keys(currentSelection)?.map((selection) => {
+    //         return(
+    //           <div className="dateChoice short" key={selection}>
+    //           {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+    //           <p className="mb-0 blue">{currentSelection[selection].label_short.replace(/\s*\(.*?\)\s*/g, '')}</p>
+    //
+    //           </div>
+    //
+    //         )
+    //       })}
+    //
+    //       </div>
+    //
+    //   ) : (
+    //
+    //
+    //
+    //   <div className="dateChoice">
+    //
+    //     <p className="mb-0 blue">{format1} to {format2}</p>
+    //
+    //   </div>
+    //
+    //   )
+    //
+    // }
 
-           )
-         })}*/}
-      </div>
 
-      )
-
-    }
+<div className="d-flex justify-content-start align-items-center flex-wrap">
     <div class="wrapOptions">
 
     {Object.keys(filterSelection)?.map((selection) => {
@@ -158,7 +154,7 @@ const format1 = moment(first).format('MM-DD-YYYY').toString();
 
         </div>
       </div>
-    </div>
-    </>
+
+
   )
 }

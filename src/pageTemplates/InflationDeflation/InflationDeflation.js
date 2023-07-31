@@ -57,7 +57,7 @@ const InflationDeflation = ({
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
   const [tabList, setTabList] = useState([]);
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
-  const [isFilterChanged, setIsFilterChanged] = useState(false);  
+  const [isFilterChanged, setIsFilterChanged] = useState(false);
   const [vis1, setVis1] = useState("")
   function handleClearAll() {}
 
@@ -75,7 +75,7 @@ const InflationDeflation = ({
   useEffect(() => {
     async function fetchDefaultFieldsAndFilters() {
       const { dashboard_elements } = await sdk.ok(
-        sdk.dashboard(config.tabbedVis1, "dashboard_elements")  
+        sdk.dashboard(config.tabbedVis1, "dashboard_elements")
       );
 
       dashboard_elements?.map((t) => {
@@ -98,7 +98,7 @@ const InflationDeflation = ({
       setSelectedFields(fields);
       if (filters) setSelectedFilters(filters);
 
-      
+
       getSingleVis(config.vis1);
       //setProductMovementVisQid(client_id);
       setIsFetchingDefaultDashboard(false);
@@ -117,7 +117,7 @@ const InflationDeflation = ({
     if (dashboard_elements.length > 0) {
       let singleVis = dashboard_elements[0]['result_maker']['query']['client_id'];
       setVis1(singleVis)
-    }    
+    }
   }
 
   // Fetch the suggestions for each filter field, after fetching all filter fields
@@ -360,14 +360,14 @@ const InflationDeflation = ({
                             <Accordion.Item eventKey="1">
                               <Accordion.Header>Account Groups</Accordion.Header>
                               <Accordion.Body>
-                                <AccountGroups 
+                                <AccountGroups
                                   fieldOptions={accountGroupOptions}
                                   selectedAccountGroup={selectedAccountGroup}
                                   setSelectedAccountGroup={setSelectedAccountGroup}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
-                          </Col>                   
+                          </Col>
                         :''
                         }
 
@@ -392,7 +392,7 @@ const InflationDeflation = ({
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
-                          </Col>                        
+                          </Col>
                         :''
                         }
 
@@ -501,7 +501,7 @@ const InflationDeflation = ({
                 quickFilterOptions={quickFilterOptions}
               />
 
-              <CurrentQuickFilter
+              {/*<CurrentQuickFilter
               selectedDateFilter={selectedDateFilter}
               selectedFilters={selectedFilters}
               selectedFields={selectedFields}
@@ -512,7 +512,7 @@ const InflationDeflation = ({
               dateFilterOptions={dateFilterOptions}
               selectedDateRange={selectedDateRange}
               quickFilterOptions={quickFilterOptions}
-            />
+            />*/}
 
             {currentInvoiceCount != ""?
               <p className="mt-5">
@@ -520,14 +520,14 @@ const InflationDeflation = ({
               </p>
               :''
             }
-            <div className="vis1-container">
+            <div className="vis1-container padding-0 innerTab smallerHeight embed-responsive embed-responsive-16by9">
               <EmbedTable queryId={vis1} />
             </div>
             </Col>
 
             <Col md={12} lg={7}>
               {/* Date Range Selector */}
-              {dateFilterOptions.length>0?              
+              {dateFilterOptions.length>0?
                 <DateRangeSelector
                   selectedDateRange={selectedDateRange}
                   setSelectedDateRange={setSelectedDateRange}

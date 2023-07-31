@@ -122,7 +122,7 @@ export const Main = () => {
       } catch (err) {
         console.error(`No total invoice field with the tag ${LOOKML_FIELD_TAGS.totalInvoices}`)
       }
-      
+
 
       let defaultFilterSelections = []
       try {
@@ -159,20 +159,20 @@ export const Main = () => {
       } else {
         console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`)
       }
-      
+
 
       if (_productMovementfieldOptions) {
         setProductMovementFields(_productMovementfieldOptions);
       } else {
         console.error(`No fields found using tag ${LOOKML_FIELD_TAGS.productMovementField}`)
       }
-      
+
 
       if (_dateFilterOptions) {
         setDateFilterOptions(sortDateFilterList(_dateFilterOptions));
       } else {
         console.error(`No date filters found using tag ${LOOKML_FIELD_TAGS.date_filter}`)
-      }     
+      }
 
       setQuickFilter(_quickFilterOptions);
 
@@ -190,7 +190,7 @@ export const Main = () => {
       } catch(error) {
         console.error(`No date range found using tag ${LOOKML_FIELD_TAGS.dateRange}`)
       }
-      
+
       setIsFetchingLookmlFields(false);
     };
 
@@ -292,7 +292,27 @@ export const Main = () => {
                   setSelectedDateFilter={setSelectedDateFilter}
                   selectedDateFilter={selectedDateFilter}
 
+                  setSelectedDateRange={setSelectedDateRange}
+                  selectedDateRange={selectedDateRange}
+                  dateRange={dateRange}
+                  currentNavTab={currentNavTab}
+
+                  currentInvoiceCount={currentInvoiceCount}
+                  updateInvoiceCount={updateInvoiceCount}
+                  getAllFilters={getAllFilters}
+                  setSelectedAccountGroup={setSelectedAccountGroup}
+                  accountGroupOptions={accountGroupOptions}
+                  selectedAccountGroup={selectedAccountGroup}
+                  accountGroupField={accountGroupField}
+                  currentNavTab={currentNavTab}
+                  showMenu={showMenu}
+                  setShowMenu={setShowMenu}
+                  quickFilterOptions={quickFilter}
+
+
                 />
+
+
               </Tab>
               <Tab eventKey="product-movement" title="Product Movement Report">
 

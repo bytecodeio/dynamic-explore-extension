@@ -605,19 +605,29 @@ legend {
 .theOptions{
   position: relative;
   background: #DFEEF6;
-  border-radius: 1rem;
+  border-radius: 2rem;
   opacity: .9;
   padding: 0.4em .65em;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: .25rem;
-
+  max-width: none;
+  display: flex;
+  align-items: center;
+  margin: 0.1rem;
+padding: 0.3rem 0.7rem;
 }
 
+
+.theOptions i{
+  margin-top:4px;
+  padding-left: 5px;
+  font-weight:100
+}
 .theOptions i:hover{
   cursor: pointer
 }
@@ -627,9 +637,14 @@ legend {
 }
 
 .wrapOptions{
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-column-gap: 6px;
+  grid-column-gap: 6px; */
+display: flex;
+justify-content: flex-start;
+align-items: center;
+flex-wrap: wrap;
+
 }
 
 
@@ -732,8 +747,8 @@ a:hover{
 }
 
 
-.tab-content{
-
+.btn-check:checked+.btn:focus-visible, .btn.active:focus-visible, .btn.show:focus-visible, .btn:first-child:active:focus-visible, :not(.btn-check)+.btn:active:focus-visible{
+  box-shadow: none !important
 }
 
 .fa-spin {
@@ -6382,7 +6397,7 @@ html.dark-mode{
   font-weight: 100;
   position: absolute;
   right: 6px;
-  top: 19px;
+  top: 10px;
   background: transparent;
   border: none;
 }
@@ -6777,9 +6792,7 @@ html.dark-mode{
 }
 
 .vis1-container > div > iframe {
-  max-height: unset;
-  min-height: unset;
-  height: 300px;
+
 }
 
 /* elizabeth changes that I do not want */

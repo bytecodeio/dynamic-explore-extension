@@ -19,7 +19,7 @@ import QuickFilter from "./helpers/QuickFilter";
 import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
-import { CurrentQuickFilter } from "./helpers/CurrentQuickFilter";
+import CurrentAccountGroup  from "./helpers/CurrentAccountGroup";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 const Template1 = ({
@@ -475,7 +475,7 @@ const Template1 = ({
 
 
           <Row className="fullW">
-            <Col md={12} lg={5}>
+            <Col md={12} lg={12}>
               <CurrentSelection
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
@@ -489,7 +489,7 @@ const Template1 = ({
                 quickFilterOptions={quickFilterOptions}
               />
 
-              {/*<CurrentQuickFilter
+          <CurrentAccountGroup
               selectedDateFilter={selectedDateFilter}
               selectedFilters={selectedFilters}
               selectedFields={selectedFields}
@@ -500,7 +500,9 @@ const Template1 = ({
               dateFilterOptions={dateFilterOptions}
               selectedDateRange={selectedDateRange}
               quickFilterOptions={quickFilterOptions}
-            />*/}
+              selectedAccountGroup={selectedAccountGroup}
+              setSelectedAccountGroup={setSelectedAccountGroup}
+            />
 
             {currentInvoiceCount != ""?
               <p className="mt-5">
@@ -509,8 +511,9 @@ const Template1 = ({
               :''
             }
             </Col>
-
-            <Col md={12} lg={7}>
+          </Row>
+          <Row className="fullW">
+            <Col md={12} lg={12}>
               {/* Date Range Selector */}
               {dateFilterOptions.length>0?
                 <DateRangeSelector

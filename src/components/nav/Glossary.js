@@ -1044,7 +1044,7 @@ const handleLetterClick = (clickedLetter) => {
         </div>
           <div className="position-relative mt-3 mb-5">
             <input value={keyword} onChange={handleChangeKeyword} placeholder="Search" type="search" class="form-control" />
-            <i class="far fa-search absoluteSearch"></i>
+  
           </div>
         <div className="showDef">
             {showItems.map((item) =>
