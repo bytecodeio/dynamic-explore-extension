@@ -120,6 +120,8 @@ export const Main = () => {
       // console.log('_quickFilterOptions', _quickFilterOptions)
 
       const _dateRange = fieldsByTag[LOOKML_FIELD_TAGS.dateRange];
+
+      console.log(_dateRange)
       let _totalInvoice = undefined
       try {
         _totalInvoice = fieldsByTag[LOOKML_FIELD_TAGS.totalInvoices][0]
@@ -271,6 +273,36 @@ export const Main = () => {
     return `${startOfMonth} to ${endOfMonth}`;
   };
 
+  const updateDateRange = async () => {
+    let field = {...dateRange};
+    console.log(selectedDateFilter)
+    if (selectedDateFilter != "" && Object.keys(field).length > 0) {
+      let dateFilterField = dateFilterOptions.find(df => df['name'] == selectedDateFilter)
+      console.log("date_filter field",field)
+      let filter = {}
+      filter[selectedDateFilter] = 'Yes'
+      console.log(filter)
+      const newRange = await sdk.ok(
+        sdk.run_inline_query({
+          result_format: "json",
+          body: {
+            model: LOOKER_MODEL,
+            view: dateFilterField['view'],
+            fields: [field['name']],
+            filters: filter,
+            sorts:[field['name']]
+          },
+        })
+      );
+      console.log("new Range", newRange)
+      if (newRange.length > 0) {
+        let max = newRange.length - 1
+        setSelectedDateRange(`${newRange[0][field['name']]} to ${newRange[max][field['name']]}`)
+      }
+    }
+
+  }
+
   const getValues = (field) => {
     return sdk.ok(
       sdk.run_inline_query({
@@ -332,7 +364,11 @@ export const Main = () => {
     setCurrentInvoiceCount(newCount[0][totalInvoiceField['name']])
   }
 
-
+  useEffect(() => {
+    if (selectedDateFilter != "") {
+      updateDateRange()
+    }    
+  },[selectedDateFilter])
 
   return (
     <>
@@ -370,7 +406,6 @@ export const Main = () => {
                   accountGroupOptions={accountGroupOptions}
                   selectedAccountGroup={selectedAccountGroup}
                   accountGroupField={accountGroupField}
-                  currentNavTab={currentNavTab}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
                   quickFilterOptions={quickFilter}

@@ -113,7 +113,6 @@ const InflationDeflation = ({
 
   const getSingleVis = async (vis) => {
     let { dashboard_elements } = await sdk.ok(sdk.dashboard(vis,'dashboard_elements'));
-    // console.log("singleVisConsole", dashboard_elements)
     if (dashboard_elements.length > 0) {
       let singleVis = dashboard_elements[0]['result_maker']['query']['client_id'];
       setVis1(singleVis)
@@ -194,6 +193,23 @@ const InflationDeflation = ({
     </Tooltip>
   );
 
+  const updateVis1Query = async (filters) => {
+    const { vis_config, fields } = await sdk.ok(
+      sdk.query_for_slug(vis1)
+    );
+
+    const { client_id } = await sdk.ok(
+      sdk.create_query({
+        model: LOOKER_MODEL,
+        view: LOOKER_EXPLORE,
+        fields: fields,
+        filters,
+        vis_config,
+      })
+    );
+    setVis1(client_id)
+  }
+
   // Handle run button click
   async function handleTabVisUpdate() {
     let tabs = [...tabList];
@@ -219,6 +235,7 @@ const InflationDeflation = ({
 
     if (isFilterChanged) {
       updateInnerTabFilters(filters);
+      updateVis1Query(filters)
     }
 
     await updateInvoiceCount()
