@@ -600,8 +600,8 @@ legend {
   color: white !important;
 }
 
-.dateChoice.short {
-  max-width: 100px;
+.dateChoice.short{
+
 }
 
 .theOptions {
@@ -4086,13 +4086,34 @@ a.white:hover {
   left: 10px;
   padding: 0px 4px;
   font-size: 16px;
+    z-index: 10;
 }
 
-.columnStart .form-control {
-  padding: 0.75rem 0.85rem;
+.columnStart  .form-control{
+  padding: 0.75rem 0.25rem .75rem .85rem;
+  z-index: 1;
+
 }
 
-.blue {
+.dark-mode .columnStart label{
+  color: white;
+
+background: #27251F;
+
+}
+
+
+.dark-mode .absoluteSearch{
+  color:white
+}
+
+
+.dark-mode .btn:hover{
+  background: transparent !important;
+}
+
+
+.blue{
   color: var(--black) !important;
   font-weight: 400;
 }
@@ -4101,6 +4122,12 @@ a.white:hover {
   color: white !important;
   font-weight: 600;
 }
+
+.endAbsolute{
+  position: absolute;
+  right:10px
+}
+
 
 .white-logo {
   background-image: url("https://ixd-studio.wesdemo.com/wesinfo/images/logo.png");
@@ -4677,7 +4704,7 @@ border:none;
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #4d5875;
+  color: black;
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid var(--black);
@@ -5518,7 +5545,15 @@ html.dark-mode {
   top: 13px;
 }
 
-.showDef {
+
+.absoluteCal{
+position: absolute;
+  top: 16px;
+  right:7px;
+      z-index: 0;
+}
+
+.showDef{
   max-height: 470px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -5569,9 +5604,31 @@ input[type="search"]::-webkit-search-results-decoration {
 
 input[type="date"]::-webkit-inner-spin-button,
 input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  color: transparent;
+  background: transparent;
 }
+
+input[type="date"] {
+    position: relative;
+}
+
+/* create a new arrow, because we are going to mess up the native one
+see "List of symbols" below if you want another, you could also try to add a font-awesome icon.. */
+input[type="date"]:after {
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 300;
+    content: "\f073";
+
+    padding: 0 5px;
+}
+
 
 #one5 {
   text-align: center;
@@ -6290,7 +6347,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* tablet */
 
-@media (max-width: 1480px) {
+
+@media (min-width:1481px){
+  .negativeTop{
+    margin-top:-4em
+  }
+}
+
+@media (max-width:1480px){
   .mneg40 {
     margin-top: 1em;
   }

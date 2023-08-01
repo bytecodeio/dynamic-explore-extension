@@ -547,7 +547,96 @@ const Template1 = ({
           </div>
 
           <Row className="fullW">
-            <Col md={12} lg={6}>
+
+
+          <Col md={12} lg={12}>
+            {/* Date Range Selector */}
+            {dateFilterOptions.length>0?
+              <DateRangeSelector
+              selectedDateRange={selectedDateRange}
+              setSelectedDateRange={setSelectedDateRange}
+              setSelectedDateFilter={setSelectedDateFilter}
+              dateFilterOptions={dateFilterOptions}
+              selectedDateFilter={selectedDateFilter}
+              handleTabVisUpdate={handleTabVisUpdate}
+                currentInvoiceCount={currentInvoiceCount}
+              />
+              :''
+            }
+
+            {/*<DateFilterGroup
+              dateFilterOptions={dateFilterOptions}
+              setSelectedDateFilter={setSelectedDateFilter}
+              selectedDateFilter={selectedDateFilter}
+              />*/}
+            </Col>
+
+            </Row>
+
+            <Row className="fullW negativeTop d-flex align-items-center">
+              <Col md={12} lg={2}>
+
+            {currentInvoiceCount != ""?
+            <p>
+              <b>Total Invoice:</b> <span className="highlight large">{currentInvoiceCount}</span>
+            </p>
+            :''
+          }
+
+            </Col>
+            <Col md={12} lg={3}>
+              <div className="position-relative columnStart">
+              <label>Search Filter</label>
+                <input placeholder="" type="search" class="form-control" />
+                <i class="far fa-search absoluteSearch"></i>
+              </div>
+            </Col>
+
+            <Col md={12} lg={2}>
+
+            <div className="position-relative columnStart">
+            <label>Top % Products</label>
+
+              <input  type="search" class="form-control" />
+
+            </div>
+            </Col>
+            </Row>
+
+
+
+
+
+            <Row className="fullW">
+
+            <Col md={12} lg={12}>
+
+
+
+              <Row className="mt-5 d-flex align-items-center">
+
+
+
+              <Col md={12} lg={12}>
+
+
+              </Col>
+            </Row>
+
+
+
+          </Col>
+
+
+          </Row>
+
+
+          <Row className="fullW mt-4">
+
+            <Col xs={12} md={12}>
+
+              <div className="d-flex justify-content-between align-items-baseline">
+
               <div className="d-flex justify-content-start align-items-center flex-wrap">
                 <p class="mr-3"><i class="fal fa-filter mr-1"></i>Filters</p>
                 <CurrentSelection
@@ -581,72 +670,17 @@ const Template1 = ({
               </div>
 
 
-              <Row className="mt-5 d-flex align-items-center">
-                <Col md={12} lg={5}>
-                  {currentInvoiceCount != ""?
-                  <p>
-                    Total Invoice: <span className="highlight large">{currentInvoiceCount}</span>
-                  </p>
-                  :''
-                }
-              </Col>
+                <a onClick={handleRestoreDefault}>
+                  <p class="red bold  mt-4"><u>Restore Default/Saved Filter</u></p>
+                </a>
 
-              <Col md={12} lg={7}>
-                <div className="position-relative columnStart">
-                <label>Search Filter</label>
-                  <input placeholder="" type="search" class="form-control" />
-                  <i class="far fa-search absoluteSearch"></i>
                 </div>
               </Col>
             </Row>
-            <Row>
-              <Col md={12} lg={12}>
-
-                <Row className="mt-4">
-                  <Col md={12} lg={12}>
-
-                    <a onClick={handleRestoreDefault}>
-                      Restore Default/Saved Filter
-                    </a>
-
-                    <Col md={12} lg={4}>
-                    <div className="position-relative columnStart  mt-4">
-                    <label>Top % Products</label>
-
-                      <input  type="search" class="form-control" />
-
-                    </div>
-                    </Col>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
 
 
 
-          </Col>
 
-          <Col md={12} lg={6}>
-            {/* Date Range Selector */}
-            {dateFilterOptions.length>0?
-              <DateRangeSelector
-              selectedDateRange={selectedDateRange}
-              setSelectedDateRange={setSelectedDateRange}
-              setSelectedDateFilter={setSelectedDateFilter}
-              dateFilterOptions={dateFilterOptions}
-              selectedDateFilter={selectedDateFilter}
-              handleTabVisUpdate={handleTabVisUpdate}
-              />
-              :''
-            }
-
-            {/*<DateFilterGroup
-              dateFilterOptions={dateFilterOptions}
-              setSelectedDateFilter={setSelectedDateFilter}
-              selectedDateFilter={selectedDateFilter}
-              />*/}
-            </Col>
-          </Row>
 
           <Row className="mt-3 mb-3">
             <Col md={12} className="embed-responsive embed-responsive-16by9">
