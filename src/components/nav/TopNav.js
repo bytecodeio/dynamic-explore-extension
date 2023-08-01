@@ -31,7 +31,7 @@ function TopNav(props) {
             tabIndex="0"
             onClick={() => setShow5(true)}
           >
-            <p className="blue">
+            <p>
               <i aria-hidden="true" className="far fa-arrow-left"></i> View All
               Reports
             </p>

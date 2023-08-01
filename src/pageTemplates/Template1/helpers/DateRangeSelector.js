@@ -43,37 +43,21 @@ export const DateRangeSelector = ({
 
 
   return (
-    <Container>
-    <Row className="fullW mt-3">
+<Container fluid>
+    <Row className="fullW mb-1">
     <Col md={12} lg={12}>
 
     <p className="mt-0 mb-2 mediumFont">
     The <span className="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in
-    descending order by units, filtering for controlled substances, and
-    filtering by type or customize your report with over 40 available
-    fields.
+    descending order by units, filtering by type or customize your report.
     </p>
 
     </Col>
     </Row>
-  <Row className="fullW mt-3">
 
-    <Col md={12} lg={3}>
-
-    <div className="buttons across">
-
-
-      <Button
-      onClick={handleTabVisUpdate}
-      className="btn">Submit Dates
-      </Button>
-    </div>
-
-    </Col>
-    </Row>
 
     <Row className="fullW bottom">
-    <Col xs={12} md={7}>
+    <Col xs={12} md={6}>
 
 
       <div className="grid2 mt-3">
@@ -106,23 +90,21 @@ export const DateRangeSelector = ({
     </div>
 
     </Col>
-    <Col xs={12} md={5}>
+    <Col xs={12} md={6}>
 
-    <div className="d-flex ml2">
-
-
+    <div className="d-flex mt-3 ml2">
 
         <div className="columnStart mr2">
-          <p className="small">Start Date</p>
-
+        <label>Start Date</label>
           <Form.Control
           type="date"
           value={splitSelectedDateRange()[0]}
           onChange={(e) => onDateSelection(e, "start")}
+
           />
         </div>
         <div className="columnStart">
-          <p className="small">End Date</p>
+        <label>End Date</label>
           <Form.Control
           type="date"
           value={splitSelectedDateRange()[1]}
@@ -133,7 +115,22 @@ export const DateRangeSelector = ({
     </Col>
     </Row>
 
+<Row className="fullW mt-2">
 
-    </Container>
+    <Col xs={12} md={12}>
+
+      <div className="d-flex justify-content-end">
+
+
+        <Button
+        onClick={handleTabVisUpdate}
+        className="btn">Submit Dates
+        </Button>
+      </div>
+</Col>
+      </Row>
+
+
+</Container>
   );
 };
