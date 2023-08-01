@@ -7,11 +7,11 @@ export const PRODUCT_MOVEMENT_VIS_DASHBOARD_ID =
 
 export const LOOKML_FIELD_TAGS = {
   filter: "filter: product_movement",
-  date_filter:"date filter",
+  date_filter: "date filter",
   productMovementField: "field: product_movement",
   dateRange: "date range",
   quick_filter: "trade_or_generic: purchases_review_dashboard",
   totalInvoices: "total_invoices",
   accountGroups: "account_group",
-
+  togglePrefix: "toggle:",
 };
