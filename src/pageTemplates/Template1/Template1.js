@@ -24,9 +24,11 @@ import { DateRangeSelector } from "./helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 const Template1 = ({
   currentNavTab,
+
   selectedFilters,
   setSelectedFilters,
   filterOptions,
+
   dateFilterOptions,
   fieldOptions,
   isFetchingLookmlFields,
@@ -42,11 +44,18 @@ const Template1 = ({
   currentInvoiceCount,
   updateInvoiceCount,
   getAllFilters,
+
   quickFilterOptions,
+  quickFilter,
+  setQuickFilter,
+
   setSelectedAccountGroup,
   accountGroupOptions,
   selectedAccountGroup,
   accountGroupField,
+  keyword,
+  setKeyword,
+  handleChangeKeyword
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -72,7 +81,7 @@ const Template1 = ({
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
     useState(true);
   useEffect(() => {
-    console.log(config)
+
     async function fetchDefaultFieldsAndFilters() {
       const { dashboard_elements } = await sdk.ok(
         sdk.dashboard(config.tabbedVis1, "dashboard_elements")
@@ -106,6 +115,11 @@ const Template1 = ({
       console.error("Error fetching default dashboard", e);
     }
   }, []);
+
+
+
+  console.log("hello", filterOptions)
+  console.log("hello2", quickFilterOptions)
 
   // Fetch the suggestions for each filter field, after fetching all filter fields
   const [isFetchingFilterSuggestions, setIsFetchingFilterSuggestions] =
@@ -164,6 +178,76 @@ const Template1 = ({
 
     fetchAllFilterSuggestions();
   }, [filterOptions, isFetchingLookmlFields]);
+
+
+// console.log("one", filterSuggestions)
+
+
+
+  // Fetch the quick filter suggestions for each filter field
+  const [isFetchingQuickFilterSuggestions, setIsFetchingQuickFilterSuggestions] =
+  useState(true);
+  const [quickFilterSuggestions, setQuickFilterSuggestions] = useState({});
+  useEffect(() => {
+    if (isFetchingLookmlFields || !quickFilterOptions?.length) {
+      return;
+    }
+
+    function fetchQuickFilterSuggestions(filterFieldName) {
+      return sdk.ok(
+        sdk.run_inline_query({
+          result_format: "json",
+          body: {
+            model: LOOKER_MODEL,
+            view: LOOKER_EXPLORE,
+            fields: [filterFieldName],
+          },
+        })
+      );
+    }
+
+    async function fetchAllQuickFilterSuggestions() {
+      const quickFilterSuggestionPromises = quickFilterOptions.map((filterField) => {
+        return fetchQuickFilterSuggestions(filterField.name);
+      });
+      const quickFilterSuggestionResponses = await Promise.allSettled(
+        quickFilterSuggestionPromises
+      );
+
+      const quickFilterSuggestionsMap = {};
+      quickFilterSuggestionPromises.forEach((response) => {
+        // Error handling
+        if (response.status !== "fulfilled") {
+          // handle rejected failures
+          return;
+        }
+        if (response.value[0].looker_error) {
+          console.error(
+            "Error fetching suggestions for a Looker filter field ",
+            response.value[0].looker_error
+          );
+          return;
+        }
+
+        // Add filter suggestions to map if no errors
+        const fieldName = Object.keys(response.value[0])[0];
+        const suggestions = response.value.map((row) => row[fieldName]);
+        quickFilterSuggestionsMap[fieldName] = suggestions;
+      });
+
+      setQuickFilterSuggestions(quickFilterSuggestionsMap);
+      setIsFetchingQuickFilterSuggestions(false);
+    }
+
+    fetchAllQuickFilterSuggestions();
+  }, [quickFilterOptions, isFetchingLookmlFields]);
+
+
+// console.log("two", quickFilterSuggestions)
+
+
+
+
 
   // Page loading state
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -295,6 +379,9 @@ const Template1 = ({
     }
   };
 
+
+  // console.log('accountGroupOptions:', accountGroupOptions)
+
   return (
     <Container fluid>
       {isPageLoading ? (
@@ -351,8 +438,9 @@ const Template1 = ({
                             <Accordion.Item eventKey="1">
                               <Accordion.Header>Account Groups</Accordion.Header>
                               <Accordion.Body>
+                                <input value={keyword} onChange={handleChangeKeyword} placeholder="Search" type="search" class="form-control mb-2" />
                                 <AccountGroups
-                                  fieldOptions={accountGroupOptions}
+                                  fieldOptions={keyword !=="" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
                                   selectedAccountGroup={selectedAccountGroup}
                                   setSelectedAccountGroup={setSelectedAccountGroup}
                                 />
@@ -362,30 +450,30 @@ const Template1 = ({
                         :''
                         }
 
-                        {/* Quick Filters */}
-                        {quickFilterOptions?.length > 0?
+
                           <Col xs={12} md={12}>
                             <Accordion.Item eventKey="3">
                               <Accordion.Header>Quick Filters</Accordion.Header>
                               <Accordion.Body>
                                 <QuickFilter
+
+                                isLoading={isFetchingQuickFilterSuggestions}
                                 quickFilterOptions={quickFilterOptions}
-                                setTabList={setTabList}
-                                tabList={tabList}
-                                currentInnerTab={currentInnerTab}
-                                // selectedFields={selectedFields}
-                                // setSelectedFields={setSelectedFields}
-                                // isDefault={isDefaultProduct}
-                                // setIsDefault={setIsDefaultProduct}
+                                quickFilterSuggestions={quickFilterSuggestions}
+                                quickFilter={quickFilter}
+                                setQuickFilter={setQuickFilter}
+                                isDefault={isDefaultProduct}
+                                setIsDefault={setIsDefaultProduct}
                                 updateBtn={updateButtonClicked}
                                 setUpdateBtn={setUpdateButtonClicked}
+                                setIsFilterChanged={setIsFilterChanged}
 
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
                           </Col>
-                        :''
-                        }
+
+
 
 
                         {/* Filters */}
@@ -461,11 +549,9 @@ const Template1 = ({
 
               <div className="across two">
                   <Button onClick={handleRestoreDefault} className="btn-clear">
-                    Restore Default <i className="fal fa-undo"></i>
+                    Restore Default Fields <i className="fal fa-undo"></i>
                   </Button>
-                  <Button className="btn-clear">
-                    Print <i className="fal fa-print"></i>
-                  </Button>
+
 
                 </div>
               </div>
@@ -475,7 +561,8 @@ const Template1 = ({
 
 
           <Row className="fullW">
-            <Col md={12} lg={12}>
+            <Col md={12} lg={6}>
+            <div className="d-flex justify-content-start align-items-center flex-wrap">
               <CurrentSelection
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
@@ -503,7 +590,7 @@ const Template1 = ({
               selectedAccountGroup={selectedAccountGroup}
               setSelectedAccountGroup={setSelectedAccountGroup}
             />
-
+          </div>
             {currentInvoiceCount != ""?
               <p className="mt-5">
                 Total Invoice: <span className="highlight large">{currentInvoiceCount}</span>
@@ -511,9 +598,8 @@ const Template1 = ({
               :''
             }
             </Col>
-          </Row>
-          <Row className="fullW">
-            <Col md={12} lg={12}>
+
+            <Col md={12} lg={6}>
               {/* Date Range Selector */}
               {dateFilterOptions.length>0?
                 <DateRangeSelector

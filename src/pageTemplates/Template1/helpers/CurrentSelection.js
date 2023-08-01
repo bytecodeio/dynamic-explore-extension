@@ -40,8 +40,8 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
     //
     //         // console.log("one", selectedFields)
     // }
-
-
+    //
+    //
     //   for (const filter in selectedFilters) {
     //
     //
@@ -100,42 +100,42 @@ const format1 = moment(first).format('MM-DD-YYYY').toString();
 
 
 
+    <span>
+
+    {
+
+      Object.keys(currentSelection).length > 0 ? (
+        <span>
+
+          {Object.keys(currentSelection)?.map((selection) => {
+            return(
+              <div className="dateChoice short" key={selection}>
+              {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+              <p className="mb-0 blue">{currentSelection[selection].label_short.replace(/\s*\(.*?\)\s*/g, '')}</p>
+
+              </div>
+
+            )
+          })}
+
+          </span>
+
+      ) : (
 
 
-    // {
-    //
-    //   Object.keys(currentSelection).length > 0 ? (
-    //     <div>
-    //
-    //       {Object.keys(currentSelection)?.map((selection) => {
-    //         return(
-    //           <div className="dateChoice short" key={selection}>
-    //           {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-    //           <p className="mb-0 blue">{currentSelection[selection].label_short.replace(/\s*\(.*?\)\s*/g, '')}</p>
-    //
-    //           </div>
-    //
-    //         )
-    //       })}
-    //
-    //       </div>
-    //
-    //   ) : (
-    //
-    //
-    //
-    //   <div className="dateChoice">
-    //
-    //     <p className="mb-0 blue">{format1} to {format2}</p>
-    //
-    //   </div>
-    //
-    //   )
-    //
-    // }
+
+      <div className="dateChoice">
+
+        <p className="mb-0 blue">{format1} to {format2}</p>
+
+      </div>
+
+      )
+
+    }
 
 
-<div className="d-flex justify-content-start align-items-center flex-wrap">
+
     <div class="wrapOptions">
 
     {Object.keys(filterSelection)?.map((selection) => {
@@ -152,9 +152,9 @@ const format1 = moment(first).format('MM-DD-YYYY').toString();
       )
     })}
 
-        </div>
-      </div>
+  </div>
 
+</span>
 
   )
 }

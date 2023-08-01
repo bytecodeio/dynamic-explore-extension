@@ -27,27 +27,40 @@ export const Main = () => {
 
   const [currentNavTab, setCurrentNavTab] = useState("dashboard");
 
-  //Create states for global variables
   const [isFetchingLookmlFields, setIsFetchingLookmlFields] = useState(true);
+
   const [selectedFilters, setSelectedFilters] = useState({});
+  const [filterOptions, setFilterOptions] = useState([]);
+
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
+  const [quickFilter, setQuickFilter] = useState("");
+
+  const [dateFilterOptions, setDateFilterOptions] = useState([]);
+  const [quickFilterOptions, setQuickFilterOptions] = useState([]);
+
+
   const [selectedDateRange, setSelectedDateRange] = useState();
+
   const [currentInvoiceCount, setCurrentInvoiceCount] = useState("");
   const [selectedAccountGroup, setSelectedAccountGroup] = useState([]);
 
   const [productMovementFields, setProductMovementFields] = useState([]);
   const [totalInvoiceField, setTotalInvoiceField] = useState()
-  const [filterOptions, setFilterOptions] = useState([]);
-  const [dateFilterOptions, setDateFilterOptions] = useState([]);
-  const [quickFilter, setQuickFilter] = useState([]);
+
   const [accountGroupOptions, setAccountGroupOptions] = useState([])
   const [accountGroupField, setAccountGroupField] = useState();
 
   const [dateRange, setDateRange] = useState("");
   const [showMenu, setShowMenu] = useState();
+  const [keyword, setKeyword] = useState("");
 
   const slideIt = (show) => {
     setShowMenu(show)
+  }
+
+
+  const handleChangeKeyword = (e) => {
+    setKeyword(e.target.value);
   }
 
   // Initialize the states
@@ -55,15 +68,10 @@ export const Main = () => {
     function groupFieldsByTags(fields) {
       const fieldsByTag = {};
       fields.forEach((field) => {
-        // console.log('fields plural', fields);
-        // console.log('field alone', field);
-        // console.log(field.tags)
+
         if (field.tags != "") {
           field.tags.toString().split(",").forEach((tag) => {
             tag = tag.trim()
-            // console.log('tag alone', tag);
-            // console.log(`fieldsByTag[${tag}] `, fieldsByTag[tag]);
-            // console.log('fieldsByTag ', fieldsByTag);
 
             if (fieldsByTag[tag] === undefined) {
               fieldsByTag[tag] = [field];
@@ -87,16 +95,16 @@ export const Main = () => {
       );
 
       const lookmlFields = [...dimensions, ...filters, ...measures];
-      // console.log('lookmlFields ', lookmlFields);
+
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
-      // console.log("fields", fieldsByTag)
-
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
+      const _quickFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
+
       const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
 
       const _productMovementfieldOptions = fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
-      const _quickFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
+
 
       let _accountGroupField = undefined
       try {
@@ -106,12 +114,8 @@ export const Main = () => {
       }
 
 
-
-      // console.log("fieldsByTag", fieldsByTag)
       //
-      // console.log("this is field", LOOKML_FIELD_TAGS.productMovementField)
-      // console.log("this is quick", LOOKML_FIELD_TAGS.quick_filter)
-      // console.log("this is LOOKML_FIELD_TAGS", LOOKML_FIELD_TAGS)
+      // console.log("fieldsByTag", fieldsByTag)
       //
       // console.log('_quickFilterOptions', _quickFilterOptions)
 
@@ -134,6 +138,26 @@ export const Main = () => {
       }
 
 
+
+     //
+     //  console.log(defaultFilterSelections)
+     //
+     //  //added  QuickFilter here
+     //
+     //  let defaultQuickFilterSelections = []
+     //    try {
+     //      defaultQuickFilterSelections = Object.fromEntries(
+     //        _quickFilterOptions.map((filter) => [filter.name, "N/A"])
+     //        );
+     //    } catch(error) {
+     //      console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.quick_filter}`)
+     //    }
+     //
+     // console.log(defaultQuickFilterSelections)
+
+
+
+    //date filters
       const defaultDateFilterSelections = _dateFilterOptions?.find((filter) => {
         if (filter["suggestions"]) {
           return filter["suggestions"].find((s) => {
@@ -142,11 +166,32 @@ export const Main = () => {
         }
       });
 
+      const defaultQuickFilterSelections = _quickFilterOptions?.find((filter) => {
+        if (filter["suggestions"]) {
+          return filter["suggestions"].find((s) => {
+            return s.toUpperCase() === "YES";
+          });
+        }
+      });
+
+
+
+
+
       if (defaultDateFilterSelections != undefined) {
         setSelectedDateFilter(defaultDateFilterSelections["name"]);
       }
 
       setSelectedDateRange(getDefaultDateRange());
+
+
+      if (defaultQuickFilterSelections != undefined) {
+        setQuickFilter(defaultQuickFilterSelections["name"]);
+      }
+
+      setSelectedDateRange(getDefaultDateRange());
+
+
 
       if (_totalInvoice != undefined) {
         setTotalInvoiceField(_totalInvoice)
@@ -156,6 +201,12 @@ export const Main = () => {
 
       if (_filterOptions) {
         setFilterOptions(_filterOptions);
+      } else {
+        console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`)
+      }
+
+      if (_quickFilterOptions) {
+        setQuickFilterOptions(_quickFilterOptions);
       } else {
         console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`)
       }
@@ -174,16 +225,23 @@ export const Main = () => {
         console.error(`No date filters found using tag ${LOOKML_FIELD_TAGS.date_filter}`)
       }
 
-      setQuickFilter(_quickFilterOptions);
+      // setQuickFilter(_quickFilterOptions);
+
+
+
+
 
       if (_accountGroupField != undefined) {
         setAccountGroupField(_accountGroupField);
         let values = await getDefaultValues(_accountGroupField)
-        setAccountGroupOptions(values.splice(0, 50).map((v,i) => {return v[_accountGroupField['name']]}));
+        setAccountGroupOptions(values.splice(0, 500).map((v,i) => {return v[_accountGroupField['name']]}));
+
       }
 
 
       setSelectedFilters(defaultFilterSelections);
+
+      setQuickFilter(defaultQuickFilterSelections);
 
       try {
         setDateRange(_dateRange[0]);
@@ -249,6 +307,12 @@ export const Main = () => {
       }
     }
 
+    for (const filter in quickFilter) {
+      if (quickFilter[filter] && quickFilter[filter] !== "N/A") {
+        filters[filter] = quickFilter[filter];
+      }
+    }
+
     if (selectedDateFilter != "") {
       filters[selectedDateFilter] = "Yes";
     } else {
@@ -267,6 +331,8 @@ export const Main = () => {
     let newCount = await getValues(totalInvoiceField);
     setCurrentInvoiceCount(newCount[0][totalInvoiceField['name']])
   }
+
+
 
   return (
     <>
@@ -341,6 +407,8 @@ export const Main = () => {
                   accountGroupOptions={accountGroupOptions}
                   selectedAccountGroup={selectedAccountGroup}
                   accountGroupField={accountGroupField}
+                  keyword={keyword}
+                  handleChangeKeyword={handleChangeKeyword}
                 />
               </Tab>
               <Tab eventKey="invoice" title="Invoice Report">
