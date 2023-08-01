@@ -10,16 +10,37 @@ import {
 import EmbedTable from "./EmbedTable";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import { useLookerQuery } from "../hooks/useLookerQuery";
+import styled from "styled-components";
+
+const ToggleButtonGroup = styled(ButtonGroup)`
+  min-width: inherit;
+`;
+
+// Use &&& to increase specificity to override some styles in src/styles.css
+// https://styled-components.com/docs/faqs#how-can-i-override-styles-with-higher-specificity
+const ToggleButton = styled(Button)`
+  &&& {
+    min-width: fit-content;
+    padding: 0px 10px;
+    height: fit-content;
+  }
+  &&&:hover {
+    background-color: #dbedf4;
+  }
+`;
 
 const DimensionToggle = ({ handleToggle, options }) => {
   return (
-    <ButtonGroup size="sm">
+    <ToggleButtonGroup>
       {options.map((option) => (
-        <Button key={option.value} onClick={() => handleToggle(option.value)}>
+        <ToggleButton
+          key={option.value}
+          onClick={() => handleToggle(option.value)}
+        >
           {option.label}
-        </Button>
+        </ToggleButton>
       ))}
-    </ButtonGroup>
+    </ToggleButtonGroup>
   );
 };
 
