@@ -79,29 +79,29 @@ const Template1 = ({
 
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
-    useState(true);
+  useState(true);
   useEffect(() => {
 
     async function fetchDefaultFieldsAndFilters() {
       const { dashboard_elements } = await sdk.ok(
-        sdk.dashboard(config.tabbedVis1, "dashboard_elements")
+      sdk.dashboard(config.tabbedVis1, "dashboard_elements")
       );
 
       dashboard_elements?.map((t) => {
         let { client_id } = t["result_maker"]["query"];
         setTabList((prev) => [
-          ...prev,
-          {
-            title: t["title"],
-            query: client_id,
-            default_fields: [...t.result_maker.query["fields"]],
-            selected_fields: [...t.result_maker.query["fields"]],
-          },
+        ...prev,
+        {
+          title: t["title"],
+          query: client_id,
+          default_fields: [...t.result_maker.query["fields"]],
+          selected_fields: [...t.result_maker.query["fields"]],
+        },
         ]);
       });
 
       const { client_id, fields, filters } =
-        dashboard_elements[0].result_maker.query;
+      dashboard_elements[0].result_maker.query;
 
       setSelectedFields(fields);
       if (filters) setSelectedFilters(filters);
@@ -123,7 +123,7 @@ const Template1 = ({
 
   // Fetch the suggestions for each filter field, after fetching all filter fields
   const [isFetchingFilterSuggestions, setIsFetchingFilterSuggestions] =
-    useState(true);
+  useState(true);
   const [filterSuggestions, setFilterSuggestions] = useState({});
   useEffect(() => {
     if (isFetchingLookmlFields || !filterOptions?.length) {
@@ -132,14 +132,14 @@ const Template1 = ({
 
     function fetchFilterSuggestions(filterFieldName) {
       return sdk.ok(
-        sdk.run_inline_query({
-          result_format: "json",
-          body: {
-            model: LOOKER_MODEL,
-            view: LOOKER_EXPLORE,
-            fields: [filterFieldName],
-          },
-        })
+      sdk.run_inline_query({
+        result_format: "json",
+        body: {
+          model: LOOKER_MODEL,
+          view: LOOKER_EXPLORE,
+          fields: [filterFieldName],
+        },
+      })
       );
     }
 
@@ -148,7 +148,7 @@ const Template1 = ({
         return fetchFilterSuggestions(filterField.name);
       });
       const filterSuggestionResponses = await Promise.allSettled(
-        filterSuggestionPromises
+      filterSuggestionPromises
       );
 
       const filterSuggestionsMap = {};
@@ -160,8 +160,8 @@ const Template1 = ({
         }
         if (response.value[0].looker_error) {
           console.error(
-            "Error fetching suggestions for a Looker filter field ",
-            response.value[0].looker_error
+          "Error fetching suggestions for a Looker filter field ",
+          response.value[0].looker_error
           );
           return;
         }
@@ -180,7 +180,7 @@ const Template1 = ({
   }, [filterOptions, isFetchingLookmlFields]);
 
 
-// console.log("one", filterSuggestions)
+  // console.log("one", filterSuggestions)
 
 
 
@@ -195,14 +195,14 @@ const Template1 = ({
 
     function fetchQuickFilterSuggestions(filterFieldName) {
       return sdk.ok(
-        sdk.run_inline_query({
-          result_format: "json",
-          body: {
-            model: LOOKER_MODEL,
-            view: LOOKER_EXPLORE,
-            fields: [filterFieldName],
-          },
-        })
+      sdk.run_inline_query({
+        result_format: "json",
+        body: {
+          model: LOOKER_MODEL,
+          view: LOOKER_EXPLORE,
+          fields: [filterFieldName],
+        },
+      })
       );
     }
 
@@ -211,7 +211,7 @@ const Template1 = ({
         return fetchQuickFilterSuggestions(filterField.name);
       });
       const quickFilterSuggestionResponses = await Promise.allSettled(
-        quickFilterSuggestionPromises
+      quickFilterSuggestionPromises
       );
 
       const quickFilterSuggestionsMap = {};
@@ -223,8 +223,8 @@ const Template1 = ({
         }
         if (response.value[0].looker_error) {
           console.error(
-            "Error fetching suggestions for a Looker filter field ",
-            response.value[0].looker_error
+          "Error fetching suggestions for a Looker filter field ",
+          response.value[0].looker_error
           );
           return;
         }
@@ -243,7 +243,7 @@ const Template1 = ({
   }, [quickFilterOptions, isFetchingLookmlFields]);
 
 
-// console.log("two", quickFilterSuggestions)
+  // console.log("two", quickFilterSuggestions)
 
 
 
@@ -258,11 +258,11 @@ const Template1 = ({
   }, [isFetchingDefaultDashboard, isFetchingLookmlFields]);
 
   const renderTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
-      These are the filters you use to query data. Select the accordions
-      individually below to choose the different filter options inside. Once you
-      are done you can choose the "Submit Values" button to update the data.
-    </Tooltip>
+  <Tooltip id="button-tooltip" {...props}>
+    These are the filters you use to query data. Select the accordions
+    individually below to choose the different filter options inside. Once you
+    are done you can choose the "Submit Values" button to update the data.
+  </Tooltip>
   );
 
   // Handle run button click
@@ -274,154 +274,154 @@ const Template1 = ({
     // remove filters with a value of "N/A"
     let filters = {};
     // for (const filter in selectedFilters) {
-    //   if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
-    //     filters[filter] = selectedFilters[filter];
-    //   }
-    // }
+      //   if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
+        //     filters[filter] = selectedFilters[filter];
+        //   }
+        // }
 
-    // if (selectedDateFilter != "") {
-    //   filters[selectedDateFilter] = "Yes";
-    // } else {
-    //   if (selectedDateRange) {
-    //     filters[dateRange["name"]] = selectedDateRange;
-    //   }
-    // }
-    filters = await getAllFilters();
+        // if (selectedDateFilter != "") {
+          //   filters[selectedDateFilter] = "Yes";
+          // } else {
+            //   if (selectedDateRange) {
+              //     filters[dateRange["name"]] = selectedDateRange;
+              //   }
+              // }
+              filters = await getAllFilters();
 
-    if (isFilterChanged) {
-      updateInnerTabFilters(filters);
-    }
+              if (isFilterChanged) {
+                updateInnerTabFilters(filters);
+              }
 
-    await updateInvoiceCount()
+              await updateInvoiceCount()
 
-    const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
+              const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
 
-    const { client_id } = await sdk.ok(
-      sdk.create_query({
-        model: LOOKER_MODEL,
-        view: LOOKER_EXPLORE,
-        fields: currentTab["selected_fields"],
-        filters,
-        vis_config,
-      })
-    );
+              const { client_id } = await sdk.ok(
+              sdk.create_query({
+                model: LOOKER_MODEL,
+                view: LOOKER_EXPLORE,
+                fields: currentTab["selected_fields"],
+                filters,
+                vis_config,
+              })
+              );
 
-    tabs[currentInnerTab]["query"] = client_id;
-    setTabList(tabs);
-  }
+              tabs[currentInnerTab]["query"] = client_id;
+              setTabList(tabs);
+            }
 
-  const updateInnerTabFilters = async (filters) => {
-    let fullTabList = [...tabList];
-    fullTabList.map(async (t, i) => {
-      if (i != currentInnerTab) {
-        const { vis_config, fields } = await sdk.ok(
-          sdk.query_for_slug(t["query"])
-        );
+            const updateInnerTabFilters = async (filters) => {
+              let fullTabList = [...tabList];
+              fullTabList.map(async (t, i) => {
+                if (i != currentInnerTab) {
+                  const { vis_config, fields } = await sdk.ok(
+                  sdk.query_for_slug(t["query"])
+                  );
 
-        const { client_id } = await sdk.ok(
-          sdk.create_query({
-            model: LOOKER_MODEL,
-            view: LOOKER_EXPLORE,
-            fields: fields,
-            filters,
-            vis_config,
-          })
-        );
+                  const { client_id } = await sdk.ok(
+                  sdk.create_query({
+                    model: LOOKER_MODEL,
+                    view: LOOKER_EXPLORE,
+                    fields: fields,
+                    filters,
+                    vis_config,
+                  })
+                  );
 
-        fullTabList[i]["query"] = client_id;
-        setTabList(fullTabList);
-      }
-    });
-    setIsFilterChanged(false);
-  };
+                  fullTabList[i]["query"] = client_id;
+                  setTabList(fullTabList);
+                }
+              });
+              setIsFilterChanged(false);
+            };
 
-  async function handleClearAll() {
-  console.log('handleClearAll')
-    // setIsDefaultProduct(false);
-    setUpdateButtonClicked(true);
-    setSelectedFields([]);
-    let tabs = [...tabList];
-    let currentTab = tabs[currentInnerTab];
-    currentTab["selected_fields"] = [];
-    setTabList(tabs);
-    let filters = {...selectedFilters};
-    for(let name in filters) {
-      filters[name] = 'N/A';
-    }
-    setSelectedFilters(filters);
-    // setSelectedFilters((prevFilters) => {
-    //   const newFilters = { ...prevFilters };
-    //   newFilters[filterName] = 'N/A';
-    //   return newFilters;
-    // });
-    setIsFilterChanged(true);
-  }
+            async function handleClearAll() {
+              console.log('handleClearAll')
+              // setIsDefaultProduct(false);
+              setUpdateButtonClicked(true);
+              setSelectedFields([]);
+              let tabs = [...tabList];
+              let currentTab = tabs[currentInnerTab];
+              currentTab["selected_fields"] = [];
+              setTabList(tabs);
+              let filters = {...selectedFilters};
+              for(let name in filters) {
+                filters[name] = 'N/A';
+              }
+              setSelectedFilters(filters);
+              // setSelectedFilters((prevFilters) => {
+                //   const newFilters = { ...prevFilters };
+                //   newFilters[filterName] = 'N/A';
+                //   return newFilters;
+                // });
+                setIsFilterChanged(true);
+              }
 
-  async function handleRestoreDefault() {
-    setIsDefaultProduct(defaultChecked);
-    setUpdateButtonClicked(true);
-    let tabs = [...tabList];
-    let currentTab = tabs[currentInnerTab];
-    currentTab["selected_fields"] = currentTab["default_fields"];
-    setTabList(tabs);
-  }
+              async function handleRestoreDefault() {
+                setIsDefaultProduct(defaultChecked);
+                setUpdateButtonClicked(true);
+                let tabs = [...tabList];
+                let currentTab = tabs[currentInnerTab];
+                currentTab["selected_fields"] = currentTab["default_fields"];
+                setTabList(tabs);
+              }
 
-  useEffect((e) => {
-    document.addEventListener("click", handleClickOutside, false);
-    return () => {
-    document.removeEventListener("click", handleClickOutside, false);
-    };
-  }, []);
+              useEffect((e) => {
+                document.addEventListener("click", handleClickOutside, false);
+                return () => {
+                  document.removeEventListener("click", handleClickOutside, false);
+                };
+              }, []);
 
-  const handleClickOutside = (event) => {
-    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      //setShow3(false);
-    }
-  };
+              const handleClickOutside = (event) => {
+                if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                  //setShow3(false);
+                }
+              };
 
 
-  // console.log('accountGroupOptions:', accountGroupOptions)
+              // console.log('accountGroupOptions:', accountGroupOptions)
 
-  return (
-    <Container fluid>
-      {isPageLoading ? (
-        <Spinner />
-      ) : (
-        <>
-       <div id="slideOut3" className={showMenu ? "" : "show3"} ref={wrapperRef}>
-        <div className="slideOutTab3">
-          <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
-             onClick={() => {setShowMenu(false);}}>
-            <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
-            <p className="m-0"><span className="noMobile">Filter Options</span></p>
-              </div>
-            </div>
+              return (
+              <Container fluid>
+                {isPageLoading ? (
+                  <Spinner />
+                  ) : (
+                  <>
+                  <div id="slideOut3" className={showMenu ? "" : "show3"} ref={wrapperRef}>
+                    <div className="slideOutTab3">
+                      <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
+                      onClick={() => {setShowMenu(false);}}>
+                      <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
+                      <p className="m-0"><span className="noMobile">Filter Options</span></p>
+                    </div>
+                  </div>
 
-            <div className="modal-content">
-              <div className="modal-header">
-                <OverlayTrigger
-                  placement="right"
-                  overlay={renderTooltip}
-                  className="tooltipHover"
-                >
-                  <p className="pb-1">
-                    Filter Options <i className="fal fa-info-circle red"></i>
-                  </p>
-                </OverlayTrigger>
-                <div className="closeThisPlease" id="close1">
-                <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1"
-                   onClick={() => {setShowMenu(true);}}>
-                  {/*onClick={() => setShow3(false)}>*/}
-                  &#10005;
-                  </Button>
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <OverlayTrigger
+                      placement="right"
+                      overlay={renderTooltip}
+                      className="tooltipHover"
+                      >
+                      <p className="pb-1">
+                        Filter Options <i className="fal fa-info-circle red"></i>
+                      </p>
+                    </OverlayTrigger>
+                    <div className="closeThisPlease" id="close1">
+                      <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1"
+                      onClick={() => {setShowMenu(true);}}>
+                      {/*onClick={() => setShow3(false)}>*/}
+                      &#10005;
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <div className="modal-actions">
-                <div className="across">
-                  <Button onClick={handleClearAll} className="btn-clear">
-                    Clear All
-                  </Button>
-                  <Button
+                <div className="modal-actions">
+                  <div className="across">
+                    <Button onClick={handleClearAll} className="btn-clear">
+                      Clear All
+                    </Button>
+                    <Button
                     onClick={handleTabVisUpdate}
                     className="btn">Submit Filters
                   </Button>
@@ -438,42 +438,43 @@ const Template1 = ({
                             <Accordion.Item eventKey="1">
                               <Accordion.Header>Account Groups</Accordion.Header>
                               <Accordion.Body>
-                                <input value={keyword} onChange={handleChangeKeyword} placeholder="Search" type="search" class="form-control mb-2" />
+                                <div className="position-relative mb-2">
+                                  <input value={keyword} onChange={handleChangeKeyword} placeholder="Search" type="search" class="form-control" />
+                                  <i class="far fa-search absoluteSearch"></i>
+                                </div>
                                 <AccountGroups
-                                  fieldOptions={keyword !=="" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
-                                  selectedAccountGroup={selectedAccountGroup}
-                                  setSelectedAccountGroup={setSelectedAccountGroup}
+                                fieldOptions={keyword !=="" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
+                                selectedAccountGroup={selectedAccountGroup}
+                                setSelectedAccountGroup={setSelectedAccountGroup}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
                           </Col>
-                        :''
+                          :''
                         }
 
 
-                          <Col xs={12} md={12}>
-                            <Accordion.Item eventKey="3">
-                              <Accordion.Header>Quick Filters</Accordion.Header>
-                              <Accordion.Body>
-                                <QuickFilter
+                        <Col xs={12} md={12}>
+                          <Accordion.Item eventKey="3">
+                            <Accordion.Header>Quick Filters</Accordion.Header>
+                            <Accordion.Body>
+                              <QuickFilter
 
-                                isLoading={isFetchingQuickFilterSuggestions}
-                                quickFilterOptions={quickFilterOptions}
-                                quickFilterSuggestions={quickFilterSuggestions}
-                                quickFilter={quickFilter}
-                                setQuickFilter={setQuickFilter}
-                                isDefault={isDefaultProduct}
-                                setIsDefault={setIsDefaultProduct}
-                                updateBtn={updateButtonClicked}
-                                setUpdateBtn={setUpdateButtonClicked}
-                                setIsFilterChanged={setIsFilterChanged}
+                              isLoading={isFetchingQuickFilterSuggestions}
+                              quickFilterOptions={quickFilterOptions}
+                              quickFilterSuggestions={quickFilterSuggestions}
+                              quickFilter={quickFilter}
+                              setQuickFilter={setQuickFilter}
+                              isDefault={isDefaultProduct}
+                              setIsDefault={setIsDefaultProduct}
+                              updateBtn={updateButtonClicked}
+                              setUpdateBtn={setUpdateButtonClicked}
+                              setIsFilterChanged={setIsFilterChanged}
 
-                                />
-                              </Accordion.Body>
-                            </Accordion.Item>
-                          </Col>
-
-
+                              />
+                            </Accordion.Body>
+                          </Accordion.Item>
+                        </Col>
 
 
                         {/* Filters */}
@@ -483,31 +484,31 @@ const Template1 = ({
                               <Accordion.Header>Filters</Accordion.Header>
                               <Accordion.Body>
                                 <Filters
-                                  isLoading={isFetchingFilterSuggestions}
-                                  filterOptions={filterOptions}
-                                  filterSuggestions={filterSuggestions}
-                                  selectedFilters={selectedFilters}
-                                  setSelectedFilters={setSelectedFilters}
-                                  isDefault={isDefaultProduct}
-                                  setIsDefault={setIsDefaultProduct}
-                                  updateBtn={updateButtonClicked}
-                                  setUpdateBtn={setUpdateButtonClicked}
-                                  setIsFilterChanged={setIsFilterChanged}
+                                isLoading={isFetchingFilterSuggestions}
+                                filterOptions={filterOptions}
+                                filterSuggestions={filterSuggestions}
+                                selectedFilters={selectedFilters}
+                                setSelectedFilters={setSelectedFilters}
+                                isDefault={isDefaultProduct}
+                                setIsDefault={setIsDefaultProduct}
+                                updateBtn={updateButtonClicked}
+                                setUpdateBtn={setUpdateButtonClicked}
+                                setIsFilterChanged={setIsFilterChanged}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
                           </Col>
-                        :''
+                          :''
                         }
 
 
                         {/* Fields */}
                         {fieldOptions?.length > 0?
-                        <Col xs={12} md={12}>
-                          <Accordion.Item eventKey="6">
-                            <Accordion.Header>Fields</Accordion.Header>
-                            <Accordion.Body>
-                              <Fields
+                          <Col xs={12} md={12}>
+                            <Accordion.Item eventKey="6">
+                              <Accordion.Header>Fields</Accordion.Header>
+                              <Accordion.Body>
+                                <Fields
                                 fieldOptions={fieldOptions}
                                 setTabList={setTabList}
                                 tabList={tabList}
@@ -518,18 +519,18 @@ const Template1 = ({
                                 // setIsDefault={setIsDefaultProduct}
                                 updateBtn={updateButtonClicked}
                                 setUpdateBtn={setUpdateButtonClicked}
-                              />
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Col>
-                        :''
+                                />
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Col>
+                          :''
                         }
 
 
                         {/* Bookmarks */}
                         <Col xs={12} md={12}>
                           <Accordion.Item eventKey="4">
-                            <Accordion.Header>Bookmarks</Accordion.Header>
+                            <Accordion.Header>Saved Filters</Accordion.Header>
                             <Accordion.Body></Accordion.Body>
                           </Accordion.Item>
                         </Col>
@@ -538,32 +539,18 @@ const Template1 = ({
                   </Row>
                 </Accordion>
 
-                <div className="across">
-
-                    <input placeholder="Top % Products" type="search" class="form-control" />
-                    <input placeholder="Search Filter" type="search" class="form-control" />
-
-               </div>
-
-              <div className="lineAcross"></div>
-
-              <div className="across two">
-                  <Button onClick={handleRestoreDefault} className="btn-clear">
-                    Restore Default Fields <i className="fal fa-undo"></i>
-                  </Button>
 
 
-                </div>
+
               </div>
             </div>
           </div>
 
-
-
           <Row className="fullW">
             <Col md={12} lg={6}>
-            <div className="d-flex justify-content-start align-items-center flex-wrap">
-              <CurrentSelection
+              <div className="d-flex justify-content-start align-items-center flex-wrap">
+                <p class="mr-3"><i class="fal fa-filter mr-1"></i>Filters</p>
+                <CurrentSelection
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
                 selectedFields={selectedFields}
@@ -574,49 +561,89 @@ const Template1 = ({
                 dateFilterOptions={dateFilterOptions}
                 selectedDateRange={selectedDateRange}
                 quickFilterOptions={quickFilterOptions}
-              />
+                />
 
-          <CurrentAccountGroup
-              selectedDateFilter={selectedDateFilter}
-              selectedFilters={selectedFilters}
-              selectedFields={selectedFields}
-              fieldOptions={fieldOptions}
-              setSelectedFields={setSelectedFields}
-              filterOptions={filterOptions}
-              setSelectedFilters={setSelectedFilters}
-              dateFilterOptions={dateFilterOptions}
+                <CurrentAccountGroup
+                selectedDateFilter={selectedDateFilter}
+                selectedFilters={selectedFilters}
+                selectedFields={selectedFields}
+                fieldOptions={fieldOptions}
+                setSelectedFields={setSelectedFields}
+                filterOptions={filterOptions}
+                setSelectedFilters={setSelectedFilters}
+                dateFilterOptions={dateFilterOptions}
+                selectedDateRange={selectedDateRange}
+                quickFilterOptions={quickFilterOptions}
+                selectedAccountGroup={selectedAccountGroup}
+                setSelectedAccountGroup={setSelectedAccountGroup}
+                />
+
+              </div>
+
+
+              <Row className="mt-5 d-flex align-items-center">
+                <Col md={12} lg={5}>
+                  {currentInvoiceCount != ""?
+                  <p>
+                    Total Invoice: <span className="highlight large">{currentInvoiceCount}</span>
+                  </p>
+                  :''
+                }
+              </Col>
+
+              <Col md={12} lg={7}>
+                <div className="position-relative columnStart">
+                <label>Search Filter</label>
+                  <input placeholder="" type="search" class="form-control" />
+                  <i class="far fa-search absoluteSearch"></i>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12} lg={12}>
+
+                <Row className="mt-4">
+                  <Col md={12} lg={12}>
+
+                    <a onClick={handleRestoreDefault}>
+                      Restore Default/Saved Filter
+                    </a>
+
+                    <Col md={12} lg={4}>
+                    <div className="position-relative columnStart  mt-4">
+                    <label>Top % Products</label>
+
+                      <input  type="search" class="form-control" />
+
+                    </div>
+                    </Col>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+
+
+
+          </Col>
+
+          <Col md={12} lg={6}>
+            {/* Date Range Selector */}
+            {dateFilterOptions.length>0?
+              <DateRangeSelector
               selectedDateRange={selectedDateRange}
-              quickFilterOptions={quickFilterOptions}
-              selectedAccountGroup={selectedAccountGroup}
-              setSelectedAccountGroup={setSelectedAccountGroup}
-            />
-          </div>
-            {currentInvoiceCount != ""?
-              <p className="mt-5">
-                Total Invoice: <span className="highlight large">{currentInvoiceCount}</span>
-              </p>
+              setSelectedDateRange={setSelectedDateRange}
+              setSelectedDateFilter={setSelectedDateFilter}
+              dateFilterOptions={dateFilterOptions}
+              selectedDateFilter={selectedDateFilter}
+              handleTabVisUpdate={handleTabVisUpdate}
+              />
               :''
             }
-            </Col>
 
-            <Col md={12} lg={6}>
-              {/* Date Range Selector */}
-              {dateFilterOptions.length>0?
-                <DateRangeSelector
-                  selectedDateRange={selectedDateRange}
-                  setSelectedDateRange={setSelectedDateRange}
-                  setSelectedDateFilter={setSelectedDateFilter}
-                  dateFilterOptions={dateFilterOptions}
-                  selectedDateFilter={selectedDateFilter}
-                  handleTabVisUpdate={handleTabVisUpdate}
-                />
-              :''
-              }
-
-              {/*<DateFilterGroup
-                dateFilterOptions={dateFilterOptions}
-                setSelectedDateFilter={setSelectedDateFilter}
-                selectedDateFilter={selectedDateFilter}
+            {/*<DateFilterGroup
+              dateFilterOptions={dateFilterOptions}
+              setSelectedDateFilter={setSelectedDateFilter}
+              selectedDateFilter={selectedDateFilter}
               />*/}
             </Col>
           </Row>
@@ -625,20 +652,20 @@ const Template1 = ({
             <Col md={12} className="embed-responsive embed-responsive-16by9">
               {tabList.length > 0?
                 <InnerTableTabs
-                  tabs={tabList}
-                  setSelectedFields={setSelectedFields}
-                  currentInnerTab={currentInnerTab}
-                  setCurrentInnerTab={setCurrentInnerTab}
+                tabs={tabList}
+                setSelectedFields={setSelectedFields}
+                currentInnerTab={currentInnerTab}
+                setCurrentInnerTab={setCurrentInnerTab}
                 />
-              :''
+                :''
               }
 
             </Col>
           </Row>
-        </>
-      )}
-    </Container>
-  );
-};
+          </>
+          )}
+        </Container>
+        );
+      };
 
-export default Template1;
+      export default Template1;
