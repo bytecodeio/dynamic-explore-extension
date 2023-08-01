@@ -113,7 +113,7 @@ const InflationDeflation = ({
 
   const getSingleVis = async (vis) => {
     let { dashboard_elements } = await sdk.ok(sdk.dashboard(vis,'dashboard_elements'));
-    console.log("singleVisConsole", dashboard_elements)
+    // console.log("singleVisConsole", dashboard_elements)
     if (dashboard_elements.length > 0) {
       let singleVis = dashboard_elements[0]['result_maker']['query']['client_id'];
       setVis1(singleVis)

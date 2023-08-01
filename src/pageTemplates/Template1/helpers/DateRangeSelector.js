@@ -45,7 +45,7 @@ export const DateRangeSelector = ({
   return (
     <Container>
     <Row className="fullW mt-3">
-    <Col md={12} lg={9}>
+    <Col md={12} lg={12}>
 
     <p className="mt-0 mb-2 mediumFont">
     The <span className="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in
@@ -55,6 +55,8 @@ export const DateRangeSelector = ({
     </p>
 
     </Col>
+    </Row>
+  <Row className="fullW mt-3">
 
     <Col md={12} lg={3}>
 

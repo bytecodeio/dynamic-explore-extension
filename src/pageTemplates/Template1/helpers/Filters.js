@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button, Form, Modal, Spinner } from "react-bootstrap";
 
 const FilterDropdown = ({ handleChange, label, name, options, value }) => {
-  // console.log('debug: options', options, value);
+
   return (
     <>
       <p>{label}</p>
@@ -43,6 +43,8 @@ const Filters = ({
     });
     setIsFilterChanged(true);
   }
+
+    console.log("filterSuggestions", filterSuggestions)
 
   return (
     <div className="wrapFilters">
