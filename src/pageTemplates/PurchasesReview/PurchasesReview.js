@@ -7,8 +7,6 @@ import {
   OverlayTrigger,
   Row,
   Spinner,
-  Tab,
-  Tabs,
   Tooltip,
 } from "react-bootstrap";
 
@@ -37,6 +35,7 @@ const PurchasesReview = ({
   isFetchingLookmlFields,
   selectedDateFilter,
   setSelectedDateFilter,
+  dimensionToggleFields,
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -392,7 +391,10 @@ const PurchasesReview = ({
             </Col>
             <Col md={8}>
               <Container fluid className="padding-0 innerTab middleHeight">
-                <TabbedVisualizations dashboardId="Sb8HOOZshOqTzjZOiPuSmE" />
+                <TabbedVisualizations
+                  dashboardId="Sb8HOOZshOqTzjZOiPuSmE"
+                  dimensionToggleFields={dimensionToggleFields}
+                />
               </Container>
             </Col>
           </Row>
@@ -414,7 +416,10 @@ const PurchasesReview = ({
 
             <Col md={8}>
               <Container fluid className="padding-0 innerTab">
-                <TabbedVisualizations dashboardId="rebecca_thompson_project::product_movement_report_tab" />
+                <TabbedVisualizations
+                  dashboardId="rebecca_thompson_project::product_movement_report_tab"
+                  dimensionToggleFields={dimensionToggleFields}
+                />
               </Container>
             </Col>
           </Row>

@@ -1,9 +1,94 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Container, Spinner, Tab, Tabs } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  Container,
+  Spinner,
+  Tab,
+  Tabs,
+} from "react-bootstrap";
 import EmbedTable from "./EmbedTable";
 import { ExtensionContext } from "@looker/extension-sdk-react";
+import { useLookerQuery } from "../hooks/useLookerQuery";
+import styled from "styled-components";
 
-const TabbedVisualizations = ({ dashboardId }) => {
+const ToggleButtonGroup = styled(ButtonGroup)`
+  min-width: inherit;
+`;
+
+// Use &&& to increase specificity to override some styles in src/styles.css
+// https://styled-components.com/docs/faqs#how-can-i-override-styles-with-higher-specificity
+const ToggleButton = styled(Button)`
+  &&& {
+    min-width: fit-content;
+    padding: 0px 10px;
+    height: fit-content;
+  }
+  &&&:hover {
+    background-color: #dbedf4;
+  }
+`;
+
+const DimensionToggle = ({ handleToggle, options }) => {
+  return (
+    <ToggleButtonGroup>
+      {options.map((option) => (
+        <ToggleButton
+          key={option.value}
+          onClick={() => handleToggle(option.value)}
+        >
+          {option.label}
+        </ToggleButton>
+      ))}
+    </ToggleButtonGroup>
+  );
+};
+
+const Visualization = ({ dimensionToggleFields, tab }) => {
+  const { core40SDK: sdk } = useContext(ExtensionContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const [queryId, setQueryId] = useState(tab.query);
+  const [queryBody, setQueryBody] = useState();
+
+  // Dimension Toggle
+  const { getQueryBodyForSlug } = useLookerQuery();
+  const dimensionToggle = {};
+  dimensionToggle.tag = Object.keys(dimensionToggleFields).find((tag) =>
+    tag.toLowerCase().endsWith(tab.title.toLowerCase())
+  );
+  dimensionToggle.field = dimensionToggleFields[dimensionToggle.tag]?.[0];
+  dimensionToggle.options = dimensionToggle.field?.enumerations;
+
+  async function handleDimensionToggle(newValue) {
+    setIsLoading(true);
+    const newQueryBody = queryBody
+      ? { ...queryBody }
+      : await getQueryBodyForSlug(queryId);
+
+    if (!newQueryBody.filters) {
+      newQueryBody.filters = {};
+    }
+    newQueryBody.filters[dimensionToggle.field.name] = newValue;
+    const { client_id } = await sdk.ok(sdk.create_query(newQueryBody));
+    setQueryId(client_id);
+    setQueryBody(newQueryBody);
+    setIsLoading(false);
+  }
+
+  return (
+    <>
+      {!!dimensionToggle.tag && (
+        <DimensionToggle
+          handleToggle={handleDimensionToggle}
+          options={dimensionToggle.options}
+        />
+      )}
+      {isLoading ? <Spinner /> : <EmbedTable queryId={queryId} />}
+    </>
+  );
+};
+
+const TabbedVisualizations = ({ dashboardId, dimensionToggleFields }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const [tabs, setTabs] = useState([]);
   const [error, setError] = useState("");
@@ -71,11 +156,16 @@ const TabbedVisualizations = ({ dashboardId }) => {
             activeKey={selectedTabIndex}
             onSelect={handleTabChange}
           >
-            {tabs?.map((tab, i) => (
-              <Tab eventKey={i} title={tab.title} key={tab.title}>
-                <EmbedTable queryId={tab.query} />
-              </Tab>
-            ))}
+            {tabs?.map((tab, i) => {
+              return (
+                <Tab key={tab.title} eventKey={i} title={tab.title}>
+                  <Visualization
+                    dimensionToggleFields={dimensionToggleFields}
+                    tab={tab}
+                  />
+                </Tab>
+              );
+            })}
           </Tabs>
         )}
       </Container>

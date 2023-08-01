@@ -4,14 +4,25 @@ import { ExtensionContext } from "@looker/extension-sdk-react";
 import styled from "styled-components";
 import { Spinner } from "react-bootstrap";
 
+const Explore = styled.div`
+  width: 100%;
+  min-height: unset;
+  & > iframe {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+const Wrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const EmbedTable = ({ queryId }) => {
   const { extensionSDK } = useContext(ExtensionContext);
-
-
-
-
-
-
 
   const embedCtrRef = useCallback(
     (el) => {
@@ -35,16 +46,9 @@ const EmbedTable = ({ queryId }) => {
     [queryId]
   );
 
-  return <>{queryId ? <Explore ref={embedCtrRef} /> : <Spinner />}</>;
+  return (
+    <Wrapper>{queryId ? <Explore ref={embedCtrRef} /> : <Spinner />}</Wrapper>
+  );
 };
-
-const Explore = styled.div`
-  width: 100%;
-  min-height: unset;
-  & > iframe {
-    width: 100%;
-    height: 100%;
-  }
-`;
 
 export default EmbedTable;
