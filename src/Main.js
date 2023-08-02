@@ -35,7 +35,10 @@ export const Main = () => {
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
 
   const [dateFilterOptions, setDateFilterOptions] = useState([]);
+
+  const [quickFilterfields, setQuickFilterFields] = useState([]);
   const [quickFilterOptions, setQuickFilterOptions] = useState([]);
+  const [selectedQuickFilter, setSelectedQuickFilter] = useState({})
 
   const [selectedDateRange, setSelectedDateRange] = useState();
 
@@ -102,12 +105,12 @@ export const Main = () => {
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
+      const _quickFilterFields = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
 
       const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
 
       const _productMovementfieldOptions =
         fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
-      const _quickFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
       // _dimensionToggleFields has the shape { [tag]: field }
       // it gets populated with all the tags that are prefixed with `toggle:`
       const _dimensionToggleFields = Object.fromEntries(
@@ -130,6 +133,25 @@ export const Main = () => {
           `No account group field using tag ${LOOKML_FIELD_TAGS.accountGroups}`
         );
       }
+
+      let _quickFilterOptions = []
+      try {
+         for await(let f of _quickFilterFields) {
+          console.log("filters",f)
+          let values = await getValues(f);
+          let qfOption = {
+            label:f['label_short'],
+            name:f['name'],
+            values: values.map(v => {return v[f['name']]})
+          }
+          _quickFilterOptions.push(qfOption)
+        }
+      } catch (error){
+        console.error(`No Quick Filter Options available`)
+      }
+
+      setQuickFilterOptions(_quickFilterOptions)
+
 
       //
       // console.log("fieldsByTag", fieldsByTag)
@@ -157,6 +179,31 @@ export const Main = () => {
         );
       }
 
+      if (_quickFilterFields.length > 0) {
+        setQuickFilterFields(_quickFilterFields)
+      } else (
+        console.error(`No quick filter fields found using tag ${LOOKML_FIELD_TAGS.quick_filter}`)
+      )
+
+     //
+       console.log(defaultFilterSelections)
+     //
+     //  //added  QuickFilter here
+     //
+     //  let defaultQuickFilterSelections = []
+     //    try {
+     //      defaultQuickFilterSelections = Object.fromEntries(
+     //        _quickFilterOptions.map((filter) => [filter.name, "N/A"])
+     //        );
+     //    } catch(error) {
+     //      console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.quick_filter}`)
+     //    }
+     //
+     // console.log(defaultQuickFilterSelections)
+
+
+
+    //date filters
       const defaultDateFilterSelections = _dateFilterOptions?.find((filter) => {
         if (filter["suggestions"]) {
           return filter["suggestions"].find((s) => {
@@ -165,15 +212,6 @@ export const Main = () => {
         }
       });
 
-      const defaultQuickFilterSelections = _quickFilterOptions?.find(
-        (filter) => {
-          if (filter["suggestions"]) {
-            return filter["suggestions"].find((s) => {
-              return s.toUpperCase() === "YES";
-            });
-          }
-        }
-      );
 
       if (defaultDateFilterSelections != undefined) {
         setSelectedDateFilter(defaultDateFilterSelections["name"]);
@@ -181,9 +219,10 @@ export const Main = () => {
 
       setSelectedDateRange(getDefaultDateRange());
 
-      if (defaultQuickFilterSelections != undefined) {
-        setQuickFilter(defaultQuickFilterSelections["name"]);
-      }
+
+      // if (defaultQuickFilterSelections != undefined) {
+      //   setQuickFilter(defaultQuickFilterSelections["name"]);
+      // }
 
       setSelectedDateRange(getDefaultDateRange());
 
@@ -201,13 +240,11 @@ export const Main = () => {
         );
       }
 
-      if (_quickFilterOptions) {
-        setQuickFilterOptions(_quickFilterOptions);
-      } else {
-        console.error(
-          `No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`
-        );
-      }
+      // if (_quickFilterOptions) {
+      //   setQuickFilterOptions(_quickFilterOptions);
+      // } else {
+      //   console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.filter}`)
+      // }
 
       if (_productMovementfieldOptions) {
         setProductMovementFields(_productMovementfieldOptions);
@@ -235,9 +272,10 @@ export const Main = () => {
         );
       }
 
-      setSelectedFilters(defaultFilterSelections);
 
-      setQuickFilter(defaultQuickFilterSelections);
+      //setSelectedFilters(defaultFilterSelections);
+
+      //setQuickFilter(defaultQuickFilterSelections);
 
       try {
         setDateRange(_dateRange[0]);
@@ -338,10 +376,15 @@ export const Main = () => {
       }
     }
 
-    for (const filter in quickFilter) {
-      if (quickFilter[filter] && quickFilter[filter] !== "N/A") {
-        filters[filter] = quickFilter[filter];
-      }
+    // for (const filter in quickFilter) {
+    //   if (quickFilter[filter] && quickFilter[filter] !== "N/A") {
+    //     filters[filter] = quickFilter[filter];
+    //   }
+    // }
+    if (selectedQuickFilter) {
+      Object.keys(selectedQuickFilter).map(key => {
+        filters[key] = selectedQuickFilter[key]
+      })
     }
 
     if (selectedDateFilter != "") {
@@ -411,9 +454,8 @@ export const Main = () => {
                   accountGroupField={accountGroupField}
                   showMenu={showMenu}
                   setShowMenu={setShowMenu}
-                  quickFilterOptions={quickFilter}
                   dimensionToggleFields={dimensionToggleFields}
-
+                  quickFilterOptions={quickFilterOptions}
                 />
               </Tab>
               <Tab eventKey="product-movement" title="Product Movement Report">
@@ -424,7 +466,6 @@ export const Main = () => {
                   filterOptions={filterOptions}
                   dateFilterOptions={dateFilterOptions}
                   fieldOptions={productMovementFields}
-                  quickFilterOptions={quickFilter}
                   isFetchingLookmlFields={isFetchingLookmlFields}
                   setSelectedDateFilter={setSelectedDateFilter}
                   selectedDateFilter={selectedDateFilter}
@@ -444,6 +485,9 @@ export const Main = () => {
                   accountGroupField={accountGroupField}
                   keyword={keyword}
                   handleChangeKeyword={handleChangeKeyword}
+                  quickFilterOptions={quickFilterOptions}
+                  setSelectedQuickFilter={setSelectedQuickFilter}
+                  selectedQuickFilter={selectedQuickFilter}
                  description={{description: <div dangerouslySetInnerHTML={{__html:comment1}} />}}
                 />
               </Tab>
@@ -472,6 +516,9 @@ export const Main = () => {
                   accountGroupOptions={accountGroupOptions}
                   selectedAccountGroup={selectedAccountGroup}
                   accountGroupField={accountGroupField}
+                  quickFilterOptions={quickFilterOptions}
+                  setSelectedQuickFilter={setSelectedQuickFilter}
+                  selectedQuickFilter={selectedQuickFilter}
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment2}} />}}
 
                 />
@@ -501,6 +548,9 @@ export const Main = () => {
                   accountGroupOptions={accountGroupOptions}
                   selectedAccountGroup={selectedAccountGroup}
                   accountGroupField={accountGroupField}
+                  quickFilterOptions={quickFilterOptions}
+                  setSelectedQuickFilter={setSelectedQuickFilter}
+                  selectedQuickFilter={selectedQuickFilter}
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment3}} />}}
 
                 />

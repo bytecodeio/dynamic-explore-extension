@@ -46,8 +46,8 @@ const Template1 = ({
   getAllFilters,
 
   quickFilterOptions,
-  quickFilter,
-  setQuickFilter,
+  selectedQuickFilter,
+  setSelectedQuickFilter,
 
   setSelectedAccountGroup,
   accountGroupOptions,
@@ -84,8 +84,8 @@ const Template1 = ({
   useEffect(() => {
 
     async function fetchDefaultFieldsAndFilters() {
-      const { dashboard_elements } = await sdk.ok(
-      sdk.dashboard(config.tabbedVis1, "dashboard_elements")
+      const { dashboard_elements, dashboard_filters } = await sdk.ok(
+        sdk.dashboard(config.tabbedVis1, "dashboard_elements, dashboard_filters")
       );
 
       dashboard_elements?.map((t) => {
@@ -105,7 +105,22 @@ const Template1 = ({
       dashboard_elements[0].result_maker.query;
 
       setSelectedFields(fields);
-      if (filters) setSelectedFilters(filters);
+
+      if (Object.keys(getAllFilters()).length == 0) {
+        let defaultedFilters = dashboard_filters.filter(f => {
+         return f.default_value !== null && f.default_value !== undefined && f.field.tags.length > 0
+        })
+        if (defaultedFilters.length > 0) {
+          let filterArr = {...selectedFilters}
+          defaultedFilters.map(f => {
+            let key = f['dimension']
+            filterArr[key] = f['default_value']
+            //addDefaultFilters(f)
+          })
+          setSelectedFilters(filterArr)
+        }
+      }
+      //if (filters) setSelectedFilters(filters);
       //setProductMovementVisQid(client_id);
       setIsFetchingDefaultDashboard(false);
     }
@@ -117,6 +132,15 @@ const Template1 = ({
     }
   }, []);
 
+  // const addDefaultFilters = (filter) => {
+  //   console.log("dashboard Filters", filterOptions)
+  //   if (filterOptions.find(f => {return f['name'] == filter['name']})) {
+  //     let selFilters = {...selectedFilters};
+  //     let key = filter['name'];
+  //     selFilters[key] = filter['default_value'];
+  //     setSelectedFilters(selFilters)
+  //   }
+  // }
 
   // Fetch the suggestions for each filter field, after fetching all filter fields
   const [isFetchingFilterSuggestions, setIsFetchingFilterSuggestions] =
@@ -420,6 +444,28 @@ const Template1 = ({
                   <Row>
                     <Col xs={12} md={12}>
                       <Row>
+                          {/*Quick Filters */}
+                          {
+                            quickFilterOptions?.length > 0?
+                            <Col xs={12} md={12}>
+                              <Accordion.Item eventKey="3">
+                                <Accordion.Header>Quick Filters</Accordion.Header>
+                                <Accordion.Body>
+                                  <QuickFilter
+                                  quickFilterOptions={quickFilterOptions}
+                                  setSelectedQuickFilter={setSelectedQuickFilter}
+                                  selectedQuickFilter={selectedQuickFilter}
+                                  updateBtn={updateButtonClicked}
+                                  setUpdateBtn={setUpdateButtonClicked}
+                                  setIsFilterChanged={setIsFilterChanged}
+                                  />
+                                </Accordion.Body>
+                              </Accordion.Item>
+                            </Col>
+                            :
+                            ''
+                          }
+
                         {/* Account Groups */}
                         {accountGroupOptions?.length > 0?
                           <Col xs={12} md={12}>
@@ -440,30 +486,6 @@ const Template1 = ({
                           </Col>
                           :''
                         }
-
-
-                        <Col xs={12} md={12}>
-                          <Accordion.Item eventKey="3">
-                            <Accordion.Header>Quick Filters</Accordion.Header>
-                            <Accordion.Body>
-                              <QuickFilter
-
-                              isLoading={isFetchingQuickFilterSuggestions}
-                              quickFilterOptions={quickFilterOptions}
-                              quickFilterSuggestions={quickFilterSuggestions}
-                              quickFilter={quickFilter}
-                              setQuickFilter={setQuickFilter}
-                              isDefault={isDefaultProduct}
-                              setIsDefault={setIsDefaultProduct}
-                              updateBtn={updateButtonClicked}
-                              setUpdateBtn={setUpdateButtonClicked}
-                              setIsFilterChanged={setIsFilterChanged}
-
-                              />
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Col>
-
 
                         {/* Filters */}
                         {filterOptions?.length > 0?

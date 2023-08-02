@@ -29,13 +29,7 @@ html {
   font-family: "Roboto", sans-serif;
   color: #282f53;
 }
-h1,
-h2,
-h3,
-span,
-p,
-h5,
-h6 {
+h1, h2, h3, span, p, h5, h6 {
   font-family: "Roboto", sans-serif;
 }
 p {
@@ -5181,8 +5175,9 @@ footer img {
   min-width: 2em;
 
   font-size: 14px;
-  border: unset !important;
-  width: 2.4em;
+  border:unset !important;
+  /*width:2.4em*/
+
 }
 
 .btn-group .btn.active .form-check-label,

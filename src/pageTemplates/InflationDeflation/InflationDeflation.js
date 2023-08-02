@@ -100,7 +100,7 @@ const InflationDeflation = ({
         dashboard_elements[0].result_maker.query;
 
       setSelectedFields(fields);
-      if (filters) setSelectedFilters(filters);
+      //if (filters) setSelectedFilters(filters);
 
 
       getSingleVis(config.vis1);
@@ -643,7 +643,7 @@ const InflationDeflation = ({
 
                   <EmbedTable queryId={vis1} />
                 </Col>
-          </Row>      
+          </Row>
 
 
           <Row className="mb-3">

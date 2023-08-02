@@ -359,7 +359,6 @@ const PurchasesReview = ({
                 setSelectedFields={setSelectedFields}
                 filterOptions={filterOptions}
                 setSelectedFilters={setSelectedFilters}
-                selectedDateFilter={selectedDateFilter}
                 dateFilterOptions={dateFilterOptions}
               />
               <p className="mt-5">
