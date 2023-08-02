@@ -423,6 +423,7 @@ export const Main = () => {
   let comment3 = `The <span class="highlight">Auto-Sub Report</span> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolor.`
   let comment4 = `The <span class="highlight">Inflation/Deflation Report</span> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolor.`
 
+
   return (
     <>
       <NavbarMain />
@@ -493,7 +494,7 @@ export const Main = () => {
                   quickFilterOptions={quickFilterOptions}
                   setSelectedQuickFilter={setSelectedQuickFilter}
                   selectedQuickFilter={selectedQuickFilter}
-                 description={{description: <div dangerouslySetInnerHTML={{__html:comment1}} />}}
+                  description={{description: <div dangerouslySetInnerHTML={{__html:comment1}} />}}
                 />
               </Tab>
               <Tab eventKey="invoice" title="Invoice Report">
@@ -525,7 +526,6 @@ export const Main = () => {
                   setSelectedQuickFilter={setSelectedQuickFilter}
                   selectedQuickFilter={selectedQuickFilter}
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment2}} />}}
-
                 />
               </Tab>
               <Tab eventKey="auto-sub" title="Auto-Sub Report">
@@ -557,7 +557,6 @@ export const Main = () => {
                   setSelectedQuickFilter={setSelectedQuickFilter}
                   selectedQuickFilter={selectedQuickFilter}
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment3}} />}}
-
                 />
               </Tab>
               <Tab eventKey="id" title="Inflation/Deflation Report">

@@ -142,6 +142,7 @@ const Template1 = ({
   //   }
   // }
 
+
   // Fetch the suggestions for each filter field, after fetching all filter fields
   const [isFetchingFilterSuggestions, setIsFetchingFilterSuggestions] =
   useState(true);
@@ -201,6 +202,10 @@ const Template1 = ({
   }, [filterOptions, isFetchingLookmlFields]);
 
 
+  // console.log("one", filterSuggestions)
+
+
+
   // Fetch the quick filter suggestions for each filter field
   const [isFetchingQuickFilterSuggestions, setIsFetchingQuickFilterSuggestions] =
   useState(true);
@@ -258,6 +263,11 @@ const Template1 = ({
 
     fetchAllQuickFilterSuggestions();
   }, [quickFilterOptions, isFetchingLookmlFields]);
+
+
+  // console.log("two", quickFilterSuggestions)
+
+
 
 
 
@@ -348,7 +358,7 @@ const Template1 = ({
             };
 
             async function handleClearAll() {
-              // console.log('handleClearAll')
+              console.log('handleClearAll')
               // setIsDefaultProduct(false);
               setUpdateButtonClicked(true);
               setSelectedFields([]);
@@ -393,6 +403,7 @@ const Template1 = ({
 
 
               // console.log('accountGroupOptions:', accountGroupOptions)
+
 
               return (
               <Container fluid>
