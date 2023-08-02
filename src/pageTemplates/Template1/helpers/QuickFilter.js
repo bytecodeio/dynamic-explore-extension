@@ -10,8 +10,7 @@ const QuickFilter = ({ quickFilterOptions,selectedQuickFilter, setSelectedQuickF
   const handleSelection = (e,name) => {
     let quickFilters = {...selectedQuickFilter}
     if (quickFilters?.hasOwnProperty(name)) {
-
-      if (quickFilters[name] === e.target.id) {
+      if (quickFilters[name] === e.target.id) {        
         delete quickFilters[name]
       } else {
         quickFilters[name] = e.target.id
@@ -24,7 +23,6 @@ const QuickFilter = ({ quickFilterOptions,selectedQuickFilter, setSelectedQuickF
   }
 
 const isActive = (key,v) => {
-
   if (!selectedQuickFilter?.hasOwnProperty(key)) {
     return false
   }

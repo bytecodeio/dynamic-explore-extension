@@ -138,7 +138,7 @@ export const Main = () => {
       try {
          for await(let f of _quickFilterFields) {
           console.log("filters",f)
-          let values = await getValues(f);
+          let values = await getDefaultValues(f);
           let qfOption = {
             label:f['label_short'],
             name:f['name'],
@@ -228,6 +228,7 @@ export const Main = () => {
 
       if (_totalInvoice != undefined) {
         setTotalInvoiceField(_totalInvoice);
+        console.log("total invoice issue", _totalInvoice)
         let values = await getValues(_totalInvoice);
         setCurrentInvoiceCount(values[0][_totalInvoice["name"]]);
       }
@@ -341,6 +342,7 @@ export const Main = () => {
   };
 
   const getValues = (field) => {
+    console.log(field)
     return sdk.ok(
       sdk.run_inline_query({
         result_format: "json",
@@ -402,8 +404,11 @@ export const Main = () => {
   };
 
   const updateInvoiceCount = async () => {
-    let newCount = await getValues(totalInvoiceField);
-    setCurrentInvoiceCount(newCount[0][totalInvoiceField["name"]]);
+    console.log("total invocie", totalInvoiceField)
+    if (totalInvoiceField != undefined) {
+      let newCount = await getValues(totalInvoiceField);
+      setCurrentInvoiceCount(newCount[0][totalInvoiceField["name"]]);
+    }
   };
 
   useEffect(() => {
