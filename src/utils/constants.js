@@ -10,8 +10,8 @@ export const LOOKML_FIELD_TAGS = {
   date_filter: "date filter",
   productMovementField: "field: product_movement",
   dateRange: "date range",
-  quick_filter: "trade_or_generic: purchases_review_dashboard",
+  quick_filter: "quick_filter: product_movement",
   totalInvoices: "total_invoices",
   accountGroups: "account_group",
-  togglePrefix: "toggle:",
+  togglePrefix: "toggle: "
 };

@@ -1,81 +1,62 @@
 
 
 import React, { useState } from "react";
+import { useEffect } from "react";
 
-import { Button, Form, Modal, Spinner } from "react-bootstrap";
+import { Button, ButtonGroup, Form, Modal, Spinner } from "react-bootstrap";
 
-const FilterDropdown = ({ handleChange, label, name, options, value }) => {
+const QuickFilter = ({ quickFilterOptions,selectedQuickFilter, setSelectedQuickFilter,updateBtn,setUpdateBtn,setIsFilterChanged,}) => {
   // console.log('debug: options', options, value);
-  return (
-    <>
-      <p>{label}</p>
-
-      <Form.Select
-
-        onChange={(e) => handleChange(name, e.target.value)}
-        value={value}
-        >
-        <option key="N/A" value="N/A">N/A</option>
-        {options?.map((optionText) => (
-          <option key={optionText} value={optionText}> {optionText}</option>
-        ))}
-      </Form.Select>
-    </>
-  );
-};
-
-const QuickFilter = ({
-  isLoading,
-  quickFilterOptions,
-  quickFilterSuggestions,
-  quickFilter,
-  setQuickFilter,
-  
-  isDefault,
-  setIsDefault,
-  setIsFilterChanged,
-  setTabList,
-  tabList,
-  currentInnerTab,
-  updateBtn,
-  setUpdateBtn,
-
-
-}) => {
-
-
-
-  function handleFilterSelection(filterName, newValue) {
-    setSelectedFilters((prevFilters) => {
-      const newFilters = { ...prevFilters };
-      newFilters[filterName] = newValue;
-      return newFilters;
-    });
-    setIsFilterChanged(true);
+  const handleSelection = (e,name) => {
+    let quickFilters = {...selectedQuickFilter}
+    if (quickFilters?.hasOwnProperty(name)) {
+      console.log("delete?",quickFilters)
+      if (quickFilters[name] === e.target.id) {        
+        delete quickFilters[name]
+      } else {
+        quickFilters[name] = e.target.id
+      }    
+    }  else {
+      quickFilters[name] = e.target.id
+    }
+    setSelectedQuickFilter(quickFilters)
+    setIsFilterChanged(true)
   }
 
-
-    console.log("quickfilterSuggestions", quickFilterSuggestions)
+const isActive = (key,v) => {
+  console.log(key)
+  if (!selectedQuickFilter?.hasOwnProperty(key)) {
+    return false
+  }
+  if (selectedQuickFilter[key] == v) {
+    return true
+  }
+  return false
+}
 
   return (
-
-    <p>hello</p>
-    // <div className="wrapFilters">
-    //   {quickFilterOptions.map((filterOption) => (
-    //     <div className="one" key={filterOption.name}>
-    //       <Form.Group>
-    //         <FilterDropdown
-    //           handleChange={handleFilterSelection}
-    //           label={filterOption.label_short}
-    //           name={filterOption.name}
-    //           //options={filterSuggestions[filterOption.name]}
-    //           value={isDefault ? selectedFilters[filterOption.name] : "N/A"}
-    //         />
-    //       </Form.Group>
-    //     </div>
-    //   ))}
-    // </div>
-  );
+    <>
+      {quickFilterOptions?.map(f => {
+        return (
+          <>
+          <div>{f['label']}</div>
+          <ButtonGroup>
+            {f['values'].map(v => 
+                <Button
+                key={v}
+                active={isActive(f['name'], v)}
+                id={v}
+                type="radio"
+                name="filters"
+                onClick={(e) => handleSelection(e,f['name'])}                
+                >{v}</Button>
+            )}
+          </ButtonGroup>
+          </>
+        )        
+      })}
+    </>
+  )
 };
 
 export default QuickFilter;

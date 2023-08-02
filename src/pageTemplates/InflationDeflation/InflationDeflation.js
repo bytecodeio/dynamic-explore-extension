@@ -96,7 +96,7 @@ const InflationDeflation = ({
         dashboard_elements[0].result_maker.query;
 
       setSelectedFields(fields);
-      if (filters) setSelectedFilters(filters);
+      //if (filters) setSelectedFilters(filters);
 
 
       getSingleVis(config.vis1);
