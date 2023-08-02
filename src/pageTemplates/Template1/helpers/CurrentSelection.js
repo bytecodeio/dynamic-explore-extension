@@ -3,9 +3,10 @@ import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
 import * as $ from "jquery";
 import moment from 'moment';
 
-export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter, quickFilterOptions }) => {
+export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter, quickFilterOptions, selectedQuickFilter, setSelectedQuickFilter }) => {
   const [currentSelection, setCurrentSelection] = useState([])
   const [filterSelection, setFilterSelection] = useState([])
+  const [quickFilterSelection, setQuickFilterSelection] = useState([])
 
   useEffect(() => {
     let currentSelectionObj = {};
@@ -28,39 +29,20 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
     }
     setFilterSelection(filterObj)
 
-    // for (const filter in selectedFields) {
-    //     if (selectedFields[filter] !== "") {
-    //       const option1 = quickFilterOptions.find(option1 => option1.name === selectedFields[filter]);
-    //
-    //       if(option1){
-    //         currentSelectionObj[filter] = option1;
-    //       }
-    //         // currentSelectionObj[filter] = selectedFields[filter];
-    //     }
-    //
-    //         // console.log("one", selectedFields)
-    // }
-    //
-    //
-    //   for (const filter in selectedFilters) {
-    //
-    //
-    //         if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
-    //         const option1 = filterOptions.find(option1 => option1.name === selectedFilters[filter]);
-    //
-    //         if(option1){
-    //           currentSelectionObj[filter] = option1;
-    //         }
-    //
-    //       // if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
-    //       //     currentSelectionObj[filter] = selectedFilters[filter];
-    //       // }
-    //   }
-    //
-    // }
+    let quickFilterObj = {};
+    for(let key in selectedQuickFilter) {
+      const option = quickFilterOptions.find(option3 => option3.name === key);
+
+      if(option && selectedQuickFilter[key] !== 'N/A'){
+        quickFilterObj[option.label] = {value: selectedQuickFilter[key], name: key};
+      }
+    }
+    setQuickFilterSelection(quickFilterObj)
+
+
 
     setCurrentSelection(currentSelectionObj)
-  },[selectedDateFilter, dateFilterOptions, selectedFilters, selectedFields, fieldOptions, filterOptions, setSelectedDateRange, selectedDateRange, quickFilterOptions])
+  },[selectedDateFilter, dateFilterOptions, selectedFilters, selectedFields, fieldOptions, filterOptions, setSelectedDateRange, selectedDateRange, quickFilterOptions, selectedQuickFilter, setSelectedQuickFilter])
 
   function removeField(fieldName) {
     setSelectedFilters((prev) => {
@@ -74,19 +56,23 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
       }
       return newObj;
     });
-    // setSelectedFields((prev) => {
-    //   return prev.filter(field !== fieldName)
-    // })
+  }
+
+  function removeQuickField(fieldName) {
+    setSelectedQuickFilter((prev) => {
+      let newObj = {};
+      for(const name in prev){
+        if(name !== fieldName) {
+          newObj[name] = prev[name];
+        } else {
+          newObj[name] = 'N/A';
+        }
+      }
+      return newObj;
+    });
   }
 
 
-//
-// selectedDateRange && selectedDateRange.split().map((selection) => {
-//   console.log(selection)
-//
-//
-//
-//  })
 
 const first = selectedDateRange.split(" to ")[0]
 const last = selectedDateRange.split(" to ")[1]
@@ -95,11 +81,13 @@ const format2 = moment(last).format('MM-DD-YYYY').toString();
 
 const format1 = moment(first).format('MM-DD-YYYY').toString();
 
+console.log('currentSelection', currentSelection)
+
 
   return (
 
 
-<div className="d-flex justify-content-start align-items-center">
+<div className="d-flex">
 <div>
     {
 
@@ -135,7 +123,28 @@ const format1 = moment(first).format('MM-DD-YYYY').toString();
 
 </div>
 
-    <div>
+    <div className="d-flex">
+
+
+
+        {Object.keys(quickFilterSelection)?.map((selection) => {
+
+          return(
+            <div className="theOptions" key={selection}>
+            {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+            <p className="mb-0 blue">
+        
+            {quickFilterSelection[selection].value}</p>
+
+            <i onClick={() => removeQuickField(quickFilterSelection[selection].name)} class="fal fa-times blue"></i>
+
+            </div>
+
+          )
+        })}
+
+
+
 
     {Object.keys(filterSelection)?.map((selection) => {
 

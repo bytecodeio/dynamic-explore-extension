@@ -1,16 +1,13 @@
-
-
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Button, ButtonGroup, Form, Modal, Spinner } from "react-bootstrap";
 
-const QuickFilter = ({ quickFilterOptions,selectedQuickFilter, setSelectedQuickFilter,updateBtn,setUpdateBtn,setIsFilterChanged,}) => {
+const QuickFilter = ({ quickFilterOptions, selectedQuickFilter, setSelectedQuickFilter, updateBtn, setUpdateBtn, setIsFilterChanged}) => {
   // console.log('debug: options', options, value);
   const handleSelection = (e,name) => {
     let quickFilters = {...selectedQuickFilter}
     if (quickFilters?.hasOwnProperty(name)) {
-      if (quickFilters[name] === e.target.id) {        
+      if (quickFilters[name] === e.target.id) {
         delete quickFilters[name]
       } else {
         quickFilters[name] = e.target.id

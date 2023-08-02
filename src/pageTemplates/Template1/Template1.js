@@ -455,27 +455,7 @@ const Template1 = ({
                   <Row>
                     <Col xs={12} md={12}>
                       <Row>
-                          {/*Quick Filters */}
-                          {
-                            quickFilterOptions?.length > 0?
-                            <Col xs={12} md={12}>
-                              <Accordion.Item eventKey="3">
-                                <Accordion.Header>Quick Filters</Accordion.Header>
-                                <Accordion.Body>
-                                  <QuickFilter
-                                  quickFilterOptions={quickFilterOptions}
-                                  setSelectedQuickFilter={setSelectedQuickFilter}
-                                  selectedQuickFilter={selectedQuickFilter}
-                                  updateBtn={updateButtonClicked}
-                                  setUpdateBtn={setUpdateButtonClicked}
-                                  setIsFilterChanged={setIsFilterChanged}
-                                  />
-                                </Accordion.Body>
-                              </Accordion.Item>
-                            </Col>
-                            :
-                            ''
-                          }
+
 
                         {/* Account Groups */}
                         {accountGroupOptions?.length > 0?
@@ -491,6 +471,31 @@ const Template1 = ({
                                 fieldOptions={keyword !=="" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
                                 selectedAccountGroup={selectedAccountGroup}
                                 setSelectedAccountGroup={setSelectedAccountGroup}
+                                />
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Col>
+                          :''
+                        }
+
+
+                        {/* Fields */}
+                        {fieldOptions?.length > 0?
+                          <Col xs={12} md={12}>
+                            <Accordion.Item eventKey="6">
+                              <Accordion.Header>Fields</Accordion.Header>
+                              <Accordion.Body>
+                                <Fields
+                                fieldOptions={fieldOptions}
+                                setTabList={setTabList}
+                                tabList={tabList}
+                                currentInnerTab={currentInnerTab}
+                                // selectedFields={selectedFields}
+                                // setSelectedFields={setSelectedFields}
+                                // isDefault={isDefaultProduct}
+                                // setIsDefault={setIsDefaultProduct}
+                                updateBtn={updateButtonClicked}
+                                setUpdateBtn={setUpdateButtonClicked}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
@@ -523,29 +528,30 @@ const Template1 = ({
                         }
 
 
-                        {/* Fields */}
-                        {fieldOptions?.length > 0?
+                        {/*Quick Filters */}
+                        {
+                          quickFilterOptions?.length > 0?
                           <Col xs={12} md={12}>
-                            <Accordion.Item eventKey="6">
-                              <Accordion.Header>Fields</Accordion.Header>
+                            <Accordion.Item eventKey="3">
+                              <Accordion.Header>Quick Filters</Accordion.Header>
                               <Accordion.Body>
-                                <Fields
-                                fieldOptions={fieldOptions}
-                                setTabList={setTabList}
-                                tabList={tabList}
-                                currentInnerTab={currentInnerTab}
-                                // selectedFields={selectedFields}
-                                // setSelectedFields={setSelectedFields}
-                                // isDefault={isDefaultProduct}
-                                // setIsDefault={setIsDefaultProduct}
+                                <QuickFilter
+                                quickFilterOptions={quickFilterOptions}
+                                setSelectedQuickFilter={setSelectedQuickFilter}
+                                selectedQuickFilter={selectedQuickFilter}
                                 updateBtn={updateButtonClicked}
                                 setUpdateBtn={setUpdateButtonClicked}
+                                setIsFilterChanged={setIsFilterChanged}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
                           </Col>
-                          :''
+                          :
+                          ''
                         }
+
+
+
 
 
                         {/* Bookmarks */}
@@ -668,6 +674,9 @@ const Template1 = ({
                 dateFilterOptions={dateFilterOptions}
                 selectedDateRange={selectedDateRange}
                 quickFilterOptions={quickFilterOptions}
+
+                selectedQuickFilter={selectedQuickFilter}
+                setSelectedQuickFilter={setSelectedQuickFilter}
                 />
 
                 <CurrentAccountGroup
@@ -689,7 +698,7 @@ const Template1 = ({
 
 
                 <a onClick={handleRestoreDefault}>
-                  <p class="red bold  mt-4"><u>Restore Default/Saved Filter</u></p>
+                  <p class="red bold small mt-4"><u>Restore Default/Saved Filter</u></p>
                 </a>
 
                 </div>
