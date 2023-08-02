@@ -5589,10 +5589,13 @@ position: absolute;
 #slideOut5 ::-webkit-scrollbar-thumb,
 #slideOut2 ::-webkit-scrollbar,
 #slideOut2 ::-webkit-scrollbar-thumb,
-#slideOut3 ::-webkit-scrollbar,
-#slideOut3 ::-webkit-scrollbar-thumb {
-  display: none !important;
+/* #slideOut3 ::-webkit-scrollbar,
+#slideOut3 ::-webkit-scrollbar-thumb  */
+{
+  width: 0px !important;
 }
+
+
 
 /* clears the ‘X’ from Chrome */
 input[type="search"]::-webkit-search-decoration,
@@ -6226,9 +6229,9 @@ input[type="date"]:after {
   padding: 0em;
 }
 
-/* elizabeth changes that I do not want */
+
 .across {
-  /* flex-direction: column; */
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6274,9 +6277,6 @@ input[type="date"]:after {
   margin: 1em 0.2em !important;
 }
 
-.show3 .modal-body {
-  max-height: 660px;
-}
 
 .across {
   display: flex !important;
@@ -6340,21 +6340,50 @@ input[type="date"]:after {
   margin: 5px;
 }
 
-.vis1-container > div > iframe {
-}
-
-/* elizabeth changes that I do not want */
-
 /* tablet */
 
 
-@media (min-width:1481px){
+
+@media (max-width:1550px) and (min-width:1401px){
+  .negativeTop{
+    margin-top:-4em
+  }
+
+  .columnStart label {
+    color: black;
+    position: absolute;
+    background: white;
+    top: -9px;
+    left: 10px;
+    padding: 0px 4px;
+    font-size: 14px;
+    z-index: 10;
+}
+
+
+  .show3 .modal-body {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+
+}
+
+
+
+@media (min-width:1401px){
   .negativeTop{
     margin-top:-4em
   }
 }
 
-@media (max-width:1480px){
+
+@media (max-width:1400px){
+
+
+  .show3 .modal-body {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
   .mneg40 {
     margin-top: 1em;
   }
@@ -6368,6 +6397,32 @@ input[type="date"]:after {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 6px;
+  }
+
+
+  .show3 .modal-body {
+    max-height: 460px;
+    overflow-y: auto;
+}
+
+  .fullW .col-lg-5,
+  .fullW .col-lg-7,
+  .fullW .col-lg-4,
+  .fullW .col-lg-8,
+  .fullW .col-lg-2,
+  .fullW .col-lg-10,
+  .fullW .col-lg-1,
+  .fullW .col-lg-3,
+  .fullW .col-lg-9    {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  .columnStart{
+      margin: 1em 0.25em;
+  }
+
+  .endAbsolute{
+    position: relative;
   }
 }
 
@@ -6421,9 +6476,22 @@ input[type="date"]:after {
   }
   .fullW .col-lg-5,
   .fullW .col-lg-7,
-  .fullW .col-lg-4 {
+  .fullW .col-lg-4,
+  .fullW .col-lg-8,
+  .fullW .col-lg-2,
+  .fullW .col-lg-10,
+  .fullW .col-lg-1,
+  .fullW .col-lg-3,
+  .fullW .col-lg-9    {
     flex: 0 0 auto;
     width: 100%;
+  }
+  .columnStart{
+      margin: 1em 0.25em;
+  }
+
+  .endAbsolute{
+    position: relative;
   }
 
   .grid2 .one.radio {

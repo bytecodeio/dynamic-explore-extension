@@ -55,7 +55,8 @@ const Template1 = ({
   accountGroupField,
   keyword,
   setKeyword,
-  handleChangeKeyword
+  handleChangeKeyword,
+  description
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -117,10 +118,6 @@ const Template1 = ({
   }, []);
 
 
-
-  console.log("hello", filterOptions)
-  console.log("hello2", quickFilterOptions)
-
   // Fetch the suggestions for each filter field, after fetching all filter fields
   const [isFetchingFilterSuggestions, setIsFetchingFilterSuggestions] =
   useState(true);
@@ -180,10 +177,6 @@ const Template1 = ({
   }, [filterOptions, isFetchingLookmlFields]);
 
 
-  // console.log("one", filterSuggestions)
-
-
-
   // Fetch the quick filter suggestions for each filter field
   const [isFetchingQuickFilterSuggestions, setIsFetchingQuickFilterSuggestions] =
   useState(true);
@@ -241,11 +234,6 @@ const Template1 = ({
 
     fetchAllQuickFilterSuggestions();
   }, [quickFilterOptions, isFetchingLookmlFields]);
-
-
-  // console.log("two", quickFilterSuggestions)
-
-
 
 
 
@@ -336,7 +324,7 @@ const Template1 = ({
             };
 
             async function handleClearAll() {
-              console.log('handleClearAll')
+              // console.log('handleClearAll')
               // setIsDefaultProduct(false);
               setUpdateButtonClicked(true);
               setSelectedFields([]);
@@ -559,7 +547,8 @@ const Template1 = ({
               dateFilterOptions={dateFilterOptions}
               selectedDateFilter={selectedDateFilter}
               handleTabVisUpdate={handleTabVisUpdate}
-                currentInvoiceCount={currentInvoiceCount}
+              currentInvoiceCount={currentInvoiceCount}
+              description={description}
               />
               :''
             }
@@ -602,10 +591,6 @@ const Template1 = ({
             </div>
             </Col>
             </Row>
-
-
-
-
 
             <Row className="fullW">
 
@@ -677,9 +662,6 @@ const Template1 = ({
                 </div>
               </Col>
             </Row>
-
-
-
 
 
           <Row className="mt-3 mb-3">

@@ -12,15 +12,15 @@ import {
 import { LOOKER_MODEL, LOOKER_EXPLORE } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import InnerTableTabs from "../../components/InnerTableTabs";
-import Fields from "./helpers/Fields";
-import Filters from "./helpers/Filters";
+import Fields from "../Template1/helpers/Fields";
+import Filters from "../Template1/helpers/Filters";
 import Rx from "./helpers/Rx";
 import QuickFilter from "./helpers/QuickFilter";
-import AccountGroups from "./helpers/AccountGroups";
+import AccountGroups from "../Template1/helpers/AccountGroups";
 import { DateFilterGroup } from "../Template1/helpers/DateFilterGroup";
 import { CurrentSelection } from "../Template1/helpers/CurrentSelection";
-// import { CurrentQuickFilter } from "../../../Template1/helpers/CurrentQuickFilter";
-import { DateRangeSelector } from "./helpers/DateRangeSelector";
+import CurrentAccountGroup  from "../Template1/helpers/CurrentAccountGroup";
+import { DateRangeSelector } from "../Template1/helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 const InflationDeflation = ({
   currentNavTab,
@@ -47,6 +47,10 @@ const InflationDeflation = ({
   accountGroupOptions,
   selectedAccountGroup,
   accountGroupField,
+  keyword,
+  setKeyword,
+  handleChangeKeyword,
+  description
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -282,8 +286,8 @@ const InflationDeflation = ({
   };
 
   async function handleClearAll() {
-  console.log('handleClearAll')
-    setIsDefaultProduct(false);
+
+    // setIsDefaultProduct(false);
     setUpdateButtonClicked(true);
     setSelectedFields([]);
     let tabs = [...tabList];
@@ -294,10 +298,14 @@ const InflationDeflation = ({
     for(let name in filters) {
       filters[name] = 'N/A';
     }
-    console.log('filters ', filters, selectedFilters)
     setSelectedFilters(filters);
-    setIsFilterChanged(true);
-  }
+    // setSelectedFilters((prevFilters) => {
+      //   const newFilters = { ...prevFilters };
+      //   newFilters[filterName] = 'N/A';
+      //   return newFilters;
+      // });
+      setIsFilterChanged(true);
+    }
 
   async function handleRestoreDefault() {
     setIsDefaultProduct(defaultChecked);
@@ -501,11 +509,97 @@ const InflationDeflation = ({
             </div>
           </div>
 
-
-
           <Row className="fullW">
-            <Col md={12} lg={5}>
-              <CurrentSelection
+
+
+          <Col md={12} lg={12}>
+            {/* Date Range Selector */}
+            {dateFilterOptions.length>0?
+              <DateRangeSelector
+              selectedDateRange={selectedDateRange}
+              setSelectedDateRange={setSelectedDateRange}
+              setSelectedDateFilter={setSelectedDateFilter}
+              dateFilterOptions={dateFilterOptions}
+              selectedDateFilter={selectedDateFilter}
+              handleTabVisUpdate={handleTabVisUpdate}
+              currentInvoiceCount={currentInvoiceCount}
+              description={description}
+              />
+              :''
+            }
+
+            {/*<DateFilterGroup
+              dateFilterOptions={dateFilterOptions}
+              setSelectedDateFilter={setSelectedDateFilter}
+              selectedDateFilter={selectedDateFilter}
+              />*/}
+            </Col>
+
+            </Row>
+
+            <Row className="fullW negativeTop d-flex align-items-center">
+              <Col md={12} lg={2}>
+
+            {currentInvoiceCount != ""?
+            <p>
+              <b>Total Invoice:</b> <span className="highlight large">{currentInvoiceCount}</span>
+            </p>
+            :''
+          }
+
+            </Col>
+            <Col md={12} lg={3}>
+              <div className="position-relative columnStart">
+              <label>Search Filter</label>
+                <input placeholder="" type="search" class="form-control" />
+                <i class="far fa-search absoluteSearch"></i>
+              </div>
+            </Col>
+
+            <Col md={12} lg={2}>
+
+            <div className="position-relative columnStart">
+            <label>Top % Products</label>
+
+              <input  type="search" class="form-control" />
+
+            </div>
+            </Col>
+            </Row>
+
+            <Row className="fullW">
+
+            <Col md={12} lg={12}>
+
+
+
+              <Row className="mt-5 d-flex align-items-center">
+
+
+
+              <Col md={12} lg={12}>
+
+
+              </Col>
+            </Row>
+
+
+
+          </Col>
+
+
+          </Row>
+
+
+          <Row className="fullW mt-4">
+
+            <Col xs={12} md={12}>
+
+              <div className="d-flex justify-content-between align-items-baseline">
+
+              <div className="d-flex justify-content-start align-items-center flex-wrap">
+                <p class="mr-3"><i class="fal fa-filter mr-1"></i>Filters</p>
+                <CurrentSelection
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
                 selectedFields={selectedFields}
@@ -516,68 +610,58 @@ const InflationDeflation = ({
                 dateFilterOptions={dateFilterOptions}
                 selectedDateRange={selectedDateRange}
                 quickFilterOptions={quickFilterOptions}
-              />
-
-              {/*<CurrentQuickFilter
-              selectedDateFilter={selectedDateFilter}
-              selectedFilters={selectedFilters}
-              selectedFields={selectedFields}
-              fieldOptions={fieldOptions}
-              setSelectedFields={setSelectedFields}
-              filterOptions={filterOptions}
-              setSelectedFilters={setSelectedFilters}
-              dateFilterOptions={dateFilterOptions}
-              selectedDateRange={selectedDateRange}
-              quickFilterOptions={quickFilterOptions}
-            />*/}
-
-            {currentInvoiceCount != ""?
-              <p className="mt-5">
-                Total Invoice: <span className="highlight large">{currentInvoiceCount}</span>
-              </p>
-              :''
-            }
-            <div className="vis1-container padding-0 innerTab smallerHeight embed-responsive embed-responsive-16by9">
-              <EmbedTable queryId={vis1} />
-            </div>
-            </Col>
-
-            <Col md={12} lg={7}>
-              {/* Date Range Selector */}
-              {dateFilterOptions.length>0?
-                <DateRangeSelector
-                  selectedDateRange={selectedDateRange}
-                  setSelectedDateRange={setSelectedDateRange}
-                  setSelectedDateFilter={setSelectedDateFilter}
-                  dateFilterOptions={dateFilterOptions}
-                  selectedDateFilter={selectedDateFilter}
-                  handleTabVisUpdate={handleTabVisUpdate}
                 />
-              :''
-              }
 
-              {/*<DateFilterGroup
-                dateFilterOptions={dateFilterOptions}
-                setSelectedDateFilter={setSelectedDateFilter}
+                <CurrentAccountGroup
                 selectedDateFilter={selectedDateFilter}
-              />*/}
-            </Col>
-          </Row>
+                selectedFilters={selectedFilters}
+                selectedFields={selectedFields}
+                fieldOptions={fieldOptions}
+                setSelectedFields={setSelectedFields}
+                filterOptions={filterOptions}
+                setSelectedFilters={setSelectedFilters}
+                dateFilterOptions={dateFilterOptions}
+                selectedDateRange={selectedDateRange}
+                quickFilterOptions={quickFilterOptions}
+                selectedAccountGroup={selectedAccountGroup}
+                setSelectedAccountGroup={setSelectedAccountGroup}
+                />
 
-          <Row className="mt-3 mb-3">
+              </div>
+
+
+                <a onClick={handleRestoreDefault}>
+                  <p class="red bold  mt-4"><u>Restore Default/Saved Filter</u></p>
+                </a>
+
+                </div>
+              </Col>
+            </Row>
+
+          <Row className="mt-3">
+                <Col lg={4} md={12} className="vis1-container padding-0 innerTab smallerHeight embed-responsive embed-responsive-16by9">
+
+                  <EmbedTable queryId={vis1} />
+                </Col>
+          </Row>      
+
+
+          <Row className="mb-3">
+
             <Col md={12} className="embed-responsive embed-responsive-16by9">
               {tabList.length > 0?
                 <InnerTableTabs
-                  tabs={tabList}
-                  setSelectedFields={setSelectedFields}
-                  currentInnerTab={currentInnerTab}
-                  setCurrentInnerTab={setCurrentInnerTab}
+                tabs={tabList}
+                setSelectedFields={setSelectedFields}
+                currentInnerTab={currentInnerTab}
+                setCurrentInnerTab={setCurrentInnerTab}
                 />
-              :''
+                :''
               }
 
             </Col>
           </Row>
+
         </>
       )}
     </Container>

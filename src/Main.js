@@ -369,6 +369,12 @@ export const Main = () => {
     }
   }, [selectedDateFilter]);
 
+
+  let comment1 =  `The <span class="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in descending order by units, filtering by type or customize your report.`
+  let comment2 = `The <span class="highlight">Invoice Report Dashboard</span> allows the view of an invoice summary for a single account and query all invoices within a specific date range.`
+  let comment3 = `The <span class="highlight">Auto-Sub Report</span> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolor.`
+  let comment4 = `The <span class="highlight">Inflation/Deflation Report</span> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolor.`
+
   return (
     <>
       <NavbarMain />
@@ -407,6 +413,7 @@ export const Main = () => {
                   setShowMenu={setShowMenu}
                   quickFilterOptions={quickFilter}
                   dimensionToggleFields={dimensionToggleFields}
+
                 />
               </Tab>
               <Tab eventKey="product-movement" title="Product Movement Report">
@@ -437,6 +444,7 @@ export const Main = () => {
                   accountGroupField={accountGroupField}
                   keyword={keyword}
                   handleChangeKeyword={handleChangeKeyword}
+                 description={{description: <div dangerouslySetInnerHTML={{__html:comment1}} />}}
                 />
               </Tab>
               <Tab eventKey="invoice" title="Invoice Report">
@@ -464,6 +472,8 @@ export const Main = () => {
                   accountGroupOptions={accountGroupOptions}
                   selectedAccountGroup={selectedAccountGroup}
                   accountGroupField={accountGroupField}
+                  description={{description: <div dangerouslySetInnerHTML={{__html:comment2}} />}}
+
                 />
               </Tab>
               <Tab eventKey="auto-sub" title="Auto-Sub Report">
@@ -491,6 +501,8 @@ export const Main = () => {
                   accountGroupOptions={accountGroupOptions}
                   selectedAccountGroup={selectedAccountGroup}
                   accountGroupField={accountGroupField}
+                  description={{description: <div dangerouslySetInnerHTML={{__html:comment3}} />}}
+
                 />
               </Tab>
               <Tab eventKey="id" title="Inflation/Deflation Report">
@@ -521,6 +533,7 @@ export const Main = () => {
                   accountGroupOptions={accountGroupOptions}
                   selectedAccountGroup={selectedAccountGroup}
                   accountGroupField={accountGroupField}
+                  description={{description: <div dangerouslySetInnerHTML={{__html:comment4}} />}}
                 />
               </Tab>
             </Tabs>
