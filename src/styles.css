@@ -6335,6 +6335,10 @@ input[type="date"]:after {
   margin: 5px;
 }
 
+.btn-group>.btn-group:not(:first-child), .btn-group>:not(.btn-check:first-child)+.btn {
+    margin-left: -5px;
+}
+
 /* tablet */
 
 
