@@ -11,7 +11,8 @@ export const DateRangeSelector = ({
   handleTabVisUpdate,
   dateFilterOptions,
   selectedDateFilter,
-  currentInvoiceCount
+  currentInvoiceCount,
+  description
 }) => {
   const onDateSelection = (e, type) => {
     if (type == "start") {
@@ -49,20 +50,13 @@ export const DateRangeSelector = ({
       <Col md={12} lg={8}>
 
         <p className="mt-0 mb-2 mediumFont">
-          The <span className="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in
-          descending order by units, filtering by type or customize your report.
+        {description?.description}
         </p>
         </Col>
 
-
-
         <Col md={12} lg={4}>
 
-
-
                 <div className="grid2">
-
-
 
                   {dateFilterOptions?.map(filter => {
                     return (
@@ -96,11 +90,11 @@ export const DateRangeSelector = ({
 
 
     <Row className="fullW bottom d-flex align-items-center">
-      <Col xs={12} md={8}>
-  
+      <Col md={12} lg={8}>
+
 
     </Col>
-    <Col xs={12} md={4}>
+    <Col md={12} lg={4}>
 
       <div className="d-flex mt-3 ml2">
 
