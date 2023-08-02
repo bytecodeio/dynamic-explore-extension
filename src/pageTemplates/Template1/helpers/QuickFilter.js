@@ -10,12 +10,12 @@ const QuickFilter = ({ quickFilterOptions,selectedQuickFilter, setSelectedQuickF
   const handleSelection = (e,name) => {
     let quickFilters = {...selectedQuickFilter}
     if (quickFilters?.hasOwnProperty(name)) {
-      console.log("delete?",quickFilters)
-      if (quickFilters[name] === e.target.id) {        
+
+      if (quickFilters[name] === e.target.id) {
         delete quickFilters[name]
       } else {
         quickFilters[name] = e.target.id
-      }    
+      }
     }  else {
       quickFilters[name] = e.target.id
     }
@@ -24,7 +24,7 @@ const QuickFilter = ({ quickFilterOptions,selectedQuickFilter, setSelectedQuickF
   }
 
 const isActive = (key,v) => {
-  console.log(key)
+
   if (!selectedQuickFilter?.hasOwnProperty(key)) {
     return false
   }
@@ -41,19 +41,19 @@ const isActive = (key,v) => {
           <>
           <div>{f['label']}</div>
           <ButtonGroup>
-            {f['values'].map(v => 
+            {f['values'].map(v =>
                 <Button
                 key={v}
                 active={isActive(f['name'], v)}
                 id={v}
                 type="radio"
                 name="filters"
-                onClick={(e) => handleSelection(e,f['name'])}                
+                onClick={(e) => handleSelection(e,f['name'])}
                 >{v}</Button>
             )}
           </ButtonGroup>
           </>
-        )        
+        )
       })}
     </>
   )

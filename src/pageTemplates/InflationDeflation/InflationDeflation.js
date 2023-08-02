@@ -12,21 +12,23 @@ import {
 import { LOOKER_MODEL, LOOKER_EXPLORE } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import InnerTableTabs from "../../components/InnerTableTabs";
-import Fields from "../Template1/helpers/Fields";
-import Filters from "../Template1/helpers/Filters";
+import Fields from "./helpers/Fields";
+import Filters from "./helpers/Filters";
 import Rx from "./helpers/Rx";
 import QuickFilter from "./helpers/QuickFilter";
-import AccountGroups from "../Template1/helpers/AccountGroups";
+import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "../Template1/helpers/DateFilterGroup";
 import { CurrentSelection } from "../Template1/helpers/CurrentSelection";
-import CurrentAccountGroup  from "../Template1/helpers/CurrentAccountGroup";
-import { DateRangeSelector } from "../Template1/helpers/DateRangeSelector";
+// import { CurrentQuickFilter } from "../../../Template1/helpers/CurrentQuickFilter";
+import { DateRangeSelector } from "./helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 const InflationDeflation = ({
   currentNavTab,
+
   selectedFilters,
   setSelectedFilters,
   filterOptions,
+
   dateFilterOptions,
   fieldOptions,
   isFetchingLookmlFields,
@@ -42,7 +44,11 @@ const InflationDeflation = ({
   currentInvoiceCount,
   updateInvoiceCount,
   getAllFilters,
+
   quickFilterOptions,
+  selectedQuickFilter,
+  setSelectedQuickFilter,
+
   setSelectedAccountGroup,
   accountGroupOptions,
   selectedAccountGroup,
@@ -62,48 +68,60 @@ const InflationDeflation = ({
   const [tabList, setTabList] = useState([]);
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
-  const [vis1, setVis1] = useState("")
+   const [vis1, setVis1] = useState("")
   function handleClearAll() {}
 
   useEffect(() => {
     if (currentNavTab == tabKey) {
       setIsFilterChanged(true);
-      //handleTabVisUpdate();
+      handleTabVisUpdate();
       //slideIt(show3);
     }
   }, [currentNavTab]);
 
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
-    useState(true);
+  useState(true);
   useEffect(() => {
+
     async function fetchDefaultFieldsAndFilters() {
-      const { dashboard_elements } = await sdk.ok(
-        sdk.dashboard(config.tabbedVis1, "dashboard_elements")
+      const { dashboard_elements, dashboard_filters } = await sdk.ok(
+        sdk.dashboard(config.tabbedVis1, "dashboard_elements, dashboard_filters")
       );
 
       dashboard_elements?.map((t) => {
         let { client_id } = t["result_maker"]["query"];
         setTabList((prev) => [
-          ...prev,
-          {
-            title: t["title"],
-            query: client_id,
-            default_fields: [...t.result_maker.query["fields"]],
-            selected_fields: [...t.result_maker.query["fields"]],
-          },
+        ...prev,
+        {
+          title: t["title"],
+          query: client_id,
+          default_fields: [...t.result_maker.query["fields"]],
+          selected_fields: [...t.result_maker.query["fields"]],
+        },
         ]);
       });
 
-
       const { client_id, fields, filters } =
-        dashboard_elements[0].result_maker.query;
+      dashboard_elements[0].result_maker.query;
 
       setSelectedFields(fields);
+
+      if (Object.keys(getAllFilters()).length == 0) {
+        let defaultedFilters = dashboard_filters.filter(f => {
+         return f.default_value !== null && f.default_value !== undefined && f.field.tags.length > 0
+        })
+        if (defaultedFilters.length > 0) {
+          let filterArr = {...selectedFilters}
+          defaultedFilters.map(f => {
+            let key = f['dimension']
+            filterArr[key] = f['default_value']
+            //addDefaultFilters(f)
+          })
+          setSelectedFilters(filterArr)
+        }
+      }
       //if (filters) setSelectedFilters(filters);
-
-
-      getSingleVis(config.vis1);
       //setProductMovementVisQid(client_id);
       setIsFetchingDefaultDashboard(false);
     }
@@ -115,17 +133,20 @@ const InflationDeflation = ({
     }
   }, []);
 
-  const getSingleVis = async (vis) => {
-    let { dashboard_elements } = await sdk.ok(sdk.dashboard(vis,'dashboard_elements'));
-    if (dashboard_elements.length > 0) {
-      let singleVis = dashboard_elements[0]['result_maker']['query']['client_id'];
-      setVis1(singleVis)
-    }
-  }
+  // const addDefaultFilters = (filter) => {
+  //   console.log("dashboard Filters", filterOptions)
+  //   if (filterOptions.find(f => {return f['name'] == filter['name']})) {
+  //     let selFilters = {...selectedFilters};
+  //     let key = filter['name'];
+  //     selFilters[key] = filter['default_value'];
+  //     setSelectedFilters(selFilters)
+  //   }
+  // }
+
 
   // Fetch the suggestions for each filter field, after fetching all filter fields
   const [isFetchingFilterSuggestions, setIsFetchingFilterSuggestions] =
-    useState(true);
+  useState(true);
   const [filterSuggestions, setFilterSuggestions] = useState({});
   useEffect(() => {
     if (isFetchingLookmlFields || !filterOptions?.length) {
@@ -134,14 +155,14 @@ const InflationDeflation = ({
 
     function fetchFilterSuggestions(filterFieldName) {
       return sdk.ok(
-        sdk.run_inline_query({
-          result_format: "json",
-          body: {
-            model: LOOKER_MODEL,
-            view: LOOKER_EXPLORE,
-            fields: [filterFieldName],
-          },
-        })
+      sdk.run_inline_query({
+        result_format: "json",
+        body: {
+          model: LOOKER_MODEL,
+          view: LOOKER_EXPLORE,
+          fields: [filterFieldName],
+        },
+      })
       );
     }
 
@@ -150,7 +171,7 @@ const InflationDeflation = ({
         return fetchFilterSuggestions(filterField.name);
       });
       const filterSuggestionResponses = await Promise.allSettled(
-        filterSuggestionPromises
+      filterSuggestionPromises
       );
 
       const filterSuggestionsMap = {};
@@ -162,8 +183,8 @@ const InflationDeflation = ({
         }
         if (response.value[0].looker_error) {
           console.error(
-            "Error fetching suggestions for a Looker filter field ",
-            response.value[0].looker_error
+          "Error fetching suggestions for a Looker filter field ",
+          response.value[0].looker_error
           );
           return;
         }
@@ -181,6 +202,76 @@ const InflationDeflation = ({
     fetchAllFilterSuggestions();
   }, [filterOptions, isFetchingLookmlFields]);
 
+
+  // console.log("one", filterSuggestions)
+
+
+
+  // Fetch the quick filter suggestions for each filter field
+  const [isFetchingQuickFilterSuggestions, setIsFetchingQuickFilterSuggestions] =
+  useState(true);
+  const [quickFilterSuggestions, setQuickFilterSuggestions] = useState({});
+  useEffect(() => {
+    if (isFetchingLookmlFields || !quickFilterOptions?.length) {
+      return;
+    }
+
+    function fetchQuickFilterSuggestions(filterFieldName) {
+      return sdk.ok(
+      sdk.run_inline_query({
+        result_format: "json",
+        body: {
+          model: LOOKER_MODEL,
+          view: LOOKER_EXPLORE,
+          fields: [filterFieldName],
+        },
+      })
+      );
+    }
+
+    async function fetchAllQuickFilterSuggestions() {
+      const quickFilterSuggestionPromises = quickFilterOptions.map((filterField) => {
+        return fetchQuickFilterSuggestions(filterField.name);
+      });
+      const quickFilterSuggestionResponses = await Promise.allSettled(
+      quickFilterSuggestionPromises
+      );
+
+      const quickFilterSuggestionsMap = {};
+      quickFilterSuggestionPromises.forEach((response) => {
+        // Error handling
+        if (response.status !== "fulfilled") {
+          // handle rejected failures
+          return;
+        }
+        if (response.value[0].looker_error) {
+          console.error(
+          "Error fetching suggestions for a Looker filter field ",
+          response.value[0].looker_error
+          );
+          return;
+        }
+
+        // Add filter suggestions to map if no errors
+        const fieldName = Object.keys(response.value[0])[0];
+        const suggestions = response.value.map((row) => row[fieldName]);
+        quickFilterSuggestionsMap[fieldName] = suggestions;
+      });
+
+      setQuickFilterSuggestions(quickFilterSuggestionsMap);
+      setIsFetchingQuickFilterSuggestions(false);
+    }
+
+    fetchAllQuickFilterSuggestions();
+  }, [quickFilterOptions, isFetchingLookmlFields]);
+
+
+  // console.log("two", quickFilterSuggestions)
+
+
+
+
+
   // Page loading state
   const [isPageLoading, setIsPageLoading] = useState(true);
   useEffect(() => {
@@ -190,29 +281,12 @@ const InflationDeflation = ({
   }, [isFetchingDefaultDashboard, isFetchingLookmlFields]);
 
   const renderTooltip = (props) => (
-    <Tooltip id="button-tooltip" {...props}>
-      These are the filters you use to query data. Select the accordions
-      individually below to choose the different filter options inside. Once you
-      are done you can choose the "Submit Values" button to update the data.
-    </Tooltip>
+  <Tooltip id="button-tooltip" {...props}>
+    These are the filters you use to query data. Select the accordions
+    individually below to choose the different filter options inside. Once you
+    are done you can choose the "Submit Values" button to update the data.
+  </Tooltip>
   );
-
-  const updateVis1Query = async (filters) => {
-    const { vis_config, fields } = await sdk.ok(
-      sdk.query_for_slug(vis1)
-    );
-
-    const { client_id } = await sdk.ok(
-      sdk.create_query({
-        model: LOOKER_MODEL,
-        view: LOOKER_EXPLORE,
-        fields: fields,
-        filters,
-        vis_config,
-      })
-    );
-    setVis1(client_id)
-  }
 
   // Handle run button click
   async function handleTabVisUpdate() {
@@ -223,113 +297,116 @@ const InflationDeflation = ({
     // remove filters with a value of "N/A"
     let filters = {};
     // for (const filter in selectedFilters) {
-    //   if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
-    //     filters[filter] = selectedFilters[filter];
-    //   }
-    // }
+      //   if (selectedFilters[filter] && selectedFilters[filter] !== "N/A") {
+        //     filters[filter] = selectedFilters[filter];
+        //   }
+        // }
 
-    // if (selectedDateFilter != "") {
-    //   filters[selectedDateFilter] = "Yes";
-    // } else {
-    //   if (selectedDateRange) {
-    //     filters[dateRange["name"]] = selectedDateRange;
-    //   }
-    // }
-    filters = await getAllFilters();
+        // if (selectedDateFilter != "") {
+          //   filters[selectedDateFilter] = "Yes";
+          // } else {
+            //   if (selectedDateRange) {
+              //     filters[dateRange["name"]] = selectedDateRange;
+              //   }
+              // }
+              filters = await getAllFilters();
 
-    if (isFilterChanged) {
-      updateInnerTabFilters(filters);
-      updateVis1Query(filters)
-    }
+              if (isFilterChanged) {
+                updateInnerTabFilters(filters);
+              }
 
-    await updateInvoiceCount()
+              await updateInvoiceCount()
 
-    const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
+              const { vis_config } = await sdk.ok(sdk.query_for_slug(prevVisQid));
 
-    const { client_id } = await sdk.ok(
-      sdk.create_query({
-        model: LOOKER_MODEL,
-        view: LOOKER_EXPLORE,
-        fields: currentTab["selected_fields"],
-        filters,
-        vis_config,
-      })
-    );
+              const { client_id } = await sdk.ok(
+              sdk.create_query({
+                model: LOOKER_MODEL,
+                view: LOOKER_EXPLORE,
+                fields: currentTab["selected_fields"],
+                filters,
+                vis_config,
+              })
+              );
 
-    tabs[currentInnerTab]["query"] = client_id;
-    setTabList(tabs);
-  }
+              tabs[currentInnerTab]["query"] = client_id;
+              setTabList(tabs);
+            }
 
-  const updateInnerTabFilters = async (filters) => {
-    let fullTabList = [...tabList];
-    fullTabList.map(async (t, i) => {
-      if (i != currentInnerTab) {
-        const { vis_config, fields } = await sdk.ok(
-          sdk.query_for_slug(t["query"])
-        );
+            const updateInnerTabFilters = async (filters) => {
+              let fullTabList = [...tabList];
+              fullTabList.map(async (t, i) => {
+                if (i != currentInnerTab) {
+                  const { vis_config, fields } = await sdk.ok(
+                  sdk.query_for_slug(t["query"])
+                  );
 
-        const { client_id } = await sdk.ok(
-          sdk.create_query({
-            model: LOOKER_MODEL,
-            view: LOOKER_EXPLORE,
-            fields: fields,
-            filters,
-            vis_config,
-          })
-        );
+                  const { client_id } = await sdk.ok(
+                  sdk.create_query({
+                    model: LOOKER_MODEL,
+                    view: LOOKER_EXPLORE,
+                    fields: fields,
+                    filters,
+                    vis_config,
+                  })
+                  );
 
-        fullTabList[i]["query"] = client_id;
-        setTabList(fullTabList);
-      }
-    });
-    setIsFilterChanged(false);
-  };
+                  fullTabList[i]["query"] = client_id;
+                  setTabList(fullTabList);
+                }
+              });
+              setIsFilterChanged(false);
+            };
 
-  async function handleClearAll() {
+            async function handleClearAll() {
+              console.log('handleClearAll')
+              // setIsDefaultProduct(false);
+              setUpdateButtonClicked(true);
+              setSelectedFields([]);
+              let tabs = [...tabList];
+              let currentTab = tabs[currentInnerTab];
+              currentTab["selected_fields"] = [];
+              setTabList(tabs);
+              let filters = {...selectedFilters};
+              for(let name in filters) {
+                filters[name] = 'N/A';
+              }
+              setSelectedFilters(filters);
+              // setSelectedFilters((prevFilters) => {
+                //   const newFilters = { ...prevFilters };
+                //   newFilters[filterName] = 'N/A';
+                //   return newFilters;
+                // });
+                setIsFilterChanged(true);
+              }
 
-    // setIsDefaultProduct(false);
-    setUpdateButtonClicked(true);
-    setSelectedFields([]);
-    let tabs = [...tabList];
-    let currentTab = tabs[currentInnerTab];
-    currentTab["selected_fields"] = [];
-    setTabList(tabs);
-    let filters = {...selectedFilters};
-    for(let name in filters) {
-      filters[name] = 'N/A';
-    }
-    setSelectedFilters(filters);
-    // setSelectedFilters((prevFilters) => {
-      //   const newFilters = { ...prevFilters };
-      //   newFilters[filterName] = 'N/A';
-      //   return newFilters;
-      // });
-      setIsFilterChanged(true);
-    }
+              async function handleRestoreDefault() {
+                setIsDefaultProduct(defaultChecked);
+                setUpdateButtonClicked(true);
+                let tabs = [...tabList];
+                let currentTab = tabs[currentInnerTab];
+                currentTab["selected_fields"] = currentTab["default_fields"];
+                setTabList(tabs);
+              }
 
-  async function handleRestoreDefault() {
-    setIsDefaultProduct(defaultChecked);
-    setUpdateButtonClicked(true);
-    let tabs = [...tabList];
-    let currentTab = tabs[currentInnerTab];
-    currentTab["selected_fields"] = currentTab["default_fields"];
-    setTabList(tabs);
-  }
+              useEffect((e) => {
+                document.addEventListener("click", handleClickOutside, false);
+                return () => {
+                  document.removeEventListener("click", handleClickOutside, false);
+                };
+              }, []);
 
-  useEffect((e) => {
-    document.addEventListener("click", handleClickOutside, false);
-    return () => {
-    document.removeEventListener("click", handleClickOutside, false);
-    };
-  }, []);
+              const handleClickOutside = (event) => {
+                if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                  //setShow3(false);
+                }
+              };
 
-  const handleClickOutside = (event) => {
-    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-      //setShow3(false);
-    }
-  };
 
-  return (
+              // console.log('accountGroupOptions:', accountGroupOptions)
+
+return  (
+
     <Container fluid>
       {isPageLoading ? (
         <Spinner />
@@ -612,20 +689,7 @@ const InflationDeflation = ({
                 quickFilterOptions={quickFilterOptions}
                 />
 
-                <CurrentAccountGroup
-                selectedDateFilter={selectedDateFilter}
-                selectedFilters={selectedFilters}
-                selectedFields={selectedFields}
-                fieldOptions={fieldOptions}
-                setSelectedFields={setSelectedFields}
-                filterOptions={filterOptions}
-                setSelectedFilters={setSelectedFilters}
-                dateFilterOptions={dateFilterOptions}
-                selectedDateRange={selectedDateRange}
-                quickFilterOptions={quickFilterOptions}
-                selectedAccountGroup={selectedAccountGroup}
-                setSelectedAccountGroup={setSelectedAccountGroup}
-                />
+
 
               </div>
 
