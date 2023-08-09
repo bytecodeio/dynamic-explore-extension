@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
+import * as $ from "jquery";
 
 const CurrentAccountGroup = ({
   selectedDateFilter,
@@ -11,6 +12,7 @@ const CurrentAccountGroup = ({
   dateFilterOptions,
   setSelectedAccountGroup,
   selectedAccountGroup
+
 }) => {
   const [currentSelection, setCurrentSelection] = useState([]);
 
@@ -48,8 +50,84 @@ const CurrentAccountGroup = ({
 
   }
 
+
+const num = $('.tab-pane.active.show .currentFiltersAdded .theOptions').length
+
+$('.numberCounter').html($('.tab-pane.active.show .currentFiltersAdded .theOptions').length)
+
+if (num > 3  ){
+  $('.whiteBar').fadeIn()
+ $('.currentFiltersAdded').addClass('minHeight')
+
+}
+if (num < 4  ){
+  $('.whiteBar').fadeOut()
+ $('.currentFiltersAdded').removeClass('minHeight')
+}
+
+if (num > 0 ){
+$('.currentFiltersAdded').addClass('newHeight')
+$('.pHidden').removeClass('hidden')
+}
+else{
+  $('.currentFiltersAdded').removeClass('newHeight')
+ $('.pHidden').addClass('hidden')
+}
+
+$('.currentFiltersAdded').on('mouseenter', function(e) {
+  if($('.whiteBar').css('display') == 'block') {
+    e.stopPropagation()
+
+    $('.whiteBar').hide()
+    $('.currentFiltersAdded').animate({
+        minHeight: "none",
+        maxHeight:"100%",
+        height:"auto"
+
+    },400);
+  }
+
+})
+
+$('.currentFiltersAdded .theOptions').click(function(e){
+  if($('.whiteBar').css('display') == 'none' && $('.tab-pane.active.show .currentFiltersAdded .theOptions').length > 3 ) {
+
+
+    $('.whiteBar').hide()
+    $('.currentFiltersAdded').css('hieght', 'auto')
+ console.log("sdvubsdvobvds")
+
+}
+})
+
+$('.leaveIt').on('mouseleave', function(e) {
+  if($('.whiteBar').css('display') == 'none' && $('.tab-pane.active.show .currentFiltersAdded .theOptions').length > 3 ) {
+
+     e.stopPropagation()
+      $('.whiteBar').show()
+    $('.currentFiltersAdded').animate({
+          minHeight: "none",
+          maxHeight:"100px",
+          height:"auto"
+    },400);
+  }
+})
+
+
   return (
     <>
+
+<div className="leaveIt">
+<p className="text-center pHidden mb-2 hidden">Selected Filters</p>
+
+    <div className="currentFiltersAdded">
+
+      <div className="whiteBar">
+        <i class="fas fa-circle">
+          <h6 className="numberCounter"></h6>
+        </i>
+        <p class="text-center mostSmall">hover to see all</p>
+      </div>
       <div className="wrapOptions">
         {Object.keys(selectedAccountGroup)?.map((selection) => {
           return (
@@ -63,6 +141,9 @@ const CurrentAccountGroup = ({
           );
         })}
       </div>
+
+      </div>
+</div>
     </>
   );
 };

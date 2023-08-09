@@ -57,6 +57,7 @@ const Template1 = ({
   setKeyword,
   handleChangeKeyword,
   description
+
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -68,6 +69,13 @@ const Template1 = ({
   const [tabList, setTabList] = useState([]);
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
+ //  const [removeHidden, setRemoveHidden] = useState(false);
+ //
+ // const hiddenCount = () =>{
+ //   setRemoveHidden(!removeHidden)
+ // }
+
+
   function handleClearAll() {}
 
   useEffect(() => {
@@ -81,6 +89,8 @@ const Template1 = ({
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
   useState(true);
+
+
   useEffect(() => {
 
     async function fetchDefaultFieldsAndFilters() {
@@ -454,6 +464,33 @@ const Template1 = ({
                 <Accordion defaultActiveKey={0} className="mt-3 mb-3">
                   <Row>
                     <Col xs={12} md={12}>
+                    <Row>
+                        <Col xs={12} md={12}>
+
+
+
+                        <CurrentAccountGroup
+                        selectedDateFilter={selectedDateFilter}
+                        selectedFilters={selectedFilters}
+                        selectedFields={selectedFields}
+                        fieldOptions={fieldOptions}
+                        setSelectedFields={setSelectedFields}
+                        filterOptions={filterOptions}
+                        setSelectedFilters={setSelectedFilters}
+                        dateFilterOptions={dateFilterOptions}
+                        selectedDateRange={selectedDateRange}
+                        quickFilterOptions={quickFilterOptions}
+                        selectedAccountGroup={selectedAccountGroup}
+                        setSelectedAccountGroup={setSelectedAccountGroup}
+
+                        />
+
+
+
+
+
+                        </Col>
+                    </Row>
                       <Row>
 
 
@@ -471,6 +508,7 @@ const Template1 = ({
                                 fieldOptions={keyword !=="" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
                                 selectedAccountGroup={selectedAccountGroup}
                                 setSelectedAccountGroup={setSelectedAccountGroup}
+
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
@@ -679,20 +717,6 @@ const Template1 = ({
                 setSelectedQuickFilter={setSelectedQuickFilter}
                 />
 
-                <CurrentAccountGroup
-                selectedDateFilter={selectedDateFilter}
-                selectedFilters={selectedFilters}
-                selectedFields={selectedFields}
-                fieldOptions={fieldOptions}
-                setSelectedFields={setSelectedFields}
-                filterOptions={filterOptions}
-                setSelectedFilters={setSelectedFilters}
-                dateFilterOptions={dateFilterOptions}
-                selectedDateRange={selectedDateRange}
-                quickFilterOptions={quickFilterOptions}
-                selectedAccountGroup={selectedAccountGroup}
-                setSelectedAccountGroup={setSelectedAccountGroup}
-                />
 
               </div>
 

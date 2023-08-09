@@ -80,8 +80,8 @@ const last = selectedDateRange.split(" to ")[1]
 const format2 = moment(last).format('MM-DD-YYYY').toString();
 
 const format1 = moment(first).format('MM-DD-YYYY').toString();
-
-console.log('currentSelection', currentSelection)
+// 
+// console.log('currentSelection', format1, format2)
 
 
   return (
@@ -98,7 +98,9 @@ console.log('currentSelection', currentSelection)
             return(
               <div className="dateChoice short" key={selection}>
 
-              <p className="mb-0 blue"><i class="fal fa-calendar-check"></i> {currentSelection[selection].label_short.replace(/\s*\(.*?\)\s*/g, '')}</p>
+
+              <p className="mb-0 blue"><i class="fal fa-calendar-check"></i> {format1} to {format2}</p>
+
 
               </div>
 
@@ -133,7 +135,7 @@ console.log('currentSelection', currentSelection)
             <div className="theOptions" key={selection}>
             {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
             <p className="mb-0 blue">
-        
+
             {quickFilterSelection[selection].value}</p>
 
             <i onClick={() => removeQuickField(quickFilterSelection[selection].name)} class="fal fa-times blue"></i>

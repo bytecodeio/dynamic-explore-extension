@@ -49,7 +49,7 @@ export const DateRangeSelector = ({
     <Row className="fullW mb-1">
       <Col md={12} lg={8}>
 
-        <p className="mt-0 mb-2 mediumFont">
+        <p className="mt-0 mb-2 mediumFont" style={{marginLeft:"-10px"}}>
         {description?.description}
         </p>
         </Col>

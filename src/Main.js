@@ -104,6 +104,9 @@ export const Main = () => {
       ];
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
+
+      console.log(fieldsByTag, "hi there")
+
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
       const _quickFilterFields = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
 
@@ -417,7 +420,7 @@ export const Main = () => {
     }
   }, [selectedDateFilter]);
 
-
+  let comment0 =  `The <span class="highlight">Purchases Review Dashboard</span> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolor.`
   let comment1 =  `The <span class="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in descending order by units, filtering by type or customize your report.`
   let comment2 = `The <span class="highlight">Invoice Report Dashboard</span> allows the view of an invoice summary for a single account and query all invoices within a specific date range.`
   let comment3 = `The <span class="highlight">Auto-Sub Report</span> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolor.`
@@ -451,6 +454,12 @@ export const Main = () => {
                   selectedDateRange={selectedDateRange}
                   dateRange={dateRange}
                   currentNavTab={currentNavTab}
+
+                  dimensionToggleFields={dimensionToggleFields}
+                  quickFilterOptions={quickFilterOptions}
+
+                  showMenu={showMenu}
+                  setShowMenu={setShowMenu}
                   currentInvoiceCount={currentInvoiceCount}
                   updateInvoiceCount={updateInvoiceCount}
                   getAllFilters={getAllFilters}
@@ -458,10 +467,12 @@ export const Main = () => {
                   accountGroupOptions={accountGroupOptions}
                   selectedAccountGroup={selectedAccountGroup}
                   accountGroupField={accountGroupField}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  dimensionToggleFields={dimensionToggleFields}
+                  keyword={keyword}
+                  handleChangeKeyword={handleChangeKeyword}
                   quickFilterOptions={quickFilterOptions}
+                  setSelectedQuickFilter={setSelectedQuickFilter}
+                  selectedQuickFilter={selectedQuickFilter}
+                  description={{description: <div dangerouslySetInnerHTML={{__html:comment0}} />}}
                 />
               </Tab>
               <Tab eventKey="product-movement" title="Product Movement Report">

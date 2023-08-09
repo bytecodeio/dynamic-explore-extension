@@ -1,14 +1,14 @@
 @import url("https://kit-pro.fontawesome.com/releases/v5.15.1/css/pro.min.css");
 
 .red {
-  color: #e41f35;
+  color: #D51A30;
 }
 .black {
   color: #27251f;
 }
 
 :root {
-  --red: #e41f35;
+  --red: #D51A30;
   --black: #27251f;
 }
 
@@ -42,13 +42,13 @@ p {
 }
 
 .btn {
-  background: #e41f35 !important;
+  background: #D51A30 !important;
 }
 
 .btn:hover {
-  border: 1px solid #e41f35 !important;
+  border: 1px solid #D51A30 !important;
   background: white !important;
-  color: #e41f35;
+  color: #D51A30;
 }
 
 .btn-clear {
@@ -4000,6 +4000,96 @@ a.white:hover {
   padding: 0.2rem 2rem !important;
 }
 
+
+.currentFiltersAdded{
+
+  height: auto;
+  width: 100%;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: auto;
+  width: 100%;
+  position: relative;
+
+    max-height: 100px;
+
+
+}
+.minHeight{
+  min-height: 95px;
+}
+
+
+.newHeight{
+margin-bottom: 1rem
+}
+
+.currentFiltersAdded.hiddenClass{
+  /* height: unset;
+  margin-bottom: 0rem; */
+}
+
+.currentFiltersAdded p{
+  font-size: 15px
+}
+
+
+.whiteBar {
+    position: absolute;
+    z-index: 11;
+    padding-top: 20px;
+    /* height: 100%; */
+    background: white;
+    height:100%;
+    top:0;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+
+    background: rgb(255,255,255);
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.5480567226890756) 0%, rgba(255,255,255,1) 100%);
+    display: none;
+}
+
+.whiteBar .fas {
+    color: #D51A30 !important;
+    font-size: 45px;
+    /* margin: 0em 0.3em 0em 0.1em; */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.whiteBar .fas .numberCounter {
+    font-size: 25px;
+    color: white;
+    position: absolute;
+    font-weight: 600;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+}
+.whiteBar p {
+
+
+}
+
+.hidden{
+  display: none
+}
+
+
 /* IE modal end */
 
 .card-body .tab-pane {
@@ -5158,18 +5248,18 @@ footer img {
   background: white !important;
   box-shadow: none !important;
 
-  min-width: 2em;
+
 
   font-size: 14px;
   color: black;
-  background-color: #efefef !important;
-  border-color: var(--black) !important;
-  width: 2.4em;
+  background-color: white !important;
+  border-color: var(--red) !important;
+
 }
 
 .btn-group .btn.active,
 .btn-group .btn:hover {
-  background-color: var(--black) !important;
+  background-color: var(--red) !important;
   color: white !important;
 
   min-width: 2em;
@@ -5233,8 +5323,8 @@ footer img {
 }
 
 .smallerHeight iframe {
-  max-height: 250px;
-  min-height: 200px;
+  max-height: 350px;
+ min-height: 300px;
 }
 
 .middleHeight iframe {
