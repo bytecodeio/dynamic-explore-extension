@@ -5887,6 +5887,14 @@
   "resolved" "https://registry.npmjs.org/react-animate-height/-/react-animate-height-3.1.1.tgz"
   "version" "3.1.1"
 
+"react-bootstrap-range-slider@^3.0.8":
+  "integrity" "sha512-FpDd1J1BW23jNN3fXmpy5nNDJ3PwMZ2/0dNse9RORwQ/z2rmpMQp/g6iNRpW6SjQkLKyGeNHyctK6dP+3zUXQA=="
+  "resolved" "https://registry.npmjs.org/react-bootstrap-range-slider/-/react-bootstrap-range-slider-3.0.8.tgz"
+  "version" "3.0.8"
+  dependencies:
+    "classnames" "^2.3.1"
+    "prop-types" "^15.7.2"
+
 "react-bootstrap@^2.7.4":
   "integrity" "sha512-EPKPwhfbxsKsNBhJBitJwqul9fvmlYWSft6jWE2EpqhEyjhqIqNihvQo2onE5XtS+QHOavUSNmA+8Lnv5YeAyg=="
   "resolved" "https://registry.npmjs.org/react-bootstrap/-/react-bootstrap-2.7.4.tgz"
