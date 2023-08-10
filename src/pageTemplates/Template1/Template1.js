@@ -452,7 +452,7 @@ const Template1 = ({
                   </div>
                 </div>
                 <div className="modal-actions">
-                <div className="position-relative columnStart mt-3 mb-3">
+                <div className="position-relative columnStart mb-3">
                 <label>Search Filter</label>
                   <input placeholder="" type="search" class="form-control" />
                   <i class="far fa-search absoluteSearch"></i>
@@ -473,18 +473,8 @@ const Template1 = ({
                 <Accordion defaultActiveKey={0} className="mt-3 mb-3">
                   <Row>
                     <Col xs={12} md={12}>
-                    <Row>
-                        <Col xs={12} md={12}>
 
-
-
-
-
-
-                        </Col>
-                    </Row>
                       <Row>
-
 
                         {/* Account Groups */}
                         {accountGroupOptions?.length > 0?
@@ -580,10 +570,6 @@ const Template1 = ({
                           ''
                         }
 
-
-
-
-
                         {/* Bookmarks */}
                         <Col xs={12} md={12}>
                           <Accordion.Item eventKey="4">
@@ -597,15 +583,27 @@ const Template1 = ({
                 </Accordion>
 
                 <Col xs={12} md={12}>
-                <div className="mt-3 d-flex flex-column text-center">
+                <div className="d-flex flex-column text-center position-relative">
                 <p className="">Top % Products</p>
+
+                  <p className="value">{value}</p>
+
+                <div className="position-relative mt-2">
+                <div class="d-flex justify-content-between range">
+                  <div><p className="small">0%</p></div>
+                  <div><p className="small">25%</p></div>
+                  <div><p className="small">50%</p></div>
+                  <div><p className="small">75%</p></div>
+                  <div><p className="small">100%</p></div>
+                </div>
                   <RangeSlider
                   value={value}
                   id="customRange"
                   onChange={changeEvent => setValue(changeEvent.target.value)}
                   />
+                </div>
 
-                  </div>
+                </div>
                 </Col>
 
 
