@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Modal, Spinner, Row, Col, Tooltip, Container, OverlayTrigger} from "react-bootstrap";
+import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
 import * as $ from "jquery";
 
 const CurrentAccountGroup = ({
@@ -51,13 +51,6 @@ const CurrentAccountGroup = ({
   }
 
 
-  const renderTooltip = (props) => (
-  <Tooltip id="button-tooltip" {...props}>
-    These are pending filters you have selected. Please use the "Submit Filters" button to update the table.
-  </Tooltip>
-  );
-
-
 const num = $('.tab-pane.active.show .currentFiltersAdded .theOptions').length
 
 $('.numberCounter').html($('.tab-pane.active.show .currentFiltersAdded .theOptions').length)
@@ -65,26 +58,28 @@ $('.numberCounter').html($('.tab-pane.active.show .currentFiltersAdded .theOptio
 // if (num > 3  ){
 //   $('.whiteBar').fadeIn()
 //  $('.currentFiltersAdded').addClass('minHeight')
+//  $('.mostSmall').removeClass('greyedOut')
 //
 // }
 // if (num < 4  ){
 //   $('.whiteBar').fadeOut()
 //  $('.currentFiltersAdded').removeClass('minHeight')
+//   $('.mostSmall').addClass('greyedOut')
 // }
 //
 // if (num > 0 ){
 // $('.currentFiltersAdded').addClass('newHeight')
-// $('.pHidden').removeClass('hidden')
+// $('.pHidden, .mostSmall').removeClass('hidden')
 // }
 // else{
 //   $('.currentFiltersAdded').removeClass('newHeight')
-//  $('.pHidden').addClass('hidden')
+//  $('.pHidden, .mostSmall').addClass('hidden')
 // }
 //
-// $('.currentFiltersAdded').on('mouseenter', function(e) {
+// $('.mostSmall').on('click', function(e) {
 //   if($('.whiteBar').css('display') == 'block') {
 //     e.stopPropagation()
-//
+//     e.preventDefault()
 //     $('.whiteBar').hide()
 //     $('.currentFiltersAdded').animate({
 //         minHeight: "none",
@@ -97,7 +92,7 @@ $('.numberCounter').html($('.tab-pane.active.show .currentFiltersAdded .theOptio
 // })
 //
 //
-// $('.leaveIt').on('mouseleave', function(e) {
+// $('.mostSmall').on('click', function(e) {
 //   if($('.whiteBar').css('display') == 'none' && $('.tab-pane.active.show .currentFiltersAdded .theOptions').length > 3 ) {
 //
 //      e.stopPropagation()
@@ -115,25 +110,21 @@ $('.numberCounter').html($('.tab-pane.active.show .currentFiltersAdded .theOptio
     <>
 
 
-
-
-    {/*<div className="currentFiltersAdded">
+<div className="d-flex justify-content-between align-items-center">
+<p className="pHidden mb-3 hidden">Selected Filters</p>
+<a href=""><p class="text-center mostSmall hidden greyedOut mb-3">Select to expand all <i class="fas fa-plus-circle tooltips-elements seeLess"></i></p></a>
+</div>
+    <div className="currentFiltersAdded">
 
       <div className="whiteBar">
         <i class="fas fa-circle">
           <h6 className="numberCounter"></h6>
         </i>
-        <p class="text-center mostSmall">hover to see all</p>
-      </div>*/}
+
+      </div>
       <div className="wrapOptions">
         {Object.keys(selectedAccountGroup)?.map((selection) => {
           return (
-
-            <OverlayTrigger
-            placement="right"
-            overlay={renderTooltip}
-            className="tooltipHover"
-            >
             <div className="theOptions" key={selection}>
               <p className="mb-0 blue">{selectedAccountGroup[selection]}</p>
               <i
@@ -141,12 +132,11 @@ $('.numberCounter').html($('.tab-pane.active.show .currentFiltersAdded .theOptio
                 className="fal fal fa-times blue"
               ></i>
             </div>
-            </OverlayTrigger>
           );
         })}
       </div>
 
-      {/*</div>*/}
+      </div>
 
     </>
   );

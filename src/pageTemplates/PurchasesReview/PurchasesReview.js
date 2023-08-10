@@ -25,7 +25,7 @@ import QuickFilter from "../Template1/helpers/QuickFilter";
 import AccountGroups from "../Template1/helpers/AccountGroups";
 import { DateFilterGroup } from "../Template1/helpers/DateFilterGroup";
 import { CurrentSelection } from "../Template1/helpers/CurrentSelection";
-import CurrentAccountGroup  from "../Template1/helpers/CurrentAccountGroup";
+import CurrentAccountGroup  from "./helpers/CurrentAccountGroup";
 import { DateRangeSelector } from "../Template1/helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 import TabbedVisualizations from "../../components/TabbedVisualizations";

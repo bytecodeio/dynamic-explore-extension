@@ -9,6 +9,7 @@ import {
   Spinner,
   Tooltip,
 } from "react-bootstrap";
+import RangeSlider from 'react-bootstrap-range-slider';
 import { LOOKER_MODEL, LOOKER_EXPLORE } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import InnerTableTabs from "../../components/InnerTableTabs";
@@ -69,6 +70,7 @@ const Template1 = ({
   const [tabList, setTabList] = useState([]);
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
+   const [ value, setValue ] = useState(0);
  //  const [removeHidden, setRemoveHidden] = useState(false);
  //
  // const hiddenCount = () =>{
@@ -450,6 +452,13 @@ const Template1 = ({
                   </div>
                 </div>
                 <div className="modal-actions">
+                <div className="position-relative columnStart mt-3 mb-3">
+                <label>Search Filter</label>
+                  <input placeholder="" type="search" class="form-control" />
+                  <i class="far fa-search absoluteSearch"></i>
+                </div>
+
+
                   <div className="across">
                     <Button onClick={handleClearAll} className="btn-clear">
                       Clear All
@@ -467,23 +476,6 @@ const Template1 = ({
                     <Row>
                         <Col xs={12} md={12}>
 
-
-
-                        <CurrentAccountGroup
-                        selectedDateFilter={selectedDateFilter}
-                        selectedFilters={selectedFilters}
-                        selectedFields={selectedFields}
-                        fieldOptions={fieldOptions}
-                        setSelectedFields={setSelectedFields}
-                        filterOptions={filterOptions}
-                        setSelectedFilters={setSelectedFilters}
-                        dateFilterOptions={dateFilterOptions}
-                        selectedDateRange={selectedDateRange}
-                        quickFilterOptions={quickFilterOptions}
-                        selectedAccountGroup={selectedAccountGroup}
-                        setSelectedAccountGroup={setSelectedAccountGroup}
-
-                        />
 
 
 
@@ -604,6 +596,19 @@ const Template1 = ({
                   </Row>
                 </Accordion>
 
+                <Col xs={12} md={12}>
+                <div className="mt-3 d-flex flex-column text-center">
+                <p className="">Top % Products</p>
+                  <RangeSlider
+                  value={value}
+                  id="customRange"
+                  onChange={changeEvent => setValue(changeEvent.target.value)}
+                  />
+
+                  </div>
+                </Col>
+
+
 
 
 
@@ -651,21 +656,18 @@ const Template1 = ({
 
             </Col>
             <Col md={12} lg={3}>
-              <div className="position-relative columnStart">
-              <label>Search Filter</label>
-                <input placeholder="" type="search" class="form-control" />
-                <i class="far fa-search absoluteSearch"></i>
-              </div>
+
             </Col>
 
             <Col md={12} lg={2}>
 
-            <div className="position-relative columnStart">
+            {/*<div className="position-relative columnStart">
             <label>Top % Products</label>
 
               <input  type="search" class="form-control" />
 
-            </div>
+            </div>*/}
+
             </Col>
             </Row>
 
@@ -693,7 +695,7 @@ const Template1 = ({
           </Row>
 
 
-          <Row className="fullW mt-4">
+          <Row className="fullW mt-5">
 
             <Col xs={12} md={12}>
 
@@ -716,6 +718,25 @@ const Template1 = ({
                 selectedQuickFilter={selectedQuickFilter}
                 setSelectedQuickFilter={setSelectedQuickFilter}
                 />
+
+
+                                  <CurrentAccountGroup
+                                  selectedDateFilter={selectedDateFilter}
+                                  selectedFilters={selectedFilters}
+                                  selectedFields={selectedFields}
+                                  fieldOptions={fieldOptions}
+                                  setSelectedFields={setSelectedFields}
+                                  filterOptions={filterOptions}
+                                  setSelectedFilters={setSelectedFilters}
+                                  dateFilterOptions={dateFilterOptions}
+                                  selectedDateRange={selectedDateRange}
+                                  quickFilterOptions={quickFilterOptions}
+                                  selectedAccountGroup={selectedAccountGroup}
+                                  setSelectedAccountGroup={setSelectedAccountGroup}
+
+                                  />
+
+
 
 
               </div>

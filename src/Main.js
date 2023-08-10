@@ -435,9 +435,9 @@ export const Main = () => {
         <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
           <div id="nav2">
             <Tabs
-              defaultActiveKey={currentNavTab}
+              defaultActiveKey="product-movement"
               onSelect={(k) => setCurrentNavTab(k)}
-              className="mb-0"
+              className="mb-0 inner"
               fill
             >
               <Tab eventKey="dashboard" title="Purchases Review">
