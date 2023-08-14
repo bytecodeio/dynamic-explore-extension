@@ -435,12 +435,12 @@ export const Main = () => {
         <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
           <div id="nav2">
             <Tabs
-              defaultActiveKey="product-movement"
+              defaultActiveKey=""
               onSelect={(k) => setCurrentNavTab(k)}
               className="mb-0 inner"
               fill
             >
-              <Tab eventKey="dashboard" title="Purchases Review">
+              <Tab eventKey="dashboard" title="Purchases Review" mountOnEnter={true} unmountOnExit={false}>
                 <PurchasesReview
                   selectedFilters={selectedFilters}
                   setSelectedFilters={setSelectedFilters}
@@ -475,7 +475,7 @@ export const Main = () => {
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment0}} />}}
                 />
               </Tab>
-              <Tab eventKey="product-movement" title="Product Movement Report">
+              <Tab eventKey="product-movement" title="Product Movement Report" mountOnEnter={true} unmountOnExit={false}>
                 <Template1
                   currentNavTab={currentNavTab}
                   selectedFilters={selectedFilters}
@@ -508,7 +508,7 @@ export const Main = () => {
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment1}} />}}
                 />
               </Tab>
-              <Tab eventKey="invoice" title="Invoice Report">
+              <Tab eventKey="invoice" title="Invoice Report" mountOnEnter={true} unmountOnExit={false}>
                 <Template1
                   currentNavTab={currentNavTab}
                   selectedFilters={selectedFilters}
@@ -539,7 +539,7 @@ export const Main = () => {
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment2}} />}}
                 />
               </Tab>
-              <Tab eventKey="auto-sub" title="Auto-Sub Report">
+              <Tab eventKey="auto-sub" title="Auto-Sub Report" mountOnEnter={true} unmountOnExit={false}>
                 <Template1
                   currentNavTab={currentNavTab}
                   selectedFilters={selectedFilters}
@@ -570,7 +570,7 @@ export const Main = () => {
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment3}} />}}
                 />
               </Tab>
-              <Tab eventKey="id" title="Inflation/Deflation Report">
+              <Tab eventKey="id" title="Inflation/Deflation Report" mountOnEnter={true} unmountOnExit={false}>
                 <InflationDeflation
                   currentNavTab={currentNavTab}
                   selectedFilters={selectedFilters}
