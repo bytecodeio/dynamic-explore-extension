@@ -118,21 +118,25 @@ const Template1 = ({
 
       setSelectedFields(fields);
 
-      if (Object.keys(getAllFilters()).length == 0) {
-        let defaultedFilters = dashboard_filters.filter(f => {
-         return f.default_value !== null && f.default_value !== undefined && f.field.tags.length > 0
-        })
-        if (defaultedFilters.length > 0) {
-          let filterArr = {...selectedFilters}
-          defaultedFilters.map(f => {
-            let key = f['dimension']
-            filterArr[key] = f['default_value']
-            //addDefaultFilters(f)
-          })
-          setSelectedFilters(filterArr)
-        }
-      }
-      //if (filters) setSelectedFilters(filters);
+      // console.log("filter",getAllFilters())
+      // if (Object.keys(getAllFilters()).length == 0) {
+      //   let defaultedFilters = dashboard_filters.filter(f => {
+      //    return f.default_value !== null && f.default_value !== undefined && f.field.tags.length > 0
+      //   })
+      //   console.log("defaulted", defaultedFilters)
+      //   if (defaultedFilters.length > 0) {
+      //     let filterArr = {...selectedFilters}
+      //     defaultedFilters.map(f => {
+      //       let key = f['dimension']
+      //       filterArr[key] = f['default_value']
+      //       addDefaultFilters(f)
+      //     })
+      //     //setSelectedFilters(filterArr)
+      //   }
+      //  }
+      console.log("tile filters", filters)
+      if (filters) setSelectedFilters(filters);
+      //handleTabVisUpdate()
       //setProductMovementVisQid(client_id);
       setIsFetchingDefaultDashboard(false);
     }
@@ -144,15 +148,19 @@ const Template1 = ({
     }
   }, []);
 
-  // const addDefaultFilters = (filter) => {
-  //   console.log("dashboard Filters", filterOptions)
-  //   if (filterOptions.find(f => {return f['name'] == filter['name']})) {
-  //     let selFilters = {...selectedFilters};
-  //     let key = filter['name'];
-  //     selFilters[key] = filter['default_value'];
-  //     setSelectedFilters(selFilters)
-  //   }
-  // }
+  const addDefaultFilters = (filter) => {
+    console.log("dashboard Filters", filterOptions)
+    if (filterOptions.find(f => {return f['name'] == filter['name']})) {
+      let selFilters = {...selectedFilters};
+      let key = filter['name'];
+      selFilters[key] = filter['default_value'];
+      setSelectedFilters(selFilters)
+    }
+  }
+
+  useEffect(() => {
+    console.log("selected filters", selectedFilters)
+  },[selectedFilters])
 
 
   // Fetch the suggestions for each filter field, after fetching all filter fields
