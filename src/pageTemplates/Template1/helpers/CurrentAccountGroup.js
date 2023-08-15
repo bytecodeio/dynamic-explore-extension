@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Button, Form, Modal, Spinner, Row, Col, Tooltip, Container, OverlayTrigger} from "react-bootstrap";
 import * as $ from "jquery";
 
@@ -111,11 +111,14 @@ $('.numberCounter').html($('.tab-pane.active.show .currentFiltersAdded .theOptio
 // })
 
 
+
+
+
   return (
-    <>
 
 
 
+      <Fragment>
 
     {/*<div className="currentFiltersAdded">
 
@@ -125,7 +128,7 @@ $('.numberCounter').html($('.tab-pane.active.show .currentFiltersAdded .theOptio
         </i>
         <p class="text-center mostSmall">hover to see all</p>
       </div>*/}
-      <div className="wrapOptions">
+
         {Object.keys(selectedAccountGroup)?.map((selection) => {
           return (
 
@@ -144,11 +147,8 @@ $('.numberCounter').html($('.tab-pane.active.show .currentFiltersAdded .theOptio
             </OverlayTrigger>
           );
         })}
-      </div>
 
-      {/*</div>*/}
-
-    </>
+      </Fragment>
   );
 };
 

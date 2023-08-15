@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {Fragment, useState, useEffect } from "react";
 import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
 import * as $ from "jquery";
 import moment from 'moment';
@@ -80,15 +80,14 @@ const last = selectedDateRange.split(" to ")[1]
 const format2 = moment(last).format('MM-DD-YYYY').toString();
 
 const format1 = moment(first).format('MM-DD-YYYY').toString();
-// 
+//
 // console.log('currentSelection', format1, format2)
 
 
   return (
 
 
-<div className="d-flex">
-<div>
+      <Fragment>
     {
 
       Object.keys(currentSelection).length > 0 ? (
@@ -123,9 +122,7 @@ const format1 = moment(first).format('MM-DD-YYYY').toString();
 
     }
 
-</div>
 
-    <div className="d-flex">
 
 
 
@@ -162,9 +159,9 @@ const format1 = moment(first).format('MM-DD-YYYY').toString();
       )
     })}
 
-  </div>
 
-</div>
+
+      </Fragment>
 
   )
 }
