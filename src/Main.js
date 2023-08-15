@@ -271,7 +271,7 @@ export const Main = () => {
         setAccountGroupField(_accountGroupField);
         let values = await getDefaultValues(_accountGroupField);
         setAccountGroupOptions(
-          values.splice(0, 500).map((v, i) => {
+          values.splice(0, 50).map((v, i) => {
             return v[_accountGroupField["name"]];
           })
         );
@@ -473,7 +473,6 @@ export const Main = () => {
                   accountGroupField={accountGroupField}
                   keyword={keyword}
                   handleChangeKeyword={handleChangeKeyword}
-                  quickFilterOptions={quickFilterOptions}
                   setSelectedQuickFilter={setSelectedQuickFilter}
                   selectedQuickFilter={selectedQuickFilter}
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment0}} />}}
