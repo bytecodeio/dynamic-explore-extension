@@ -35,7 +35,7 @@ const isActive = (key,v) => {
         return (
           <>
           <div>{f['label']}</div>
-          <ButtonGroup>
+          <ButtonGroup className="mb-1">
             {f['values'].map(v =>
                 <Button
                 key={v}

@@ -156,17 +156,18 @@ export const Main = () => {
       setQuickFilterOptions(_quickFilterOptions)
 
 
-      //
-      // console.log("fieldsByTag", fieldsByTag)
-      //
-      // console.log('_quickFilterOptions', _quickFilterOptions)
 
       const _dateRange = fieldsByTag[LOOKML_FIELD_TAGS.dateRange];
+
       let _totalInvoice = undefined;
+
+
       try {
         _totalInvoice = fieldsByTag[LOOKML_FIELD_TAGS.totalInvoices][0];
       } catch (err) {
         console.error(
+
+
           `No total invoice field with the tag ${LOOKML_FIELD_TAGS.totalInvoices}`
         );
       }
@@ -284,6 +285,9 @@ export const Main = () => {
       try {
         setDateRange(_dateRange[0]);
       } catch (error) {
+
+
+          console.log(error)
         console.error(
           `No date range found using tag ${LOOKML_FIELD_TAGS.dateRange}`
         );

@@ -4,7 +4,9 @@ import { Button, Form, Modal } from "react-bootstrap";
 const AccountGroups = ({
   fieldOptions,
   setSelectedAccountGroup,
-  selectedAccountGroup
+  selectedAccountGroup,
+  showFull,
+  setShowFull
 }) => {
   function handleFieldSelection(value) {
     setSelectedAccountGroup((prev) => {
@@ -20,7 +22,10 @@ const AccountGroups = ({
 
 
   return (
-    <div className="wrapFilters">
+    <div  className={showFull ? "wrapFilters fullScreen" : "wrapFilters"}>
+      <i class="fal fa-times closeOptions"></i>
+
+
       {fieldOptions.map((fieldOption) => (
         <div className="one" key={fieldOption}>
           <Form.Group>

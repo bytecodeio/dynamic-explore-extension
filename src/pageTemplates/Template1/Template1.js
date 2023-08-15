@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useLayoutEffect, useState, useContext, useEffect, useRef } from "react";
 import {
   Accordion,
   Button,
@@ -9,6 +9,7 @@ import {
   Spinner,
   Tooltip,
 } from "react-bootstrap";
+import * as $ from "jquery";
 import RangeSlider from 'react-bootstrap-range-slider';
 import { LOOKER_MODEL, LOOKER_EXPLORE } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
@@ -22,6 +23,8 @@ import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import CurrentAccountGroup  from "./helpers/CurrentAccountGroup";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
+
+
 import EmbedTable from "../../components/EmbedTable";
 const Template1 = ({
   currentNavTab,
@@ -57,7 +60,8 @@ const Template1 = ({
   keyword,
   setKeyword,
   handleChangeKeyword,
-  description
+  description,
+
 
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
@@ -70,7 +74,10 @@ const Template1 = ({
   const [tabList, setTabList] = useState([]);
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
-   const [ value, setValue ] = useState(0);
+  const [ value, setValue ] = useState(0);
+  const [active, setActive] = useState(false);
+  const [faClass, setFaClass] = useState(true);
+  const [toggle, setToggle] = useState(true);
  //  const [removeHidden, setRemoveHidden] = useState(false);
  //
  // const hiddenCount = () =>{
@@ -293,9 +300,9 @@ const Template1 = ({
 
   const renderTooltip = (props) => (
   <Tooltip id="button-tooltip" {...props}>
-    These are the filters you use to query data. Select the accordions
-    individually below to choose the different filter options inside. Once you
-    are done you can choose the "Submit Values" button to update the data.
+    These are the filters and fields you use to query data. Select the accordions
+    individually below to choose the different filter or field options inside. Once you
+    are done you can choose the "Update Values" button to update the data in the table.
   </Tooltip>
   );
 
@@ -414,7 +421,49 @@ const Template1 = ({
               };
 
 
-              // console.log('accountGroupOptions:', accountGroupOptions)
+
+              const handleClick = () => {
+                  setToggle(!toggle);
+
+                setTimeout(() => {
+                  setActive(!active);
+
+                  setFaClass(!faClass);
+                }, 600);
+                };
+
+              $(document).on('click', function(){
+                if ($('.theSelected').height() > 74.8){
+
+                  $('.theSelected').addClass('theEnd').css({'maxHeight': '76px', "overflow" : "hidden"})
+                  $('.hideThisEnd, .whiteBar').show()
+
+                }
+                else{
+                  $('.theSelected').removeClass('theEnd').css({'maxHeight': 'unset', "overflow" : "unset"})
+                      $('.hideThisEnd, .whiteBar').hide()
+
+                }
+
+
+                 const num = $('.tab-pane.active.show .theSelected .theOptions').length
+
+                  $('#numberCounter').html($('.tab-pane.active.show .theSelected .theOptions').length + 1)
+
+
+              })
+
+
+
+              $(window).resize(function () {
+                  $(document).trigger('click')
+              });
+
+
+
+
+                const clickExpand = () => setShowFull(!showFull);
+                const [showFull, setShowFull] = useState(false);
 
 
               return (
@@ -428,7 +477,7 @@ const Template1 = ({
                       <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
                       onClick={() => {setShowMenu(false);}}>
                       <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
-                      <p className="m-0"><span className="noMobile">Filter Options</span></p>
+                      <p className="m-0"><span className="noMobile">Selection Options</span></p>
                     </div>
                   </div>
 
@@ -440,7 +489,7 @@ const Template1 = ({
                       className="tooltipHover"
                       >
                       <p className="pb-1">
-                        Filter Options <i className="fal fa-info-circle red"></i>
+                        Selection Options <i className="fal fa-info-circle red"></i>
                       </p>
                     </OverlayTrigger>
                     <div className="closeThisPlease" id="close1">
@@ -453,7 +502,7 @@ const Template1 = ({
                 </div>
                 <div className="modal-actions">
                 <div className="position-relative columnStart mb-3">
-                <label>Search Filter</label>
+                <label>Search Selections</label>
                   <input placeholder="" type="search" class="form-control" />
                   <i class="far fa-search absoluteSearch"></i>
                 </div>
@@ -465,7 +514,7 @@ const Template1 = ({
                     </Button>
                     <Button
                     onClick={handleTabVisUpdate}
-                    className="btn">Submit Filters
+                    className="btn">Update Selections
                   </Button>
                 </div>
               </div>
@@ -482,15 +531,21 @@ const Template1 = ({
                             <Accordion.Item eventKey="1">
                               <Accordion.Header>Account Groups</Accordion.Header>
                               <Accordion.Body>
+
+                              <span className="allOptions" onClick={clickExpand}>View All</span>
+
+                              <div className="mb-5"></div>
+
+
                                 <div className="position-relative mb-2">
                                   <input value={keyword} onChange={handleChangeKeyword} placeholder="Search" type="search" class="form-control" />
                                   <i class="far fa-search absoluteSearch"></i>
                                 </div>
                                 <AccountGroups
-                                fieldOptions={keyword !=="" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
+                                fieldOptions={keyword !== "" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
                                 selectedAccountGroup={selectedAccountGroup}
                                 setSelectedAccountGroup={setSelectedAccountGroup}
-
+                                clickExpand={clickExpand}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
@@ -505,6 +560,10 @@ const Template1 = ({
                             <Accordion.Item eventKey="6">
                               <Accordion.Header>Fields</Accordion.Header>
                               <Accordion.Body>
+
+                              <a onClick={handleRestoreDefault}>
+                                <p class="red bold text-center mb-2 small"><u>Restore Default Fields</u></p>
+                              </a>
                                 <Fields
                                 fieldOptions={fieldOptions}
                                 setTabList={setTabList}
@@ -523,12 +582,30 @@ const Template1 = ({
                           :''
                         }
 
-                        {/* Filters */}
-                        {filterOptions?.length > 0?
+                        {/*Filters */}
+                        {quickFilterOptions?.length && filterOptions?.length > 0 ?
                           <Col xs={12} md={12}>
                             <Accordion.Item eventKey="5">
                               <Accordion.Header>Filters</Accordion.Header>
                               <Accordion.Body>
+
+                              {/*Quick Filters */}
+                              {
+                                quickFilterOptions?.length > 0?
+                              <QuickFilter
+                              quickFilterOptions={quickFilterOptions}
+                              setSelectedQuickFilter={setSelectedQuickFilter}
+                              selectedQuickFilter={selectedQuickFilter}
+                              updateBtn={updateButtonClicked}
+                              setUpdateBtn={setUpdateButtonClicked}
+                              setIsFilterChanged={setIsFilterChanged}
+                              />
+                              :
+                              ''
+                            }
+
+                            {/* Filters */}
+                            {filterOptions?.length > 0?
                                 <Filters
                                 isLoading={isFetchingFilterSuggestions}
                                 filterOptions={filterOptions}
@@ -541,28 +618,9 @@ const Template1 = ({
                                 setUpdateBtn={setUpdateButtonClicked}
                                 setIsFilterChanged={setIsFilterChanged}
                                 />
-                              </Accordion.Body>
-                            </Accordion.Item>
-                          </Col>
-                          :''
-                        }
 
-
-                        {/*Quick Filters */}
-                        {
-                          quickFilterOptions?.length > 0?
-                          <Col xs={12} md={12}>
-                            <Accordion.Item eventKey="3">
-                              <Accordion.Header>Quick Filters</Accordion.Header>
-                              <Accordion.Body>
-                                <QuickFilter
-                                quickFilterOptions={quickFilterOptions}
-                                setSelectedQuickFilter={setSelectedQuickFilter}
-                                selectedQuickFilter={selectedQuickFilter}
-                                updateBtn={updateButtonClicked}
-                                setUpdateBtn={setUpdateButtonClicked}
-                                setIsFilterChanged={setIsFilterChanged}
-                                />
+                                :''
+                              }
                               </Accordion.Body>
                             </Accordion.Item>
                           </Col>
@@ -586,9 +644,36 @@ const Template1 = ({
                 <div className="d-flex flex-column text-center position-relative">
                 <p className="">Top % Products</p>
 
-                  <p className="value">{value}</p>
+                <input value={value}
+                onChange={changeEvent => setValue(changeEvent.target.value)}
+                placeholder={value}
+                type="search"
+                list="steplist"
+                min="0" max="100"
+                from="0"
+                step="1"
+                className="value"/>
+                <input
+                  value={value}
+                  onChange={changeEvent => setValue(changeEvent.target.value)}
+                  type="range"
+                  min="0" max="100"
+                  step="25"
+                  list="steplist"
+                  className="range-slider mt-2"/>
+                <datalist id="steplist" className="range">
+                    <option label="0">0</option>
+                    <option label="25">25</option>
+                    <option label="50">50</option>
+                    <option label="75">75</option>
+                    <option label="100">100</option>
+                </datalist>
+
+
+                  {/*<input value={value} onChange="" placeholder={value} type="search" className="value"/>
 
                 <div className="position-relative mt-2">
+
                 <div class="d-flex justify-content-between range">
                   <div><p className="small">0%</p></div>
                   <div><p className="small">25%</p></div>
@@ -596,12 +681,14 @@ const Template1 = ({
                   <div><p className="small">75%</p></div>
                   <div><p className="small">100%</p></div>
                 </div>
+
                   <RangeSlider
                   value={value}
                   id="customRange"
                   onChange={changeEvent => setValue(changeEvent.target.value)}
                   />
-                </div>
+
+                </div>*/}
 
                 </div>
                 </Col>
@@ -642,12 +729,14 @@ const Template1 = ({
 
             </Row>
 
-            <Row className="fullW negativeTop d-flex align-items-center">
+            <Row className="fullW d-flex align-items-center">
               <Col md={12} lg={2}>
+
+
 
             {currentInvoiceCount != ""?
             <p>
-              <b>Total Invoice:</b> <span className="highlight large">{currentInvoiceCount}</span>
+              <b>Total Invoices:</b> <span className="highlight large">{currentInvoiceCount}</span>
             </p>
             :''
           }
@@ -669,38 +758,17 @@ const Template1 = ({
             </Col>
             </Row>
 
-            <Row className="fullW">
 
-            <Col md={12} lg={12}>
+          <Row className="fullW mt-4 position-relative">
 
-
-
-              <Row className="mt-5 d-flex align-items-center">
+            <Col xs={12} md={11}>
 
 
+              <div  className={toggle ? 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-up' : 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-down'}>
 
-              <Col md={12} lg={12}>
+              <div className={toggle ?  "whiteBar" : "hidden"}></div>
 
-
-              </Col>
-            </Row>
-
-
-
-          </Col>
-
-
-          </Row>
-
-
-          <Row className="fullW mt-5">
-
-            <Col xs={12} md={12}>
-
-              <div className="d-flex justify-content-between align-items-baseline">
-
-              <div className="d-flex justify-content-start align-items-center flex-wrap">
-                <p class="mr-3"><i class="fal fa-filter mr-1"></i>Filters</p>
+              <p class="mr-3"><b>Current Selections</b></p>
                 <CurrentSelection
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
@@ -735,17 +803,18 @@ const Template1 = ({
                                   />
 
 
-
-
               </div>
 
-
-                <a onClick={handleRestoreDefault}>
-                  <p class="red bold small mt-4"><u>Restore Default/Saved Filter</u></p>
-                </a>
-
-                </div>
               </Col>
+
+              <div className="hideThisEnd" onClick={handleClick}>
+                <i className={faClass ? 'fas fa-plus-circle' : 'fas fa-minus-circle'}>&nbsp;
+                <span> { active ? "See Less" : "See All"} (<p id="numberCounter"></p>) </span></i>
+
+
+            </div>
+
+
             </Row>
 
 
