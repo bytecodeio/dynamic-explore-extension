@@ -120,7 +120,7 @@ padding: 1em 0em;
 padding-left: 1em;
 background: #fff;
 box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
-z-index: 999999999999;
+z-index: 999999;
 }
 
 #nav2 {
@@ -2823,7 +2823,7 @@ background: linear-gradient(
 rgba(62, 28, 138, 1) 31%,
 rgba(103, 74, 167, 1) 100%
 );
-box-shadow: 0px 10px 20px rgba(4, 90, 150, 0.24);
+box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.24);
 min-width: 10em;
 padding: 0.62em 0.2em;
 border-radius: 2rem;
@@ -4188,7 +4188,7 @@ top: -12px;
 left: 10px;
 padding: 0px 4px;
 font-size: 16px;
-z-index: 10;
+z-index: 2;
 }
 
 .columnStart  .form-control{
@@ -4912,6 +4912,10 @@ text-align: center;
   text-align: center;
 }
 
+.allOptions:hover{
+  cursor: pointer;
+}
+
 .range .small{
 font-size: 13px
 }
@@ -4997,17 +5001,25 @@ font-weight: 600;
 #nav2 .innerTab .tab-content {
 background: white;
 margin: 0;
-padding: 0em 0em 2em 0em;
+padding: 1em 0em 2em 0em;
 border-radius: 0;
 background: white;
 box-shadow: 0px 11px 11px 1px rgba(0, 0, 0, 0.1);
 position: relative;
-z-index: 5;
+    z-index: 2;
 margin-top: -7px;
 }
 
 .innerTab .tab-pane {
 padding-top: 0em;
+}
+
+.expand{
+  position: absolute;
+  right:17px
+}
+.expand:hover{
+  cursor: pointer;
 }
 
 #nav2 .inner.nav-tabs {
@@ -5215,7 +5227,7 @@ flex-wrap: wrap;
     max-height: none;
     overflow: auto;
     position: fixed;
-  
+
 
     width: 76vw;
 background: white;
@@ -5232,9 +5244,9 @@ border-top-right-radius: 1rem;
 border-bottom-right-radius: 1rem;
 max-height: 56vh;
 background: white;
-top: 37%;
+top: 24em;
 left: 0;
-padding: 2em 1em;
+padding: 2em 0em 2em 3em;
 display: flex;
 height: auto;
 justify-content: flex-start;
@@ -5243,7 +5255,21 @@ z-index: 999999;
 
 }
 
+.clearAllModal .modal-dialog{
+  max-width: 40%;
+  top: 15%;
+}
 
+.clearAllModal .modal-content{
+  border-radius: 1rem
+}
+
+.clearAllModal .modal-footer button{
+
+  max-width: 7em;
+width: 7em;
+min-width: 7em;
+}
 
 .closeOptions{
   position: absolute;
@@ -5260,7 +5286,7 @@ display:block
 }
 
 #slideOut3 .wrapFilters.fullScreen .one {
-    min-width: 10em;
+    min-width: 12em;
 }
 #slideOut3.form-control {
 display: block;
@@ -5505,6 +5531,46 @@ cursor: pointer;
 max-height: 700px;
 min-height: 550px;
 }
+
+ .tab-content .whole  iframe {
+max-height: 100%;
+ min-height: 100%;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+
+    background: white;
+    padding: 3em;
+}
+
+.whole .expand {
+  position: absolute;
+      right: 53px;
+        top: 30px;
+      z-index: 99999999999;
+}
+
+.whole{
+  position: fixed;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0em;
+    z-index: 99999999999999999999999999999999999999999999999999999999999;
+    background: white;
+}
+
+#nav2 .innerTab.highIndex .tab-content{
+      z-index: 9999999999;
+}
+
+
 
 .smallerHeight iframe {
 max-height: 350px;
@@ -5792,7 +5858,7 @@ padding-left: 0rem;
 }
 
 .activeLetter {
-background-color: #e41f35;
+background-color: var(--red);
 color: white !important;
 }
 .activeLetter p {
@@ -6564,7 +6630,7 @@ flex-wrap: nowrap;
 
 .show #slideOut3 {
 top: 192px;
-z-index: 9999999999999999;
+z-index: 5;
 }
 
 .accordion.mb-3 {
@@ -6654,16 +6720,19 @@ display: none
 }
 
 @media (min-width:1720px){
-
+  .grid2 {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+  }
 .grid2 .one.radio {
+  min-width: 10em;
+  margin-right: 0em;
 
-  min-width: 33%;
-  margin-right:0em
 }
 
 .grid2 .one.radio:last-child{
-  width: 50%;
-  left: 25%;
+
 }
 }
 

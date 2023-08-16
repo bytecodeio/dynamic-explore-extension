@@ -271,7 +271,7 @@ export const Main = () => {
         setAccountGroupField(_accountGroupField);
         let values = await getDefaultValues(_accountGroupField);
         setAccountGroupOptions(
-          values.splice(0, 50).map((v, i) => {
+          values.splice(0, 160).map((v, i) => {
             return v[_accountGroupField["name"]];
           })
         );
@@ -439,7 +439,7 @@ export const Main = () => {
         <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
           <div id="nav2">
             <Tabs
-              defaultActiveKey=""
+              defaultActiveKey="product-movement"
               onSelect={(k) => setCurrentNavTab(k)}
               className="mb-0 inner"
               fill
