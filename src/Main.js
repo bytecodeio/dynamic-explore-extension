@@ -56,6 +56,8 @@ export const Main = () => {
   const [showMenu, setShowMenu] = useState();
   const [keyword, setKeyword] = useState("");
 
+  const [updatedFilters, setUpdatedFilters] = useState([])
+
   const slideIt = (show) => {
     setShowMenu(show);
   };
@@ -114,6 +116,26 @@ export const Main = () => {
 
       const _productMovementfieldOptions =
         fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
+
+      const _defaultFilterFields = fieldsByTag[LOOKML_FIELD_TAGS.defaultFilters];
+
+      console.log("default filters", _defaultFilterFields)
+
+      if (_defaultFilterFields.length > 0) {
+        let _filterSet = {}
+        _defaultFilterFields.map(d => {
+          if (_dateFilterOptions.find(({name}) => name === d['name'])) {
+            setSelectedDateFilter(d['name'])
+          } else {
+            _filterSet[d['name']] = d['default_filter_value']
+            setSelectedFilters(_filterSet)
+          }          
+        })
+        console.log("filter set",_filterSet)
+        
+      } else {
+        console.error("No default filters")
+      }
       // _dimensionToggleFields has the shape { [tag]: field }
       // it gets populated with all the tags that are prefixed with `toggle:`
       const _dimensionToggleFields = Object.fromEntries(
@@ -509,6 +531,8 @@ export const Main = () => {
                   setSelectedQuickFilter={setSelectedQuickFilter}
                   selectedQuickFilter={selectedQuickFilter}
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment1}} />}}
+                  updatedFilters={updatedFilters}
+                  setUpdatedFilters={setUpdatedFilters}
                 />
               </Tab>
               <Tab eventKey="invoice" title="Invoice Report" mountOnEnter={true} unmountOnExit={false}>

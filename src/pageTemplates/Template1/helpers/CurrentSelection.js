@@ -3,7 +3,7 @@ import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
 import * as $ from "jquery";
 import moment from 'moment';
 
-export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter, quickFilterOptions, selectedQuickFilter, setSelectedQuickFilter }) => {
+export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter, quickFilterOptions, selectedQuickFilter, setSelectedQuickFilter, updatedFilters }) => {
   const [currentSelection, setCurrentSelection] = useState([])
   const [filterSelection, setFilterSelection] = useState([])
   const [quickFilterSelection, setQuickFilterSelection] = useState([])
