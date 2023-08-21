@@ -107,12 +107,12 @@ export const Main = () => {
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
 
-      console.log(fieldsByTag, "hi there")
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
       const _quickFilterFields = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
 
       const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
+
 
       const _productMovementfieldOptions =
         fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
@@ -212,7 +212,7 @@ export const Main = () => {
       )
 
      //
-       console.log(defaultFilterSelections)
+       console.log(defaultFilterSelections, "elizabeth")
      //
      //  //added  QuickFilter here
      //
@@ -293,7 +293,7 @@ export const Main = () => {
         setAccountGroupField(_accountGroupField);
         let values = await getDefaultValues(_accountGroupField);
         setAccountGroupOptions(
-          values.splice(0, 50).map((v, i) => {
+          values.splice(0, 160).map((v, i) => {
             return v[_accountGroupField["name"]];
           })
         );
@@ -309,7 +309,6 @@ export const Main = () => {
       } catch (error) {
 
 
-          console.log(error)
         console.error(
           `No date range found using tag ${LOOKML_FIELD_TAGS.dateRange}`
         );
@@ -461,7 +460,7 @@ export const Main = () => {
         <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
           <div id="nav2">
             <Tabs
-              defaultActiveKey=""
+              defaultActiveKey="product-movement"
               onSelect={(k) => setCurrentNavTab(k)}
               className="mb-0 inner"
               fill

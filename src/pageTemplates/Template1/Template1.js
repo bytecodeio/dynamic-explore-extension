@@ -8,6 +8,7 @@ import {
   Row,
   Spinner,
   Tooltip,
+  Modal
 } from "react-bootstrap";
 import * as $ from "jquery";
 import RangeSlider from 'react-bootstrap-range-slider';
@@ -75,17 +76,15 @@ const Template1 = ({
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   const [ value, setValue ] = useState(0);
+  const [ step, setStep ] = useState(1);
   const [active, setActive] = useState(false);
   const [faClass, setFaClass] = useState(true);
   const [toggle, setToggle] = useState(true);
- //  const [removeHidden, setRemoveHidden] = useState(false);
- //
- // const hiddenCount = () =>{
- //   setRemoveHidden(!removeHidden)
- // }
-
-
-  function handleClearAll() {}
+  const [showMenu2, setShowMenu2] = useState();
+  const [choseClearAll, setChoseClearAll] = useState(defaultChosenValue);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     if (currentNavTab == tabKey) {
@@ -229,9 +228,6 @@ const Template1 = ({
   }, [filterOptions, isFetchingLookmlFields]);
 
 
-  // console.log("one", filterSuggestions)
-
-
 
   // Fetch the quick filter suggestions for each filter field
   const [isFetchingQuickFilterSuggestions, setIsFetchingQuickFilterSuggestions] =
@@ -290,12 +286,6 @@ const Template1 = ({
 
     fetchAllQuickFilterSuggestions();
   }, [quickFilterOptions, isFetchingLookmlFields]);
-
-
-  // console.log("two", quickFilterSuggestions)
-
-
-
 
 
   // Page loading state
@@ -387,7 +377,7 @@ const Template1 = ({
               setIsFilterChanged(false);
             };
 
-            async function handleClearAll() {
+            async function doClearAll() {
               console.log('handleClearAll')
               // setIsDefaultProduct(false);
               setUpdateButtonClicked(true);
@@ -431,8 +421,6 @@ const Template1 = ({
                 }
               };
 
-
-
               const handleClick = () => {
                   setToggle(!toggle);
 
@@ -443,38 +431,70 @@ const Template1 = ({
                 }, 600);
                 };
 
+                //jquery will be removed and changed, leave for now
+
               $(document).on('click', function(){
                 if ($('.theSelected').height() > 74.8){
-
                   $('.theSelected').addClass('theEnd').css({'maxHeight': '76px', "overflow" : "hidden"})
                   $('.hideThisEnd, .whiteBar').show()
-
                 }
                 else{
                   $('.theSelected').removeClass('theEnd').css({'maxHeight': 'unset', "overflow" : "unset"})
-                      $('.hideThisEnd, .whiteBar').hide()
-
+                  $('.hideThisEnd, .whiteBar').hide()
                 }
-
-
                  const num = $('.tab-pane.active.show .theSelected .theOptions').length
-
                   $('#numberCounter').html($('.tab-pane.active.show .theSelected .theOptions').length + 1)
-
-
               })
-
-
-
               $(window).resize(function () {
                   $(document).trigger('click')
               });
+              //jquery will be removed and changed, leave for now
+
+
+              const defaultChosenValue = localStorage.getItem('choseClearAll');
+              console.log('local storage value first', defaultChosenValue)
+
+              // const handleChoice = (choice) => {
+              //   setChoseClearAll(choice);
+              //   localStorage.setItem('choseClearAll', choice);
+              //   window.location.reload();
+              // }
+
+
+              const handleUserYes = () => {
+                setChoseClearAll("1")
+                localStorage.setItem('choseClearAll', "1");
+                doClearAll();
+                setShow(false);
+              }
+
+              // console.log(choseClearAll)
+              //
+              // if(defaultChosenValue == "1"){
+              //   console.log("it is user 1")
+              //   // setShow(false);
+              //   // doClearAll();
+              // }
 
 
 
+              const handleClearAll = () => {
+                if (defaultChosenValue == "1") {
+                  setShow(false)
+                  doClearAll();
+                } else {
+                  if(!choseClearAll) {
+                    setShow(true)
+                  } else {
+                    doClearAll();
+                  }
+                }
+              }
 
-                const clickExpand = () => setShowFull(!showFull);
-                const [showFull, setShowFull] = useState(false);
+              const slideIt2 = () =>{
+                setShowMenu2(!showMenu2)
+              }
+
 
 
               return (
@@ -520,9 +540,14 @@ const Template1 = ({
 
 
                   <div className="across">
-                    <Button onClick={handleClearAll} className="btn-clear">
+                    <Button
+                      onClick={handleClearAll}
+                      className="btn-clear"
+                    >
                       Clear All
                     </Button>
+
+
                     <Button
                     onClick={handleTabVisUpdate}
                     className="btn">Update Selections
@@ -543,7 +568,11 @@ const Template1 = ({
                               <Accordion.Header>Account Groups</Accordion.Header>
                               <Accordion.Body>
 
-                              <span className="allOptions" onClick={clickExpand}>View All</span>
+                              <span className="allOptions clear first">Select All</span>
+
+                              <span className="allOptions clear second">Clear All</span>
+
+                              <span className="allOptions clear"  onClick={() => slideIt2()}>View All</span>
 
                               <div className="mb-5"></div>
 
@@ -556,7 +585,8 @@ const Template1 = ({
                                 fieldOptions={keyword !== "" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
                                 selectedAccountGroup={selectedAccountGroup}
                                 setSelectedAccountGroup={setSelectedAccountGroup}
-                                clickExpand={clickExpand}
+                                showMenu2={showMenu2}
+                                setShowMenu2={setShowMenu2}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
@@ -571,10 +601,14 @@ const Template1 = ({
                             <Accordion.Item eventKey="6">
                               <Accordion.Header>Fields</Accordion.Header>
                               <Accordion.Body>
+                              <div className="mb-5">
+                              <span className="allOptions clear first">Select All</span>
 
-                              <a onClick={handleRestoreDefault}>
-                                <p class="red bold text-center mb-2 small"><u>Restore Default Fields</u></p>
-                              </a>
+                              <span className="allOptions clear restore" onClick={handleRestoreDefault}>Restore Defaults</span>
+
+                              <span className="allOptions clear" onClick={() => slideIt2()}>View All</span>
+                              </div>
+
                                 <Fields
                                 fieldOptions={fieldOptions}
                                 setTabList={setTabList}
@@ -586,6 +620,8 @@ const Template1 = ({
                                 // setIsDefault={setIsDefaultProduct}
                                 updateBtn={updateButtonClicked}
                                 setUpdateBtn={setUpdateButtonClicked}
+                                showMenu2={showMenu2}
+                                setShowMenu2={setShowMenu2}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
@@ -655,23 +691,32 @@ const Template1 = ({
                 <div className="d-flex flex-column text-center position-relative">
                 <p className="">Top % Products</p>
 
-                <input value={value}
-                onChange={changeEvent => setValue(changeEvent.target.value)}
-                placeholder={value}
-                type="search"
-                list="steplist"
-                min="0" max="100"
-                from="0"
-                step="1"
-                className="value"/>
                 <input
-                  value={value}
-                  onChange={changeEvent => setValue(changeEvent.target.value)}
-                  type="range"
-                  min="0" max="100"
-                  step="25"
-                  list="steplist"
-                  className="range-slider mt-2"/>
+                    value={value}
+                    onChange={changeEvent => {
+                      setStep(1);
+                      setValue(changeEvent.target.value)
+                    }}
+                    placeholder={value}
+                    type="search"
+                    list="steplist"
+                    min="0" max="100"
+                    from="0"
+                    step="1"
+                    className="value"/>
+
+                <input
+                    value={value}
+                    onChange={changeEvent => {
+                      setStep(25);
+                      setValue(changeEvent.target.value)
+                    }}
+                    type="range"
+                    min="0" max="100"
+                    step={step}
+                    list="steplist"
+                    className="range-slider mt-2"/>
+
                 <datalist id="steplist" className="range">
                     <option label="0">0</option>
                     <option label="25">25</option>
@@ -680,26 +725,6 @@ const Template1 = ({
                     <option label="100">100</option>
                 </datalist>
 
-
-                  {/*<input value={value} onChange="" placeholder={value} type="search" className="value"/>
-
-                <div className="position-relative mt-2">
-
-                <div class="d-flex justify-content-between range">
-                  <div><p className="small">0%</p></div>
-                  <div><p className="small">25%</p></div>
-                  <div><p className="small">50%</p></div>
-                  <div><p className="small">75%</p></div>
-                  <div><p className="small">100%</p></div>
-                </div>
-
-                  <RangeSlider
-                  value={value}
-                  id="customRange"
-                  onChange={changeEvent => setValue(changeEvent.target.value)}
-                  />
-
-                </div>*/}
 
                 </div>
                 </Col>
@@ -777,9 +802,9 @@ const Template1 = ({
 
               <div  className={toggle ? 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-up' : 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-down'}>
 
-              <div className={toggle ?  "whiteBar" : "hidden"}></div>
 
-              <p class="mr-3"><b>Current Selections</b></p>
+
+              <p class="mr-3"><b>Current Selections:</b></p>
                 <CurrentSelection
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
@@ -823,7 +848,6 @@ const Template1 = ({
                 <i className={faClass ? 'fas fa-plus-circle' : 'fas fa-minus-circle'}>&nbsp;
                 <span> { active ? "See Less" : "See All"} (<p id="numberCounter"></p>) </span></i>
 
-
             </div>
 
 
@@ -844,6 +868,25 @@ const Template1 = ({
 
             </Col>
           </Row>
+
+
+
+          <Modal show={show} onHide={handleClose} className="clearAllModal">
+                <Modal.Header closeButton>
+
+                </Modal.Header>
+                <Modal.Body><p>Are you sure you want to clear all selections?</p></Modal.Body>
+                <Modal.Footer>
+                <Button className="btn" onClick={handleUserYes}>
+                  Yes
+                </Button>
+                  <Button className="btn-clear" onClick={handleClose}>
+                    Cancel <i class="fas fa-ban stop"></i>
+                  </Button>
+
+                  </Modal.Footer>
+              </Modal>
+
           </>
           )}
         </Container>

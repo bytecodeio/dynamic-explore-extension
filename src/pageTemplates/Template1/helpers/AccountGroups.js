@@ -5,8 +5,8 @@ const AccountGroups = ({
   fieldOptions,
   setSelectedAccountGroup,
   selectedAccountGroup,
-  showFull,
-  setShowFull
+  showMenu2,
+  setShowMenu2
 }) => {
   function handleFieldSelection(value) {
     setSelectedAccountGroup((prev) => {
@@ -22,8 +22,9 @@ const AccountGroups = ({
 
 
   return (
-    <div  className={showFull ? "wrapFilters fullScreen" : "wrapFilters"}>
-      <i class="fal fa-times closeOptions"></i>
+
+    <div  className={showMenu2 ? "wrapFilters fullScreen" : "wrapFilters"}>
+      <i class="fal fa-times closeOptions" onClick={() => setShowMenu2(false)} ></i>
 
 
       {fieldOptions.map((fieldOption) => (

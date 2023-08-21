@@ -8,6 +8,9 @@ const Fields = ({
   currentInnerTab,
   updateBtn,
   setUpdateBtn,
+  showMenu2,
+  setShowMenu2
+
 }) => {
   function handleFieldSelection(fieldName) {
     setUpdateBtn(false);
@@ -33,7 +36,8 @@ const Fields = ({
   }
 
   return (
-    <div className="wrapFilters">
+    <div  className={showMenu2 ? "wrapFilters fullScreen" : "wrapFilters"}>
+      <i class="fal fa-times closeOptions" onClick={() => setShowMenu2(false)} ></i>
       {fieldOptions.map((fieldOption) => (
         <div className="one" key={fieldOption.name}>
           <Form.Group>
