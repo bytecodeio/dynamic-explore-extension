@@ -61,8 +61,8 @@ const Template1 = ({
   setKeyword,
   handleChangeKeyword,
   description,
-
-
+  updatedFilters,
+  setUpdatedFilters
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -141,8 +141,8 @@ const Template1 = ({
       //     //setSelectedFilters(filterArr)
       //   }
       //  }
-      console.log("tile filters", filters)
-      if (filters) setSelectedFilters(filters);
+      //console.log("tile filters", filters)
+      //if (filters) setSelectedFilters(filters);
       //handleTabVisUpdate()
       //setProductMovementVisQid(client_id);
       setIsFetchingDefaultDashboard(false);
@@ -337,6 +337,8 @@ const Template1 = ({
               // }
               filters = await getAllFilters();
 
+              console.log("get all filters", filters)
+
               if (isFilterChanged) {
                 updateInnerTabFilters(filters);
               }
@@ -357,6 +359,7 @@ const Template1 = ({
 
               tabs[currentInnerTab]["query"] = client_id;
               setTabList(tabs);
+              setUpdatedFilters(filters)
             }
 
             const updateInnerTabFilters = async (filters) => {
@@ -791,6 +794,7 @@ const Template1 = ({
 
                 selectedQuickFilter={selectedQuickFilter}
                 setSelectedQuickFilter={setSelectedQuickFilter}
+                updatedFilters={updatedFilters}
                 />
 
 
@@ -807,7 +811,7 @@ const Template1 = ({
                                   quickFilterOptions={quickFilterOptions}
                                   selectedAccountGroup={selectedAccountGroup}
                                   setSelectedAccountGroup={setSelectedAccountGroup}
-
+                                  updatedFilters={updatedFilters}
                                   />
 
 
