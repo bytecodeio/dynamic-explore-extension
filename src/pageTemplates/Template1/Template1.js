@@ -62,8 +62,8 @@ const Template1 = ({
   setKeyword,
   handleChangeKeyword,
   description,
-changeChoice
-
+  updatedFilters,
+  setUpdatedFilters
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -140,8 +140,8 @@ changeChoice
       //     //setSelectedFilters(filterArr)
       //   }
       //  }
-      console.log("tile filters", filters)
-      if (filters) setSelectedFilters(filters);
+      //console.log("tile filters", filters)
+      //if (filters) setSelectedFilters(filters);
       //handleTabVisUpdate()
       //setProductMovementVisQid(client_id);
       setIsFetchingDefaultDashboard(false);
@@ -327,6 +327,8 @@ changeChoice
               // }
               filters = await getAllFilters();
 
+              console.log("get all filters", filters)
+
               if (isFilterChanged) {
                 updateInnerTabFilters(filters);
               }
@@ -347,6 +349,7 @@ changeChoice
 
               tabs[currentInnerTab]["query"] = client_id;
               setTabList(tabs);
+              setUpdatedFilters(filters)
             }
 
             const updateInnerTabFilters = async (filters) => {
@@ -816,24 +819,25 @@ changeChoice
 
                 selectedQuickFilter={selectedQuickFilter}
                 setSelectedQuickFilter={setSelectedQuickFilter}
+                updatedFilters={updatedFilters}
                 />
 
 
-                              <CurrentAccountGroup
-                              selectedDateFilter={selectedDateFilter}
-                              selectedFilters={selectedFilters}
-                              selectedFields={selectedFields}
-                              fieldOptions={fieldOptions}
-                              setSelectedFields={setSelectedFields}
-                              filterOptions={filterOptions}
-                              setSelectedFilters={setSelectedFilters}
-                              dateFilterOptions={dateFilterOptions}
-                              selectedDateRange={selectedDateRange}
-                              quickFilterOptions={quickFilterOptions}
-                              selectedAccountGroup={selectedAccountGroup}
-                              setSelectedAccountGroup={setSelectedAccountGroup}
-
-                              />
+                                  <CurrentAccountGroup
+                                  selectedDateFilter={selectedDateFilter}
+                                  selectedFilters={selectedFilters}
+                                  selectedFields={selectedFields}
+                                  fieldOptions={fieldOptions}
+                                  setSelectedFields={setSelectedFields}
+                                  filterOptions={filterOptions}
+                                  setSelectedFilters={setSelectedFilters}
+                                  dateFilterOptions={dateFilterOptions}
+                                  selectedDateRange={selectedDateRange}
+                                  quickFilterOptions={quickFilterOptions}
+                                  selectedAccountGroup={selectedAccountGroup}
+                                  setSelectedAccountGroup={setSelectedAccountGroup}
+                                  updatedFilters={updatedFilters}
+                                  />
 
 
               </div>

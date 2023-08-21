@@ -14,5 +14,5 @@ export const LOOKML_FIELD_TAGS = {
   totalInvoices: "total_invoices",
   accountGroups: "account_group",
   togglePrefix: "toggle: ",
-  defaultFilter: "default_filter: purchase_review"
+  defaultFilters: "default_filter: purchase_review"
 };
