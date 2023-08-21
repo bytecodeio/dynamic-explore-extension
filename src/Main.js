@@ -105,12 +105,12 @@ export const Main = () => {
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
 
-      console.log(fieldsByTag, "hi there")
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
       const _quickFilterFields = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
 
       const _dateFilterOptions = fieldsByTag[LOOKML_FIELD_TAGS.date_filter];
+
 
       const _productMovementfieldOptions =
         fieldsByTag[LOOKML_FIELD_TAGS.productMovementField];
@@ -190,7 +190,7 @@ export const Main = () => {
       )
 
      //
-       console.log(defaultFilterSelections)
+       console.log(defaultFilterSelections, "elizabeth")
      //
      //  //added  QuickFilter here
      //
@@ -287,7 +287,6 @@ export const Main = () => {
       } catch (error) {
 
 
-          console.log(error)
         console.error(
           `No date range found using tag ${LOOKML_FIELD_TAGS.dateRange}`
         );

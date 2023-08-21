@@ -768,10 +768,16 @@ transform: rotate(359deg);
 box-shadow: none;
 }
 
-.dark-mode .dateChoice,
-.dark-mode .theOptions {
-background: black;
+.dark-mode .dateChoice{
+  background:  var(--red);
+  border:1px solid  var(--red)
 }
+.dark-mode .theOptions {
+  background: transparent;
+  border: 1px solid white !important;
+}
+
+
 
 .dark-mode h5 {
 color: white;
@@ -1072,11 +1078,11 @@ background-color: black;
 }
 
 .dark-mode .one.radio .form-check input + label::before {
-border: 1px solid #b13590;
+border: 1px solid white;
 }
 
 .dark-mode .one.radio .form-check input + label::after {
-border: 6px solid #b13590;
+border: 6px solid white;
 }
 
 .form-check {
@@ -4916,6 +4922,40 @@ text-align: center;
   cursor: pointer;
 }
 
+
+.allOptions.clear{
+  position: absolute;
+  right: 15px;
+  background: white;
+  padding: 0.2rem 0.5rem;
+
+  border-radius: 2rem;
+  font-size: 14px;
+  border: none;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border:2px solid
+}
+
+.allOptions.clear.first{
+  right:unset;
+  left:15px
+}
+
+.allOptions.clear.second{
+  right:unset;
+  left:40%
+}
+
+.allOptions.clear.restore{
+  right: unset;
+      left: 31.4%;
+
+}
+
 .range .small{
 font-size: 13px
 }
@@ -5232,7 +5272,7 @@ flex-wrap: wrap;
     width: 76vw;
 background: white;
 top: 9%;
-left: 0;
+left: 1em;
 padding: 2em 1em;
 display: flex;
 box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.3);
@@ -5240,8 +5280,8 @@ max-height: none;
 overflow-y: scroll;
 overflow-x: hidden;
 position: fixed;
-border-top-right-radius: 1rem;
-border-bottom-right-radius: 1rem;
+border-radius: 1rem;
+
 max-height: 56vh;
 background: white;
 top: 24em;
@@ -5595,15 +5635,15 @@ background: #3c3a35 !important;
 }
 
 .dark-mode #nav2 .nav-tabs .nav-link.active {
-background: #b13590 !important;
+background: var(--red) !important;
 }
 
 .dark-mode #nav2 .nav-tabs .nav-link.active {
 color: white;
 }
 
-.dark-mode #one3 {
-background: #b13590;
+.dark-mode #two {
+background: #27251f;
 }
 
 .dark-mode #nav2 .nav-tabs .nav-item {
@@ -5644,7 +5684,7 @@ font-weight: 400;
 .dark-mode .btn-group .btn {
 background: transparent !important;
 color: white;
-border-color: #b13590 !important;
+border-color: var(--red) !important;
 }
 
 .dark-mode .nav-tabs .nav-link {
@@ -5654,12 +5694,12 @@ box-shadow: none;
 .dark-mode .btn-group .btn.active,
 .dark-mode .btn-group .btn:hover,
 .dark-mode .scroll-top {
-background: #b13590 !important;
+background: var(--red) !important;
 }
 
 .dark-mode .form-control {
 background: transparent;
-border: 1px solid #b13590;
+border: 1px solid white;
 color: white;
 }
 
@@ -5701,7 +5741,7 @@ background: #3c3a35 !important;
 }
 
 .dark-mode #nav2 .inner.nav-tabs .nav-link.active {
-background: transparent !important;
+background: #27251f !important;
 box-shadow: 0px 24px 38px 3px rgba(0, 0, 0, 0.14),
 0px 9px 46px 8px rgba(0, 0, 0, 0.12), 0px 11px 15px -7px rgba(0, 0, 0, 0.2);
 color: white;
@@ -5718,9 +5758,32 @@ border-top-left-radius: 0;
 .dark-mode #one1 {
 background: #948a85;
 }
+.dark-mode #two p{
+color:white !important
+}
+
+.dark-mode #two i{
+color:white !important
+}
 
 .dark-mode #slideOut1 .modal-content {
 background: #27251f;
+}
+
+.dark-mode .value,
+.dark-mode .allOptions{
+  background: white
+}
+
+
+.dark-mode  .range-slider{
+  background: transparent
+}
+
+.dark-mode datalist option {
+    width: 1.4em;
+    font-size: 12px;
+    color: white;
 }
 
 .dark-mode #slideOut1 .blackLarger,
@@ -5736,20 +5799,26 @@ box-shadow: 0px 24px 38px 3px rgba(0, 0, 0, 0.14),
 .dark-mode .accordion-header {
 box-shadow: 0px 24px 38px 3px rgba(0, 0, 0, 0.14),
 0px 9px 46px 8px rgba(0, 0, 0, 0.12), 0px 11px 15px -7px rgba(0, 0, 0, 0.2);
-}
 
+
+}
+.dark-mode .accordion-header{
+background: #3c3a35 !important;
+}
 .dark-mode .show3 .modal-content {
 position: relative;
-background: #3c3a35;
+    background: #27251f;
 }
 
+
+
 .dark-mode #slideOut3 .modal-header {
-border-bottom: 1px solid #b13590;
+border-bottom: 1px solid white;
 }
 
 .dark-mode .accordion-button,
 .dark-mode .accordion-header {
-background: transparent !important;
+background: #3c3a35 !important;
 }
 
 .dark-mode .accordion-button {
@@ -5757,11 +5826,11 @@ color: white;
 }
 
 .dark-mode .lineAcross {
-background: #b13590;
+background: var(--red);
 }
 
 .dark-mode .accordion-header:hover {
-outline: 4px solid #b13590;
+outline: 4px solid var(--red);
 }
 
 .dark-mode .btn-clear {
@@ -6073,7 +6142,7 @@ background: black !important;
 background: transparent !important;
 }
 .dark-mode #slideOut5 .accordion-body a:hover {
-border-left: 5px solid #b13590;
+border-left: 5px solid var(--red);
 }
 
 #slideOut5 .modal-header {

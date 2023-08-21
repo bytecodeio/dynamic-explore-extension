@@ -565,7 +565,11 @@ changeChoice
                               <Accordion.Header>Account Groups</Accordion.Header>
                               <Accordion.Body>
 
-                              <span className="allOptions"  onClick={() => slideIt2()}>View All</span>
+                              <span className="allOptions clear first">Select All</span>
+
+                              <span className="allOptions clear second">Clear All</span>
+
+                              <span className="allOptions clear"  onClick={() => slideIt2()}>View All</span>
 
                               <div className="mb-5"></div>
 
@@ -594,10 +598,14 @@ changeChoice
                             <Accordion.Item eventKey="6">
                               <Accordion.Header>Fields</Accordion.Header>
                               <Accordion.Body>
+                              <div className="mb-5">
+                              <span className="allOptions clear first">Select All</span>
 
-                              <a onClick={handleRestoreDefault}>
-                                <p class="red bold text-center mb-2 small"><u>Restore Default Fields</u></p>
-                              </a>
+                              <span className="allOptions clear restore" onClick={handleRestoreDefault}>Restore Defaults</span>
+
+                              <span className="allOptions clear" onClick={() => slideIt2()}>View All</span>
+                              </div>
+
                                 <Fields
                                 fieldOptions={fieldOptions}
                                 setTabList={setTabList}
@@ -609,6 +617,8 @@ changeChoice
                                 // setIsDefault={setIsDefaultProduct}
                                 updateBtn={updateButtonClicked}
                                 setUpdateBtn={setUpdateButtonClicked}
+                                showMenu2={showMenu2}
+                                setShowMenu2={setShowMenu2}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
@@ -789,9 +799,9 @@ changeChoice
 
               <div  className={toggle ? 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-up' : 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-down'}>
 
-              <div className={toggle ?  "whiteBar" : "hidden"}></div>
 
-              <p class="mr-3"><b>Current Selections</b></p>
+
+              <p class="mr-3"><b>Current Selections:</b></p>
                 <CurrentSelection
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}

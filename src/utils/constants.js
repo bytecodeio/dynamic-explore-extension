@@ -13,5 +13,6 @@ export const LOOKML_FIELD_TAGS = {
   quick_filter: "quick_filter: product_movement",
   totalInvoices: "total_invoices",
   accountGroups: "account_group",
-  togglePrefix: "toggle: "
+  togglePrefix: "toggle: ",
+  defaultFilter: "default_filter: purchase_review"
 };
