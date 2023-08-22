@@ -101,7 +101,7 @@ export const Main2 = () => {
       return app[0];
     }
 
-    
+
 
     const fetchLookmlFields = async () => {
       let {model, explore} = await initializeApp();
@@ -156,7 +156,7 @@ export const Main2 = () => {
 
       let _appProperties = []
       for await (let p of LOOKML_FIELD_TAGS.properties){
-        let _type = p.type;        
+        let _type = p.type;
         let _text = p.text;
         let _tag = p.tag;
         let _fields = fieldsByTag[_tag]
@@ -254,23 +254,24 @@ export const Main2 = () => {
     <>
       <NavbarMain />
       <Container fluid className="mt-50 padding-0">
-        <TopNav /> 
+        <TopNav />
          <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
           <div id="nav2">
             <Tab.Container
               defaultActiveKey={currentNavTab}
               onSelect={(k) => setCurrentNavTab(k)}>
               <Nav className="inner nav nav-tabs nav-fill">
-                {tabs?.map(t => 
+                {tabs?.map(t =>
                   <Nav.Item>
                     <Nav.Link eventKey={t.route} as={Link} to={`${route.url}/${t.route}`}>{t.title}</Nav.Link>
-                  </Nav.Item>                  
+                  </Nav.Item>
                 )}
               </Nav>
             </Tab.Container>
+            <div className="show">
             <Tab.Content>
               <Switch>
-                {tabs?.map((t,i) => 
+                {tabs?.map((t,i) =>
                   <Route exact path={`${route.url}/${t.route}`}>
                     <LayoutSelector key={i}
                       tabProps={t}
@@ -289,11 +290,12 @@ export const Main2 = () => {
                       />
                   </Route>
                 )}
-                <Route path={`${route.url}/`}> 
+                <Route path={`${route.url}/`}>
                   <Test />
                 </Route>
               </Switch>
             </Tab.Content>
+            </div>
             {/* <Tabs
               defaultActiveKey={currentNavTab}
               onSelect={(k) => setCurrentNavTab(k)}
@@ -452,7 +454,7 @@ export const Main2 = () => {
                   accountGroupField={accountGroupField}
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment4}} />}}
                 />
-              </Tab>  
+              </Tab>
               <Tab eventKey="product_movement" title="Product Movement Report" mountOnEnter={true} unMountOnExit={false}>
                 <Template2
                   currentNavTab={currentNavTab}
@@ -514,7 +516,7 @@ export const Main2 = () => {
                   properties={properties}
                   updateAppProperties={updateAppProperties}
                   isFetchingLookmlFields={isFetchingLookmlFields}
-                  config={{ 
+                  config={{
                     tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
                     vis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID
                    }}
@@ -528,7 +530,7 @@ export const Main2 = () => {
               </Tab>
             </Tabs> */}
           </div>
-        </div> 
+        </div>
       </Container>
       <ToTopButton />
       <SideForm />
