@@ -89,7 +89,7 @@ export const DateRangeSelector = ({
 
       <Col md={12} lg={4}>
 
-        <div className="d-flex mt-3 ml2">
+        <div className="d-flex mt-1 ml2">
 
           <div className="columnStart mr2">
             <label>Start Date</label>

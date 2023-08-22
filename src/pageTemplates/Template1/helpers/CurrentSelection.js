@@ -1,12 +1,13 @@
-import React, {Fragment, useState, useEffect } from "react";
-import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
+import React, { Fragment, useState, useEffect } from "react";
+import { Button, Form, Modal, Spinner, Row, Col, Tooltip, Container, OverlayTrigger} from "react-bootstrap";
 import * as $ from "jquery";
 import moment from 'moment';
 
-export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter, quickFilterOptions, selectedQuickFilter, setSelectedQuickFilter, updatedFilters }) => {
+export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelectedFilters, filterOptions, fieldOptions, selectedFields, setSelectedFields, dateFilterOptions, setSelectedDateRange, selectedDateRange, setSelectedDateFilter, quickFilterOptions, selectedQuickFilter, setSelectedQuickFilter, setSelectedAccountGroup, selectedAccountGroup, updatedFilters, setUpdatedFilters, changeColor }) => {
   const [currentSelection, setCurrentSelection] = useState([])
   const [filterSelection, setFilterSelection] = useState([])
   const [quickFilterSelection, setQuickFilterSelection] = useState([])
+  const [currentAccountSelection, setCurrentAccountSelection] = useState([]);
 
   useEffect(() => {
     let currentSelectionObj = {};
@@ -29,6 +30,26 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
     }
     setFilterSelection(filterObj)
 
+
+    let currentSelectionAccountObj = {};
+
+    for (const filter in selectedAccountGroup) {
+      if (selectedAccountGroup[filter] !== "") {
+        const option1 = fieldOptions.find(
+          (option1) => option1.name ===  selectedAccountGroup[filter]
+        );
+        if (option1) {
+
+          currentSelectionAccountObj[filter] = option1;
+        }
+      }
+    }
+
+
+
+    setCurrentAccountSelection(currentSelectionAccountObj);
+
+
     let quickFilterObj = {};
     for(let key in selectedQuickFilter) {
       const option = quickFilterOptions.find(option3 => option3.name === key);
@@ -42,7 +63,7 @@ export const CurrentSelection = ({ selectedDateFilter, selectedFilters, setSelec
 
 
     setCurrentSelection(currentSelectionObj)
-  },[selectedDateFilter, dateFilterOptions, selectedFilters, selectedFields, fieldOptions, filterOptions, setSelectedDateRange, selectedDateRange, quickFilterOptions, selectedQuickFilter, setSelectedQuickFilter])
+  },[selectedDateFilter, dateFilterOptions, selectedFilters, selectedFields, fieldOptions, filterOptions, setSelectedDateRange, selectedDateRange, quickFilterOptions, selectedQuickFilter, setSelectedQuickFilter, setSelectedAccountGroup, selectedAccountGroup, updatedFilters, setUpdatedFilters, changeColor])
 
   function removeField(fieldName) {
     setSelectedFilters((prev) => {
@@ -82,6 +103,26 @@ const format2 = moment(last).format('MM-DD-YYYY').toString();
 const format1 = moment(first).format('MM-DD-YYYY').toString();
 //
 // console.log('currentSelection', format1, format2)
+
+
+
+function removeAccount(fieldName) {
+  setSelectedAccountGroup((prev) => {
+    if (prev.includes(fieldName)) {
+      return prev.filter((selectedFilter) => selectedFilter !== fieldName);
+    } else {
+      return [...prev, fieldName];
+    }
+  });
+
+}
+
+
+const renderTooltip = (props) => (
+<Tooltip id="button-tooltip" {...props}>
+  These are pending filters you have selected. Please use the "Update Selections" button to update the table.
+</Tooltip>
+);
 
 
   return (
@@ -129,7 +170,7 @@ const format1 = moment(first).format('MM-DD-YYYY').toString();
         {Object.keys(quickFilterSelection)?.map((selection) => {
 
           return(
-            <div className="theOptions" key={selection}>
+            <div  key={selection} className={updatedFilters ? "theOptions red" : "theOptions"}>
             {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
             <p className="mb-0 blue">
 
@@ -148,7 +189,7 @@ const format1 = moment(first).format('MM-DD-YYYY').toString();
     {Object.keys(filterSelection)?.map((selection) => {
 
       return(
-        <div className="theOptions" key={selection}>
+        <div  key={selection} className={updatedFilters ? "theOptions red" : "theOptions"}>
         {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
         <p className="mb-0 blue">{selection.replace(/\s*\(.*?\)\s*/g, '')}: {filterSelection[selection].value}</p>
 
@@ -157,6 +198,26 @@ const format1 = moment(first).format('MM-DD-YYYY').toString();
         </div>
 
       )
+    })}
+
+
+    {Object.keys(selectedAccountGroup)?.map((selection) => {
+      return (
+
+        <OverlayTrigger
+        placement="right"
+        overlay={renderTooltip}
+        className="tooltipHover"
+        >
+        <div  key={selection} className={updatedFilters  ? "theOptions red" : "theOptions"}>
+          <p className="mb-0 blue">{selectedAccountGroup[selection]}</p>
+          <i
+            onClick={() => removeAccount(selectedAccountGroup[selection])}
+            className="fal fal fa-times blue"
+          ></i>
+        </div>
+        </OverlayTrigger>
+      );
     })}
 
 

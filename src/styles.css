@@ -615,6 +615,20 @@ padding: 0.3rem 0.7rem;
 border: 1px solid var(--black) !important;
 }
 
+.theOptions.red{
+  background:var(--red) !important;
+  border: 1px solid var(--red) !important;
+}
+
+.theOptions.red p,
+.theOptions.red i{
+  color:white !important
+}
+
+.theOptions.blue{
+  background:blue!important
+}
+
 h5{
 color:var(--black) !important
 }
@@ -4947,12 +4961,18 @@ text-align: center;
 
 .allOptions.clear.second{
   right:unset;
-  left:40%
+
+      left: calc(50% - 2.8em);
+      width: 6em;
+
 }
 
 .allOptions.clear.restore{
   right: unset;
-      left: 31.4%;
+
+    left: calc(50% - 4.2em);
+    width: 9em;
+
 
 }
 
@@ -5830,7 +5850,7 @@ background: var(--red);
 }
 
 .dark-mode .accordion-header:hover {
-outline: 4px solid var(--red);
+outline: 4px solid white;
 }
 
 .dark-mode .btn-clear {
@@ -6773,6 +6793,7 @@ width: 100%;
 position: absolute;
 right:0;
 width:8em;
+top:15px;
 display: none
 }
 

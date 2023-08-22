@@ -56,7 +56,10 @@ export const Main = () => {
   const [showMenu, setShowMenu] = useState();
   const [keyword, setKeyword] = useState("");
 
-  const [updatedFilters, setUpdatedFilters] = useState([])
+  const [updatedFilters, setUpdatedFilters] = useState(false);
+
+  const [updatedColor, setUpdatedColor] = useState({});
+
 
   const slideIt = (show) => {
     setShowMenu(show);
@@ -106,7 +109,7 @@ export const Main = () => {
       ];
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
-
+      console.log(fieldsByTag, "hi there")
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
       const _quickFilterFields = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
@@ -129,10 +132,10 @@ export const Main = () => {
           } else {
             _filterSet[d['name']] = d['default_filter_value']
             setSelectedFilters(_filterSet)
-          }          
+          }
         })
         console.log("filter set",_filterSet)
-        
+
       } else {
         console.error("No default filters")
       }
@@ -211,8 +214,7 @@ export const Main = () => {
         console.error(`No quick filter fields found using tag ${LOOKML_FIELD_TAGS.quick_filter}`)
       )
 
-     //
-       console.log(defaultFilterSelections, "elizabeth")
+
      //
      //  //added  QuickFilter here
      //
@@ -532,6 +534,7 @@ export const Main = () => {
                   description={{description: <div dangerouslySetInnerHTML={{__html:comment1}} />}}
                   updatedFilters={updatedFilters}
                   setUpdatedFilters={setUpdatedFilters}
+
                 />
               </Tab>
               <Tab eventKey="invoice" title="Invoice Report" mountOnEnter={true} unmountOnExit={false}>
