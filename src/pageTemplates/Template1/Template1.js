@@ -22,7 +22,7 @@ import QuickFilter from "./helpers/QuickFilter";
 import AccountGroups from "./helpers/AccountGroups";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
-import CurrentAccountGroup  from "./helpers/CurrentAccountGroup";
+
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 
 
@@ -63,7 +63,13 @@ const Template1 = ({
   handleChangeKeyword,
   description,
   updatedFilters,
-  setUpdatedFilters
+  setUpdatedFilters,
+
+
+  handleFieldsAll,
+  updatedColor,
+  setUpdatedColor
+
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -85,6 +91,7 @@ const Template1 = ({
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
 
   useEffect(() => {
     if (currentNavTab == tabKey) {
@@ -123,6 +130,8 @@ const Template1 = ({
       dashboard_elements[0].result_maker.query;
 
       setSelectedFields(fields);
+
+
 
       // console.log("filter",getAllFilters())
       // if (Object.keys(getAllFilters()).length == 0) {
@@ -350,6 +359,7 @@ const Template1 = ({
               tabs[currentInnerTab]["query"] = client_id;
               setTabList(tabs);
               setUpdatedFilters(filters)
+
             }
 
             const updateInnerTabFilters = async (filters) => {
@@ -378,10 +388,11 @@ const Template1 = ({
             };
 
             async function doClearAll() {
-              console.log('handleClearAll')
+
               // setIsDefaultProduct(false);
               setUpdateButtonClicked(true);
               setSelectedFields([]);
+              setSelectedAccountGroup([])
               let tabs = [...tabList];
               let currentTab = tabs[currentInnerTab];
               currentTab["selected_fields"] = [];
@@ -399,14 +410,19 @@ const Template1 = ({
                 setIsFilterChanged(true);
               }
 
+
+              async function clearAllAccounts() {
+                setSelectedAccountGroup([])
+              }
+
               async function handleRestoreDefault() {
-                setIsDefaultProduct(defaultChecked);
-                setUpdateButtonClicked(true);
+
                 let tabs = [...tabList];
-                let currentTab = tabs[currentInnerTab];
-                currentTab["selected_fields"] = currentTab["default_fields"];
+
+                tabs[currentInnerTab]["selected_fields"] = [...tabs[currentInnerTab]["default_fields"]];
                 setTabList(tabs);
               }
+
 
               useEffect((e) => {
                 document.addEventListener("click", handleClickOutside, false);
@@ -442,8 +458,8 @@ const Template1 = ({
                   $('.theSelected').removeClass('theEnd').css({'maxHeight': 'unset', "overflow" : "unset"})
                   $('.hideThisEnd, .whiteBar').hide()
                 }
-                 const num = $('.tab-pane.active.show .theSelected .theOptions').length
-                  $('#numberCounter').html($('.tab-pane.active.show .theSelected .theOptions').length + 1)
+
+                  $('#numberCounter').html($('.tab-pane.active.show .theSelected .theOptions').length + $('.tab-pane.active.show .theSelected .dateChoice').length)
               })
               $(window).resize(function () {
                   $(document).trigger('click')
@@ -454,11 +470,6 @@ const Template1 = ({
               const defaultChosenValue = localStorage.getItem('choseClearAll');
               console.log('local storage value first', defaultChosenValue)
 
-              // const handleChoice = (choice) => {
-              //   setChoseClearAll(choice);
-              //   localStorage.setItem('choseClearAll', choice);
-              //   window.location.reload();
-              // }
 
 
               const handleUserYes = () => {
@@ -467,14 +478,6 @@ const Template1 = ({
                 doClearAll();
                 setShow(false);
               }
-
-              // console.log(choseClearAll)
-              //
-              // if(defaultChosenValue == "1"){
-              //   console.log("it is user 1")
-              //   // setShow(false);
-              //   // doClearAll();
-              // }
 
 
 
@@ -494,7 +497,20 @@ const Template1 = ({
               const slideIt2 = () =>{
                 setShowMenu2(!showMenu2)
               }
+              function handleFieldAll(value) {
+                setSelectedAccountGroup(accountGroupOptions)
+              }
 
+              function handleFieldsAll(value) {
+                let tabs = [...tabList];
+                tabs[currentInnerTab]['selected_fields'] = fieldOptions?.map(f => {return f['name']});
+                setTabList(tabs)
+              }
+
+
+              const changeColor = () => {
+                  setUpdatedFilters(true);
+                };
 
 
               return (
@@ -549,7 +565,12 @@ const Template1 = ({
 
 
                     <Button
-                    onClick={handleTabVisUpdate}
+                    onClick={() => {
+                     handleTabVisUpdate();
+                     changeColor();
+                   }}
+
+
                     className="btn">Update Selections
                   </Button>
                 </div>
@@ -568,9 +589,9 @@ const Template1 = ({
                               <Accordion.Header>Account Groups</Accordion.Header>
                               <Accordion.Body>
 
-                              <span className="allOptions clear first">Select All</span>
+                              <span className="allOptions clear first" onClick={handleFieldAll}>Select All</span>
 
-                              <span className="allOptions clear second">Clear All</span>
+                              <span className="allOptions clear second" onClick={clearAllAccounts}>Clear All</span>
 
                               <span className="allOptions clear"  onClick={() => slideIt2()}>View All</span>
 
@@ -587,6 +608,7 @@ const Template1 = ({
                                 setSelectedAccountGroup={setSelectedAccountGroup}
                                 showMenu2={showMenu2}
                                 setShowMenu2={setShowMenu2}
+                                handleFieldAll={handleFieldAll}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
@@ -602,7 +624,7 @@ const Template1 = ({
                               <Accordion.Header>Fields</Accordion.Header>
                               <Accordion.Body>
                               <div className="mb-5">
-                              <span className="allOptions clear first">Select All</span>
+                              <span className="allOptions clear first" onClick={handleFieldsAll}>Select All</span>
 
                               <span className="allOptions clear restore" onClick={handleRestoreDefault}>Restore Defaults</span>
 
@@ -610,10 +632,13 @@ const Template1 = ({
                               </div>
 
                                 <Fields
-                                fieldOptions={fieldOptions}
+
                                 setTabList={setTabList}
                                 tabList={tabList}
                                 currentInnerTab={currentInnerTab}
+                                selectedFields={selectedFields}
+                                fieldOptions={fieldOptions}
+                                setSelectedFields={setSelectedFields}
                                 // selectedFields={selectedFields}
                                 // setSelectedFields={setSelectedFields}
                                 // isDefault={isDefaultProduct}
@@ -622,6 +647,7 @@ const Template1 = ({
                                 setUpdateBtn={setUpdateButtonClicked}
                                 showMenu2={showMenu2}
                                 setShowMenu2={setShowMenu2}
+                                handleFieldsAll={handleFieldsAll}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
@@ -795,7 +821,7 @@ const Template1 = ({
             </Row>
 
 
-          <Row className="fullW mt-4 position-relative">
+          <Row className="fullW mt-5 position-relative">
 
             <Col xs={12} md={11}>
 
@@ -819,25 +845,14 @@ const Template1 = ({
 
                 selectedQuickFilter={selectedQuickFilter}
                 setSelectedQuickFilter={setSelectedQuickFilter}
+
+                selectedAccountGroup={selectedAccountGroup}
+                setSelectedAccountGroup={setSelectedAccountGroup}
                 updatedFilters={updatedFilters}
+                setUpdatedFilters={setUpdatedFilters}
+                changeColor={changeColor}
                 />
 
-
-                                  <CurrentAccountGroup
-                                  selectedDateFilter={selectedDateFilter}
-                                  selectedFilters={selectedFilters}
-                                  selectedFields={selectedFields}
-                                  fieldOptions={fieldOptions}
-                                  setSelectedFields={setSelectedFields}
-                                  filterOptions={filterOptions}
-                                  setSelectedFilters={setSelectedFilters}
-                                  dateFilterOptions={dateFilterOptions}
-                                  selectedDateRange={selectedDateRange}
-                                  quickFilterOptions={quickFilterOptions}
-                                  selectedAccountGroup={selectedAccountGroup}
-                                  setSelectedAccountGroup={setSelectedAccountGroup}
-                                  updatedFilters={updatedFilters}
-                                  />
 
 
               </div>
