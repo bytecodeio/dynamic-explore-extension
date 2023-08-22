@@ -7,8 +7,7 @@
     "analyze": "set ANALYZE_MODE=static && yarn build",
     "build": "set BABEL_ENV=build && webpack --config webpack.prod.js",
     "clean": "rm -rf dist",
-    "dev": "webpack serve --hot --port 8080 --disable-host-check --config webpack.develop.js",
-    "prebuild": "yarn clean"
+    "dev": "webpack serve --hot --port 8080 --disable-host-check --config webpack.develop.js"
   },
   "author": "yournamehere",
   "license": "Apache-2.0",
