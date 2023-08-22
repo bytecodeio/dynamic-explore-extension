@@ -23,6 +23,8 @@ import CurrentAccountGroup  from "./helpers/CurrentAccountGroup";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 import { CurrentSelection2 } from "./helpers/CurrentSelection2";
+import usePagination from "@mui/material/usePagination/usePagination";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 const Template2 = ({
   currentNavTab,
   filters,
@@ -41,7 +43,8 @@ const Template2 = ({
   selectedFilters,
   setSelectedFilters,
   initialLoad,
-  setInitialLoad
+  setInitialLoad,
+  isActive
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -54,12 +57,26 @@ const Template2 = ({
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   const [visList, setVisList] = useState([])
+  const [isMounted, setIsMounted] = useState(false)
   function handleClearAll() {}
 
+  const params = useParams()
+
   useEffect(() => {
-    if (currentNavTab == tabKey) {
-      setIsFilterChanged(true);
-      handleTabVisUpdate();
+    if (params.subpath == tabKey) {
+      if (!isMounted) {
+        console.log("Mounting")
+        try {
+          fetchDefaultFieldsAndFilters();
+          setIsMounted(true)
+        } catch (e) {
+          console.error("Error fetching default dashboard", e);
+          setIsMounted(true)
+        }
+      } else {
+        handleTabVisUpdate();
+      }
+      
       //slideIt(show3);
     }
   }, [currentNavTab]);
@@ -67,56 +84,46 @@ const Template2 = ({
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
   useState(true);
-  useEffect(() => {
-    console.log("is reloading",isFetchingDefaultDashboard)
 
-    async function fetchDefaultFieldsAndFilters() {
-      console.log("config", config)
-      let _visList = []
-      let index = 0
-      for await(let visConfig of config) {
-        const {dashboard_elements, dashboard_filters} = await sdk.ok(
-          sdk.dashboard(visConfig['lookml_id'], 'dashboard_elements, dashboard_filters')
-        )
-        if (dashboard_elements.length > 0) {
-          dashboard_elements?.map((t,i) => {
-            let vis = {}
-            let {client_id} = t['result_maker']['query'];
-            vis =  {
-              visId: visConfig['vis_name'],
-              title: t['title'],
-              query: client_id,
-              default_fields: [...t.result_maker.query.fields],
-              selected_fields: [...t.result_maker.query.fields],
-              index: index++
-            }
-            _visList.push(vis)
+  async function fetchDefaultFieldsAndFilters() {
+    console.log("config", config)
+    let _visList = []
+    let index = 0
+    for await(let visConfig of config) {
+      const {dashboard_elements, dashboard_filters} = await sdk.ok(
+        sdk.dashboard(visConfig['lookml_id'], 'dashboard_elements, dashboard_filters')
+      )
+      if (dashboard_elements.length > 0) {
+        dashboard_elements?.map((t,i) => {
+          let vis = {}
+          let {client_id} = t['result_maker']['query'];
+          vis =  {
+            visId: visConfig['vis_name'],
+            title: t['title'],
+            query: client_id,
+            default_fields: [...t.result_maker.query.fields],
+            selected_fields: [...t.result_maker.query.fields],
+            index: index++
+          }
+          _visList.push(vis)
 
-            if (initialLoad && i === 0) {
-              //Finish default query
-                console.log("dashboard element", t.result_maker.query.filters)
-                setInitialLoad(false)
-            }          
-          })  
-        } else (setInitialLoad(false))
-    
-      }
-      console.log("visList", _visList)
-      setVisList(_visList)
-
-
-
-      setSelectedFields(fields);
-      setIsFetchingDefaultDashboard(false);
+          if (initialLoad && i === 0) {
+            //Finish default query
+              console.log("dashboard element", t.result_maker.query.filters)
+              setInitialLoad(false)
+          }          
+        })  
+      } else (setInitialLoad(false))
+  
     }
+    console.log("visList", _visList)
+    setVisList(_visList)
 
-    try {
-      fetchDefaultFieldsAndFilters();
-    } catch (e) {
-      console.error("Error fetching default dashboard", e);
-    }
-  }, []);
 
+
+    setSelectedFields(fields);
+    setIsFetchingDefaultDashboard(false);
+  }
 
   // Page loading state
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -231,7 +238,7 @@ const Template2 = ({
 
 
               return (
-              <Container fluid>
+              <Container fluid style={isActive?{display:'block'}:{display:'none'}}>
                 {isPageLoading ? (
                   <Spinner />
                   ) : (

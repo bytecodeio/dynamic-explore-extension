@@ -263,17 +263,17 @@ export const Main2 = () => {
               <Nav className="inner nav nav-tabs nav-fill">
                 {tabs?.map(t =>
                   <Nav.Item>
-                    <Nav.Link eventKey={t.route} as={Link} to={`${route.url}/${t.route}`}>{t.title}</Nav.Link>
-                  </Nav.Item>
+                    <Nav.Link active={t.route === params.subpath} eventKey={t.route} as={Link} to={`${t.route}`}>{t.title}</Nav.Link>
+                  </Nav.Item>                  
                 )}
               </Nav>
             </Tab.Container>
             <div className="show">
             <Tab.Content>
-              <Switch>
-                {tabs?.map((t,i) =>
-                  <Route exact path={`${route.url}/${t.route}`}>
+              <>
+                {tabs?.map((t,i) => 
                     <LayoutSelector key={i}
+                      isActive={params.subpath === t.route}
                       tabProps={t}
                       currentNavTab={currentNavTab}
                       filters={filters}
@@ -288,12 +288,11 @@ export const Main2 = () => {
                       initialLoad={initialLoad}
                       setInitialLoad={setInitialLoad}
                       />
-                  </Route>
                 )}
-                <Route path={`${route.url}/`}>
+                {/* <Route path={`${route.url}/`}> 
                   <Test />
-                </Route>
-              </Switch>
+                </Route> */}
+              </>
             </Tab.Content>
             </div>
             {/* <Tabs
