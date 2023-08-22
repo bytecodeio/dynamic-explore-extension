@@ -32,7 +32,7 @@ const EmbedTable = ({ queryId }) => {
         el.innerHTML = "";
         LookerEmbedSDK.init(hostUrl);
         LookerEmbedSDK.createExploreWithUrl(
-            `${hostUrl}/embed/query/rebecca_thompson_project/sdt_all_dates?qid=${queryId}&sdk=2&embed_domain=${hostUrl}&sandboxed_host=true`
+            `${hostUrl}/embed/query/rebecca_thompson_project/order_items?qid=${queryId}&sdk=2&embed_domain=${hostUrl}&sandboxed_host=true`
           )
           .appendTo(el)
           .build()
