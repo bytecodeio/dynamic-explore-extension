@@ -22,6 +22,9 @@ import { CurrentSelection } from "./helpers/CurrentSelection";
 import CurrentAccountGroup  from "./helpers/CurrentAccountGroup";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
+import { CurrentSelection2 } from "./helpers/CurrentSelection2";
+import usePagination from "@mui/material/usePagination/usePagination";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 const Template2 = ({
   currentNavTab,
   filters,
@@ -40,7 +43,8 @@ const Template2 = ({
   selectedFilters,
   setSelectedFilters,
   initialLoad,
-  setInitialLoad
+  setInitialLoad,
+  isActive
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -53,12 +57,26 @@ const Template2 = ({
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   const [visList, setVisList] = useState([])
+  const [isMounted, setIsMounted] = useState(false)
   function handleClearAll() {}
 
+  const params = useParams()
+
   useEffect(() => {
-    if (currentNavTab == tabKey) {
-      setIsFilterChanged(true);
-      handleTabVisUpdate();
+    if (params.subpath == tabKey) {
+      if (!isMounted) {
+        console.log("Mounting")
+        try {
+          fetchDefaultFieldsAndFilters();
+          setIsMounted(true)
+        } catch (e) {
+          console.error("Error fetching default dashboard", e);
+          setIsMounted(true)
+        }
+      } else {
+        handleTabVisUpdate();
+      }
+      
       //slideIt(show3);
     }
   }, [currentNavTab]);
@@ -66,20 +84,21 @@ const Template2 = ({
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
   useState(true);
-  useEffect(() => {
 
-    async function fetchDefaultFieldsAndFilters() {
-      let _visList = []
-      let index = 0
-      for await(let visConfig of Object.keys(config)) {
-        const {dashboard_elements, dashboard_filters} = await sdk.ok(
-          sdk.dashboard(config[visConfig], 'dashboard_elements, dashboard_filters')
-        )
+  async function fetchDefaultFieldsAndFilters() {
+    console.log("config", config)
+    let _visList = []
+    let index = 0
+    for await(let visConfig of config) {
+      const {dashboard_elements, dashboard_filters} = await sdk.ok(
+        sdk.dashboard(visConfig['lookml_id'], 'dashboard_elements, dashboard_filters')
+      )
+      if (dashboard_elements.length > 0) {
         dashboard_elements?.map((t,i) => {
           let vis = {}
           let {client_id} = t['result_maker']['query'];
           vis =  {
-            visId: visConfig,
+            visId: visConfig['vis_name'],
             title: t['title'],
             query: client_id,
             default_fields: [...t.result_maker.query.fields],
@@ -93,24 +112,18 @@ const Template2 = ({
               console.log("dashboard element", t.result_maker.query.filters)
               setInitialLoad(false)
           }          
-        })      
-      }
-      console.log("visList", _visList)
-      setVisList(_visList)
-
-
-
-      setSelectedFields(fields);
-      setIsFetchingDefaultDashboard(false);
+        })  
+      } else (setInitialLoad(false))
+  
     }
+    console.log("visList", _visList)
+    setVisList(_visList)
 
-    try {
-      fetchDefaultFieldsAndFilters();
-    } catch (e) {
-      console.error("Error fetching default dashboard", e);
-    }
-  }, []);
 
+
+    setSelectedFields(fields);
+    setIsFetchingDefaultDashboard(false);
+  }
 
   // Page loading state
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -225,7 +238,7 @@ const Template2 = ({
 
 
               return (
-              <Container fluid>
+              <Container fluid style={isActive?{display:'block'}:{display:'none'}}>
                 {isPageLoading ? (
                   <Spinner />
                   ) : (
@@ -476,23 +489,14 @@ const Template2 = ({
 
               <div className="d-flex justify-content-start align-items-center flex-wrap">
                 <p class="mr-3"><i class="fal fa-filter mr-1"></i>Filters</p>
-                {/* <CurrentSelection
-                selectedDateFilter={selectedDateFilter}
-                selectedFilters={selectedFilters}
-                selectedFields={selectedFields}
-                fieldOptions={fieldOptions}
-                setSelectedFields={setSelectedFields}
-                filterOptions={filterOptions}
-                setSelectedFilters={setSelectedFilters}
-                dateFilterOptions={dateFilterOptions}
-                selectedDateRange={selectedDateRange}
-                quickFilterOptions={quickFilterOptions}
-
-                selectedQuickFilter={selectedQuickFilter}
-                setSelectedQuickFilter={setSelectedQuickFilter}
+                <CurrentSelection2
+                  filters={filters}
+                  selectedFilters={selectedFilters}
+                  setSelectedFilters={setSelectedFilters}
+                  formatFilters={formatFilters}
                 />
 
-                <CurrentAccountGroup
+                {/*<CurrentAccountGroup
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
                 selectedFields={selectedFields}
