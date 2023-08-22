@@ -124,7 +124,7 @@ export const Main = () => {
 
       console.log("default filters", _defaultFilterFields)
 
-      if (_defaultFilterFields.length > 0) {
+      if (_defaultFilterFields?.length > 0) {
         let _filterSet = {}
         _defaultFilterFields.map(d => {
           if (_dateFilterOptions.find(({name}) => name === d['name'])) {
@@ -378,9 +378,11 @@ export const Main = () => {
         result_format: "json",
         body: {
           model: LOOKER_MODEL,
-          view: field["view"],
+          view: LOOKER_EXPLORE,
+          //view: field["view"],
           fields: [field["name"]],
           filters: getAllFilters(),
+          limit:10
         },
       })
     );
@@ -392,9 +394,10 @@ export const Main = () => {
         result_format: "json",
         body: {
           model: LOOKER_MODEL,
-          view: field["view"],
+          view: LOOKER_EXPLORE,
           fields: [field["name"]],
           filters: {},
+          limit:10
         },
       })
     );
