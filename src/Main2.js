@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Container, Tab, Tabs, Nav} from "react-bootstrap";
+import { Container, Tab, Tabs, Nav, NavItem} from "react-bootstrap";
 import SideForm from "./components/nav/Form.js";
 import PurchasesReview from "./pageTemplates/PurchasesReview/PurchasesReview.js";
 import InflationDeflation from "./pageTemplates/InflationDeflation/InflationDeflation.js";
@@ -24,7 +24,9 @@ import Template2 from "./pageTemplates/Template2/Template2.js";
 import Template3 from "./pageTemplates/Template3/Template3.js";
 import { BrowserRouter, Routes, Route, Link, useNavigate, Switch, useRouteMatch } from "react-router-dom";
 import Test from "./Test.js";
-import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.js";
+import { useHistory, useLocation, useParams } from "react-router-dom/cjs/react-router-dom.js";
+import { getApplication, getApplicationTabs, getTabVisualizations } from "./utils/writebackService.js";
+import { LayoutSelector } from "./LayoutSelector.js";
 
 export const Main2 = () => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
@@ -44,8 +46,12 @@ export const Main2 = () => {
 
   const [selectedFilters, setSelectedFilters] = useState([])
 
-  const {path} = useRouteMatch()
+  const [tabs, setTabs] = useState([])
+  const [application, setApplication] = useState({})
 
+  const params = useParams();
+
+  const route = useRouteMatch()
 
   const slideIt = (show) => {
     setShowMenu(show);
@@ -78,9 +84,31 @@ export const Main2 = () => {
       return fieldsByTag;
     }
 
+    const initializeApp = async () => {
+      let app = await getApplication(params.path,sdk);
+      if (app.length > 0) {
+        setApplication(app[0])
+        let appTabs = await getApplicationTabs(app[0].id, sdk)
+        if (appTabs.length > 0) {
+          for await (let tab of appTabs) {
+            let vis = await getTabVisualizations(tab.id, sdk);
+            tab['config'] = vis;
+          }
+          setTabs(appTabs)
+        }
+        console.log(appTabs)
+      }
+      return app[0];
+    }
+
+    
+
     const fetchLookmlFields = async () => {
+      let {model, explore} = await initializeApp();
+      console.log(model, explore)
+
       const response = await sdk.ok(
-        sdk.lookml_model_explore(LOOKER_MODEL, LOOKER_EXPLORE, "fields")
+        sdk.lookml_model_explore(model, explore, "fields")
       );
 
       const {
@@ -177,7 +205,6 @@ export const Main2 = () => {
   };
 
   const getValues = (field, filters) => {
-    console.log(field, filters)
     return sdk.ok(
       sdk.run_inline_query({
         result_format: "json",
@@ -202,11 +229,26 @@ export const Main2 = () => {
     setProperties(newProps)
   }
 
-  let comment1 =  `The <span class="highlight">Product Movement Dashboard</span> allows viewing of top-moving products for a single account in descending order by units, filtering by type or customize your report.`
-  let comment2 = `The <span class="highlight">Invoice Report Dashboard</span> allows the view of an invoice summary for a single account and query all invoices within a specific date range.`
-  let comment3 = `The <span class="highlight">Auto-Sub Report</span> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolor.`
-  let comment4 = `The <span class="highlight">Inflation/Deflation Report</span> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolor.`
-
+  const layoutSelection = (tabProps) => {
+    if (tabProps.layout_name === "Template1") {
+      return <Template2 key={tabProps.id}
+          currentNavTab={currentNavTab}
+          filters={filters}
+          fields={fields.find(({tab}) => tab === "Product Movement Report")}
+          properties={properties}
+          updateAppProperties={updateAppProperties}
+          isFetchingLookmlFields={isFetchingLookmlFields}
+          config={tabProps.config}
+          tabKey={tabProps.route}
+          showMenu={showMenu}
+          setShowMenu={setShowMenu}
+          description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
+          selectedFilters={selectedFilters}
+          setSelectedFilters={setSelectedFilters}
+          initialLoad={initialLoad}
+          setInitialLoad={setInitialLoad}/>;
+    }
+  }
 
   return (
     <>
@@ -215,100 +257,39 @@ export const Main2 = () => {
         <TopNav /> 
          <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
           <div id="nav2">
-            <Tab.Container 
+            <Tab.Container
               defaultActiveKey={currentNavTab}
               onSelect={(k) => setCurrentNavTab(k)}>
-              <Nav>
-                <Nav.Item>
-                  <Nav.Link eventKey={"product-movement"} as={Link} to={`${path}/product-movement`}>Product Movement</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey={"invoice-report"} as={Link} to={`${path}/invoice-report`}>Invoice Report</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey={"auto-sub"} as={Link} to={`${path}/auto-sub`}>Auto Sub Report</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey={"inflation-deflation"} as={Link} to={`${path}/inflation-deflation`}>Inflation/Deflation</Nav.Link>
-                </Nav.Item>
+              <Nav className="inner nav nav-tabs nav-fill">
+                {tabs?.map(t => 
+                  <Nav.Item>
+                    <Nav.Link eventKey={t.route} as={Link} to={`${route.url}/${t.route}`}>{t.title}</Nav.Link>
+                  </Nav.Item>                  
+                )}
               </Nav>
             </Tab.Container>
             <Tab.Content>
               <Switch>
-                <Route exact path={`${path}/product-movement`}>
-                  <Template2
-                    currentNavTab={currentNavTab}
-                    filters={filters}
-                    fields={fields.find(({tab}) => tab === "Product Movement Report")}
-                    properties={properties}
-                    updateAppProperties={updateAppProperties}
-                    isFetchingLookmlFields={isFetchingLookmlFields}
-                    config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
-                    tabKey={"product_movement"}
-                    showMenu={showMenu}
-                    setShowMenu={setShowMenu}
-                    description={{description: <div dangerouslySetInnerHTML={{__html:comment1}} />}}
-                    selectedFilters={selectedFilters}
-                    setSelectedFilters={setSelectedFilters}
-                    initialLoad={initialLoad}
-                    setInitialLoad={setInitialLoad}
-                  />
-                </Route>
-                <Route exact path={`${path}/invoice-report`}>
-                  <Template2
-                    currentNavTab={currentNavTab}
-                    filters={filters}
-                    fields={fields.find(({tab}) => tab === "Product Movement Report")}
-                    properties={properties}
-                    updateAppProperties={updateAppProperties}
-                    isFetchingLookmlFields={isFetchingLookmlFields}
-                    config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
-                    tabKey={"invoice_report"}
-                    showMenu={showMenu}
-                    setShowMenu={setShowMenu}
-                    description={{description: <div dangerouslySetInnerHTML={{__html:comment2}} />}}
-                    selectedFilters={selectedFilters}
-                    setSelectedFilters={setSelectedFilters}
-                  />
-                </Route>
-                <Route exact path={`${path}/auto-sub`}>
-                  <Template2
-                    currentNavTab={currentNavTab}
-                    filters={filters}
-                    fields={fields.find(({tab}) => tab === "Product Movement Report")}
-                    properties={properties}
-                    updateAppProperties={updateAppProperties}
-                    isFetchingLookmlFields={isFetchingLookmlFields}
-                    config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
-                    tabKey={"auto_sub"}
-                    showMenu={showMenu}
-                    setShowMenu={setShowMenu}
-                    description={{description: <div dangerouslySetInnerHTML={{__html:comment3}} />}}
-                    selectedFilters={selectedFilters}
-                    setSelectedFilters={setSelectedFilters}
-                  />
-                </Route>
-                <Route exact path={`${path}/inflation-deflation`}>
-                  <Template3
-                    currentNavTab={currentNavTab}
-                    filters={filters}
-                    fields={fields.find(({tab}) => tab === "Product Movement Report")}
-                    properties={properties}
-                    updateAppProperties={updateAppProperties}
-                    isFetchingLookmlFields={isFetchingLookmlFields}
-                    config={{ 
-                      tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
-                      vis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID
-                    }}
-                    tabKey={"id"}
-                    showMenu={showMenu}
-                    setShowMenu={setShowMenu}
-                    description={{description: <div dangerouslySetInnerHTML={{__html:comment4}} />}}
-                    selectedFilters={selectedFilters}
-                    setSelectedFilters={setSelectedFilters}
-                  />
-                </Route>
-                <Route path={`${path}/`}> 
+                {tabs?.map((t,i) => 
+                  <Route exact path={`${route.url}/${t.route}`}>
+                    <LayoutSelector key={i}
+                      tabProps={t}
+                      currentNavTab={currentNavTab}
+                      filters={filters}
+                      fields={fields}
+                      properties={properties}
+                      updateAppProperties={updateAppProperties}
+                      isFetchingLookmlFields={isFetchingLookmlFields}
+                      showMenu={showMenu}
+                      setShowMenu={setShowMenu}
+                      selectedFilters={selectedFilters}
+                      setSelectedFilters={setSelectedFilters}
+                      initialLoad={initialLoad}
+                      setInitialLoad={setInitialLoad}
+                      />
+                  </Route>
+                )}
+                <Route path={`${route.url}/`}> 
                   <Test />
                 </Route>
               </Switch>

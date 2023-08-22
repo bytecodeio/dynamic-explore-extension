@@ -22,6 +22,7 @@ import { CurrentSelection } from "./helpers/CurrentSelection";
 import CurrentAccountGroup  from "./helpers/CurrentAccountGroup";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
+import { CurrentSelection2 } from "./helpers/CurrentSelection2";
 const Template2 = ({
   currentNavTab,
   filters,
@@ -67,33 +68,38 @@ const Template2 = ({
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
   useState(true);
   useEffect(() => {
+    console.log("is reloading",isFetchingDefaultDashboard)
 
     async function fetchDefaultFieldsAndFilters() {
+      console.log("config", config)
       let _visList = []
       let index = 0
-      for await(let visConfig of Object.keys(config)) {
+      for await(let visConfig of config) {
         const {dashboard_elements, dashboard_filters} = await sdk.ok(
-          sdk.dashboard(config[visConfig], 'dashboard_elements, dashboard_filters')
+          sdk.dashboard(visConfig['lookml_id'], 'dashboard_elements, dashboard_filters')
         )
-        dashboard_elements?.map((t,i) => {
-          let vis = {}
-          let {client_id} = t['result_maker']['query'];
-          vis =  {
-            visId: visConfig,
-            title: t['title'],
-            query: client_id,
-            default_fields: [...t.result_maker.query.fields],
-            selected_fields: [...t.result_maker.query.fields],
-            index: index++
-          }
-          _visList.push(vis)
+        if (dashboard_elements.length > 0) {
+          dashboard_elements?.map((t,i) => {
+            let vis = {}
+            let {client_id} = t['result_maker']['query'];
+            vis =  {
+              visId: visConfig['vis_name'],
+              title: t['title'],
+              query: client_id,
+              default_fields: [...t.result_maker.query.fields],
+              selected_fields: [...t.result_maker.query.fields],
+              index: index++
+            }
+            _visList.push(vis)
 
-          if (initialLoad && i === 0) {
-            //Finish default query
-              console.log("dashboard element", t.result_maker.query.filters)
-              setInitialLoad(false)
-          }          
-        })      
+            if (initialLoad && i === 0) {
+              //Finish default query
+                console.log("dashboard element", t.result_maker.query.filters)
+                setInitialLoad(false)
+            }          
+          })  
+        } else (setInitialLoad(false))
+    
       }
       console.log("visList", _visList)
       setVisList(_visList)
@@ -476,23 +482,14 @@ const Template2 = ({
 
               <div className="d-flex justify-content-start align-items-center flex-wrap">
                 <p class="mr-3"><i class="fal fa-filter mr-1"></i>Filters</p>
-                {/* <CurrentSelection
-                selectedDateFilter={selectedDateFilter}
-                selectedFilters={selectedFilters}
-                selectedFields={selectedFields}
-                fieldOptions={fieldOptions}
-                setSelectedFields={setSelectedFields}
-                filterOptions={filterOptions}
-                setSelectedFilters={setSelectedFilters}
-                dateFilterOptions={dateFilterOptions}
-                selectedDateRange={selectedDateRange}
-                quickFilterOptions={quickFilterOptions}
-
-                selectedQuickFilter={selectedQuickFilter}
-                setSelectedQuickFilter={setSelectedQuickFilter}
+                <CurrentSelection2
+                  filters={filters}
+                  selectedFilters={selectedFilters}
+                  setSelectedFilters={setSelectedFilters}
+                  formatFilters={formatFilters}
                 />
 
-                <CurrentAccountGroup
+                {/*<CurrentAccountGroup
                 selectedDateFilter={selectedDateFilter}
                 selectedFilters={selectedFilters}
                 selectedFields={selectedFields}
