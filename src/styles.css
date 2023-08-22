@@ -6155,7 +6155,7 @@ color: white !important;
 }
 
 .dark-mode #slideOut5 .accordion-header {
-background: black !important;
+background: #3c3a35 !important;
 }
 
 .dark-mode #slideOut5 .accordion-body {
@@ -6826,9 +6826,13 @@ display: none
 }
 }
 
-@media (max-width:1719px) and (min-width:1501px){
+@media (max-width:1719px) and (min-width:1450px){
 .grid2  .one.radio {
-  min-width: 46%;
+  min-width: 44%;
+}
+.one label {
+
+    padding-left: 20px;
 }
 }
 
