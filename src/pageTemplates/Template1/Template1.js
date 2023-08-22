@@ -96,7 +96,7 @@ const Template1 = ({
   useEffect(() => {
     if (currentNavTab == tabKey) {
       setIsFilterChanged(true);
-      handleTabVisUpdate();
+      //handleTabVisUpdate();
       //slideIt(show3);
     }
   }, [currentNavTab]);
