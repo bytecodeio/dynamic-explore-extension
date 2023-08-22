@@ -41,9 +41,9 @@ const Fields = ({
               type="checkbox"
               className=""
               label={fieldOption.label_short}
-              checked={tabList[currentInnerTab]["selected_fields"].includes(
+              checked={tabList.length > 0?tabList[currentInnerTab]["selected_fields"].includes(
                 fieldOption.name
-              )}
+              ):false}
               name="Fields"
               // id={fieldOption.name}
               value={fieldOption.fields}

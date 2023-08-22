@@ -14,7 +14,10 @@ export const App = hot(() => {
   return (
     <ExtensionProvider>
       <Switch>
-        <Route path={APP_ROUTE}>
+      <Route path='/:path/:subpath'>
+          <Main2 />
+        </Route>
+        <Route path='/:path/'>
           <Main2 />
         </Route>
         <Route exact path="/">
