@@ -6872,6 +6872,56 @@ display: none
 
 
 @media (max-width:1500px){
+  .allOptions.clear.second {
+      right: unset;
+      left: 0;
+      width: 100%;
+  }
+  .allOptions.clear {
+      position: relative;
+
+      width: 100%;
+      right: 0;
+      left:0;
+      margin: 0.4em 0em;
+  }
+
+  .allOptions.clear.restore {
+    right: unset;
+    left: 0;
+    width: 100%;
+}
+
+  .btn-group{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+align-items: flex-start;
+  }
+
+    .btn-group button {
+    width: 100%;
+    margin: 0.2em 0em;
+}
+
+
+.value {
+    position: relative;
+    right: unset;
+    background: #e2e9ea;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2rem;
+    font-size: 14px;
+    border: none;
+    max-width: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+}
+
 .grid2  .one.radio {
   min-width: unset;
 }
