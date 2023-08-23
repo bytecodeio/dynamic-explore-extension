@@ -212,24 +212,6 @@ const Template2 = ({
     setVisList(newVisList)
   }
 
-  function getSelectedFilters() {
-    if(selection !== "") {
-      return filters.map(filter => {
-        let values = {};
-        Object.keys(filter.options.values).forEach(value => {
-          if(filter.options.values[value] && filter.options.values[value].indexOf(selection) !== -1)
-            values[value] = filter.options.values[value];
-        })
-        return {
-          ...filter,
-          options: {
-            ...filter.options,
-            values: values
-        }};
-      });
-    }
-    return filters;
-  }
 
 
   async function doClearAll() {
@@ -353,6 +335,29 @@ const Template2 = ({
     //   tabs[currentInnerTab]['selected_fields'] = fieldOptions?.map(f => {return f['name']});
     //   setTabList(tabs)
     // }
+
+
+//for search
+
+    function getSelectedFilters() {
+      if(selection !== "") {
+        return filters.map(filter => {
+          let values = {};
+          Object.keys(filter.options.values).forEach(value => {
+            if(filter.options.values[value] && filter.options.values[value].indexOf(selection) !== -1)
+              values[value] = filter.options.values[value];
+          })
+          return {
+            ...filter,
+            options: {
+              ...filter.options,
+              values: values
+          }};
+        });
+      }
+      return filters;
+    }
+
 
               return (
               <div className={isActive? "tab-pane active" : "hidden"}>
