@@ -2,7 +2,7 @@ import React, {useState, useContext} from "react";
 import DatePicker from "react-datepicker";
 import { Form, Row, Col, Button, Container } from "react-bootstrap";
 import { useEffect } from "react";
-import { updateDateRange } from "../../../utils/globalFunctions";
+import { sortDateFilterList, updateDateRange } from "../../../utils/globalFunctions";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import { LOOKER_MODEL } from "../../../utils/constants2";
 
@@ -96,9 +96,9 @@ export const DateRangeSelector = ({
 
 
   return (
-  <Container fluid>
+  <Container fluid className="padding-0">
     <Row className="fullW mb-1">
-      <Col md={12} lg={8}>
+      <Col md={12} lg={4}>
 
         <p className="mt-0 mb-2 mediumFont">
         {description?.description}
@@ -109,7 +109,7 @@ export const DateRangeSelector = ({
 
                 <div className="grid2">
 
-                  {dateFilter.options?.map(filter => {
+                  {sortDateFilterList(dateFilter.options)?.map(filter => {
                     return (
 
                     <div className="one radio">
@@ -137,17 +137,10 @@ export const DateRangeSelector = ({
 
 
       </Col>
-    </Row>
 
-
-    <Row className="fullW bottom d-flex align-items-center">
-      <Col md={12} lg={8}>
-
-
-    </Col>
     <Col md={12} lg={4}>
 
-      <div className="d-flex mt-3 ml2">
+      <div className="d-flex mt-1 ml2">
 
         <div className="columnStart mr2">
           <label>Start Date</label>
@@ -174,16 +167,24 @@ export const DateRangeSelector = ({
     </Col>
   </Row>
 
+  <Row className="fullW bottom d-flex align-items-center">
+      <Col md={12} lg={8}>
+
+
+    </Col>
+
+  </Row>
+
   <Row className="fullW mt-3 position-relative">
 
-    <Col xs={12} md={12}>
+    <Col xs={12} md={12} className="position-absolute">
 
       <div className="d-flex justify-content-end endAbsolute">
 
 
         <Button
         onClick={handleTabVisUpdate}
-        className="btn">Submit Dates
+        className="btn">Update Dates
       </Button>
     </div>
   </Col>

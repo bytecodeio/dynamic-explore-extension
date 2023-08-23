@@ -25,7 +25,7 @@ const AccountGroups = ({
 
   return (
     <div className="wrapFilters">
-      {fieldOptions?.options.values.map((fieldOption) => (
+      {fieldOptions?.options.values.filter(v => {return v[fieldOptions['options']['field']['name']] != null}).map((fieldOption) => (
         <div className="one" key={Object.values(fieldOption)}>
           <Form.Group>
             <Form.Check

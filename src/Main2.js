@@ -25,7 +25,7 @@ import Template3 from "./pageTemplates/Template3/Template3.js";
 import { BrowserRouter, Routes, Route, Link, useNavigate, Switch, useRouteMatch } from "react-router-dom";
 import Test from "./Test.js";
 import { useHistory, useLocation, useParams } from "react-router-dom/cjs/react-router-dom.js";
-import { getApplication, getApplicationTabs, getTabVisualizations } from "./utils/writebackService.js";
+import { getApplication, getApplicationTags, getApplicationTabs, getTabVisualizations, getTabTags } from "./utils/writebackService.js";
 import { LayoutSelector } from "./LayoutSelector.js";
 
 export const Main2 = () => {
@@ -85,30 +85,34 @@ export const Main2 = () => {
     }
 
     const initializeApp = async () => {
+      let _appTags = []
+      let _tabTags = []
       let app = await getApplication(params.path,sdk);
       if (app.length > 0) {
+        _appTags = await getApplicationTags(app[0].id,sdk);
+        console.log("apptags",_appTags)
         setApplication(app[0])
         let appTabs = await getApplicationTabs(app[0].id, sdk)
         if (appTabs.length > 0) {
           for await (let tab of appTabs) {
             let vis = await getTabVisualizations(tab.id, sdk);
             tab['config'] = vis;
+            let _tabTagsRes = await getTabTags(tab.id, sdk)
+            _tabTags = _tabTags.concat(_tabTagsRes);
           }
           setTabs(appTabs)
         }
-        console.log(appTabs)
+        console.log(_tabTags)
       }
-      return app[0];
+      return {application: app[0], applicationTags:_appTags, tabTags:_tabTags};
     }
 
 
-
     const fetchLookmlFields = async () => {
-      let {model, explore} = await initializeApp();
-      console.log(model, explore)
+      let {application, applicationTags, tabTags} = await initializeApp();
 
       const response = await sdk.ok(
-        sdk.lookml_model_explore(model, explore, "fields")
+        sdk.lookml_model_explore(application.model, application.explore, "fields")
       );
 
       const {
@@ -124,24 +128,24 @@ export const Main2 = () => {
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
       let _filters = []
-      for await(let f of LOOKML_FIELD_TAGS.filters) {
+      for await(let f of applicationTags.filter(({tag_group}) => tag_group == "filters")) {
         let _type = f.type;
-        let _tag = f.tag;
+        let _tag = f.tag_name;
         let _fields = fieldsByTag[_tag];
         let _options = []
-        if (f.options === "fields") {
+        if (f.option_type === "fields") {
           _options = _fields;
         }
-        if (f.options === "date range") {
+        if (f.option_type === "date range") {
           _options = {field:_fields[0], values:getDefaultDateRange()}
         }
-        if (f.options === "values") {
+        if (f.option_type === "values") {
           for await (let field of _fields) {
             let values = await getValues(field, {})
             _options.push({field:field, values:values})
           }
         }
-        if (f.options === "single_dimension_value") {
+        if (f.option_type === "single_dimension_value") {
           console.log("account groups", _fields)
           if (_fields.length > 0) {
             let value = await getValues(_fields[0],{})
@@ -155,22 +159,22 @@ export const Main2 = () => {
       console.log("filters", _filters)
 
       let _appProperties = []
-      for await (let p of LOOKML_FIELD_TAGS.properties){
+      for await (let p of applicationTags.filter(({tag_group}) => tag_group == "property")){
         let _type = p.type;
-        let _text = p.text;
-        let _tag = p.tag;
+        let _text = p.misc;
+        let _tag = p.tag_name;
         let _fields = fieldsByTag[_tag]
         let _options = ""
-        if (p.options === "single_value") {
+        if (p.option_type === "single_value") {
           let value = await getValues(_fields[0],{});
           _options = value[0]
         }
         _appProperties.push({type:_type, text:_text, fields:_fields[0], value:_options})
       }
 
-      let _fields = LOOKML_FIELD_TAGS.fields.map(f => {
-        let _tab = f.tab;
-        let _tag = f.tag;
+      let _fields = tabTags.map((f) => {
+        let _tab = f.title;
+        let _tag = f.tag_name;
         return {tab:_tab, fields:fieldsByTag[_tag]}
       })
 
@@ -227,27 +231,6 @@ export const Main2 = () => {
         newProps.push(prop)
     }
     setProperties(newProps)
-  }
-
-  const layoutSelection = (tabProps) => {
-    if (tabProps.layout_name === "Template1") {
-      return <Template2 key={tabProps.id}
-          currentNavTab={currentNavTab}
-          filters={filters}
-          fields={fields.find(({tab}) => tab === "Product Movement Report")}
-          properties={properties}
-          updateAppProperties={updateAppProperties}
-          isFetchingLookmlFields={isFetchingLookmlFields}
-          config={tabProps.config}
-          tabKey={tabProps.route}
-          showMenu={showMenu}
-          setShowMenu={setShowMenu}
-          description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
-          selectedFilters={selectedFilters}
-          setSelectedFilters={setSelectedFilters}
-          initialLoad={initialLoad}
-          setInitialLoad={setInitialLoad}/>;
-    }
   }
 
   return (
