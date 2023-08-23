@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Form, Modal, Spinner } from "react-bootstrap";
 
 const type = 'quick filter'
 
-const QuickFilter = ({ quickFilters, selectedFilters, setSelectedFilters, updateBtn, setUpdateBtn, setIsFilterChanged}) => {
+const QuickFilter = ({ quickFilters, selectedFilters, selection, setSelectedFilters, updateBtn, setUpdateBtn, setIsFilterChanged}) => {
   // console.log('debug: options', options, value);
   const handleSelection = (e,name) => {
     let quickFilters = {...selectedFilters}
@@ -34,6 +34,7 @@ const isActive = (key,v) => {
 useEffect(() => {
   console.log("selected Filters", selectedFilters)
 },[selectedFilters])
+
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useLayoutEffect, useState, useContext, useEffect, useRef } from "react";
 import {
   Accordion,
   Button,
@@ -8,7 +8,10 @@ import {
   Row,
   Spinner,
   Tooltip,
+  Modal
 } from "react-bootstrap";
+import * as $ from "jquery";
+import RangeSlider from 'react-bootstrap-range-slider';
 import { LOOKER_MODEL, LOOKER_EXPLORE } from "../../utils/constants";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import InnerTableTabs from "../../components/InnerTableTabs";
@@ -42,6 +45,8 @@ const Template2 = ({
   description,
   selectedFilters,
   setSelectedFilters,
+  updatedFilters,
+  setUpdatedFilters,
   initialLoad,
   setInitialLoad,
   isActive
@@ -58,7 +63,21 @@ const Template2 = ({
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   const [visList, setVisList] = useState([])
   const [isMounted, setIsMounted] = useState(false)
-  function handleClearAll() {}
+  const [selection, setSelection] = useState('');
+
+  const [ value, setValue ] = useState(0);
+  const [ step, setStep ] = useState(1);
+  const [active, setActive] = useState(false);
+  const [faClass, setFaClass] = useState(true);
+  const [toggle, setToggle] = useState(true);
+  const [showMenu2, setShowMenu2] = useState();
+  // const [choseClearAll, setChoseClearAll] = useState(defaultChosenValue);
+  const [choseClearAll, setChoseClearAll] = useState();
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+
 
   const params = useParams()
 
@@ -76,7 +95,7 @@ const Template2 = ({
       } else {
         handleTabVisUpdate();
       }
-      
+
       //slideIt(show3);
     }
   }, [currentNavTab]);
@@ -84,6 +103,10 @@ const Template2 = ({
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
   useState(true);
+
+  const handleChangeSelection = (e) => {
+    setSelection(e.target.value);
+  }
 
   async function fetchDefaultFieldsAndFilters() {
     console.log("config", config)
@@ -111,10 +134,10 @@ const Template2 = ({
             //Finish default query
               console.log("dashboard element", t.result_maker.query.filters)
               setInitialLoad(false)
-          }          
-        })  
+          }
+        })
       } else (setInitialLoad(false))
-  
+
     }
     console.log("visList", _visList)
     setVisList(_visList)
@@ -161,6 +184,7 @@ const Template2 = ({
     let _filters = {};
     _filters = await formatFilters();
     updateAppProperties(_filters)
+    setUpdatedFilters(_filters);
 
     let newVisList = []
     for await (let vis of _visList) {
@@ -188,57 +212,152 @@ const Template2 = ({
     setVisList(newVisList)
   }
 
-
-            async function handleClearAll() {
-              console.log('handleClearAll')
-              // setIsDefaultProduct(false);
-              setUpdateButtonClicked(true);
-              setSelectedFields([]);
-              let tabs = [...tabList];
-              let currentTab = tabs[currentInnerTab];
-              currentTab["selected_fields"] = [];
-              setTabList(tabs);
-              let filters = {...selectedFilters};
-              for(let name in filters) {
-                filters[name] = 'N/A';
-              }
-              setSelectedFilters(filters);
-              // setSelectedFilters((prevFilters) => {
-                //   const newFilters = { ...prevFilters };
-                //   newFilters[filterName] = 'N/A';
-                //   return newFilters;
-                // });
-                setIsFilterChanged(true);
-              }
-
-              async function handleRestoreDefault() {
-                setIsDefaultProduct(defaultChecked);
-                setUpdateButtonClicked(true);
-                let tabs = [...tabList];
-                let currentTab = tabs[currentInnerTab];
-                currentTab["selected_fields"] = currentTab["default_fields"];
-                setTabList(tabs);
-              }
-
-              useEffect((e) => {
-                document.addEventListener("click", handleClickOutside, false);
-                return () => {
-                  document.removeEventListener("click", handleClickOutside, false);
-                };
-              }, []);
-
-              const handleClickOutside = (event) => {
-                if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-                  //setShow3(false);
-                }
-              };
+  function getSelectedFilters() {
+    if(selection !== "") {
+      return filters.map(filter => {
+        let values = {};
+        Object.keys(filter.options.values).forEach(value => {
+          if(filter.options.values[value] && filter.options.values[value].indexOf(selection) !== -1)
+            values[value] = filter.options.values[value];
+        })
+        return {
+          ...filter,
+          options: {
+            ...filter.options,
+            values: values
+        }};
+      });
+    }
+    return filters;
+  }
 
 
-              // console.log('accountGroupOptions:', accountGroupOptions)
+  async function doClearAll() {
 
+    // setIsDefaultProduct(false);
+    setUpdateButtonClicked(true);
+    setSelectedFields([]);
+    setSelectedAccountGroup([])
+    let tabs = [...tabList];
+    let currentTab = tabs[currentInnerTab];
+    currentTab["selected_fields"] = [];
+    setTabList(tabs);
+    let filters = {...selectedFilters};
+    for(let name in filters) {
+      filters[name] = 'N/A';
+    }
+    setSelectedFilters(filters);
+    // setSelectedFilters((prevFilters) => {
+      //   const newFilters = { ...prevFilters };
+      //   newFilters[filterName] = 'N/A';
+      //   return newFilters;
+      // });
+      setIsFilterChanged(true);
+    }
+
+
+    async function clearAllAccounts() {
+      setSelectedAccountGroup([])
+    }
+
+    async function handleRestoreDefault() {
+
+      let tabs = [...tabList];
+
+      tabs[currentInnerTab]["selected_fields"] = [...tabs[currentInnerTab]["default_fields"]];
+      setTabList(tabs);
+    }
+
+
+    useEffect((e) => {
+      document.addEventListener("click", handleClickOutside, false);
+      return () => {
+        document.removeEventListener("click", handleClickOutside, false);
+      };
+    }, []);
+
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        //setShow3(false);
+      }
+    };
+
+    const handleClick = () => {
+        setToggle(!toggle);
+
+      setTimeout(() => {
+        setActive(!active);
+
+        setFaClass(!faClass);
+      }, 600);
+      };
+
+      //jquery will be removed and changed, leave for now
+
+    $(document).on('click', function(){
+      if ($('.theSelected').height() > 74.8){
+        $('.theSelected').addClass('theEnd').css({'maxHeight': '76px', "overflow" : "hidden"})
+        $('.hideThisEnd, .whiteBar').show()
+      }
+      else{
+        $('.theSelected').removeClass('theEnd').css({'maxHeight': 'unset', "overflow" : "unset"})
+        $('.hideThisEnd, .whiteBar').hide()
+      }
+
+        $('#numberCounter').html($('.tab-pane.active .theSelected .theOptions').length + $('.tab-pane.active.show .theSelected .dateChoice').length)
+    })
+    $(window).resize(function () {
+        $(document).trigger('click')
+    });
+    //jquery will be removed and changed, leave for now
+
+
+    // const defaultChosenValue = localStorage.getItem('choseClearAll');
+    // console.log('local storage value first', defaultChosenValue)
+    //
+
+
+    const handleUserYes = () => {
+      // setChoseClearAll("1")
+      // localStorage.setItem('choseClearAll', "1");
+      doClearAll();
+      // setShow(false);
+      setShow(true)
+    }
+
+
+
+    const handleClearAll = () => {
+      setShow(true)
+      // if (defaultChosenValue == "1") {
+      //   setShow(false)
+      //   doClearAll();
+      // } else {
+      //   if(!choseClearAll) {
+      //     setShow(true)
+      //   } else {
+      //     doClearAll();
+      //   }
+      // }
+    }
+
+    const slideIt2 = () =>{
+      setShowMenu2(!showMenu2)
+    }
+    // function handleFieldAll(value) {
+    //   setSelectedAccountGroup(accountGroupOptions)
+    // }
+    //
+    // function handleFieldsAll(value) {
+    //   let tabs = [...tabList];
+    //   tabs[currentInnerTab]['selected_fields'] = fieldOptions?.map(f => {return f['name']});
+    //   setTabList(tabs)
+    // }
 
               return (
-              <Container fluid style={isActive?{display:'block'}:{display:'none'}}>
+              <div className={isActive? "tab-pane active" : "hidden"}>
+
+             <Container fluid>
                 {isPageLoading ? (
                   <Spinner />
                   ) : (
@@ -274,9 +393,12 @@ const Template2 = ({
                 <div className="modal-actions">
                   <div className="position-relative columnStart mb-3">
                   <label>Search Selections</label>
-                    <input placeholder="" type="search" class="form-control" />
+                    <input value={selection} onChange={handleChangeSelection} placeholder="" type="search" class="form-control" />
                     <i class="far fa-search absoluteSearch"></i>
                   </div>
+
+
+
                   <div className="across">
                     <Button onClick={handleClearAll} className="btn-clear">
                       Clear All
@@ -349,10 +471,11 @@ const Template2 = ({
                                       quickFilters={filters.find(({type}) =>  type === "quick filter")}
                                       selectedFilters={selectedFilters}
                                       setSelectedFilters={setSelectedFilters}
+                                      selection={selection}
                                       updateBtn={updateButtonClicked}
                                       setUpdateBtn={setUpdateButtonClicked}
                                       setIsFilterChanged={setIsFilterChanged}
-                                    />   
+                                    />
                                   :
                                   ''
                                 }
@@ -390,9 +513,51 @@ const Template2 = ({
                         </Col>
                       </Row>
                     </Col>
-                    
+
                   </Row>
                 </Accordion>
+                <Col xs={12} md={12}>
+                <div className="d-flex flex-column text-center position-relative">
+                <p className="">Top % Products</p>
+
+                <input
+                    value={value}
+                    onChange={changeEvent => {
+                      setStep(1);
+                      setValue(changeEvent.target.value)
+                    }}
+                    placeholder={value}
+                    type="search"
+                    list="steplist"
+                    min="0" max="100"
+                    from="0"
+                    step="1"
+                    className="value"/>
+
+                <input
+                    value={value}
+                    onChange={changeEvent => {
+                      setStep(25);
+                      setValue(changeEvent.target.value)
+                    }}
+                    type="range"
+                    min="0" max="100"
+                    step={step}
+                    list="steplist"
+                    className="range-slider mt-2"/>
+
+                <datalist id="steplist" className="range">
+                    <option label="0">0</option>
+                    <option label="25">25</option>
+                    <option label="50">50</option>
+                    <option label="75">75</option>
+                    <option label="100">100</option>
+                </datalist>
+
+
+                </div>
+                </Col>
+
 
 
 
@@ -436,7 +601,7 @@ const Template2 = ({
               <b>{properties.find(({type}) => type ==="total invoices").text}</b> <span className="highlight large">{Object.values(properties.find(({type}) => type ==="total invoices").value)}</span>
             </p>
             :''
-            } 
+            }
 
             </Col>
             {/* <Col md={12} lg={3}>
@@ -463,37 +628,30 @@ const Template2 = ({
 
             <Col xs={12} md={11}>
 
-              <div className="d-flex justify-content-between align-items-baseline">
 
-              <div className="d-flex justify-content-start align-items-center flex-wrap">
+            <div className={toggle ? 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-up' : 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-down'}>
+
               <p class="mr-3"><b>Current Selections:</b></p>
                 <CurrentSelection2
                   filters={filters}
                   selectedFilters={selectedFilters}
                   setSelectedFilters={setSelectedFilters}
+                  updatedFilters={updatedFilters}
                   formatFilters={formatFilters}
                 />
 
-                {/*<CurrentAccountGroup
-                selectedDateFilter={selectedDateFilter}
-                selectedFilters={selectedFilters}
-                selectedFields={selectedFields}
-                fieldOptions={fieldOptions}
-                setSelectedFields={setSelectedFields}
-                filterOptions={filterOptions}
-                setSelectedFilters={setSelectedFilters}
-                dateFilterOptions={dateFilterOptions}
-                selectedDateRange={selectedDateRange}
-                quickFilterOptions={quickFilterOptions}
-                selectedAccountGroup={selectedAccountGroup}
-                setSelectedAccountGroup={setSelectedAccountGroup}
-                /> */}
 
-              </div>
 
 
                 </div>
               </Col>
+              <div className="hideThisEnd" onClick={handleClick}>
+                <i className={faClass ? 'fas fa-plus-circle' : 'fas fa-minus-circle'}>&nbsp;
+                <span> { active ? "See Less" : "See All"} (<p id="numberCounter"></p>) </span></i>
+
+            </div>
+
+
             </Row>
 
 
@@ -511,9 +669,29 @@ const Template2 = ({
 
             </Col>
           </Row>
+
+          <Modal show={show} onHide={handleClose} className="clearAllModal">
+                <Modal.Header closeButton>
+
+                </Modal.Header>
+                <Modal.Body><p>Are you sure you want to clear all selections?</p></Modal.Body>
+                <Modal.Footer>
+                <Button className="btn"  onClick={() => {handleUserYes();handleClose()}}>
+                  Yes
+                </Button>
+                  <Button className="btn-clear" onClick={handleClose}>
+                    Cancel <i class="fas fa-ban stop"></i>
+                  </Button>
+
+                  </Modal.Footer>
+              </Modal>
+
+
+
           </>
           )}
         </Container>
+        </div>
         );
       };
 
