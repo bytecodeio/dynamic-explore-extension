@@ -4592,7 +4592,7 @@ min-height: 100vh;
 padding-top: 1em;
 
 padding-bottom: 24vh;
-z-index: 999999999;
+z-index: 999;
 position: relative;
 }
 
@@ -5289,7 +5289,7 @@ flex-wrap: wrap;
     position: fixed;
 
 
-    width: 76vw;
+    width: 70%;
 background: white;
 top: 9%;
 left: 1em;
@@ -5305,7 +5305,7 @@ border-radius: 1rem;
 max-height: 56vh;
 background: white;
 top: 24em;
-left: 0;
+left: 1em;
 padding: 2em 0em 2em 3em;
 display: flex;
 height: auto;
@@ -5346,7 +5346,7 @@ display:block
 }
 
 #slideOut3 .wrapFilters.fullScreen .one {
-    min-width: 12em;
+width: 22%;
 }
 #slideOut3.form-control {
 display: block;
@@ -5602,7 +5602,7 @@ max-height: 100%;
     width: 100%;
     left: 0;
     right: 0;
-    top: 0;
+    top: 68px;
 
     background: white;
     padding: 3em;
@@ -5611,7 +5611,7 @@ max-height: 100%;
 .whole .expand {
   position: absolute;
       right: 53px;
-        top: 30px;
+        top: 43px;
       z-index: 99999999999;
 }
 
@@ -5621,7 +5621,7 @@ max-height: 100%;
     width: 100%;
     left: 0;
     right: 0;
-    top: 0em;
+    top: 56px;
     z-index: 99999999999999999999999999999999999999999999999999999999999;
     background: white;
 }
@@ -5790,9 +5790,14 @@ color:white !important
 background: #27251f;
 }
 
-.dark-mode .value,
-.dark-mode .allOptions{
+.dark-mode .value{
+
   background: white
+}
+
+.dark-mode .allOptions{
+  background: transparent;
+  color:white
 }
 
 
