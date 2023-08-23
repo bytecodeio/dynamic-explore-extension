@@ -58,7 +58,6 @@ export const Main = () => {
 
   const [updatedFilters, setUpdatedFilters] = useState(false);
 
-  const [updatedColor, setUpdatedColor] = useState({});
 
 
   const slideIt = (show) => {

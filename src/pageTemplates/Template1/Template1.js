@@ -87,7 +87,8 @@ const Template1 = ({
   const [faClass, setFaClass] = useState(true);
   const [toggle, setToggle] = useState(true);
   const [showMenu2, setShowMenu2] = useState();
-  const [choseClearAll, setChoseClearAll] = useState(defaultChosenValue);
+  // const [choseClearAll, setChoseClearAll] = useState(defaultChosenValue);
+  const [choseClearAll, setChoseClearAll] = useState();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -467,31 +468,33 @@ const Template1 = ({
               //jquery will be removed and changed, leave for now
 
 
-              const defaultChosenValue = localStorage.getItem('choseClearAll');
-              console.log('local storage value first', defaultChosenValue)
-
+              // const defaultChosenValue = localStorage.getItem('choseClearAll');
+              // console.log('local storage value first', defaultChosenValue)
+              //
 
 
               const handleUserYes = () => {
-                setChoseClearAll("1")
-                localStorage.setItem('choseClearAll', "1");
+                // setChoseClearAll("1")
+                // localStorage.setItem('choseClearAll', "1");
                 doClearAll();
-                setShow(false);
+                // setShow(false);
+                setShow(true)
               }
 
 
 
               const handleClearAll = () => {
-                if (defaultChosenValue == "1") {
-                  setShow(false)
-                  doClearAll();
-                } else {
-                  if(!choseClearAll) {
-                    setShow(true)
-                  } else {
-                    doClearAll();
-                  }
-                }
+                setShow(true)
+                // if (defaultChosenValue == "1") {
+                //   setShow(false)
+                //   doClearAll();
+                // } else {
+                //   if(!choseClearAll) {
+                //     setShow(true)
+                //   } else {
+                //     doClearAll();
+                //   }
+                // }
               }
 
               const slideIt2 = () =>{
@@ -892,7 +895,7 @@ const Template1 = ({
                 </Modal.Header>
                 <Modal.Body><p>Are you sure you want to clear all selections?</p></Modal.Body>
                 <Modal.Footer>
-                <Button className="btn" onClick={handleUserYes}>
+                <Button className="btn"  onClick={() => {handleUserYes();handleClose()}}>
                   Yes
                 </Button>
                   <Button className="btn-clear" onClick={handleClose}>

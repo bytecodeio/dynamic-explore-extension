@@ -43,8 +43,9 @@ export const Main2 = () => {
   const [properties, setProperties] = useState([])
 
   const [initialLoad, setInitialLoad] = useState(true)
-
+//here
   const [selectedFilters, setSelectedFilters] = useState([])
+  const [updatedFilters, setUpdatedFilters] = useState({})
 
   const [tabs, setTabs] = useState([])
   const [application, setApplication] = useState({})
@@ -222,6 +223,9 @@ export const Main2 = () => {
       })
     );
   };
+  const handleUpdateFilter = () => {
+    console.log('handleUpdateFilter');
+  }
 
   const updateAppProperties = async (filters) => {
     let newProps = []
@@ -247,14 +251,14 @@ export const Main2 = () => {
                 {tabs?.map(t =>
                   <Nav.Item>
                     <Nav.Link active={t.route === params.subpath} eventKey={t.route} as={Link} to={`${t.route}`}>{t.title}</Nav.Link>
-                  </Nav.Item>                  
+                  </Nav.Item>
                 )}
               </Nav>
             </Tab.Container>
             <div className="show">
             <Tab.Content>
               <>
-                {tabs?.map((t,i) => 
+                {tabs?.map((t,i) =>
                     <LayoutSelector key={i}
                       isActive={params.subpath === t.route}
                       tabProps={t}
@@ -268,11 +272,13 @@ export const Main2 = () => {
                       setShowMenu={setShowMenu}
                       selectedFilters={selectedFilters}
                       setSelectedFilters={setSelectedFilters}
+                      updatedFilters={updatedFilters}
+                      setUpdatedFilters={setUpdatedFilters}
                       initialLoad={initialLoad}
                       setInitialLoad={setInitialLoad}
                       />
                 )}
-                {/* <Route path={`${route.url}/`}> 
+                {/* <Route path={`${route.url}/`}>
                   <Test />
                 </Route> */}
               </>

@@ -9,7 +9,7 @@ import { useRouteMatch } from "react-router-dom/cjs/react-router-dom";
 
 
 export const LayoutSelector = ({
-    tabProps,  
+    tabProps,
     currentNavTab,
     filters,
     fields,
@@ -23,11 +23,14 @@ export const LayoutSelector = ({
     handleChangeKeyword,
     selectedFilters,
     setSelectedFilters,
+    updatedFilters,
+    setUpdatedFilters,
     initialLoad,
     setInitialLoad,
     isActive}) => {
     if (tabProps.layout_name === "Template1") {
         return <Template2
+            className="active"
             isActive={isActive}
             currentNavTab={currentNavTab}
             filters={filters}
@@ -42,12 +45,14 @@ export const LayoutSelector = ({
             description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
             selectedFilters={selectedFilters}
             setSelectedFilters={setSelectedFilters}
+            updatedFilters={updatedFilters}
+            setUpdatedFilters={setUpdatedFilters}
             initialLoad={initialLoad}
             setInitialLoad={setInitialLoad}/>;
     }
     // switch (tabProps.layout_name) {
     //     case 'Template1':
-    //         return <Template2 
+    //         return <Template2
     //             currentNavTab={currentNavTab}
     //             filters={filters}
     //             fields={fields.find(({tab}) => tab === "Product Movement Report")}

@@ -5937,6 +5937,22 @@ margin-bottom: 0;
 font-size: 15px;
 }
 
+.dark-mode .letter {
+    color: black !important;
+    background: transparent;
+
+    border: 1px solid white;
+}
+
+ .dark-mode #currentLetter{
+     border: 1px solid white;
+ }
+
+  .dark-mode .activeLetter {
+    background-color: var(--red);
+    color: white !important;
+}
+
 .filter-attr-list {
 display: flex;
 flex-wrap: wrap;

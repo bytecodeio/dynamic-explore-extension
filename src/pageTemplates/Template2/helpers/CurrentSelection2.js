@@ -1,34 +1,47 @@
-import React, { useState, useEffect } from "react";
-import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
+import React, { Fragment, useState, useEffect } from "react";
+import { Button, Form, Modal, Spinner, Row, Col, Tooltip, Container, OverlayTrigger} from "react-bootstrap";
 import * as $ from "jquery";
 import moment from 'moment';
 
-export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters, formatFilters }) => {
+export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters, updatedFilters, formatFilters }) => {
   const [currentSelection, setCurrentSelection] = useState([])
   useEffect(() => {
-    
+
     setCurrentSelection(formatFilters())
     console.log("selectedFIlters", selectedFilters)
   },[selectedFilters])
 
+
+  const renderTooltip = (props) => (
+  <Tooltip id="button-tooltip" {...props}>
+    These are pending filters you have selected. Please use the "Update Selections" button to update the table.
+  </Tooltip>
+  );
+
   return (
 
 
-<div className="d-flex">
+<Fragment>
   {Object.keys(currentSelection)?.map((selection) => {
 
   return(
-    <div className="theOptions" key={selection}>
-    {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-    <p className="mb-0 blue">{selection.replace(/\s*\(.*?\)\s*/g, '')}: {currentSelection[selection]}</p>
+    <OverlayTrigger
+    placement="right"
+    overlay={renderTooltip}
+    className="tooltipHover"
+    >
+      <div className={updatedFilters && selection in updatedFilters ? "theOptions red": "theOptions"} key={selection}>
+      {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+      <p className="mb-0 blue">{selection.replace(/\s*\(.*?\)\s*/g, '')}: {currentSelection[selection]}</p>
 
-    {/* <i onClick={() => removeField(filterSelection[selection].name)} class="fal fa-times blue"></i> */}
+      {/* <i onClick={() => removeField(filterSelection[selection].name)} class="fal fa-times blue"></i> */}
 
-    </div>
+      </div>
+  </OverlayTrigger>
 
   )
   })}
-</div>
+</Fragment>
 
   )
 }

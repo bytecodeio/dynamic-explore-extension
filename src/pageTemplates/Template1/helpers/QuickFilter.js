@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Button, ButtonGroup, Form, Modal, Spinner } from "react-bootstrap";
 
-const QuickFilter = ({ quickFilterOptions, selectedQuickFilter, setSelectedQuickFilter, updateBtn, setUpdateBtn, setIsFilterChanged}) => {
+const QuickFilter = ({ quickFilterOptions, selection , selectedQuickFilter, setSelectedQuickFilter, updateBtn, setUpdateBtn, setIsFilterChanged}) => {
   // console.log('debug: options', options, value);
   const handleSelection = (e,name) => {
     let quickFilters = {...selectedQuickFilter}
