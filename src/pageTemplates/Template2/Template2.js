@@ -248,7 +248,7 @@ const Template2 = ({
                       <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
                       onClick={() => {setShowMenu(false);}}>
                       <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
-                      <p className="m-0"><span className="noMobile">Filter Options</span></p>
+                      <p className="m-0"><span className="noMobile">Selection Options</span></p>
                     </div>
                   </div>
 
@@ -260,7 +260,7 @@ const Template2 = ({
                       className="tooltipHover"
                       >
                       <p className="pb-1">
-                        Filter Options <i className="fal fa-info-circle red"></i>
+                        Selection Options <i className="fal fa-info-circle red"></i>
                       </p>
                     </OverlayTrigger>
                     <div className="closeThisPlease" id="close1">
@@ -272,13 +272,18 @@ const Template2 = ({
                   </div>
                 </div>
                 <div className="modal-actions">
+                  <div className="position-relative columnStart mb-3">
+                  <label>Search Selections</label>
+                    <input placeholder="" type="search" class="form-control" />
+                    <i class="far fa-search absoluteSearch"></i>
+                  </div>
                   <div className="across">
                     <Button onClick={handleClearAll} className="btn-clear">
                       Clear All
                     </Button>
                     <Button
                     onClick={handleTabVisUpdate}
-                    className="btn">Submit Filters
+                    className="btn">Update Selections
                   </Button>
                 </div>
               </div>
@@ -312,7 +317,7 @@ const Template2 = ({
 
 
                         {/* Fields */}
-                        {fields.fields?.length > 0?
+                        {fields?.fields?.length > 0?
                           <Col xs={12} md={12}>
                             <Accordion.Item eventKey="6">
                               <Accordion.Header>Fields</Accordion.Header>
@@ -337,6 +342,21 @@ const Template2 = ({
                             <Accordion.Item eventKey="5">
                               <Accordion.Header>Filters</Accordion.Header>
                               <Accordion.Body>
+                                {/*Quick Filters */}
+                                {
+                                  filters.find(({type}) =>  type === "quick filter").options?.length > 0?
+                                    <QuickFilter
+                                      quickFilters={filters.find(({type}) =>  type === "quick filter")}
+                                      selectedFilters={selectedFilters}
+                                      setSelectedFilters={setSelectedFilters}
+                                      updateBtn={updateButtonClicked}
+                                      setUpdateBtn={setUpdateButtonClicked}
+                                      setIsFilterChanged={setIsFilterChanged}
+                                    />   
+                                  :
+                                  ''
+                                }
+
                                 <Filters
                                 //isLoading={isFetchingFilterSuggestions}
                                 filters={filters.find(({type}) =>  type === "filter")}
@@ -355,27 +375,7 @@ const Template2 = ({
                         }
 
 
-                        {/*Quick Filters */}
-                        {
-                          filters.find(({type}) =>  type === "quick filter").options?.length > 0?
-                          <Col xs={12} md={12}>
-                            <Accordion.Item eventKey="3">
-                              <Accordion.Header>Quick Filters</Accordion.Header>
-                              <Accordion.Body>
-                                <QuickFilter
-                                  quickFilters={filters.find(({type}) =>  type === "quick filter")}
-                                  selectedFilters={selectedFilters}
-                                  setSelectedFilters={setSelectedFilters}
-                                  updateBtn={updateButtonClicked}
-                                  setUpdateBtn={setUpdateButtonClicked}
-                                  setIsFilterChanged={setIsFilterChanged}
-                                />
-                              </Accordion.Body>
-                            </Accordion.Item>
-                          </Col>
-                          :
-                          ''
-                        }
+
 
 
 
@@ -390,6 +390,7 @@ const Template2 = ({
                         </Col>
                       </Row>
                     </Col>
+                    
                   </Row>
                 </Accordion>
 
@@ -427,7 +428,7 @@ const Template2 = ({
 
             </Row>
 
-            <Row className="fullW negativeTop d-flex align-items-center">
+            <Row className="fullW d-flex align-items-center">
               <Col md={12} lg={2}>
 
             {properties.find(({type}) => type ==="total invoices")?
@@ -438,7 +439,7 @@ const Template2 = ({
             } 
 
             </Col>
-            <Col md={12} lg={3}>
+            {/* <Col md={12} lg={3}>
               <div className="position-relative columnStart">
               <label>Search Filter</label>
                 <input placeholder="" type="search" class="form-control" />
@@ -454,41 +455,18 @@ const Template2 = ({
               <input  type="search" class="form-control" />
 
             </div>
-            </Col>
-            </Row>
-
-            <Row className="fullW">
-
-            <Col md={12} lg={12}>
-
-
-
-              <Row className="mt-5 d-flex align-items-center">
-
-
-
-              <Col md={12} lg={12}>
-
-
-              </Col>
+            </Col> */}
             </Row>
 
 
+          <Row className="fullW mt-5 position-relative">
 
-          </Col>
-
-
-          </Row>
-
-
-          <Row className="fullW mt-4">
-
-            <Col xs={12} md={12}>
+            <Col xs={12} md={11}>
 
               <div className="d-flex justify-content-between align-items-baseline">
 
               <div className="d-flex justify-content-start align-items-center flex-wrap">
-                <p class="mr-3"><i class="fal fa-filter mr-1"></i>Filters</p>
+              <p class="mr-3"><b>Current Selections:</b></p>
                 <CurrentSelection2
                   filters={filters}
                   selectedFilters={selectedFilters}
@@ -513,10 +491,6 @@ const Template2 = ({
 
               </div>
 
-
-                <a onClick={handleRestoreDefault}>
-                  <p class="red bold small mt-4"><u>Restore Default/Saved Filter</u></p>
-                </a>
 
                 </div>
               </Col>

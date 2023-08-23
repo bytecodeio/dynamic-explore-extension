@@ -31,7 +31,7 @@ export const LayoutSelector = ({
             isActive={isActive}
             currentNavTab={currentNavTab}
             filters={filters}
-            fields={fields.find(({tab}) => tab === "Product Movement Report")}
+            fields={fields.find(({tab}) => tab === tabProps.title)}
             properties={properties}
             updateAppProperties={updateAppProperties}
             isFetchingLookmlFields={isFetchingLookmlFields}
