@@ -1,15 +1,18 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 
-const NavbarMain = () => {
+const NavbarMain = ({handleDataRefresh}) => {
   const { core40SDK } = useContext(ExtensionContext);
   const [message, setMessage] = useState();
+  const [me, setMe] = useState({});
 
   useEffect(() => {
     const initialize = async () => {
       try {
         const value = await core40SDK.ok(core40SDK.me());
+        setMe(value)
+        console.log(value);
         setMessage(`${value.display_name}`);
       } catch (error) {
         setMessage("Error occured getting information about me!");
@@ -26,6 +29,10 @@ const NavbarMain = () => {
     document.body.classList.toggle("dark-mode");
   };
 
+  const refreshData = () => {
+    handleDataRefresh()
+  }
+
   return (
     <Container fluid className="padding-0">
       <div className="inner_page_block white_option"></div>
@@ -41,6 +48,7 @@ const NavbarMain = () => {
             <Nav className="me-auto"></Nav>
             <Nav className="align-items-center">
               <Navbar.Text>
+                <Button onClick={refreshData}>Refresh data</Button>         
                 <a className="dark-layout" onClick={handleClick}>
                   <i className={faClass ? "far fa-moon" : "far fa-sun"}></i>
                 </a>

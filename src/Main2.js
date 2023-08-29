@@ -20,16 +20,16 @@ import {
   PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
 } from "./utils/constants2.js";
 
-import Template2 from "./pageTemplates/Template2/Template2.js";
-import Template3 from "./pageTemplates/Template3/Template3.js";
-import { BrowserRouter, Routes, Route, Link, useNavigate, Switch, useRouteMatch } from "react-router-dom";
-import Test from "./Test.js";
-import { useHistory, useLocation, useParams } from "react-router-dom/cjs/react-router-dom.js";
+import { Link, useRouteMatch } from "react-router-dom";
+import { useParams } from "react-router-dom/cjs/react-router-dom.js";
 import { getApplication, getApplicationTags, getApplicationTabs, getTabVisualizations, getTabTags } from "./utils/writebackService.js";
 import { LayoutSelector } from "./LayoutSelector.js";
 
 export const Main2 = () => {
-  const { core40SDK: sdk } = useContext(ExtensionContext);
+  const [extensionId, setExtensionId] = useState()
+  const extensionContext = useContext(ExtensionContext);
+  const sdk = extensionContext.core40SDK;
+  
 
   const [currentNavTab, setCurrentNavTab] = useState("dashboard");
 
@@ -44,7 +44,7 @@ export const Main2 = () => {
 
   const [initialLoad, setInitialLoad] = useState(true)
 //here
-  const [selectedFilters, setSelectedFilters] = useState([])
+  const [selectedFilters, setSelectedFilters] = useState({})
   const [updatedFilters, setUpdatedFilters] = useState({})
 
   const [tabs, setTabs] = useState([])
@@ -61,6 +61,11 @@ export const Main2 = () => {
   const handleChangeKeyword = (e) => {
     setKeyword(e.target.value);
   };
+
+  useEffect(() => {
+    console.log("updated", updatedFilters)
+  }
+  ,[updatedFilters])
 
   // Initialize the states
   useEffect(() => {
@@ -85,119 +90,137 @@ export const Main2 = () => {
       return fieldsByTag;
     }
 
-    const initializeApp = async () => {
-      let _appTags = []
-      let _tabTags = []
-      let app = await getApplication(params.path,sdk);
-      if (app.length > 0) {
-        _appTags = await getApplicationTags(app[0].id,sdk);
-        console.log("apptags",_appTags)
-        setApplication(app[0])
-        let appTabs = await getApplicationTabs(app[0].id, sdk)
-        if (appTabs.length > 0) {
-          for await (let tab of appTabs) {
-            let vis = await getTabVisualizations(tab.id, sdk);
-            tab['config'] = vis;
-            let _tabTagsRes = await getTabTags(tab.id, sdk)
-            _tabTags = _tabTags.concat(_tabTagsRes);
-          }
-          setTabs(appTabs)
-        }
-        console.log(_tabTags)
+    const initializeTabs = async (tabs, tabTags, fieldsByTag) => {
+      if (tabs) {
+        if (tabs.length > 0) {
+          setTabs(tabs)        
+          
+          let _fields = tabTags.map((f) => {
+            let _tab = f.title;
+            let _tag = f.tag_name;
+            return {tab:_tab, fields:fieldsByTag[_tag]}
+          }) 
+          setFields(_fields)
+        }       
       }
-      return {application: app[0], applicationTags:_appTags, tabTags:_tabTags};
-    }
+   }
 
-
-    const fetchLookmlFields = async () => {
-      let {application, applicationTags, tabTags} = await initializeApp();
-
-      const response = await sdk.ok(
-        sdk.lookml_model_explore(application.model, application.explore, "fields")
-      );
-
-      const {
-        fields: { dimensions, filters, measures, parameters },
-      } = response;
-
-      const lookmlFields = [
-        ...dimensions,
-        ...filters,
-        ...measures,
-        ...parameters,
-      ];
-      const fieldsByTag = groupFieldsByTags(lookmlFields);
-
-      let _filters = []
-      for await(let f of applicationTags.filter(({tag_group}) => tag_group == "filters")) {
-        let _type = f.type;
-        let _tag = f.tag_name;
-        let _fields = fieldsByTag[_tag];
-        let _options = []
-        if (f.option_type === "fields") {
-          _options = _fields;
+   const createFilters = async (applicationTags, fieldsByTag) => {
+        let _filters = [];
+        for await(let f of applicationTags.filter(({tag_group}) => tag_group == "filters")) {
+          let _type = f.type;
+          let _tag = f.tag_name;
+          let _fields = fieldsByTag[_tag];
+          let _options = []
+          if (f.option_type === "date range") {
+            _options = {field:_fields[0], values:await getDefaultDateRange()}
+          }
+          _filters.push({type:_type, fields:fieldsByTag[_tag], options:_options, option_type:f.option_type})
         }
-        if (f.option_type === "date range") {
-          _options = {field:_fields[0], values:getDefaultDateRange()}
+        setFilters(_filters)
+
+        let defaultSelected = {}
+        _filters.map(f => defaultSelected[f.type] = {})
+        setSelectedFilters(defaultSelected)
+
+        getOptionValues(_filters);
+   }
+
+   const createAppProperties = async (applicationTags, fieldsByTag) => {
+        let _appProperties = []
+        for await (let p of applicationTags.filter(({tag_group}) => tag_group == "property")){
+          let _type = p.type;
+          let _text = p.misc;
+          let _tag = p.tag_name;
+          let _fields = fieldsByTag[_tag]
+          let _options = ""
+          if (p.option_type === "single_value") {
+            let value = await getValues(_fields[0],{});
+            _options = value[0]
+          }
+          _appProperties.push({type:_type, text:_text, fields:_fields[0], value:_options})
+        }
+        setProperties(_appProperties)
+   }
+
+   const initializeAppTags = async (applicationTags, fieldsByTag) => {
+      if (applicationTags) {
+        createFilters(applicationTags, fieldsByTag)
+        createAppProperties(applicationTags, fieldsByTag)
+      }
+   }
+
+   const fetchLookMlFields = async (model, explore) => {
+    const response = await sdk.ok(
+      sdk.lookml_model_explore(model, explore, "fields")
+    );
+    const {
+      fields: { dimensions, filters, measures, parameters },
+    } = response;
+
+    const lookmlFields = [
+      ...dimensions,
+      ...filters,
+      ...measures,
+      ...parameters,
+    ];
+    return groupFieldsByTags(lookmlFields);
+   }
+
+    const initialize = async () => {
+      setExtensionId(extensionContext.extensionSDK.lookerHostData.extensionId.split("::")[1])
+      let contextData = getContextData();
+      console.log("getContext",contextData)
+      if (contextData) {
+        let {application, application_tags, tabs, tab_tags} = contextData;      
+        let fieldsByTag = await fetchLookMlFields(application.model, application.explore);
+        initializeTabs(tabs, tab_tags, fieldsByTag);
+        initializeAppTags(application_tags, fieldsByTag);
+        setIsFetchingLookmlFields(false);
+      }
+    };
+
+    try {
+      initialize();
+    } catch (e) {
+      console.error("Error fetching Looker filters and fields", e);
+    }
+  }, []);
+
+  const getOptionValues = async (filters) => {
+    let _filters = []
+    let filterArr = [...filters]
+    console.log("getOptionValues", filters)
+    for await (let f of filterArr) {
+        let _options = []
+        console.log(f)
+        if (f.option_type === "fields") {
+          _options = f.fields;
         }
         if (f.option_type === "values") {
-          for await (let field of _fields) {
+          for await (let field of f.fields) {
             let values = await getValues(field, {})
             _options.push({field:field, values:values})
           }
         }
         if (f.option_type === "single_dimension_value") {
-          console.log("account groups", _fields)
-          if (_fields.length > 0) {
-            let value = await getValues(_fields[0],{})
+          console.log("account groups", f.fields)
+          if (f.fields.length > 0) {
+            let value = await getValues(f.fields[0],{})
             console.log("account groups", value)
-            _options = ({field:_fields[0], values:value})
+            _options = ({field:f.fields[0], values:value})
           }
         }
-        _filters.push({type:_type, fields:fieldsByTag[_tag], options:_options})
-      }
-
-      console.log("filters", _filters)
-
-      let _appProperties = []
-      for await (let p of applicationTags.filter(({tag_group}) => tag_group == "property")){
-        let _type = p.type;
-        let _text = p.misc;
-        let _tag = p.tag_name;
-        let _fields = fieldsByTag[_tag]
-        let _options = ""
-        if (p.option_type === "single_value") {
-          let value = await getValues(_fields[0],{});
-          _options = value[0]
+        if (f.option_type === "date range") {
+          _options = f.options
         }
-        _appProperties.push({type:_type, text:_text, fields:_fields[0], value:_options})
-      }
-
-      let _fields = tabTags.map((f) => {
-        let _tab = f.title;
-        let _tag = f.tag_name;
-        return {tab:_tab, fields:fieldsByTag[_tag]}
-      })
-
-      setFilters(_filters)
-      setProperties(_appProperties)
-      setFields(_fields)
-
-      console.log("app props",_appProperties)
-
-      let defaultSelected = {}
-      _filters.map(f => defaultSelected[f.type] = {})
-      setSelectedFilters(defaultSelected)
-
-      setIsFetchingLookmlFields(false);
-    };
-
-    try {
-      fetchLookmlFields();
-    } catch (e) {
-      console.error("Error fetching Looker filters and fields", e);
+        console.log("options", _options)
+        f['options'] = _options;
+        _filters.push(f)
     }
-  }, []);
+    console.log(_filters)
+    setFilters(_filters)
+  }
 
   const getDefaultDateRange = () => {
     let prevMonth = moment().subtract(1, "month");
@@ -237,9 +260,39 @@ export const Main2 = () => {
     setProperties(newProps)
   }
 
+  const updateContextData = (data) => {
+    extensionContext.extensionSDK.saveContextData(data)
+  }
+
+  const getContextData = () => {
+    return extensionContext.extensionSDK.getContextData();
+  }
+
+  const handleDataRefresh = async () => {
+    let contextData = {}
+    let app = await getApplication(extensionId,sdk)
+    if (app.length > 0) {
+      contextData['application'] = app[0];
+      let _appTags = await getApplicationTags(app[0].id, sdk);
+      contextData['application_tags'] = _appTags
+      let _tabs = await getApplicationTabs(app[0].id, sdk);
+      let _tabTagsList = []
+      for await (let t of _tabs) {
+        let visConfig = await getTabVisualizations(t.id, sdk);
+        t['config'] = visConfig;
+        let _tabTags = await getTabTags(t.id, sdk);
+        _tabTagsList = _tabTagsList.concat(_tabTags)
+      }
+      contextData['tab_tags'] = _tabTagsList
+      contextData['tabs'] = _tabs;
+    }
+    console.log(contextData)
+    updateContextData(contextData)
+  }
+
   return (
     <>
-      <NavbarMain />
+      <NavbarMain handleDataRefresh={handleDataRefresh}/>
       <Container fluid className="mt-50 padding-0">
         <TopNav />
          <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
@@ -250,7 +303,7 @@ export const Main2 = () => {
               <Nav className="inner nav nav-tabs nav-fill">
                 {tabs?.map(t =>
                   <Nav.Item>
-                    <Nav.Link active={t.route === params.subpath} eventKey={t.route} as={Link} to={`${t.route}`}>{t.title}</Nav.Link>
+                    <Nav.Link active={t.route === params.path} eventKey={t.route} as={Link} to={`${t.route}`}>{t.title}</Nav.Link>
                   </Nav.Item>
                 )}
               </Nav>
@@ -260,7 +313,7 @@ export const Main2 = () => {
               <>
                 {tabs?.map((t,i) =>
                     <LayoutSelector key={i}
-                      isActive={params.subpath === t.route}
+                      isActive={params.path === t.route}
                       tabProps={t}
                       currentNavTab={currentNavTab}
                       filters={filters}
@@ -280,7 +333,7 @@ export const Main2 = () => {
                 )}
                 {/* <Route path={`${route.url}/`}>
                   <Test />
-                </Route> */}
+                  </Route> */}
               </>
             </Tab.Content>
             </div>

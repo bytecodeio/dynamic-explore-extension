@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
 const Fields = ({
@@ -9,6 +9,8 @@ const Fields = ({
   updateBtn,
   setUpdateBtn,
 }) => {
+  const [expandMenu, setExpandMenu] = useState(false);
+
   function handleFieldSelection(fieldName) {
     setUpdateBtn(false);
     let tabs = [...tabList];
@@ -20,20 +22,37 @@ const Fields = ({
       currentTab["selected_fields"].push(fieldName);
     }
     setTabList(tabs);
+  }
 
-    // setSelectedFields((prev) => {
-    //   if (prev.includes(fieldName)) {
-    //     return prev.filter((selectedFilter) => selectedFilter !== fieldName);
-    //   } else {
-    //     return [...prev, fieldName];
-    //   }
-    // });
+  const handleFieldsAll = () => {
+    let tabs = [...tabList];
+    let currentTab = tabs[currentInnerTab];
+    currentTab['selected_fields'] = fieldOptions.map(fo => {return fo['name']})
+    setTabList(tabs)
+  }
 
+  const handleRestoreDefault = () => {
+    let tabs = [...tabList];
+    let currentTab = tabs[currentInnerTab];
+    currentTab['selected_fields'] = [...currentTab['default_fields']]
+    setTabList(tabs)
+  }
 
+  const handleMenuExpand = () => {
+    setExpandMenu(true)
   }
 
   return (
-    <div className="wrapFilters">
+    <>
+    <div className="mb-5">
+      <span className="allOptions clear first" onClick={handleFieldsAll}>Select All</span>
+
+      <span className="allOptions clear restore" onClick={handleRestoreDefault}>Restore Defaults</span>
+
+      <span className="allOptions clear" onClick={() => handleMenuExpand()}>Expand</span>
+    </div>
+    <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
+      <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
       {fieldOptions.map((fieldOption) => (
         <div className="one" key={fieldOption.name}>
           <Form.Group>
@@ -53,7 +72,7 @@ const Fields = ({
         </div>
       ))}
     </div>
-
+  </>
     // set value to name
   );
 };
