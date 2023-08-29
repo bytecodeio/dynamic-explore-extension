@@ -15,7 +15,8 @@ export const DateRangeSelector = ({
   selectedFilters,
   setSelectedFilters,
   currentInvoiceCount,
-  description
+  description,
+  setUpdatedFilters
 }) => {
   
   const [dateRangeField, setDateRangeField] = useState({})
@@ -28,7 +29,7 @@ export const DateRangeSelector = ({
     if (selectedFilters[date_range_type]) {
       let filters = {...selectedFilters}
       filters[date_range_type][_dateRangeField['name']] = dateRange['options']['values']
-      setSelectedFilters(filters)
+      setUpdatedFilters(filters)
     }
   },[])
 

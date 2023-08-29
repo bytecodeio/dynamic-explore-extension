@@ -82,7 +82,7 @@ const Template2 = ({
   const params = useParams()
 
   useEffect(() => {
-    if (params.subpath == tabKey) {
+    if (params.path == tabKey) {
       if (!isMounted) {
         console.log("Mounting")
         try {
@@ -95,8 +95,6 @@ const Template2 = ({
       } else {
         handleTabVisUpdate();
       }
-
-      //slideIt(show3);
     }
   }, [currentNavTab]);
 
@@ -183,8 +181,8 @@ const Template2 = ({
 
     let _filters = {};
     _filters = await formatFilters();
+    setUpdatedFilters({...selectedFilters})
     updateAppProperties(_filters)
-    setUpdatedFilters(_filters);
 
     let newVisList = []
     for await (let vis of _visList) {
@@ -243,7 +241,6 @@ const Template2 = ({
     }
 
     async function handleRestoreDefault() {
-
       let tabs = [...tabList];
 
       tabs[currentInnerTab]["selected_fields"] = [...tabs[currentInnerTab]["default_fields"]];
@@ -276,21 +273,21 @@ const Template2 = ({
 
       //jquery will be removed and changed, leave for now
 
-    $(document).on('click', function(){
-      if ($('.theSelected').height() > 74.8){
-        $('.theSelected').addClass('theEnd').css({'maxHeight': '76px', "overflow" : "hidden"})
-        $('.hideThisEnd, .whiteBar').show()
-      }
-      else{
-        $('.theSelected').removeClass('theEnd').css({'maxHeight': 'unset', "overflow" : "unset"})
-        $('.hideThisEnd, .whiteBar').hide()
-      }
+    // $(document).on('click', function(){
+    //   if ($('.theSelected').height() > 74.8){
+    //     $('.theSelected').addClass('theEnd').css({'maxHeight': '76px', "overflow" : "hidden"})
+    //     $('.hideThisEnd, .whiteBar').show()
+    //   }
+    //   else{
+    //     $('.theSelected').removeClass('theEnd').css({'maxHeight': 'unset', "overflow" : "unset"})
+    //     $('.hideThisEnd, .whiteBar').hide()
+    //   }
 
-        $('#numberCounter').html($('.tab-pane.active .theSelected .theOptions').length + $('.tab-pane.active.show .theSelected .dateChoice').length)
-    })
-    $(window).resize(function () {
-        $(document).trigger('click')
-    });
+    //     $('#numberCounter').html($('.tab-pane.active .theSelected .theOptions').length + $('.tab-pane.active.show .theSelected .dateChoice').length)
+    // })
+    // $(window).resize(function () {
+    //     $(document).trigger('click')
+    // });
     //jquery will be removed and changed, leave for now
 
 
@@ -427,14 +424,11 @@ const Template2 = ({
                             <Accordion.Item eventKey="1">
                               <Accordion.Header>Account Groups</Accordion.Header>
                               <Accordion.Body>
-                                <div className="position-relative mb-2">
-                                  <input value={keyword} onChange={handleChangeKeyword} placeholder="Search" type="search" class="form-control" />
-                                  <i class="far fa-search absoluteSearch"></i>
-                                </div>
                                 <AccountGroups
                                   //fieldOptions={keyword !=="" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
                                   fieldOptions={filters.find(({type}) => type === "account group")}
                                   selectedFilters={selectedFilters}
+                                  setSelectedFilters={setSelectedFilters}
                                 />
                               </Accordion.Body>
                             </Accordion.Item>
@@ -582,6 +576,7 @@ const Template2 = ({
                 dateRange={filters.find(({type}) => type === "date range")}
                 selectedFilters={selectedFilters}
                 setSelectedFilters={setSelectedFilters}
+                setUpdatedFilters={setUpdatedFilters}
                 handleTabVisUpdate={handleTabVisUpdate}
                 currentInvoiceCount={properties.find(({type}) => type === "total invoices")}
                 description={description}
@@ -642,6 +637,7 @@ const Template2 = ({
                   selectedFilters={selectedFilters}
                   setSelectedFilters={setSelectedFilters}
                   updatedFilters={updatedFilters}
+                  setUpdatedFilters={setUpdatedFilters}
                   formatFilters={formatFilters}
                 />
 
