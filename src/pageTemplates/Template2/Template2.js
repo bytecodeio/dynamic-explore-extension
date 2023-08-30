@@ -33,6 +33,7 @@ const Template2 = ({
   filters,
   fields,
   properties,
+  parameters,
   updateAppProperties,
   isFetchingLookmlFields,
   tabKey,
@@ -116,6 +117,21 @@ const Template2 = ({
       )
       if (dashboard_elements.length > 0) {
         dashboard_elements?.map((t,i) => {
+          let tileFilters = t['result_maker']['query']['filters'];
+          let _tileFilterOptions = []
+          let _selectedFilters = {}
+          parameters?.map(p => {
+            if (tileFilters) {
+              Object.keys(tileFilters).map(key => {
+                  if (key === p.fields['name']) {
+                    _selectedFilters[key] = tileFilters[key]
+                    _tileFilterOptions.push({'name':p.fields['name'], options:p['value']});
+                  };
+              })         
+            }
+          })
+          
+          console.log("filter options",_tileFilterOptions)
           let vis = {}
           let {client_id} = t['result_maker']['query'];
           vis =  {
@@ -124,6 +140,8 @@ const Template2 = ({
             query: client_id,
             default_fields: [...t.result_maker.query.fields],
             selected_fields: [...t.result_maker.query.fields],
+            tileFilterOptions: _tileFilterOptions,
+            localSelectedFilters: _selectedFilters,
             index: index++
           }
           _visList.push(vis)
@@ -162,12 +180,12 @@ const Template2 = ({
   </Tooltip>
   );
 
-  const formatFilters = () => {
+  const formatFilters = (filters) => {
     let filter = {}
-    Object.keys(selectedFilters).map(key => {
-      if (Object.keys(selectedFilters[key]).length > 0) {
-        if (!(key == "date range" && Object.keys(selectedFilters['date filter']).length > 0)) {
-          filter = {...filter,...selectedFilters[key]}
+    Object.keys(filters).map(key => {
+      if (Object.keys(filters[key]).length > 0) {
+        if (!(key == "date range" && Object.keys(filters['date filter']).length > 0)) {
+          filter = {...filter,...filters[key]}
         }
       }
     })
@@ -180,7 +198,7 @@ const Template2 = ({
     let currentVis = _visList.find(({index}) => index === currentInnerTab)
 
     let _filters = {};
-    _filters = await formatFilters();
+    _filters = await formatFilters({...selectedFilters});
     setUpdatedFilters({...selectedFilters})
     updateAppProperties(_filters)
 
@@ -199,7 +217,7 @@ const Template2 = ({
           model: LOOKER_MODEL,
           view: LOOKER_EXPLORE,
           fields: _fields,
-          filters: _filters,
+          filters: vis['localSelectedFilters']?{..._filters, ...vis['localSelectedFilters']}:_filters,
           vis_config,
         })
       );
@@ -209,6 +227,35 @@ const Template2 = ({
     setIsFilterChanged(false);
     setVisList(newVisList)
   }
+
+  const handleSingleVisUpdate = async(index) => {
+    let _visList = [...visList];
+    let currentVis = _visList.find(({index}) => index === index)
+
+    let _filters = {};
+    _filters = await formatFilters({...updatedFilters});
+    console.log("currentvis",currentVis)
+    _filters = {..._filters,...currentVis['localSelectedFilters']}
+
+    const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(currentVis['query']));
+
+    let _fields = []
+    _fields = currentVis['selected_fields']
+
+    const { client_id } = await sdk.ok(
+      sdk.create_query({
+        model: LOOKER_MODEL,
+        view: LOOKER_EXPLORE,
+        fields: _fields,
+        filters: _filters,
+        vis_config,
+      })
+    );
+    currentVis['query'] = client_id
+    setVisList(_visList)
+  }
+    
+  
 
 
 
@@ -664,6 +711,9 @@ const Template2 = ({
                 setSelectedFields={setSelectedFields}
                 currentInnerTab={currentInnerTab}
                 setCurrentInnerTab={setCurrentInnerTab}
+                setVisList={setVisList}
+                visList={visList}
+                handleSingleVisUpdate={handleSingleVisUpdate}
                 />
                 :''
               }

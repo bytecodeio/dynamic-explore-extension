@@ -1,12 +1,16 @@
 import React, {Fragment, useState, useEffect } from "react";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import EmbedTable from "./EmbedTable";
+import { EmbedContainer } from "./EmbedContainer";
 
 const InnerTableTabs = ({
   tabs,
+  setVisList,
+  visList,
   setSelectedFields,
   currentInnerTab,
   setCurrentInnerTab,
+  handleSingleVisUpdate
 }) => {
 
   const [showMenu3, setShowMenu3] = useState();
@@ -46,7 +50,7 @@ const InnerTableTabs = ({
               <div id="embedWrapper" className={showMenu3 ? "whole" : ""}>
 
                 <p className="small expand" onClick={() => {slideIt3();handleClick()}}> <i className={faClass ? 'fal fa-expand-alt' : 'far fa-compress-arrows-alt'}></i> { active ? "Collapse" : "Expand"}</p>
-                <EmbedTable queryId={t["query"]} />
+                <EmbedContainer vis={t} visList={visList} updateVisList={setVisList} handleVisUpdate={handleSingleVisUpdate} />
               </div>
             </Tab>
           ))}

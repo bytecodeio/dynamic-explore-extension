@@ -41,6 +41,7 @@ export const Main2 = () => {
   const [filters, setFilters] = useState([]);
   const [fields, setFields] = useState([])
   const [properties, setProperties] = useState([])
+  const [parameters, setParameters] = useState([])
 
   const [initialLoad, setInitialLoad] = useState(true)
 //here
@@ -143,10 +144,24 @@ export const Main2 = () => {
         setProperties(_appProperties)
    }
 
+   
+   const createParameters = async (applicationTags, fieldsByTag) => {
+    let _appToggles = []
+    for await (let p of applicationTags.filter(({tag_group}) => tag_group == "toggle")){
+      let _type = p.type;
+      let _tag = p.tag_name;
+      let _fields = fieldsByTag[_tag]
+      let _options = _fields[0].enumerations;
+      _appToggles.push({type:_type, fields:_fields[0], value:_options})
+    }
+    setParameters(_appToggles)
+}
+
    const initializeAppTags = async (applicationTags, fieldsByTag) => {
       if (applicationTags) {
         createFilters(applicationTags, fieldsByTag)
         createAppProperties(applicationTags, fieldsByTag)
+        createParameters(applicationTags, fieldsByTag)
       }
    }
 
@@ -174,6 +189,7 @@ export const Main2 = () => {
       if (contextData) {
         let {application, application_tags, tabs, tab_tags} = contextData;      
         let fieldsByTag = await fetchLookMlFields(application.model, application.explore);
+        console.log("fieldsByTag", fieldsByTag)
         initializeTabs(tabs, tab_tags, fieldsByTag);
         initializeAppTags(application_tags, fieldsByTag);
         setIsFetchingLookmlFields(false);
@@ -186,6 +202,10 @@ export const Main2 = () => {
       console.error("Error fetching Looker filters and fields", e);
     }
   }, []);
+  
+  useEffect(() => {
+    console.log("field toggles", parameters)
+  },[parameters])
 
   const getOptionValues = async (filters) => {
     let _filters = []
@@ -319,6 +339,7 @@ export const Main2 = () => {
                       filters={filters}
                       fields={fields}
                       properties={properties}
+                      parameters={parameters}
                       updateAppProperties={updateAppProperties}
                       isFetchingLookmlFields={isFetchingLookmlFields}
                       showMenu={showMenu}

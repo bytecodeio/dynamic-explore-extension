@@ -24,7 +24,6 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
           if (filter.type !== "date filter") {
             if (filter.type === "date range") {
               let obj = {key:row, type:filter.type, label :filtersSelections[key][row], value:filtersSelections[key][row], removable:false, selection_type: selectionType}
-              //current.splice(0,0,filtersSelections[key][row])
               current.splice(0,0,obj)
 
               let first = obj.label.split(" to ")[0]
@@ -39,10 +38,8 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
               let field = filter.fields.find(({name}) => name === row)
               let obj = {key:row, type:filter.type, label:`${field.label_short}: ${filtersSelections[key][row]}`, value:filtersSelections[key][row], removable:true, selection_type: selectionType}
               current.push(obj)
-              //current.push(`${field.label_short}: ${filtersSelections[key][row]}`)
             }
           }
-
         })
       }
     })
