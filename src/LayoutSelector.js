@@ -14,6 +14,7 @@ export const LayoutSelector = ({
     filters,
     fields,
     properties,
+    parameters,
     updateAppProperties,
     isFetchingLookmlFields,
     showMenu,
@@ -36,6 +37,7 @@ export const LayoutSelector = ({
             filters={filters}
             fields={fields.find(({tab}) => tab === tabProps.title)}
             properties={properties}
+            parameters={parameters}
             updateAppProperties={updateAppProperties}
             isFetchingLookmlFields={isFetchingLookmlFields}
             config={tabProps.config}
