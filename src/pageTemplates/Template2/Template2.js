@@ -28,6 +28,7 @@ import EmbedTable from "../../components/EmbedTable";
 import { CurrentSelection2 } from "./helpers/CurrentSelection2";
 import usePagination from "@mui/material/usePagination/usePagination";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import {SearchInput} from './helpers/SearchInput'
 const Template2 = ({
   currentNavTab,
   filters,
@@ -440,14 +441,7 @@ const Template2 = ({
                   </div>
                 </div>
                 <div className="modal-actions">
-                  <div className="position-relative columnStart mb-3">
-                  <label>Search Selections</label>
-                    <input value={selection} onChange={handleChangeSelection} placeholder="" type="search" class="form-control" />
-                    <i class="far fa-search absoluteSearch"></i>
-                  </div>
-
-
-
+                  <SearchInput filters={filters} fields={fields}/>
                   <div className="across">
                     <Button onClick={handleClearAll} className="btn-clear">
                       Clear All

@@ -6830,6 +6830,20 @@ display: none
   cursor: pointer
 }
 
+/**AaronM 08/30/23 **/
+.search-popover {
+  position: absolute;
+  background-color: white;
+  width: 90%;
+  padding: 5px;
+  max-height: 300px;
+  z-index: 99;
+  margin-top: -15px;
+  box-shadow: 1px 1px 3px lightgray;
+  border-radius: 5px;
+  overflow: auto;
+}
+
 @media (min-width:1720px){
   .grid2 {
       display: flex;
