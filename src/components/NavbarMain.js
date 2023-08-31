@@ -48,7 +48,7 @@ const NavbarMain = ({handleDataRefresh}) => {
             <Nav className="me-auto"></Nav>
             <Nav className="align-items-center">
               <Navbar.Text>
-                <Button onClick={refreshData}>Refresh data</Button>         
+                {/*<Button onClick={refreshData}>Refresh data</Button>*/}       
                 <a className="dark-layout" onClick={handleClick}>
                   <i className={faClass ? "far fa-moon" : "far fa-sun"}></i>
                 </a>
