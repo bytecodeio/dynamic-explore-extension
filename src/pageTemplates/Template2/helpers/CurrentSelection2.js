@@ -25,7 +25,16 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
             if (filter.type === "date range") {
               let obj = {key:row, type:filter.type, label :filtersSelections[key][row], value:filtersSelections[key][row], removable:false, selection_type: selectionType}
               current.splice(0,0,obj)
-            } else {
+
+              let first = obj.label.split(" to ")[0]
+              let format1 = moment(first).format('MM-DD-YYYY').toString();
+              const last = obj.label.split(" to ")[1]
+              let format2 = moment(last).format('MM-DD-YYYY').toString();
+
+                console.log(format1,format2, "lix")
+
+            }
+              else {
               let field = filter.fields.find(({name}) => name === row)
               let obj = {key:row, type:filter.type, label:`${field.label_short}: ${filtersSelections[key][row]}`, value:filtersSelections[key][row], removable:true, selection_type: selectionType}
               current.push(obj)
@@ -35,7 +44,14 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
       }
     })
     return current
+
+console.log(current)
+
   }
+
+
+  console.log(currentSelection, "one")
+    console.log(updatedSelection, "two")
 
   const removeFilter = (selection) => {
     let type = selection.selection_type === "updated"? {...updatedFilters}: {...selectedFilters}
@@ -44,7 +60,7 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
     } else {
       type[selection.type][selection.key] = selection.value;
     }
-    
+
     if (selection.selection_type === "updated") {
       setUpdatedFilters(type)
     } else {
@@ -62,17 +78,19 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
   return (
 
 
+
 <Fragment>
 {updatedSelection?.map((selection) => {
+
   return(
       <div className={!currentSelection.some(c => c.label == selection.label)? "theOptions":'theOptions red'} key={selection.label}>
       {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-      <p className="mb-0 blue">{!currentSelection.some(c => c.label == selection.label)? "(-) ":""}{selection.label.replace(/\s*\(.*?\)\s*/g, '')}</p>
+      <p className="mb-0 blue">{!currentSelection.some(c => c.label == selection.label)? <i class="fal fa-eraser remove"></i> : "" }{selection.label.replace(/\s*\(.*?\)\s*/g, '')}</p>
       {selection.removable?
         <i onClick={() => removeFilter(selection)} class="fal fa-times blue"></i>
         :''
       }
-      
+
 
       </div>
 

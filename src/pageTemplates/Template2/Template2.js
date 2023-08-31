@@ -321,21 +321,21 @@ const Template2 = ({
 
       //jquery will be removed and changed, leave for now
 
-    // $(document).on('click', function(){
-    //   if ($('.theSelected').height() > 74.8){
-    //     $('.theSelected').addClass('theEnd').css({'maxHeight': '76px', "overflow" : "hidden"})
-    //     $('.hideThisEnd, .whiteBar').show()
-    //   }
-    //   else{
-    //     $('.theSelected').removeClass('theEnd').css({'maxHeight': 'unset', "overflow" : "unset"})
-    //     $('.hideThisEnd, .whiteBar').hide()
-    //   }
+    $(document).on('click', function(){
+      if ($('.theSelected').height() > 74.8){
+        $('.theSelected').addClass('theEnd').css({'maxHeight': '76px', "overflow" : "hidden"})
+        $('.hideThisEnd, .whiteBar').show()
+      }
+      else{
+        $('.theSelected').removeClass('theEnd').css({'maxHeight': 'unset', "overflow" : "unset"})
+        $('.hideThisEnd, .whiteBar').hide()
+      }
 
-    //     $('#numberCounter').html($('.tab-pane.active .theSelected .theOptions').length + $('.tab-pane.active.show .theSelected .dateChoice').length)
-    // })
-    // $(window).resize(function () {
-    //     $(document).trigger('click')
-    // });
+        $('#numberCounter').html($('.tab-pane.active .theSelected .theOptions').length + $('.tab-pane.active.show .theSelected .dateChoice').length)
+    })
+    $(window).resize(function () {
+        $(document).trigger('click')
+    });
     //jquery will be removed and changed, leave for now
 
 
