@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Container, Tab, Tabs, Nav, NavItem} from "react-bootstrap";
+import { Container, Tab, Tabs, Nav, NavItem } from "react-bootstrap";
 import SideForm from "./components/nav/Form.js";
 import PurchasesReview from "./pageTemplates/PurchasesReview/PurchasesReview.js";
 import InflationDeflation from "./pageTemplates/InflationDeflation/InflationDeflation.js";
@@ -29,7 +29,7 @@ export const Main2 = () => {
   const [extensionId, setExtensionId] = useState()
   const extensionContext = useContext(ExtensionContext);
   const sdk = extensionContext.core40SDK;
-  
+
 
   const [currentNavTab, setCurrentNavTab] = useState("dashboard");
 
@@ -44,7 +44,7 @@ export const Main2 = () => {
   const [parameters, setParameters] = useState([])
 
   const [initialLoad, setInitialLoad] = useState(true)
-//here
+  //here
   const [selectedFilters, setSelectedFilters] = useState({})
   const [updatedFilters, setUpdatedFilters] = useState({})
 
@@ -66,7 +66,7 @@ export const Main2 = () => {
   useEffect(() => {
     console.log("updated", updatedFilters)
   }
-  ,[updatedFilters])
+    , [updatedFilters])
 
   // Initialize the states
   useEffect(() => {
@@ -94,100 +94,102 @@ export const Main2 = () => {
     const initializeTabs = async (tabs, tabTags, fieldsByTag) => {
       if (tabs) {
         if (tabs.length > 0) {
-          setTabs(tabs)        
-          
+          setTabs(tabs)
+
           let _fields = tabTags.map((f) => {
             let _tab = f.title;
             let _tag = f.tag_name;
-            return {tab:_tab, fields:fieldsByTag[_tag]}
-          }) 
+            return { tab: _tab, fields: fieldsByTag[_tag] }
+          })
           setFields(_fields)
-        }       
+        }
       }
-   }
-
-   const createFilters = async (applicationTags, fieldsByTag) => {
-        let _filters = [];
-        for await(let f of applicationTags.filter(({tag_group}) => tag_group == "filters")) {
-          let _type = f.type;
-          let _tag = f.tag_name;
-          let _fields = fieldsByTag[_tag];
-          let _options = []
-          if (f.option_type === "date range") {
-            _options = {field:_fields[0], values:await getDefaultDateRange()}
-          }
-          _filters.push({type:_type, fields:fieldsByTag[_tag], options:_options, option_type:f.option_type})
-        }
-        setFilters(_filters)
-
-        let defaultSelected = {}
-        _filters.map(f => defaultSelected[f.type] = {})
-        setSelectedFilters(defaultSelected)
-
-        getOptionValues(_filters);
-   }
-
-   const createAppProperties = async (applicationTags, fieldsByTag) => {
-        let _appProperties = []
-        for await (let p of applicationTags.filter(({tag_group}) => tag_group == "property")){
-          let _type = p.type;
-          let _text = p.misc;
-          let _tag = p.tag_name;
-          let _fields = fieldsByTag[_tag]
-          let _options = ""
-          if (p.option_type === "single_value") {
-            let value = await getValues(_fields[0],{});
-            _options = value[0]
-          }
-          _appProperties.push({type:_type, text:_text, fields:_fields[0], value:_options})
-        }
-        setProperties(_appProperties)
-   }
-
-   
-   const createParameters = async (applicationTags, fieldsByTag) => {
-    let _appToggles = []
-    for await (let p of applicationTags.filter(({tag_group}) => tag_group == "toggle")){
-      let _type = p.type;
-      let _tag = p.tag_name;
-      let _fields = fieldsByTag[_tag]
-      let _options = _fields[0].enumerations;
-      _appToggles.push({type:_type, fields:_fields[0], value:_options})
     }
-    setParameters(_appToggles)
-}
 
-   const initializeAppTags = async (applicationTags, fieldsByTag) => {
+    const createFilters = async (applicationTags, fieldsByTag) => {
+      let _filters = [];
+      for await (let f of applicationTags.filter(({ tag_group }) => tag_group == "filters")) {
+        let _type = f.type;
+        let _tag = f.tag_name;
+        let _fields = fieldsByTag[_tag];
+        let _options = []
+        if (f.option_type === "date range") {
+          _options = { field: _fields[0], values: await getDefaultDateRange() }
+        }
+        _filters.push({ type: _type, fields: fieldsByTag[_tag], options: _options, option_type: f.option_type })
+      }
+      setFilters(_filters)
+
+      let defaultSelected = {}
+      console.log('hre', _filters, defaultSelected)
+      _filters.map(f => defaultSelected[f.type] = {})
+      console.log('Default filters', defaultSelected)
+      setSelectedFilters(defaultSelected)
+
+      getOptionValues(_filters);
+    }
+
+    const createAppProperties = async (applicationTags, fieldsByTag) => {
+      let _appProperties = []
+      for await (let p of applicationTags.filter(({ tag_group }) => tag_group == "property")) {
+        let _type = p.type;
+        let _text = p.misc;
+        let _tag = p.tag_name;
+        let _fields = fieldsByTag[_tag]
+        let _options = ""
+        if (p.option_type === "single_value") {
+          let value = await getValues(_fields[0], {});
+          _options = value[0]
+        }
+        _appProperties.push({ type: _type, text: _text, fields: _fields[0], value: _options })
+      }
+      setProperties(_appProperties)
+    }
+
+
+    const createParameters = async (applicationTags, fieldsByTag) => {
+      let _appToggles = []
+      for await (let p of applicationTags.filter(({ tag_group }) => tag_group == "toggle")) {
+        let _type = p.type;
+        let _tag = p.tag_name;
+        let _fields = fieldsByTag[_tag]
+        let _options = _fields[0].enumerations;
+        _appToggles.push({ type: _type, fields: _fields[0], value: _options })
+      }
+      setParameters(_appToggles)
+    }
+
+    const initializeAppTags = async (applicationTags, fieldsByTag) => {
       if (applicationTags) {
         createFilters(applicationTags, fieldsByTag)
         createAppProperties(applicationTags, fieldsByTag)
         createParameters(applicationTags, fieldsByTag)
       }
-   }
+    }
 
-   const fetchLookMlFields = async (model, explore) => {
-    const response = await sdk.ok(
-      sdk.lookml_model_explore(model, explore, "fields")
-    );
-    const {
-      fields: { dimensions, filters, measures, parameters },
-    } = response;
+    const fetchLookMlFields = async (model, explore) => {
+      const response = await sdk.ok(
+        sdk.lookml_model_explore(model, explore, "fields")
+      );
+      const {
+        fields: { dimensions, filters, measures, parameters },
+      } = response;
 
-    const lookmlFields = [
-      ...dimensions,
-      ...filters,
-      ...measures,
-      ...parameters,
-    ];
-    return groupFieldsByTags(lookmlFields);
-   }
+      const lookmlFields = [
+        ...dimensions,
+        ...filters,
+        ...measures,
+        ...parameters,
+      ];
+      return groupFieldsByTags(lookmlFields);
+    }
 
     const initialize = async () => {
       setExtensionId(extensionContext.extensionSDK.lookerHostData.extensionId.split("::")[1])
       let contextData = getContextData();
-      console.log("getContext",contextData)
+      console.log("getContext", contextData)
       if (contextData) {
-        let {application, application_tags, tabs, tab_tags} = contextData;      
+        let { application, application_tags, tabs, tab_tags } = contextData;
         let fieldsByTag = await fetchLookMlFields(application.model, application.explore);
         console.log("fieldsByTag", fieldsByTag)
         initializeTabs(tabs, tab_tags, fieldsByTag);
@@ -202,41 +204,41 @@ export const Main2 = () => {
       console.error("Error fetching Looker filters and fields", e);
     }
   }, []);
-  
+
   useEffect(() => {
     console.log("field toggles", parameters)
-  },[parameters])
+  }, [parameters])
 
   const getOptionValues = async (filters) => {
     let _filters = []
     let filterArr = [...filters]
     console.log("getOptionValues", filters)
     for await (let f of filterArr) {
-        let _options = []
-        console.log(f)
-        if (f.option_type === "fields") {
-          _options = f.fields;
+      let _options = []
+      console.log(f)
+      if (f.option_type === "fields") {
+        _options = f.fields;
+      }
+      if (f.option_type === "values") {
+        for await (let field of f.fields) {
+          let values = await getValues(field, {})
+          _options.push({ field: field, values: values })
         }
-        if (f.option_type === "values") {
-          for await (let field of f.fields) {
-            let values = await getValues(field, {})
-            _options.push({field:field, values:values})
-          }
+      }
+      if (f.option_type === "single_dimension_value") {
+        console.log("account groups", f.fields)
+        if (f.fields.length > 0) {
+          let value = await getValues(f.fields[0], {})
+          console.log("account groups", value)
+          _options = ({ field: f.fields[0], values: value })
         }
-        if (f.option_type === "single_dimension_value") {
-          console.log("account groups", f.fields)
-          if (f.fields.length > 0) {
-            let value = await getValues(f.fields[0],{})
-            console.log("account groups", value)
-            _options = ({field:f.fields[0], values:value})
-          }
-        }
-        if (f.option_type === "date range") {
-          _options = f.options
-        }
-        console.log("options", _options)
-        f['options'] = _options;
-        _filters.push(f)
+      }
+      if (f.option_type === "date range") {
+        _options = f.options
+      }
+      console.log("options", _options)
+      f['options'] = _options;
+      _filters.push(f)
     }
     console.log(_filters)
     setFilters(_filters)
@@ -261,7 +263,7 @@ export const Main2 = () => {
           view: LOOKER_EXPLORE,
           fields: [field["name"]],
           filters: filters,
-          limit:1000
+          limit: 1000
         },
       })
     );
@@ -273,9 +275,9 @@ export const Main2 = () => {
   const updateAppProperties = async (filters) => {
     let newProps = []
     for await (let prop of properties) {
-        let _value = await getValues(prop['fields'], filters)
-        prop.value = _value[0]
-        newProps.push(prop)
+      let _value = await getValues(prop['fields'], filters)
+      prop.value = _value[0]
+      newProps.push(prop)
     }
     setProperties(newProps)
   }
@@ -290,7 +292,7 @@ export const Main2 = () => {
 
   const handleDataRefresh = async () => {
     let contextData = {}
-    let app = await getApplication(extensionId,sdk)
+    let app = await getApplication(extensionId, sdk)
     if (app.length > 0) {
       contextData['application'] = app[0];
       let _appTags = await getApplicationTags(app[0].id, sdk);
@@ -312,10 +314,10 @@ export const Main2 = () => {
 
   return (
     <>
-      <NavbarMain handleDataRefresh={handleDataRefresh}/>
+      <NavbarMain handleDataRefresh={handleDataRefresh} />
       <Container fluid className="mt-50 padding-0">
         <TopNav />
-         <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
+        <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
           <div id="nav2">
             <Tab.Container
               defaultActiveKey={currentNavTab}
@@ -329,9 +331,9 @@ export const Main2 = () => {
               </Nav>
             </Tab.Container>
             <div className="show">
-            <Tab.Content>
-              <>
-                {tabs?.map((t,i) =>
+              <Tab.Content>
+                <>
+                  {tabs?.map((t, i) =>
                     <LayoutSelector key={i}
                       isActive={params.path === t.route}
                       tabProps={t}
@@ -350,13 +352,15 @@ export const Main2 = () => {
                       setUpdatedFilters={setUpdatedFilters}
                       initialLoad={initialLoad}
                       setInitialLoad={setInitialLoad}
-                      />
-                )}
-                {/* <Route path={`${route.url}/`}>
+                      keyword={keyword}
+                      handleChangeKeyword={handleChangeKeyword}
+                    />
+                  )}
+                  {/* <Route path={`${route.url}/`}>
                   <Test />
                   </Route> */}
-              </>
-            </Tab.Content>
+                </>
+              </Tab.Content>
             </div>
             {/* <Tabs
               defaultActiveKey={currentNavTab}

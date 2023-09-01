@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import DatePicker from "react-datepicker";
 import { Form, Row, Col, Button, Container } from "react-bootstrap";
 import { useEffect } from "react";
@@ -18,23 +18,24 @@ export const DateRangeSelector = ({
   description,
   setUpdatedFilters
 }) => {
-  
+
   const [dateRangeField, setDateRangeField] = useState({})
   const { core40SDK: sdk } = useContext(ExtensionContext);
- 
+
 
   useEffect(() => {
-    let _dateRangeField = dateRange['options']['field'];
-    setDateRangeField(dateRange['options']['field'])
+    let dRange = Object.assign({}, dateRange)
+    let _dateRangeField = dRange['options']['field'];
+    setDateRangeField(dRange['options']['field'])
     if (selectedFilters[date_range_type]) {
-      let filters = {...selectedFilters}
-      filters[date_range_type][_dateRangeField['name']] = dateRange['options']['values']
-      setUpdatedFilters(filters)
+      let filters = Object.assign({}, selectedFilters)
+      filters[date_range_type][_dateRangeField['name']] = dRange['options']['values']
+      setUpdatedFilters(JSON.parse(JSON.stringify(selectedFilters)))
     }
-  },[])
+  }, [])
 
   const onDateSelection = (e, type) => {
-    let filters = {...selectedFilters}
+    let filters = JSON.parse(JSON.stringify(selectedFilters))
     if (type == "start") {
       let splitDate = splitSelectedDateRange();
       splitDate[0] = e.target.value;
@@ -60,19 +61,19 @@ export const DateRangeSelector = ({
 
 
   const handleSelection = async (e) => {
-    let filters = {...selectedFilters}
+    let filters = JSON.parse(JSON.stringify(selectedFilters))
     filters[date_filter_type] = {}
     filters[date_filter_type][e.target.id] = 'Yes'
-    setSelectedFilters(filters);    
-    await updateDateRange(dateRange,dateFilter,filters)
+    setSelectedFilters(filters);
+    await updateDateRange(dateRange, dateFilter, filters)
   };
 
   const updateDateRange = async (dateRange, dateFilters, selectedFilters) => {
     let _dateRange = { ...dateRange };
-    let _filters = {...selectedFilters}
+    let _filters = JSON.parse(JSON.stringify(selectedFilters))
     if (_filters['date filter']) {
       let dateFilterField = dateFilters.options.find(
-        ({name}) => name == Object.keys(_filters['date filter'])[0]
+        ({ name }) => name == Object.keys(_filters['date filter'])[0]
       );
       const newRange = await sdk.ok(
         sdk.run_inline_query({
@@ -92,106 +93,96 @@ export const DateRangeSelector = ({
         setSelectedFilters(_filters)
       }
     }
-}
+  }
 
 
 
   return (
-  <Container fluid className="padding-0">
-    <Row className="fullW mb-1">
-      <Col md={12} lg={4}>
+    <Container fluid className="padding-0">
+      <Row className="fullW mb-1">
+        <Col md={12} lg={4}>
 
-        <p className="mt-0 mb-2 mediumFont">
-        {description?.description}
-        </p>
+          <p className="mt-0 mb-2 mediumFont">
+            {description?.description}
+          </p>
         </Col>
 
         <Col md={12} lg={4}>
 
-                <div className="grid2">
+          <div className="grid2">
 
-                  {sortDateFilterList(dateFilter.options)?.map(filter => {
-                    return (
+            {sortDateFilterList(dateFilter.options)?.map(filter => {
+              return (
 
-                    <div className="one radio">
-                      <Form.Group
-                      controlId={filter['name']}>
-                      <Form.Check
+                <div className="one radio">
+                  <Form.Group
+                    controlId={filter['name']}>
+                    <Form.Check
                       checked={Object.keys(selectedFilters[date_filter_type]).find(key => key === filter['name'])}
                       id={filter['name']}
                       value={filter['name']}
                       type="radio"
                       // name="dateFilters"
                       onChange={handleSelection}
-                      label={filter['label_short'].replace('(Yes / No)','')}
-                      />
+                      label={filter['label_short'].replace('(Yes / No)', '')}
+                    />
 
-                    </Form.Group>
-                  </div>
+                  </Form.Group>
+                </div>
 
-                  )
-                })}
-
-
-              </div>
+              )
+            })}
 
 
+          </div>
 
-      </Col>
 
-    <Col md={12} lg={4}>
 
-      <div className="d-flex mt-1 ml2">
+        </Col>
 
-        <div className="columnStart mr2">
-          <label>Start Date</label>
-          <Form.Control
-          type="date"
-          value={splitSelectedDateRange()[0]}
-          onChange={(e) => onDateSelection(e, "start")}
+        <Col md={12} lg={4} className="position-relative">
 
-          />
+          <div className="d-flex mt-1 pt-2 ml2">
 
+            <div className="columnStart mr2">
+              <label>Start Date</label>
+              <Form.Control
+              type="date"
+              value={splitSelectedDateRange()[0]}
+              onChange={(e) => onDateSelection(e, "start")}
+
+              />
+
+            </div>
+            <div className="columnStart">
+              <label>End Date</label>
+              <Form.Control
+              type="date"
+              value={splitSelectedDateRange()[1]}
+              onChange={(e) => onDateSelection(e, "end")}
+              />
+
+            </div>
+
+
+          </div>
+
+          <div className="endAbsolute">
+
+
+            <Button
+            onClick={handleTabVisUpdate}
+            className="btn">Update Dates
+          </Button>
         </div>
-        <div className="columnStart">
-          <label>End Date</label>
-          <Form.Control
-          type="date"
-          value={splitSelectedDateRange()[1]}
-          onChange={(e) => onDateSelection(e, "end")}
-          />
 
-        </div>
+        </Col>
+      </Row>
 
 
-      </div>
-    </Col>
-  </Row>
-
-  <Row className="fullW bottom d-flex align-items-center">
-      <Col md={12} lg={8}>
 
 
-    </Col>
 
-  </Row>
-
-  <Row className="fullW mt-3 position-relative">
-
-    <Col xs={12} md={12} className="position-absolute">
-
-      <div className="d-flex justify-content-end endAbsolute">
-
-
-        <Button
-        onClick={handleTabVisUpdate}
-        className="btn">Update Dates
-      </Button>
-    </div>
-  </Col>
-</Row>
-
-
-</Container>
-);
+    </Container>
+  );
 };

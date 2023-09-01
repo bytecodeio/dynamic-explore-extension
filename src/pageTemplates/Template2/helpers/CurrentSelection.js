@@ -3,7 +3,7 @@ import { Button, Form, Modal, Spinner, Row, Col } from "react-bootstrap";
 import * as $ from "jquery";
 import moment from 'moment';
 
-export const CurrentSelection = ({ filters, selectedFilters, setSelectedFilters}) => {
+export const CurrentSelection = ({ filters, selectedFilters, setSelectedFilters }) => {
   const [currentSelection, setCurrentSelection] = useState([])
 
   useEffect(() => {
@@ -11,12 +11,12 @@ export const CurrentSelection = ({ filters, selectedFilters, setSelectedFilters}
     let current = []
     Object.keys(selectedFilters).map(key => {
       if (Object.keys(selectedFilters[key]).length > 0) {
-        let filter = filters.find(({type}) => type === key);
+        let filter = filters.find(({ type }) => type === key);
         Object.keys(selectedFilters[key]).map(row => {
           if (filter.type === "date range") {
-            current.splice(0,0,selectedFilters[key][row])
+            current.splice(0, 0, selectedFilters[key][row])
           } else {
-            let field = filter.fields.find(({name}) => name === row)
+            let field = filter.fields.find(({ name }) => name === row)
             current.push(`${field.label_short}: ${selectedFilters[key][row]}`)
           }
         })
@@ -24,13 +24,13 @@ export const CurrentSelection = ({ filters, selectedFilters, setSelectedFilters}
       }
     })
     setCurrentSelection(current)
-  },[selectedFilters])
+  }, [selectedFilters])
 
   function removeField(fieldName) {
     setSelectedFilters((prev) => {
       let newObj = {};
-      for(const name in prev){
-        if(name !== fieldName) {
+      for (const name in prev) {
+        if (name !== fieldName) {
           newObj[name] = prev[name];
         } else {
           newObj[name] = 'N/A';
@@ -40,56 +40,56 @@ export const CurrentSelection = ({ filters, selectedFilters, setSelectedFilters}
     });
   }
 
-// const first = selectedDateRange.split(" to ")[0]
-// const last = selectedDateRange.split(" to ")[1]
+  // const first = selectedDateRange.split(" to ")[0]
+  // const last = selectedDateRange.split(" to ")[1]
 
-// const format2 = moment(last).format('MM-DD-YYYY').toString();
+  // const format2 = moment(last).format('MM-DD-YYYY').toString();
 
-// const format1 = moment(first).format('MM-DD-YYYY').toString();
+  // const format1 = moment(first).format('MM-DD-YYYY').toString();
 
-// console.log('currentSelection', currentSelection)
+  console.log('currentSelection', currentSelection)
 
 
   return (
 
 
-<div className="d-flex">
-<div>
-    {
+    <div className="d-flex">
+      <div>
+        {
 
-      currentSelection.length > 0 ? (
-        <div>
+          currentSelection.length > 0 ? (
+            <div>
 
-          {currentSelection?.map((selection) => {
-            return(
-              <div className="dateChoice short" key={selection}>
+              {currentSelection?.map((selection) => {
+                return (
+                  <div className="dateChoice short" key={selection}>
 
-              <p className="mb-0 blue"> {selection}</p>
+                    <p className="mb-0 blue"> {selection}</p>
 
-              </div>
+                  </div>
 
-            )
-          })}
+                )
+              })}
 
-          </div>
+            </div>
 
-      ) : (
+          ) : (
 
 
 
-      <div className="dateChoice">
+            <div className="dateChoice">
 
-        <p className="mb-0 blue"><i class="fal fa-calendar-check"></i> </p>
+              <p className="mb-0 blue"><i class="fal fa-calendar-check"></i> </p>
+
+            </div>
+
+          )
+
+        }
 
       </div>
 
-      )
-
-    }
-
-</div>
-
-</div>
+    </div>
 
   )
 }

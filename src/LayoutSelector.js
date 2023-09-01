@@ -50,7 +50,9 @@ export const LayoutSelector = ({
             updatedFilters={updatedFilters}
             setUpdatedFilters={setUpdatedFilters}
             initialLoad={initialLoad}
-            setInitialLoad={setInitialLoad}/>;
+            setInitialLoad={setInitialLoad}
+            keyword={keyword}
+            handleChangeKeyword={handleChangeKeyword}/>;
     }
     // switch (tabProps.layout_name) {
     //     case 'Template1':
