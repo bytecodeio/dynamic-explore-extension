@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Form } from "react-bootstrap";
+import React, { Fragment, useState, useEffect } from "react";
+import { Form, Row, Col, Button, Container } from "react-bootstrap";
 import EmbedTable from "./EmbedTable";
 
 export const EmbedContainer = ({vis, visList, updateVisList, handleVisUpdate}) => {
@@ -16,23 +16,25 @@ export const EmbedContainer = ({vis, visList, updateVisList, handleVisUpdate}) =
     }
     return(
         <>
-        <div className="tile-filter-container">
+        <Row>
+        <Col md={12} lg={3}>
             {vis['tileFilterOptions'].length > 0?
                 vis['tileFilterOptions'].map(o => {
                     return (
-                        <Form.Select onChange={(el) => handleToggle(el,o['name'])} value={vis['localSelectedFilters'][o['name']]} style={{width:'25%'}}>
+                        <Form.Select onChange={(el) => handleToggle(el,o['name'])} value={vis['localSelectedFilters'][o['name']]}>
                             {o.options.map(v => {
                                 return (
-                                <option key={v.value} value={v.value}> {v.label}</option> 
-                                )                            
+                                <option key={v.value} value={v.value}> {v.label}</option>
+                                )
                             })}
                         </Form.Select>
                     )
                 })
                 :''
             }
-        </div>
+            </Col>
+        </Row>
         <EmbedTable queryId={vis.query} />
         </>
-    )    
+    )
 }

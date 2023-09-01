@@ -20,19 +20,20 @@ import Filters from "./helpers/Filters";
 import Rx from "./helpers/Rx";
 import QuickFilter from "./helpers/QuickFilter";
 import AccountGroups from "./helpers/AccountGroups";
+import SearchAll from "./helpers/SearchAll";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
-import CurrentAccountGroup  from "./helpers/CurrentAccountGroup";
+import CurrentAccountGroup from "./helpers/CurrentAccountGroup";
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 import { CurrentSelection2 } from "./helpers/CurrentSelection2";
 import usePagination from "@mui/material/usePagination/usePagination";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import {SearchInput} from './helpers/SearchInput'
 const Template2 = ({
   currentNavTab,
   filters,
   fields,
+  setFields,
   properties,
   parameters,
   updateAppProperties,
@@ -67,18 +68,17 @@ const Template2 = ({
   const [isMounted, setIsMounted] = useState(false)
   const [selection, setSelection] = useState('');
 
-  const [ value, setValue ] = useState(0);
-  const [ step, setStep ] = useState(1);
+  const [value, setValue] = useState(0);
+  const [step, setStep] = useState(1);
   const [active, setActive] = useState(false);
   const [faClass, setFaClass] = useState(true);
   const [toggle, setToggle] = useState(true);
   const [showMenu2, setShowMenu2] = useState();
+  const [showMenu3, setShowMenu3] = useState();
   // const [choseClearAll, setChoseClearAll] = useState(defaultChosenValue);
   const [choseClearAll, setChoseClearAll] = useState();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
 
 
   const params = useParams()
@@ -102,40 +102,39 @@ const Template2 = ({
 
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
-  useState(true);
+    useState(true);
 
   const handleChangeSelection = (e) => {
     setSelection(e.target.value);
   }
 
   async function fetchDefaultFieldsAndFilters() {
-    console.log("config", config)
     let _visList = []
     let index = 0
-    for await(let visConfig of config) {
-      const {dashboard_elements, dashboard_filters} = await sdk.ok(
+    for await (let visConfig of config) {
+      const { dashboard_elements, dashboard_filters } = await sdk.ok(
         sdk.dashboard(visConfig['lookml_id'], 'dashboard_elements, dashboard_filters')
       )
       if (dashboard_elements.length > 0) {
-        dashboard_elements?.map((t,i) => {
+        dashboard_elements?.map((t, i) => {
           let tileFilters = t['result_maker']['query']['filters'];
           let _tileFilterOptions = []
           let _selectedFilters = {}
           parameters?.map(p => {
             if (tileFilters) {
               Object.keys(tileFilters).map(key => {
-                  if (key === p.fields['name']) {
-                    _selectedFilters[key] = tileFilters[key]
-                    _tileFilterOptions.push({'name':p.fields['name'], options:p['value']});
-                  };
-              })         
+                if (key === p.fields['name']) {
+                  _selectedFilters[key] = tileFilters[key]
+                  _tileFilterOptions.push({ 'name': p.fields['name'], options: p['value'] });
+                };
+              })
             }
           })
-          
-          console.log("filter options",_tileFilterOptions)
+
+          console.log("filter options", _tileFilterOptions)
           let vis = {}
-          let {client_id} = t['result_maker']['query'];
-          vis =  {
+          let { client_id } = t['result_maker']['query'];
+          vis = {
             visId: visConfig['vis_name'],
             title: t['title'],
             query: client_id,
@@ -149,8 +148,8 @@ const Template2 = ({
 
           if (initialLoad && i === 0) {
             //Finish default query
-              console.log("dashboard element", t.result_maker.query.filters)
-              setInitialLoad(false)
+            console.log("dashboard element", t.result_maker.query.filters)
+            setInitialLoad(false)
           }
         })
       } else (setInitialLoad(false))
@@ -174,11 +173,11 @@ const Template2 = ({
   }, [isFetchingDefaultDashboard, isFetchingLookmlFields]);
 
   const renderTooltip = (props) => (
-  <Tooltip id="button-tooltip" {...props}>
-    These are the filters you use to query data. Select the accordions
-    individually below to choose the different filter options inside. Once you
-    are done you can choose the "Submit Values" button to update the data.
-  </Tooltip>
+    <Tooltip id="button-tooltip" {...props}>
+      These are the filters you use to query data. Select the accordions
+      individually below to choose the different filter options inside. Once you
+      are done you can choose the "Submit Values" button to update the data.
+    </Tooltip>
   );
 
   const formatFilters = (filters) => {
@@ -186,7 +185,7 @@ const Template2 = ({
     Object.keys(filters).map(key => {
       if (Object.keys(filters[key]).length > 0) {
         if (!(key == "date range" && Object.keys(filters['date filter']).length > 0)) {
-          filter = {...filter,...filters[key]}
+          filter = { ...filter, ...filters[key] }
         }
       }
     })
@@ -194,13 +193,13 @@ const Template2 = ({
   }
 
   // Handle run button click
-  const handleTabVisUpdate = async() => {
+  const handleTabVisUpdate = async () => {
     let _visList = [...visList];
-    let currentVis = _visList.find(({index}) => index === currentInnerTab)
+    let currentVis = _visList.find(({ index }) => index === currentInnerTab)
 
     let _filters = {};
-    _filters = await formatFilters({...selectedFilters});
-    setUpdatedFilters({...selectedFilters})
+    _filters = await formatFilters(JSON.parse(JSON.stringify(selectedFilters)));
+    setUpdatedFilters(JSON.parse(JSON.stringify(selectedFilters)))
     updateAppProperties(_filters)
 
     let newVisList = []
@@ -218,7 +217,7 @@ const Template2 = ({
           model: LOOKER_MODEL,
           view: LOOKER_EXPLORE,
           fields: _fields,
-          filters: vis['localSelectedFilters']?{..._filters, ...vis['localSelectedFilters']}:_filters,
+          filters: vis['localSelectedFilters'] ? { ..._filters, ...vis['localSelectedFilters'] } : _filters,
           vis_config,
         })
       );
@@ -229,14 +228,14 @@ const Template2 = ({
     setVisList(newVisList)
   }
 
-  const handleSingleVisUpdate = async(index) => {
+  const handleSingleVisUpdate = async (index) => {
     let _visList = [...visList];
-    let currentVis = _visList.find(({index}) => index === index)
+    let currentVis = _visList.find(({ index }) => index === index)
 
     let _filters = {};
-    _filters = await formatFilters({...updatedFilters});
-    console.log("currentvis",currentVis)
-    _filters = {..._filters,...currentVis['localSelectedFilters']}
+    _filters = await formatFilters(JSON.parse(JSON.stringify(updatedFilters)));
+    console.log("currentvis", currentVis)
+    _filters = { ..._filters, ...currentVis['localSelectedFilters'] }
 
     const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(currentVis['query']));
 
@@ -255,397 +254,433 @@ const Template2 = ({
     currentVis['query'] = client_id
     setVisList(_visList)
   }
-    
-  
+
+
 
 
 
   async function doClearAll() {
-
-    // setIsDefaultProduct(false);
+    console.log("baba")
+    setIsDefaultProduct(false);
     setUpdateButtonClicked(true);
-    setSelectedFields([]);
-    setSelectedAccountGroup([])
-    let tabs = [...tabList];
-    let currentTab = tabs[currentInnerTab];
-    currentTab["selected_fields"] = [];
-    setTabList(tabs);
-    let filters = {...selectedFilters};
-    for(let name in filters) {
-      filters[name] = 'N/A';
+
+
+    
+
+    // setSelectedFilters([])
+    // setSelectedAccountGroup([])
+
+    // let tabs = [...tabList];
+    //
+    // let currentTab = tabs[currentInnerTab];
+    // if (currentTab)
+    //   currentTab["selected_fields"] = [];
+    // setTabList(tabs);
+
+    let filters = JSON.parse(JSON.stringify(selectedFilters));
+    for (let name in filters) {
+      if (name !== "date range")
+        filters[name] = {};
     }
     setSelectedFilters(filters);
-    // setSelectedFilters((prevFilters) => {
-      //   const newFilters = { ...prevFilters };
-      //   newFilters[filterName] = 'N/A';
-      //   return newFilters;
-      // });
-      setIsFilterChanged(true);
-    }
+    setUpdatedFilters(filters)
+
+    // setIsFilterChanged(true);
+  }
 
 
-    async function clearAllAccounts() {
-      setSelectedAccountGroup([])
-    }
+  async function clearAllAccounts() {
+    setSelectedAccountGroup([])
+  }
 
-    async function handleRestoreDefault() {
-      let tabs = [...tabList];
+  async function handleRestoreDefault() {
+    let tabs = [...tabList];
 
-      tabs[currentInnerTab]["selected_fields"] = [...tabs[currentInnerTab]["default_fields"]];
-      setTabList(tabs);
-    }
+    tabs[currentInnerTab]["selected_fields"] = [...tabs[currentInnerTab]["default_fields"]];
+    setTabList(tabs);
+  }
 
 
-    useEffect((e) => {
-      document.addEventListener("click", handleClickOutside, false);
-      return () => {
-        document.removeEventListener("click", handleClickOutside, false);
-      };
-    }, []);
-
-    const handleClickOutside = (event) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        //setShow3(false);
-      }
+  useEffect((e) => {
+    document.addEventListener("click", handleClickOutside, false);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, false);
     };
+  }, []);
 
-    const handleClick = () => {
-        setToggle(!toggle);
+  const handleClickOutside = (event) => {
+    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      //setShow3(false);
+    }
+  };
 
-      setTimeout(() => {
-        setActive(!active);
+  const handleClick = () => {
+    setToggle(!toggle);
 
-        setFaClass(!faClass);
-      }, 600);
-      };
+    setTimeout(() => {
+      setActive(!active);
 
-      //jquery will be removed and changed, leave for now
+      setFaClass(!faClass);
+    }, 600);
+  };
 
-    $(document).on('click', function(){
-      if ($('.theSelected').height() > 74.8){
-        $('.theSelected').addClass('theEnd').css({'maxHeight': '76px', "overflow" : "hidden"})
-        $('.hideThisEnd, .whiteBar').show()
-      }
-      else{
-        $('.theSelected').removeClass('theEnd').css({'maxHeight': 'unset', "overflow" : "unset"})
-        $('.hideThisEnd, .whiteBar').hide()
-      }
+  //jquery will be removed and changed, leave for now
 
-        $('#numberCounter').html($('.tab-pane.active .theSelected .theOptions').length + $('.tab-pane.active.show .theSelected .dateChoice').length)
-    })
-    $(window).resize(function () {
-        $(document).trigger('click')
-    });
-    //jquery will be removed and changed, leave for now
-
-
-    // const defaultChosenValue = localStorage.getItem('choseClearAll');
-    // console.log('local storage value first', defaultChosenValue)
-    //
-
-
-    const handleUserYes = () => {
-      // setChoseClearAll("1")
-      // localStorage.setItem('choseClearAll', "1");
-      doClearAll();
-      // setShow(false);
-      setShow(true)
+  $(document).on('click', function () {
+    if ($('.theSelected').height() > 74.8) {
+      $('.theSelected').addClass('theEnd').css({ 'maxHeight': '76px', "overflow": "hidden" })
+      $('.hideThisEnd, .whiteBar').show()
+    }
+    else {
+      $('.theSelected').removeClass('theEnd').css({ 'maxHeight': 'unset', "overflow": "unset" })
+      $('.hideThisEnd, .whiteBar').hide()
     }
 
+    $('#numberCounter').html($('.tab-pane.active .theSelected .theOptions').length + $('.tab-pane.active.show .theSelected .dateChoice').length)
+  })
+  $(window).resize(function () {
+    $(document).trigger('click')
+  });
+  //jquery will be removed and changed, leave for now
 
 
-    const handleClearAll = () => {
-      setShow(true)
-      // if (defaultChosenValue == "1") {
-      //   setShow(false)
-      //   doClearAll();
-      // } else {
-      //   if(!choseClearAll) {
-      //     setShow(true)
-      //   } else {
-      //     doClearAll();
-      //   }
-      // }
-    }
+  // const defaultChosenValue = localStorage.getItem('choseClearAll');
+  // console.log('local storage value first', defaultChosenValue)
+  //
 
-    const slideIt2 = () =>{
-      setShowMenu2(!showMenu2)
-    }
-    // function handleFieldAll(value) {
-    //   setSelectedAccountGroup(accountGroupOptions)
+
+  const handleUserYes = () => {
+    // setChoseClearAll("1")
+    // localStorage.setItem('choseClearAll', "1");
+    doClearAll();
+    // setShow(false);
+    setShow(true)
+  }
+
+
+
+  const handleClearAll = () => {
+    setShow(true)
+    // if (defaultChosenValue == "1") {
+    //   setShow(false)
+    //   doClearAll();
+    // } else {
+    //   if(!choseClearAll) {
+    //     setShow(true)
+    //   } else {
+    //     doClearAll();
+    //   }
     // }
-    //
-    // function handleFieldsAll(value) {
-    //   let tabs = [...tabList];
-    //   tabs[currentInnerTab]['selected_fields'] = fieldOptions?.map(f => {return f['name']});
-    //   setTabList(tabs)
-    // }
+  }
+
+  const slideIt2 = () => {
+    setShowMenu2(!showMenu2)
+  }
+
+  const slideIt3 = () =>{
+    setShowMenu3(!showMenu3)
+  }
+  // function handleFieldAll(value) {
+  //   setSelectedAccountGroup(accountGroupOptions)
+  // }
+  //
+  // function handleFieldsAll(value) {
+  //   let tabs = [...tabList];
+  //   tabs[currentInnerTab]['selected_fields'] = fieldOptions?.map(f => {return f['name']});
+  //   setTabList(tabs)
+  // }
 
 
-//for search
+  //for search
 
-    function getSelectedFilters() {
-      if(selection !== "") {
-        return filters.map(filter => {
-          let values = {};
-          Object.keys(filter.options.values).forEach(value => {
-            if(filter.options.values[value] && filter.options.values[value].indexOf(selection) !== -1)
-              values[value] = filter.options.values[value];
-          })
-          return {
-            ...filter,
-            options: {
-              ...filter.options,
-              values: values
-          }};
-        });
-      }
-      return filters;
-    }
+  // function getSelectedFilters() {
+  //   if (selection !== "") {
+  //     return filters.map(filter => {
+  //       let values = {};
+  //       Object.keys(filter.options.values).forEach(value => {
+  //         if (filter.options.values[value] && filter.options.values[value].indexOf(selection) !== -1)
+  //           values[value] = filter.options.values[value];
+  //       })
+  //       return {
+  //         ...filter,
+  //         options: {
+  //           ...filter.options,
+  //           values: values
+  //         }
+  //       };
+  //     });
+  //   }
+  //   return filters;
+  // }
 
 
-              return (
-              <div className={isActive? "tab-pane active" : "hidden"}>
+  return (
+    <div className={isActive ? "tab-pane active" : "hidden"}>
 
-             <Container fluid>
-                {isPageLoading ? (
-                  <Spinner />
-                  ) : (
-                  <>
-                  <div id="slideOut3" className={showMenu ? "" : "show3"} ref={wrapperRef}>
-                    <div className="slideOutTab3">
-                      <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
-                      onClick={() => {setShowMenu(false);}}>
-                      <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
-                      <p className="m-0"><span className="noMobile">Selection Options</span></p>
-                    </div>
-                  </div>
+      <Container fluid>
+        {isPageLoading ? (
+          <Spinner />
+        ) : (
+          <>
+            <div id="slideOut3" className={showMenu ? "" : "show3"} ref={wrapperRef}>
+              <div className="slideOutTab3">
+                <div id="one3" className="openTab bottomShadow" role="button" tabindex="0"
+                  onClick={() => { setShowMenu(false); }}>
+                  <p className="black m-0 mb-2"><i class="far fa-bars"></i></p>
+                  <p className="m-0"><span className="noMobile">Selection Options</span></p>
+                </div>
+              </div>
 
-                  <div className="modal-content">
-                    <div className="modal-header">
-                      <OverlayTrigger
-                      placement="right"
-                      overlay={renderTooltip}
-                      className="tooltipHover"
-                      >
-                      <p className="pb-1">
-                        Selection Options <i className="fal fa-info-circle red"></i>
-                      </p>
-                    </OverlayTrigger>
-                    <div className="closeThisPlease" id="close1">
-                      <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1"
-                      onClick={() => {setShowMenu(true);}}>
+              <div className="modal-content">
+                <div className="modal-header">
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={renderTooltip}
+                    className="tooltipHover"
+                  >
+                    <p className="pb-1">
+                      Selection Options <i className="fal fa-info-circle red"></i>
+                    </p>
+                  </OverlayTrigger>
+                  <div className="closeThisPlease" id="close1">
+                    <Button role="button" className="close" data-dismiss="modal" id="closeThisPlease1"
+                      onClick={() => { setShowMenu(true); }}>
                       {/*onClick={() => setShow3(false)}>*/}
                       &#10005;
                     </Button>
                   </div>
                 </div>
                 <div className="modal-actions">
-                  <SearchInput filters={filters} fields={fields}/>
+                  <div className="position-relative columnStart mb-3">
+                    <label>Search Selections</label>
+                    <input value={keyword} onChange={() => {slideIt3(true);}} placeholder="" type="search" class="form-control" />
+                    {/*<input value={keyword} onChange={() => {slideIt3(true);handleChangeKeyword();}} placeholder="" type="search" class="form-control" />*/}
+                    {fields?.fields?.length > 0 ?
+                    <SearchAll
+                      fieldOptions={keyword !== "" ? fields.filter(option => option.indexOf(keyword)!== -1) : fields.fields}
+                      setTabList={setVisList}
+                      tabList={visList.filter(({ visId }) => visId === "tabbedVis1")}
+                      currentInnerTab={currentInnerTab}
+                      updateBtn={updateButtonClicked}
+                      setUpdateBtn={setUpdateButtonClicked}
+                      selectedFields={selectedFields}
+                      showMenu3={showMenu3}
+                      setShowMenu3={setShowMenu3}
+
+                    />
+                    : ''
+                  }
+                    <i class="far fa-search absoluteSearch"></i>
+                  </div>
+
+
+
                   <div className="across">
                     <Button onClick={handleClearAll} className="btn-clear">
                       Clear All
                     </Button>
                     <Button
-                    onClick={handleTabVisUpdate}
-                    className="btn">Update Selections
-                  </Button>
+                      onClick={handleTabVisUpdate}
+                      className="btn">Update Selections
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <div className="modal-body">
-                <Accordion defaultActiveKey={0} className="mt-3 mb-3">
-                  <Row>
-                    <Col xs={12} md={12}>
-                      <Row>
+                <div className="modal-body">
+                  <Accordion defaultActiveKey={0} className="mt-3 mb-3">
+                    <Row>
+                      <Col xs={12} md={12}>
+                        <Row>
 
 
-                        {/* Account Groups */}
-                        {filters.find(({type}) => type === "account group").options.values?.length > 0?
+                          {/* Account Groups */}
+                          {filters.find(({ type }) => type === "account group").options.values?.length > 0 ?
+                            <Col xs={12} md={12}>
+                              <Accordion.Item eventKey="1">
+                                <Accordion.Header>Account Groups</Accordion.Header>
+                                <Accordion.Body>
+                                  <AccountGroups
+                                    //fieldOptions={keyword !=="" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
+                                    fieldOptions={filters.find(({ type }) => type === "account group")}
+                                    selectedFilters={selectedFilters}
+                                    setSelectedFilters={setSelectedFilters}
+                                  />
+                                </Accordion.Body>
+                              </Accordion.Item>
+                            </Col>
+                            : ''
+                          }
+
+
+                          {/* Fields */}
+                          {fields?.fields?.length > 0 ?
+                            <Col xs={12} md={12}>
+                              <Accordion.Item eventKey="6">
+                                <Accordion.Header>Fields</Accordion.Header>
+                                <Accordion.Body>
+                                  <Fields
+                                    fieldOptions={fields.fields}
+                                    setTabList={setVisList}
+                                    tabList={visList.filter(({ visId }) => visId === "tabbedVis1")}
+                                    currentInnerTab={currentInnerTab}
+                                    updateBtn={updateButtonClicked}
+                                    setUpdateBtn={setUpdateButtonClicked}
+                                    selectedFields={selectedFields}
+
+
+                                  />
+                                </Accordion.Body>
+                              </Accordion.Item>
+                            </Col>
+                            : ''
+                          }
+
+                          {/* Filters */}
+                          {filters.find(({ type }) => type === "filter").options?.length > 0 ?
+                            <Col xs={12} md={12}>
+                              <Accordion.Item eventKey="5">
+                                <Accordion.Header>Filters</Accordion.Header>
+                                <Accordion.Body>
+                                  {/*Quick Filters */}
+                                  {
+                                    filters.find(({ type }) => type === "quick filter").options?.length > 0 ?
+                                      <QuickFilter
+                                        quickFilters={filters.find(({ type }) => type === "quick filter")}
+                                        selectedFilters={selectedFilters}
+                                        setSelectedFilters={setSelectedFilters}
+                                        selection={selection}
+                                        updateBtn={updateButtonClicked}
+                                        setUpdateBtn={setUpdateButtonClicked}
+                                        setIsFilterChanged={setIsFilterChanged}
+                                      />
+                                      :
+                                      ''
+                                  }
+
+                                  <Filters
+                                    //isLoading={isFetchingFilterSuggestions}
+                                    filters={filters.find(({ type }) => type === "filter")}
+                                    setSelectedFilters={setSelectedFilters}
+                                    selectedFilters={selectedFilters}
+                                    isDefault={isDefaultProduct}
+                                    setIsDefault={setIsDefaultProduct}
+                                    updateBtn={updateButtonClicked}
+                                    setUpdateBtn={setUpdateButtonClicked}
+                                    setIsFilterChanged={setIsFilterChanged}
+                                  />
+                                </Accordion.Body>
+                              </Accordion.Item>
+                            </Col>
+                            : ''
+                          }
+
+
+
+
+
+
+
+
+                          {/* Bookmarks */}
                           <Col xs={12} md={12}>
-                            <Accordion.Item eventKey="1">
-                              <Accordion.Header>Account Groups</Accordion.Header>
-                              <Accordion.Body>
-                                <AccountGroups
-                                  //fieldOptions={keyword !=="" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
-                                  fieldOptions={filters.find(({type}) => type === "account group")}
-                                  selectedFilters={selectedFilters}
-                                  setSelectedFilters={setSelectedFilters}
-                                />
-                              </Accordion.Body>
+                            <Accordion.Item eventKey="4">
+                              <Accordion.Header>Saved Filters</Accordion.Header>
+                              <Accordion.Body></Accordion.Body>
                             </Accordion.Item>
                           </Col>
-                          :''
-                        }
+                        </Row>
+                      </Col>
+
+                    </Row>
+                  </Accordion>
+                  <Col xs={12} md={12}>
+                    <div className="d-flex flex-column text-center position-relative">
+                      <p className="">Top % Products</p>
+
+                      <input
+                        value={value}
+                        onChange={changeEvent => {
+                          setStep(1);
+                          setValue(changeEvent.target.value)
+                        }}
+                        placeholder={value}
+                        type="search"
+                        list="steplist"
+                        min="0" max="100"
+                        from="0"
+                        step="1"
+                        className="value" />
+
+                      <input
+                        value={value}
+                        onChange={changeEvent => {
+                          setStep(25);
+                          setValue(changeEvent.target.value)
+                        }}
+                        type="range"
+                        min="0" max="100"
+                        step={step}
+                        list="steplist"
+                        className="range-slider mt-2" />
+
+                      <datalist id="steplist" className="range">
+                        <option label="0">0</option>
+                        <option label="25">25</option>
+                        <option label="50">50</option>
+                        <option label="75">75</option>
+                        <option label="100">100</option>
+                      </datalist>
 
 
-                        {/* Fields */}
-                        {fields?.fields?.length > 0?
-                          <Col xs={12} md={12}>
-                            <Accordion.Item eventKey="6">
-                              <Accordion.Header>Fields</Accordion.Header>
-                              <Accordion.Body>
-                                <Fields
-                                fieldOptions={fields.fields}
-                                setTabList={setVisList}
-                                tabList={visList.filter(({visId}) => visId ==="tabbedVis1")}
-                                currentInnerTab={currentInnerTab}
-                                updateBtn={updateButtonClicked}
-                                setUpdateBtn={setUpdateButtonClicked}
-                                />
-                              </Accordion.Body>
-                            </Accordion.Item>
-                          </Col>
-                          :''
-                        }
-
-                        {/* Filters */}
-                        {filters.find(({type}) =>  type === "filter").options?.length > 0?
-                          <Col xs={12} md={12}>
-                            <Accordion.Item eventKey="5">
-                              <Accordion.Header>Filters</Accordion.Header>
-                              <Accordion.Body>
-                                {/*Quick Filters */}
-                                {
-                                  filters.find(({type}) =>  type === "quick filter").options?.length > 0?
-                                    <QuickFilter
-                                      quickFilters={filters.find(({type}) =>  type === "quick filter")}
-                                      selectedFilters={selectedFilters}
-                                      setSelectedFilters={setSelectedFilters}
-                                      selection={selection}
-                                      updateBtn={updateButtonClicked}
-                                      setUpdateBtn={setUpdateButtonClicked}
-                                      setIsFilterChanged={setIsFilterChanged}
-                                    />
-                                  :
-                                  ''
-                                }
-
-                                <Filters
-                                //isLoading={isFetchingFilterSuggestions}
-                                filters={filters.find(({type}) =>  type === "filter")}
-                                setSelectedFilters={setSelectedFilters}
-                                selectedFilters={selectedFilters}
-                                isDefault={isDefaultProduct}
-                                setIsDefault={setIsDefaultProduct}
-                                updateBtn={updateButtonClicked}
-                                setUpdateBtn={setUpdateButtonClicked}
-                                setIsFilterChanged={setIsFilterChanged}
-                                />
-                              </Accordion.Body>
-                            </Accordion.Item>
-                          </Col>
-                          :''
-                        }
+                    </div>
+                  </Col>
 
 
 
-
-
-
-
-
-                        {/* Bookmarks */}
-                        <Col xs={12} md={12}>
-                          <Accordion.Item eventKey="4">
-                            <Accordion.Header>Saved Filters</Accordion.Header>
-                            <Accordion.Body></Accordion.Body>
-                          </Accordion.Item>
-                        </Col>
-                      </Row>
-                    </Col>
-
-                  </Row>
-                </Accordion>
-                <Col xs={12} md={12}>
-                <div className="d-flex flex-column text-center position-relative">
-                <p className="">Top % Products</p>
-
-                <input
-                    value={value}
-                    onChange={changeEvent => {
-                      setStep(1);
-                      setValue(changeEvent.target.value)
-                    }}
-                    placeholder={value}
-                    type="search"
-                    list="steplist"
-                    min="0" max="100"
-                    from="0"
-                    step="1"
-                    className="value"/>
-
-                <input
-                    value={value}
-                    onChange={changeEvent => {
-                      setStep(25);
-                      setValue(changeEvent.target.value)
-                    }}
-                    type="range"
-                    min="0" max="100"
-                    step={step}
-                    list="steplist"
-                    className="range-slider mt-2"/>
-
-                <datalist id="steplist" className="range">
-                    <option label="0">0</option>
-                    <option label="25">25</option>
-                    <option label="50">50</option>
-                    <option label="75">75</option>
-                    <option label="100">100</option>
-                </datalist>
 
 
                 </div>
-                </Col>
-
-
-
-
-
               </div>
             </div>
-          </div>
 
-          <Row className="fullW">
+            <Row className="fullW">
 
 
-          <Col md={12} lg={12}>
-            {/* Date Range Selector */}
-            {filters.find(({type}) => type  === "date filter").options?.length>0?
-              <DateRangeSelector
-                dateFilter={filters.find(({type}) => type  === "date filter")}
-                dateRange={filters.find(({type}) => type === "date range")}
-                selectedFilters={selectedFilters}
-                setSelectedFilters={setSelectedFilters}
-                setUpdatedFilters={setUpdatedFilters}
-                handleTabVisUpdate={handleTabVisUpdate}
-                currentInvoiceCount={properties.find(({type}) => type === "total invoices")}
-                description={description}
-              />
-              :''
-            }
-
-            {/*<DateFilterGroup
+              <Col md={12} lg={12}>
+                {/* Date Range Selector */}
+                {filters.find(({ type }) => type === "date filter").options?.length > 0 ?
+                  <DateRangeSelector
+                    dateFilter={filters.find(({ type }) => type === "date filter")}
+                    dateRange={filters.find(({ type }) => type === "date range")}
+                    selectedFilters={selectedFilters}
+                    setSelectedFilters={setSelectedFilters}
+                    setUpdatedFilters={setUpdatedFilters}
+                    handleTabVisUpdate={handleTabVisUpdate}
+                    currentInvoiceCount={properties.find(({ type }) => type === "total invoices")}
+                    description={description}
+                  />
+                  : ''
+                }
+                {/*<DateFilterGroup
               dateFilterOptions={dateFilterOptions}
               setSelectedDateFilter={setSelectedDateFilter}
               selectedDateFilter={selectedDateFilter}
               />*/}
-            </Col>
+              </Col>
 
             </Row>
 
             <Row className="fullW d-flex align-items-center">
               <Col md={12} lg={2}>
 
-            {properties.find(({type}) => type ==="total invoices")?
-            <p>
-              <b>{properties.find(({type}) => type ==="total invoices").text}</b> <span className="highlight large">{Object.values(properties.find(({type}) => type ==="total invoices").value)}</span>
-            </p>
-            :''
-            }
+                {properties.find(({ type }) => type === "total invoices") ?
+                  <p>
+                    <b>{properties.find(({ type }) => type === "total invoices").text}</b> <span className="highlight large">{Object.values(properties.find(({ type }) => type === "total invoices").value)}</span>
+                  </p>
+                  : ''
+                }
 
-            </Col>
-            {/* <Col md={12} lg={3}>
+              </Col>
+              {/* <Col md={12} lg={3}>
               <div className="position-relative columnStart">
               <label>Search Filter</label>
                 <input placeholder="" type="search" class="form-control" />
@@ -665,22 +700,22 @@ const Template2 = ({
             </Row>
 
 
-          <Row className="fullW mt-5 position-relative">
+            <Row className="fullW mt-5 position-relative">
 
-            <Col xs={12} md={11}>
+              <Col xs={12} md={11}>
 
 
-            <div className={toggle ? 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-up' : 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-down'}>
+                <div className={toggle ? 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-up' : 'd-flex justify-content-start align-items-center flex-wrap theSelected slide-down'}>
 
-              <p class="mr-3"><b>Current Selections:</b></p>
-                <CurrentSelection2
-                  filters={filters}
-                  selectedFilters={selectedFilters}
-                  setSelectedFilters={setSelectedFilters}
-                  updatedFilters={updatedFilters}
-                  setUpdatedFilters={setUpdatedFilters}
-                  formatFilters={formatFilters}
-                />
+                  <p class="mr-3"><b>Current Selections:</b></p>
+                  <CurrentSelection2
+                    filters={filters}
+                    selectedFilters={selectedFilters}
+                    setSelectedFilters={setSelectedFilters}
+                    updatedFilters={updatedFilters}
+                    setUpdatedFilters={setUpdatedFilters}
+                    formatFilters={formatFilters}
+                  />
 
 
 
@@ -689,55 +724,55 @@ const Template2 = ({
               </Col>
               <div className="hideThisEnd" onClick={handleClick}>
                 <i className={faClass ? 'fas fa-plus-circle' : 'fas fa-minus-circle'}>&nbsp;
-                <span> { active ? "See Less" : "See All"} (<p id="numberCounter"></p>) </span></i>
+                  <span> {active ? "See Less" : "See All"} (<p id="numberCounter"></p>) </span></i>
 
-            </div>
+              </div>
 
 
             </Row>
 
 
-          <Row className="mt-3 mb-3">
-            <Col md={12} className="embed-responsive embed-responsive-16by9">
-              {visList.filter(({visId}) => visId ==="tabbedVis1").length > 0?
-                <InnerTableTabs
-                tabs={visList.filter(({visId}) => visId ==="tabbedVis1")}
-                setSelectedFields={setSelectedFields}
-                currentInnerTab={currentInnerTab}
-                setCurrentInnerTab={setCurrentInnerTab}
-                setVisList={setVisList}
-                visList={visList}
-                handleSingleVisUpdate={handleSingleVisUpdate}
-                />
-                :''
-              }
+            <Row className="mt-3 mb-3">
+              <Col md={12} className="embed-responsive embed-responsive-16by9">
+                {visList.filter(({ visId }) => visId === "tabbedVis1").length > 0 ?
+                  <InnerTableTabs
+                    tabs={visList.filter(({ visId }) => visId === "tabbedVis1")}
+                    setSelectedFields={setSelectedFields}
+                    currentInnerTab={currentInnerTab}
+                    setCurrentInnerTab={setCurrentInnerTab}
+                    setVisList={setVisList}
+                    visList={visList}
+                    handleSingleVisUpdate={handleSingleVisUpdate}
+                  />
+                  : ''
+                }
 
-            </Col>
-          </Row>
+              </Col>
+            </Row>
 
-          <Modal show={show} onHide={handleClose} className="clearAllModal">
-                <Modal.Header closeButton>
+            <Modal show={show} onHide={handleClose} className="clearAllModal">
+              <Modal.Header closeButton>
 
-                </Modal.Header>
-                <Modal.Body><p>Are you sure you want to clear all selections?</p></Modal.Body>
-                <Modal.Footer>
-                <Button className="btn"  onClick={() => {handleUserYes();handleClose()}}>
+              </Modal.Header>
+              <Modal.Body><p>Are you sure you want to clear all selections?</p></Modal.Body>
+              <Modal.Footer>
+                <Button className="btn" onClick={() => { handleUserYes(); handleClose() }}>
                   Yes
                 </Button>
-                  <Button className="btn-clear" onClick={handleClose}>
-                    Cancel <i class="fas fa-ban stop"></i>
-                  </Button>
+                <Button className="btn-clear" onClick={handleClose}>
+                  Cancel <i class="fas fa-ban stop"></i>
+                </Button>
 
-                  </Modal.Footer>
-              </Modal>
+              </Modal.Footer>
+            </Modal>
 
 
 
           </>
-          )}
-        </Container>
-        </div>
-        );
-      };
+        )}
+      </Container>
+    </div>
+  );
+};
 
-      export default Template2;
+export default Template2;
