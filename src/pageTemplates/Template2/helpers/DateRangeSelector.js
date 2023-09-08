@@ -61,7 +61,7 @@ export const DateRangeSelector = ({
 
 
   const handleSelection = async (e) => {
-    let filters = JSON.parse(JSON.stringify(selectedFilters))
+    let filters = {...selectedFilters}
     filters[date_filter_type] = {}
     filters[date_filter_type][e.target.id] = 'Yes'
     setSelectedFilters(filters);
@@ -118,7 +118,7 @@ export const DateRangeSelector = ({
                   <Form.Group
                     controlId={filter['name']}>
                     <Form.Check
-                      checked={Object.keys(selectedFilters[date_filter_type]).find(key => key === filter['name'])}
+                      checked={Object.keys(selectedFilters[date_filter_type]).find(key => key === filter['name'])? true:false}
                       id={filter['name']}
                       value={filter['name']}
                       type="radio"

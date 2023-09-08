@@ -9,49 +9,56 @@ const AccountGroups = ({
   selectedFilters,
   setSelectedFilters
 }) => {
+  const [field, setField] = useState({})
   const [expandMenu, setExpandMenu] = useState(false)
   const [keyword, setKeyword] = useState("")
-  function handleFieldSelection(key,value) {
-    console.log(value)
-    let filters = {...selectedFilters}
-    if (filters[account_key][key]) {
-      let values = filters[account_key][key]
-      if (values.includes(value)){
-        let index = values.indexOf(value);
-        console.log(index)
-        console.log(values.splice(index,1))
-        let newValues = [...values.splice(index,1)];
-        console.log(newValues)
-        filters[account_key][key] = newValues
-      }
+  const [options, setOptions] = useState([])
+  const [selectedOptions, setSelectedOptions] = useState([])
+
+  useEffect(() => {
+    if (fieldOptions['options']) {
+      console.log(fieldOptions)
+      setField(fieldOptions['options']['field']['name'])
+      setOptions(fieldOptions['options']['values'])
+    }
+  },[])
+
+  function handleFieldSelection(value) {
+    let key = field;
+    let _selectedOptions = [...selectedOptions]
+    if (_selectedOptions.find(v => v === value)){
+      let index = _selectedOptions.indexOf(value);
+      _selectedOptions.splice(index,1);
     } else {
-      filters[account_key][key] = [value]
+      _selectedOptions.push(value)
+    }
+    let filters = {...selectedFilters}
+    filters[account_key][key] = _selectedOptions.join(",")
+    if (_selectedOptions.length === 0) {
+      filters[account_key] = {};
+      setSelectedFilters(filters)
+      setSelectedOptions([])
+    } else {
+      setSelectedOptions(_selectedOptions)
+      setSelectedFilters(filters)
     }
 
-    console.log(filters)
-    // let keyVal = Object.keys(value)[0]
-    // let selectFilters = {...selectedFilters}
-    // let filters = []
-    // if (selectFilters[key][keyVal].includes(Object.values(value))) {
-    //   filters = selectFilters[key].filter((selectedFilter) => selectedFilter !== value);
-    // } else {
-    //   filters.push(value)
-    // }
-    // selectFilters[key][keyVal] = filters
-    // // });
-    // setSelectedFilters(selectFilters)
   }
 
   const handleFieldsAll = () => {
-    let filters = [...selectedFilters];
-    currentTab['selected_fields'] = fieldOptions.map(fo => {return fo['name']})
+    let filters = {...selectedFilters};
+    let allVals =fieldOptions['options']['values'].map(opt => {return Object.values(opt)[0]}) 
+    console.log(allVals)
+    setSelectedOptions(allVals)
+    filters[account_key][field] = allVals.join(",")
     setSelectedFilters(filters)
   }
 
   const clearAllAccounts = () => {
-    let filters = [...selectedFilters];
-    filters[account_key] = []
+    let filters = {...selectedFilters};
+    filters[account_key] = {}
     setSelectedFilters(filters)
+    setSelectedOptions([])
   }
 
   const handleMenuExpand = () => {
@@ -77,8 +84,8 @@ const AccountGroups = ({
       </div>
       <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
         <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
-        {fieldOptions?.options.values?
-          fieldOptions.options.values.map((fieldOption) => {
+        {options?
+          options.map((fieldOption) => {
             let [key,value] = Object.entries(fieldOption)[0];
             return (
             <div className="one" key={value}>
@@ -87,11 +94,11 @@ const AccountGroups = ({
                   type="checkbox"
                   className=""
                   label={value}
-                  checked={false}
+                  checked={selectedOptions.includes(value)}
                   name="accountGroups"
                   // id={fieldOption}
                   value={value}
-                  onChange={() => handleFieldSelection(key,value)}
+                  onChange={() => handleFieldSelection(value)}
                 />
               </Form.Group>
             </div>

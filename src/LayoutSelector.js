@@ -29,6 +29,8 @@ export const LayoutSelector = ({
     initialLoad,
     setInitialLoad,
     isActive}) => {
+        console.log("props", properties)
+        console.log("Tabprops", tabProps)
     if (tabProps.layout_name === "Template1") {
         return <Template2
             className="active"
@@ -36,7 +38,7 @@ export const LayoutSelector = ({
             currentNavTab={currentNavTab}
             filters={filters}
             fields={fields.find(({tab}) => tab === tabProps.title)}
-            properties={properties}
+            properties={properties.filter(({type}) => type == tabProps.properties[0]?.type)}
             parameters={parameters}
             updateAppProperties={updateAppProperties}
             isFetchingLookmlFields={isFetchingLookmlFields}

@@ -20,7 +20,7 @@ import {
   PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
 } from "./utils/constants2.js";
 
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useRouteMatch, useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom/cjs/react-router-dom.js";
 import { getApplication, getApplicationTags, getApplicationTabs, getTabVisualizations, getTabTags } from "./utils/writebackService.js";
 import { LayoutSelector } from "./LayoutSelector.js";
@@ -50,6 +50,7 @@ export const Main2 = () => {
 
   const [tabs, setTabs] = useState([])
   const [application, setApplication] = useState({})
+  const [isDefaultFilters, setIsDefaultFilters] = useState()
 
   const params = useParams();
 
@@ -95,19 +96,44 @@ export const Main2 = () => {
       if (tabs) {
         if (tabs.length > 0) {
           setTabs(tabs)
+          console.log("tabs", tabs)
 
-          let _fields = tabTags.map((f) => {
+          let _fields = tabTags.filter(({tag_group}) => tag_group === "fields").map(f => {
             let _tab = f.title;
             let _tag = f.tag_name;
             return { tab: _tab, fields: fieldsByTag[_tag] }
-          })
+          })         
+          
           setFields(_fields)
+          
+
+          let _appProperties = []
+          for await (let p of tabTags.filter(({ tag_group }) => tag_group == "property")) {
+            if (!_appProperties.filter(prop => prop.type == p.type).length > 0) {
+              let _type = p.type;
+              let _text = p.att1;
+              let _tag = p.tag_name;
+              let _group = p.tag_group;
+              let _fields = fieldsByTag[_tag]
+              let _options = ""
+              if (p.option_type === "single_value") {
+                let value = await getValues(_fields[0], {});
+                _options = value[0]
+              }
+              _appProperties.push({ type: _type, text: _text, fields: _fields[0], value: _options, group: _group })
+            }
+          }
+          setProperties(_appProperties)
         }
       }
     }
 
     const createFilters = async (applicationTags, fieldsByTag) => {
       let _filters = [];
+      let _defaultSelected = {}
+      let _defTags = applicationTags.find(({type}) => type === "default_filter");
+      console.log(_defTags)
+      let _defaultFilterFields = fieldsByTag[_defTags.tag_name]
       for await (let f of applicationTags.filter(({ tag_group }) => tag_group == "filters")) {
         let _type = f.type;
         let _tag = f.tag_name;
@@ -116,34 +142,23 @@ export const Main2 = () => {
         if (f.option_type === "date range") {
           _options = { field: _fields[0], values: await getDefaultDateRange() }
         }
+        console.log("def", _defaultFilterFields)
+        let _defFilterType = _defaultFilterFields?.filter(df => _fields.includes(df))
+        if (_defFilterType?.length > 0) {
+          _defaultSelected[_type] = {}
+          _defFilterType.map(f => {
+            _defaultSelected[_type][f['name']] = f['default_filter_value']
+          })
+        } else {
+          _defaultSelected[_type] = {}
+        }
         _filters.push({ type: _type, fields: fieldsByTag[_tag], options: _options, option_type: f.option_type })
       }
       setFilters(_filters)
 
-      let defaultSelected = {}
-      console.log('hre', _filters, defaultSelected)
-      _filters.map(f => defaultSelected[f.type] = {})
-      console.log('Default filters', defaultSelected)
-      setSelectedFilters(defaultSelected)
+      setSelectedFilters(_defaultSelected)
 
       getOptionValues(_filters);
-    }
-
-    const createAppProperties = async (applicationTags, fieldsByTag) => {
-      let _appProperties = []
-      for await (let p of applicationTags.filter(({ tag_group }) => tag_group == "property")) {
-        let _type = p.type;
-        let _text = p.misc;
-        let _tag = p.tag_name;
-        let _fields = fieldsByTag[_tag]
-        let _options = ""
-        if (p.option_type === "single_value") {
-          let value = await getValues(_fields[0], {});
-          _options = value[0]
-        }
-        _appProperties.push({ type: _type, text: _text, fields: _fields[0], value: _options })
-      }
-      setProperties(_appProperties)
     }
 
 
@@ -162,7 +177,6 @@ export const Main2 = () => {
     const initializeAppTags = async (applicationTags, fieldsByTag) => {
       if (applicationTags) {
         createFilters(applicationTags, fieldsByTag)
-        createAppProperties(applicationTags, fieldsByTag)
         createParameters(applicationTags, fieldsByTag)
       }
     }
@@ -205,14 +219,9 @@ export const Main2 = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("field toggles", parameters)
-  }, [parameters])
-
   const getOptionValues = async (filters) => {
     let _filters = []
     let filterArr = [...filters]
-    console.log("getOptionValues", filters)
     for await (let f of filterArr) {
       let _options = []
       console.log(f)
@@ -268,9 +277,6 @@ export const Main2 = () => {
       })
     );
   };
-  const handleUpdateFilter = () => {
-    console.log('handleUpdateFilter');
-  }
 
   const updateAppProperties = async (filters) => {
     let newProps = []
@@ -303,6 +309,7 @@ export const Main2 = () => {
         let visConfig = await getTabVisualizations(t.id, sdk);
         t['config'] = visConfig;
         let _tabTags = await getTabTags(t.id, sdk);
+        t['properties'] = _tabTags.filter(({tag_group}) => tag_group === "property")
         _tabTagsList = _tabTagsList.concat(_tabTags)
       }
       contextData['tab_tags'] = _tabTagsList
@@ -362,239 +369,6 @@ export const Main2 = () => {
                 </>
               </Tab.Content>
             </div>
-            {/* <Tabs
-              defaultActiveKey={currentNavTab}
-              onSelect={(k) => setCurrentNavTab(k)}
-              className="mb-0"
-              fill
-            >
-               {/* <Tab eventKey="dashboard" title="Purchases Review">
-                <PurchasesReview
-                  selectedFilters={selectedFilters}
-                  setSelectedFilters={setSelectedFilters}
-                  filterOptions={filterOptions}
-                  dateFilterOptions={dateFilterOptions}
-                  fieldOptions={productMovementFields}
-                  isFetchingLookmlFields={isFetchingLookmlFields}
-                  setSelectedDateFilter={setSelectedDateFilter}
-                  selectedDateFilter={selectedDateFilter}
-                  setSelectedDateRange={setSelectedDateRange}
-                  selectedDateRange={selectedDateRange}
-                  dateRange={dateRange}
-                  currentNavTab={currentNavTab}
-                  currentInvoiceCount={currentInvoiceCount}
-                  updateInvoiceCount={updateInvoiceCount}
-                  getAllFilters={getAllFilters}
-                  setSelectedAccountGroup={setSelectedAccountGroup}
-                  accountGroupOptions={accountGroupOptions}
-                  selectedAccountGroup={selectedAccountGroup}
-                  accountGroupField={accountGroupField}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  dimensionToggleFields={dimensionToggleFields}
-                  quickFilterOptions={quickFilterOptions}
-                />
-              </Tab>
-              <Tab eventKey="product-movement" title="Product Movement Report">
-                <Template1
-                  currentNavTab={currentNavTab}
-                  selectedFilters={selectedFilters}
-                  setSelectedFilters={setSelectedFilters}
-                  filterOptions={filterOptions}
-                  dateFilterOptions={dateFilterOptions}
-                  fieldOptions={productMovementFields}
-                  isFetchingLookmlFields={isFetchingLookmlFields}
-                  setSelectedDateFilter={setSelectedDateFilter}
-                  selectedDateFilter={selectedDateFilter}
-                  setSelectedDateRange={setSelectedDateRange}
-                  selectedDateRange={selectedDateRange}
-                  dateRange={dateRange}
-                  config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
-                  tabKey={"product-movement"}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  currentInvoiceCount={currentInvoiceCount}
-                  updateInvoiceCount={updateInvoiceCount}
-                  getAllFilters={getAllFilters}
-                  setSelectedAccountGroup={setSelectedAccountGroup}
-                  accountGroupOptions={accountGroupOptions}
-                  selectedAccountGroup={selectedAccountGroup}
-                  accountGroupField={accountGroupField}
-                  keyword={keyword}
-                  handleChangeKeyword={handleChangeKeyword}
-                  quickFilterOptions={quickFilterOptions}
-                  setSelectedQuickFilter={setSelectedQuickFilter}
-                  selectedQuickFilter={selectedQuickFilter}
-                  description={{description: <div dangerouslySetInnerHTML={{__html:comment1}} />}}
-                />
-              </Tab>
-              <Tab eventKey="invoice" title="Invoice Report">
-                <Template1
-                  currentNavTab={currentNavTab}
-                  selectedFilters={selectedFilters}
-                  setSelectedFilters={setSelectedFilters}
-                  filterOptions={filterOptions}
-                  dateFilterOptions={dateFilterOptions}
-                  fieldOptions={productMovementFields}
-                  isFetchingLookmlFields={isFetchingLookmlFields}
-                  setSelectedDateFilter={setSelectedDateFilter}
-                  selectedDateFilter={selectedDateFilter}
-                  setSelectedDateRange={setSelectedDateRange}
-                  selectedDateRange={selectedDateRange}
-                  dateRange={dateRange}
-                  config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
-                  tabKey={"invoice"}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  currentInvoiceCount={currentInvoiceCount}
-                  updateInvoiceCount={updateInvoiceCount}
-                  getAllFilters={getAllFilters}
-                  setSelectedAccountGroup={setSelectedAccountGroup}
-                  accountGroupOptions={accountGroupOptions}
-                  selectedAccountGroup={selectedAccountGroup}
-                  accountGroupField={accountGroupField}
-                  quickFilterOptions={quickFilterOptions}
-                  setSelectedQuickFilter={setSelectedQuickFilter}
-                  selectedQuickFilter={selectedQuickFilter}
-                  description={{description: <div dangerouslySetInnerHTML={{__html:comment2}} />}}
-                />
-              </Tab>
-              <Tab eventKey="auto-sub" title="Auto-Sub Report">
-                <Template1
-                  currentNavTab={currentNavTab}
-                  selectedFilters={selectedFilters}
-                  setSelectedFilters={setSelectedFilters}
-                  filterOptions={filterOptions}
-                  dateFilterOptions={dateFilterOptions}
-                  fieldOptions={productMovementFields}
-                  isFetchingLookmlFields={isFetchingLookmlFields}
-                  setSelectedDateFilter={setSelectedDateFilter}
-                  selectedDateFilter={selectedDateFilter}
-                  setSelectedDateRange={setSelectedDateRange}
-                  selectedDateRange={selectedDateRange}
-                  dateRange={dateRange}
-                  config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
-                  tabKey={"auto-sub"}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  currentInvoiceCount={currentInvoiceCount}
-                  updateInvoiceCount={updateInvoiceCount}
-                  getAllFilters={getAllFilters}
-                  setSelectedAccountGroup={setSelectedAccountGroup}
-                  accountGroupOptions={accountGroupOptions}
-                  selectedAccountGroup={selectedAccountGroup}
-                  accountGroupField={accountGroupField}
-                  quickFilterOptions={quickFilterOptions}
-                  setSelectedQuickFilter={setSelectedQuickFilter}
-                  selectedQuickFilter={selectedQuickFilter}
-                  description={{description: <div dangerouslySetInnerHTML={{__html:comment3}} />}}
-                />
-              </Tab>
-              <Tab eventKey="id" title="Inflation/Deflation Report">
-                <InflationDeflation
-                  currentNavTab={currentNavTab}
-                  selectedFilters={selectedFilters}
-                  setSelectedFilters={setSelectedFilters}
-                  filterOptions={filterOptions}
-                  dateFilterOptions={dateFilterOptions}
-                  fieldOptions={productMovementFields}
-                  isFetchingLookmlFields={isFetchingLookmlFields}
-                  setSelectedDateFilter={setSelectedDateFilter}
-                  selectedDateFilter={selectedDateFilter}
-                  setSelectedDateRange={setSelectedDateRange}
-                  selectedDateRange={selectedDateRange}
-                  dateRange={dateRange}
-                  config={{
-                    tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
-                    vis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
-                  }}
-                  tabKey={"id"}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  currentInvoiceCount={currentInvoiceCount}
-                  updateInvoiceCount={updateInvoiceCount}
-                  getAllFilters={getAllFilters}
-                  setSelectedAccountGroup={setSelectedAccountGroup}
-                  accountGroupOptions={accountGroupOptions}
-                  selectedAccountGroup={selectedAccountGroup}
-                  accountGroupField={accountGroupField}
-                  description={{description: <div dangerouslySetInnerHTML={{__html:comment4}} />}}
-                />
-              </Tab>
-              <Tab eventKey="product_movement" title="Product Movement Report" mountOnEnter={true} unMountOnExit={false}>
-                <Template2
-                  currentNavTab={currentNavTab}
-                  filters={filters}
-                  fields={fields.find(({tab}) => tab === "Product Movement Report")}
-                  properties={properties}
-                  updateAppProperties={updateAppProperties}
-                  isFetchingLookmlFields={isFetchingLookmlFields}
-                  config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
-                  tabKey={"product_movement"}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  description={{description: <div dangerouslySetInnerHTML={{__html:comment1}} />}}
-                  selectedFilters={selectedFilters}
-                  setSelectedFilters={setSelectedFilters}
-                  initialLoad={initialLoad}
-                  setInitialLoad={setInitialLoad}
-                />
-              </Tab>
-              <Tab eventKey="invoice_report" title="Invoice Report" mountOnEnter={true} unMountOnExit={false}>
-                <Template2
-                  currentNavTab={currentNavTab}
-                  filters={filters}
-                  fields={fields.find(({tab}) => tab === "Product Movement Report")}
-                  properties={properties}
-                  updateAppProperties={updateAppProperties}
-                  isFetchingLookmlFields={isFetchingLookmlFields}
-                  config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
-                  tabKey={"invoice_report"}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  description={{description: <div dangerouslySetInnerHTML={{__html:comment2}} />}}
-                  selectedFilters={selectedFilters}
-                  setSelectedFilters={setSelectedFilters}
-                />
-              </Tab>
-              <Tab eventKey="auto_sub" title="Auto Sub Report" mountOnEnter={true} unMountOnExit={false}>
-                <Template2
-                  currentNavTab={currentNavTab}
-                  filters={filters}
-                  fields={fields.find(({tab}) => tab === "Product Movement Report")}
-                  properties={properties}
-                  updateAppProperties={updateAppProperties}
-                  isFetchingLookmlFields={isFetchingLookmlFields}
-                  config={{ tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID }}
-                  tabKey={"auto_sub"}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  description={{description: <div dangerouslySetInnerHTML={{__html:comment3}} />}}
-                  selectedFilters={selectedFilters}
-                  setSelectedFilters={setSelectedFilters}
-                />
-              </Tab>
-              <Tab eventKey="id" title="Inflation/Deflation Report" mountOnEnter={true} unMountOnExit={false}>
-                <Template3
-                  currentNavTab={currentNavTab}
-                  filters={filters}
-                  fields={fields.find(({tab}) => tab === "Product Movement Report")}
-                  properties={properties}
-                  updateAppProperties={updateAppProperties}
-                  isFetchingLookmlFields={isFetchingLookmlFields}
-                  config={{
-                    tabbedVis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
-                    vis1: PRODUCT_MOVEMENT_VIS_DASHBOARD_ID
-                   }}
-                  tabKey={"id"}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  description={{description: <div dangerouslySetInnerHTML={{__html:comment3}} />}}
-                  selectedFilters={selectedFilters}
-                  setSelectedFilters={setSelectedFilters}
-                />
-              </Tab>
-            </Tabs> */}
           </div>
         </div>
       </Container>

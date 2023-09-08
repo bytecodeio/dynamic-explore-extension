@@ -8,12 +8,13 @@ const Fields = ({
   currentInnerTab,
   updateBtn,
   setUpdateBtn,
-
+  showActionBtns = true
 
 }) => {
   const [expandMenu, setExpandMenu] = useState(false);
 
   function handleFieldSelection(fieldName) {
+    console.log(fieldName)
     setUpdateBtn(false);
     let tabs = [...tabList];
     let currentTab = tabs[currentInnerTab];
@@ -48,13 +49,18 @@ const Fields = ({
 
   return (
     <>
-    <div className="mb-5">
-      <span className="allOptions clear first" onClick={handleFieldsAll}>Select All</span>
+    {showActionBtns?
+      <div className="mb-5">      
+          <>
+            <span className="allOptions clear first" onClick={handleFieldsAll}>Select All</span>
 
-      <span className="allOptions clear restore" onClick={handleRestoreDefault}>Restore Defaults</span>
+            <span className="allOptions clear restore" onClick={handleRestoreDefault}>Restore Defaults</span>
 
-      <span className="allOptions clear" onClick={() => handleMenuExpand()}>Expand</span>
-    </div>
+            <span className="allOptions clear" onClick={() => handleMenuExpand()}>Expand</span>
+          </>
+      </div>        
+      :''
+    }
     <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
       <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
       {fieldOptions.map((fieldOption) => (
