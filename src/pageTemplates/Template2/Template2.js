@@ -28,7 +28,9 @@ import { DateRangeSelector } from "./helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 import { CurrentSelection2 } from "./helpers/CurrentSelection2";
 import usePagination from "@mui/material/usePagination/usePagination";
+import SearchAll2 from './helpers/SearchAll2'
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { connection_columns } from "@looker/sdk";
 const Template2 = ({
   currentNavTab,
   filters,
@@ -61,7 +63,6 @@ const Template2 = ({
   const defaultChecked = true;
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
-  const [tabList, setTabList] = useState([]);
   const [currentInnerTab, setCurrentInnerTab] = useState(0);
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   const [visList, setVisList] = useState([])
@@ -95,7 +96,7 @@ const Template2 = ({
           setIsMounted(true)
         }
       } else {
-        handleTabVisUpdate();
+        //handleTabVisUpdate();
       }
     }
   }, [currentNavTab]);
@@ -108,6 +109,7 @@ const Template2 = ({
     setSelection(e.target.value);
   }
 
+
   async function fetchDefaultFieldsAndFilters() {
     let _visList = []
     let index = 0
@@ -116,7 +118,7 @@ const Template2 = ({
         sdk.dashboard(visConfig['lookml_id'], 'dashboard_elements, dashboard_filters')
       )
       if (dashboard_elements.length > 0) {
-        dashboard_elements?.map((t, i) => {
+        for await (let t of dashboard_elements) {
           let tileFilters = t['result_maker']['query']['filters'];
           let _tileFilterOptions = []
           let _selectedFilters = {}
@@ -133,7 +135,10 @@ const Template2 = ({
 
           console.log("filter options", _tileFilterOptions)
           let vis = {}
+          console.log("selected tabs",selectedFilters)
           let { client_id } = t['result_maker']['query'];
+          //let newClientId = await loadDefaultVisualizations(client_id, _selectedFilters)
+          //console.log(newClientId)
           vis = {
             visId: visConfig['vis_name'],
             title: t['title'],
@@ -146,22 +151,42 @@ const Template2 = ({
           }
           _visList.push(vis)
 
-          if (initialLoad && i === 0) {
-            //Finish default query
-            console.log("dashboard element", t.result_maker.query.filters)
-            setInitialLoad(false)
-          }
-        })
+          // if (initialLoad && i === 0) {
+          //   //Finish default query
+          //   console.log("dashboard element", t.result_maker.query.filters)
+          //   setInitialLoad(false)
+          // }
+        }
       } else (setInitialLoad(false))
 
     }
     console.log("visList", _visList)
     setVisList(_visList)
 
-
-
     setSelectedFields(fields);
-    setIsFetchingDefaultDashboard(false);
+    setIsFetchingDefaultDashboard(false); 
+    loadDefaults(_visList)
+  }
+
+  const loadDefaults = async (_visList) => {
+    handleTabVisUpdate(_visList)
+  }
+
+  const loadDefaultVisualizations = async (clientId, localFilters) => {
+    let _filters = formatFilters({...selectedFilters})
+    const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(clientId));
+
+    const { client_id } = await sdk.ok(
+      sdk.create_query({
+        model: LOOKER_MODEL,
+        view: LOOKER_EXPLORE,
+        fields: fields,
+        filters: _filters,
+        vis_config,
+      })
+    );
+    setUpdatedFilters({...selectedFilters})
+    return client_id
   }
 
   // Page loading state
@@ -193,8 +218,11 @@ const Template2 = ({
   }
 
   // Handle run button click
-  const handleTabVisUpdate = async () => {
-    let _visList = [...visList];
+  const handleTabVisUpdate = async (_visList = []) => {
+    if (!Array.isArray(_visList)) {
+      _visList = [...visList];
+    }    
+    console.log("visList", _visList)
     let currentVis = _visList.find(({ index }) => index === currentInnerTab)
 
     let _filters = {};
@@ -287,19 +315,6 @@ const Template2 = ({
 
     // setIsFilterChanged(true);
   }
-
-
-  async function clearAllAccounts() {
-    setSelectedAccountGroup([])
-  }
-
-  async function handleRestoreDefault() {
-    let tabs = [...tabList];
-
-    tabs[currentInnerTab]["selected_fields"] = [...tabs[currentInnerTab]["default_fields"]];
-    setTabList(tabs);
-  }
-
 
   useEffect((e) => {
     document.addEventListener("click", handleClickOutside, false);
@@ -452,25 +467,22 @@ const Template2 = ({
                 </div>
                 <div className="modal-actions">
                   <div className="position-relative columnStart mb-3">
-                    <label>Search Selections</label>
-                    <input value={keyword} onChange={() => {slideIt3(true);}} placeholder="" type="search" class="form-control" />
                     {/*<input value={keyword} onChange={() => {slideIt3(true);handleChangeKeyword();}} placeholder="" type="search" class="form-control" />*/}
-                    {fields?.fields?.length > 0 ?
-                    <SearchAll
-                      fieldOptions={keyword !== "" ? fields.filter(option => option.indexOf(keyword)!== -1) : fields.fields}
+                    {fields?.fields?.length > 0?
+                    <SearchAll2
+                      filters={filters.find(({ type }) => type === "filter")}
+                      setSelectedFilters={setSelectedFilters}
+                      selectedFilters={selectedFilters}
+                      fieldOptions={fields.fields}
                       setTabList={setVisList}
                       tabList={visList.filter(({ visId }) => visId === "tabbedVis1")}
                       currentInnerTab={currentInnerTab}
                       updateBtn={updateButtonClicked}
-                      setUpdateBtn={setUpdateButtonClicked}
                       selectedFields={selectedFields}
-                      showMenu3={showMenu3}
-                      setShowMenu3={setShowMenu3}
-
+                      setSelectedFields={setSelectedFields}
                     />
                     : ''
                   }
-                    <i class="far fa-search absoluteSearch"></i>
                   </div>
 
 
@@ -655,7 +667,7 @@ const Template2 = ({
                     setSelectedFilters={setSelectedFilters}
                     setUpdatedFilters={setUpdatedFilters}
                     handleTabVisUpdate={handleTabVisUpdate}
-                    currentInvoiceCount={properties.find(({ type }) => type === "total invoices")}
+                    //currentInvoiceCount={properties.find(({ type }) => type === "total invoices")}
                     description={description}
                   />
                   : ''
@@ -671,10 +683,9 @@ const Template2 = ({
 
             <Row className="fullW d-flex align-items-center">
               <Col md={12} lg={2}>
-
-                {properties.find(({ type }) => type === "total invoices") ?
+                {properties?.find(({ group }) => group === "property") ?
                   <p>
-                    <b>{properties.find(({ type }) => type === "total invoices").text}</b> <span className="highlight large">{Object.values(properties.find(({ type }) => type === "total invoices").value)}</span>
+                    <b>{properties?.find(({ group }) => group === "property").text}</b> <span className="highlight large">{Object.values(properties?.find(({ group }) => group === "property").value)}</span>
                   </p>
                   : ''
                 }
