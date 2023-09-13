@@ -28,7 +28,7 @@ export const LayoutSelector = ({
     setUpdatedFilters,
     initialLoad,
     setInitialLoad,
-    isActive}) => {
+    isActive, application}) => {
         console.log("props", properties)
         console.log("Tabprops", tabProps)
     if (tabProps.layout_name === "Template1") {
@@ -54,7 +54,8 @@ export const LayoutSelector = ({
             initialLoad={initialLoad}
             setInitialLoad={setInitialLoad}
             keyword={keyword}
-            handleChangeKeyword={handleChangeKeyword}/>;
+            handleChangeKeyword={handleChangeKeyword}
+            application={application}/>;
     }
     // switch (tabProps.layout_name) {
     //     case 'Template1':

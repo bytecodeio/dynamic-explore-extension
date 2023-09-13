@@ -54,7 +54,8 @@ const Template2 = ({
   setUpdatedFilters,
   initialLoad,
   setInitialLoad,
-  isActive
+  isActive,
+  application
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -88,6 +89,7 @@ const Template2 = ({
     if (params.path == tabKey) {
       if (!isMounted) {
         console.log("Mounting")
+        console.log("application", application)
         try {
           fetchDefaultFieldsAndFilters();
           setIsMounted(true)
@@ -174,12 +176,12 @@ const Template2 = ({
 
   const loadDefaultVisualizations = async (clientId, localFilters) => {
     let _filters = formatFilters({...selectedFilters})
-    const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(clientId));
+    const { vis_config, fields, model, view } = await sdk.ok(sdk.query_for_slug(clientId));
 
     const { client_id } = await sdk.ok(
       sdk.create_query({
-        model: LOOKER_MODEL,
-        view: LOOKER_EXPLORE,
+        model: model,
+        view: view,
         fields: fields,
         filters: _filters,
         vis_config,
@@ -210,7 +212,14 @@ const Template2 = ({
     Object.keys(filters).map(key => {
       if (Object.keys(filters[key]).length > 0) {
         if (!(key == "date range" && Object.keys(filters['date filter']).length > 0)) {
-          filter = { ...filter, ...filters[key] }
+          if (key === "date range") {
+            let val = Object.keys(filters[key]);
+            console.log(val)
+            filters[key][val] = filters[key][val].replace("-","/");
+            filter = {...filter, ...filters[key]}
+          } else {
+            filter = { ...filter, ...filters[key] }
+          }          
         }
       }
     })
@@ -232,7 +241,7 @@ const Template2 = ({
 
     let newVisList = []
     for await (let vis of _visList) {
-      const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(vis['query']));
+      const { vis_config, fields, model, view } = await sdk.ok(sdk.query_for_slug(vis['query']));
 
       let _fields = []
       if (vis['index'] === currentInnerTab) {
@@ -242,8 +251,8 @@ const Template2 = ({
       }
       const { client_id } = await sdk.ok(
         sdk.create_query({
-          model: LOOKER_MODEL,
-          view: LOOKER_EXPLORE,
+          model: model,
+          view: view,
           fields: _fields,
           filters: vis['localSelectedFilters'] ? { ..._filters, ...vis['localSelectedFilters'] } : _filters,
           vis_config,
@@ -265,15 +274,15 @@ const Template2 = ({
     console.log("currentvis", currentVis)
     _filters = { ..._filters, ...currentVis['localSelectedFilters'] }
 
-    const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(currentVis['query']));
+    const { vis_config, fields, model, view } = await sdk.ok(sdk.query_for_slug(currentVis['query']));
 
     let _fields = []
     _fields = currentVis['selected_fields']
 
     const { client_id } = await sdk.ok(
       sdk.create_query({
-        model: LOOKER_MODEL,
-        view: LOOKER_EXPLORE,
+        model: model,
+        view: view,
         fields: _fields,
         filters: _filters,
         vis_config,
@@ -505,7 +514,7 @@ const Template2 = ({
 
 
                           {/* Account Groups */}
-                          {filters.find(({ type }) => type === "account group").options.values?.length > 0 ?
+                          {filters?.find(({ type }) => type === "account group")?.options?.values?.length > 0 ?
                             <Col xs={12} md={12}>
                               <Accordion.Item eventKey="1">
                                 <Accordion.Header>Account Groups</Accordion.Header>
@@ -659,7 +668,6 @@ const Template2 = ({
 
               <Col md={12} lg={12}>
                 {/* Date Range Selector */}
-                {filters.find(({ type }) => type === "date filter").options?.length > 0 ?
                   <DateRangeSelector
                     dateFilter={filters.find(({ type }) => type === "date filter")}
                     dateRange={filters.find(({ type }) => type === "date range")}
@@ -669,9 +677,8 @@ const Template2 = ({
                     handleTabVisUpdate={handleTabVisUpdate}
                     //currentInvoiceCount={properties.find(({ type }) => type === "total invoices")}
                     description={description}
+                    application={application}
                   />
-                  : ''
-                }
                 {/*<DateFilterGroup
               dateFilterOptions={dateFilterOptions}
               setSelectedDateFilter={setSelectedDateFilter}
