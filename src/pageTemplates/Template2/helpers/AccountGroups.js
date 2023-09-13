@@ -78,10 +78,10 @@ const AccountGroups = ({
 
       <span className="allOptions clear"  onClick={() => handleMenuExpand()}>Expand</span>
       <div className="mb-5"></div>
-      <div className="position-relative mb-2">
+      {/* <div className="position-relative mb-2">
         <input value={keyword} onChange={handleChangeKeyword} placeholder="Search" type="search" class="form-control" />
         <i class="far fa-search absoluteSearch"></i>
-      </div>
+      </div> */}
       <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
         <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
         {options?

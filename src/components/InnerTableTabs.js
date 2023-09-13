@@ -47,12 +47,13 @@ const InnerTableTabs = ({
         >
           {tabs?.map((t, i) => (
             <Tab eventKey={i} title={t.title} key={t.title}>
-        
-              <i class="fal fa-sign-out endAbso1"></i>
-              <i class="fal fa-print endAbso2"></i>
+     
               <div id="embedWrapper" className={showMenu3 ? "whole" : ""}>
-
-                <p className="small expand" onClick={() => {slideIt3();handleClick()}}> <i className={faClass ? 'fal fa-expand-alt' : 'far fa-compress-arrows-alt'}></i> { active ? "Collapse" : "Expand"}</p>
+                <div className={showMenu3?"embed-icon-container expand":"embed-icon-container"}>
+                  <i class="fal fa-sign-out embed-icon"></i>
+                  <i class="fal fa-print embed-icon"></i>
+                  <p className="small embed-icon" onClick={() => {slideIt3();handleClick()}}> <i className={faClass ? 'fal fa-expand-alt' : 'far fa-compress-arrows-alt'}></i> { active ? "Collapse" : "Expand"}</p>
+                </div>  
                 <EmbedContainer vis={t} visList={visList} updateVisList={setVisList} handleVisUpdate={handleSingleVisUpdate} />
               </div>
             </Tab>

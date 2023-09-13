@@ -16,7 +16,8 @@ export const DateRangeSelector = ({
   setSelectedFilters,
   currentInvoiceCount,
   description,
-  setUpdatedFilters
+  setUpdatedFilters,
+  application
 }) => {
 
   const [dateRangeField, setDateRangeField] = useState({})
@@ -79,7 +80,7 @@ export const DateRangeSelector = ({
         sdk.run_inline_query({
           result_format: "json",
           body: {
-            model: LOOKER_MODEL,
+            model: application.model,
             view: dateFilterField["view"],
             fields: [_dateRange['options']['field']["name"]],
             filters: _filters['date filter'],
@@ -142,7 +143,7 @@ export const DateRangeSelector = ({
 
         <Col md={12} lg={4} className="position-relative">
 
-          <div className="d-flex mt-1 pt-2 ml2">
+          <div className="d-flex mt-1 ml2">
 
             <div className="columnStart mr2">
               <label>Start Date</label>
