@@ -6894,10 +6894,11 @@ h6{
 }
 
 .filter-expand {
-    display: block;
-    position: relative !important;
-    width: 75px;
-    margin-left: auto;
+  height: auto;
+  position: relative !important;
+  margin: 0;
+  right: 5px !important;
+
 }
 
 .embed-icon-container {

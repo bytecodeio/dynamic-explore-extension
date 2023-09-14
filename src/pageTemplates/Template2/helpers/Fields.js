@@ -45,12 +45,11 @@ const Fields = ({
     setExpandMenu(true)
   }
 
-  console.log(fieldOptions, "lixxi")
 
   return (
     <>
     {showActionBtns?
-      <div className="mb-5">      
+      <div className="mb-5">
           <>
             <span className="allOptions clear first" onClick={handleFieldsAll}>Select All</span>
 
@@ -58,7 +57,7 @@ const Fields = ({
 
             <span className="allOptions clear" onClick={() => handleMenuExpand()}>Expand</span>
           </>
-      </div>        
+      </div>
       :''
     }
     <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>

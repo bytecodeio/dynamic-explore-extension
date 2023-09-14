@@ -68,7 +68,7 @@ const SearchAll2 = ({
             {filteredFilters['options']?.length > 0 ?
               <div className="search-all-container">
                 <h6 className="mb-2 mt-0">Filters</h6>
-                <Filters filters={filteredFilters} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
+                <Filters filters={filteredFilters} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} showActionBtns={false}/>
               </div>
               : ''
             }
