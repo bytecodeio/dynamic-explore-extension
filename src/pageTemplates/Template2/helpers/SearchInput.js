@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-export const SearchInput = ({fields, filters}) => {
+export const SearchInput = ({ fields, filters }) => {
     const [allOptions, setAllOptions] = useState([])
     const [searchOptions, setSearchOptions] = useState([])
     const [selection, setSelection] = useState([])
@@ -8,7 +8,7 @@ export const SearchInput = ({fields, filters}) => {
     useEffect(() => {
         console.log("search fields", fields);
         let _results = []
-        if (fields?.fields.length> 0) {
+        if (fields?.fields.length > 0) {
             fields.fields.map((f) => {
                 _results.push(f['label_short'])
             })
@@ -23,12 +23,12 @@ export const SearchInput = ({fields, filters}) => {
         setAllOptions(sortData(_results));
         setSearchOptions(sortData(_results));
         console.log("search filters", filters);
-    },[])
+    }, [])
 
     const sortData = (data) => {
-    return data.sort((a,b) => {
-        var x = a.toLowerCase();
-        var y = b.toLowerCase();
+        return data.sort((a, b) => {
+            var x = a.toLowerCase();
+            var y = b.toLowerCase();
             return x < y ? -1 : x > y ? 1 : 0;
         });
     }
@@ -54,23 +54,23 @@ export const SearchInput = ({fields, filters}) => {
         })
         setSearchOptions(_newList)
     }
-    return(
+    return (
         <>
-        <div onFocus={openSearchOptions} onBlur={closeSearchOptions} >
-            <div className="position-relative columnStart mb-3">
-                <label>Search Selections</label>
-                <input value={selection} onChange={handleSelectionChange} placeholder="" type="search" class="form-control" />
-                <i class="far fa-search absoluteSearch"></i>
+            <div onFocus={openSearchOptions} onBlur={closeSearchOptions} >
+                <div className="position-relative columnStart mb-3">
+                    <label>Search Selections</label>
+                    <input value={selection} onChange={handleSelectionChange} placeholder="" type="search" class="form-control" />
+                    <i class="far fa-search absoluteSearch"></i>
+                </div>
+                {selectOpen ?
+                    <div className="search-popover">
+                        {searchOptions?.map(opt => (
+                            <option>{opt}</option>
+                        ))}
+                    </div>
+                    : ''
+                }
             </div>
-            {selectOpen?
-            <div className="search-popover">       
-                {searchOptions?.map(opt => (
-                    <option>{opt}</option>
-                ))}
-            </div>
-                :''
-            }                
-        </div>
         </>
     )
 }

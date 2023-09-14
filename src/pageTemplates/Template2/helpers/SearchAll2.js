@@ -17,19 +17,19 @@ const SearchAll2 = ({
 }) => {
   const [filteredFields, setFilteredFields] = useState([])
   const [filteredFilters, setFilteredFilters] = useState([])
-  
-  const [selection, setSelection] = useState([])
+
+  const [selection, setSelection] = useState('')
   const [selectOpen, setSelectOpen] = useState(false)
 
   useEffect(() => {
     setFilteredFields(fieldOptions)
     setFilteredFilters(filters)
-  },[])
+  }, [])
 
   const handleSelectionChange = (v) => {
     setSelection(v.target.value)
     let _fieldOptions = [...fieldOptions];
-    let _filterOptions = {...filters}
+    let _filterOptions = { ...filters }
     if (v.target.value != '') {
       let _fields = _fieldOptions.filter(opt => opt['label_short'].toUpperCase().includes(v.target.value.toUpperCase()))
       let _filters = _filterOptions['options'].filter(opt => opt['field']['label_short'].toUpperCase().includes(v.target.value.toUpperCase()))
@@ -41,52 +41,50 @@ const SearchAll2 = ({
       setFilteredFilters(_filterOptions)
     }
 
-    
-    
+
+
     //filterSearchOptions(v.target.value)
-}
+  }
 
-const openSearchOptions = () => {
+  const openSearchOptions = () => {
     setSelectOpen(true)
-}
+  }
 
-const closeSearchOptions = () => {
+  const closeSearchOptions = () => {
     setSelectOpen(false)
-}
-
-
+  }
   return (
     <>
 
-    <div onFocus={openSearchOptions}>
-      <div className="position-relative columnStart mb-3">
-                <label>Search Selections</label>
-                <input value={selection} onChange={handleSelectionChange} placeholder="" type="search" class="form-control" />
-                <i class="far fa-search absoluteSearch"></i>
-      </div>
-      {selectOpen?
-        <div className="search-popover">
-          <i onClick={closeSearchOptions} class="fal fa-times closeSearch"></i>
-          {filteredFilters['options']?.length > 0?
-            <div className="search-all-container">
-              <h5>Filters</h5>
-              <Filters filters={filteredFilters}  selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
-            </div>
-            :''          
-          }
-          {filteredFields.length > 0?
-            <div className="search-all-container">
-              <h5>Fields</h5>
-              <Fields fieldOptions={filteredFields} setTabList={setTabList} tabList={tabList}  currentInnerTab={currentInnerTab}  selectedFields={selectedFields} setSelectedFields={setSelectedFields} showActionBtns={false}/> 
-            </div>
-            :''
-          }
-            
+      <div onFocus={openSearchOptions} className="position-relative">
+        <div className="position-relative columnStart mb-3">
+          <label>Search Selections</label>
+          <input value={selection} onChange={handleSelectionChange} placeholder="" type="search" class="form-control" />
+          <i class="far fa-search absoluteSearch"></i>
         </div>
-            :''
-        }     
-    </div>
-  </>
+        {selectOpen && selection ?
+          <div className="search-popover">
+            <i onClick={closeSearchOptions} class="fal fa-times closeSearch"></i>
+            {filteredFilters['options']?.length > 0 ?
+              <div className="search-all-container">
+                <h6 className="mb-2 mt-0">Filters</h6>
+                <Filters filters={filteredFilters} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
+              </div>
+              : ''
+            }
+            {filteredFields.length > 0 ?
+              <div className="search-all-container">
+                <h6 className="mb-2 mt-0">Fields</h6>
+                <Fields fieldOptions={filteredFields} setTabList={setTabList} tabList={tabList} currentInnerTab={currentInnerTab} selectedFields={selectedFields} setSelectedFields={setSelectedFields} showActionBtns={false} />
+              </div>
+              : ''
+            }
+
+          </div>
+          : ''
+        }
+      </div>
+    </>
     // set value to name
   );
 };

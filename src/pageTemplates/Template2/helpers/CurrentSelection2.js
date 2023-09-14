@@ -9,13 +9,16 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
   useEffect(() => {
     setCurrentSelection(formatCurrentSelection(JSON.parse(JSON.stringify(selectedFilters)), 'current'))
   }, [selectedFilters])
-  console.log('lizzi', selectedFilters)
+
   useEffect(() => {
     setUpdateSelection(formatCurrentSelection(JSON.parse(JSON.stringify(updatedFilters)), 'updated'))
   }, [updatedFilters])
 
+
+
   const formatCurrentSelection = (filtersSelections, selectionType) => {
     let current = []
+    let currentAccounts = []
     Object.keys(filtersSelections).map(key => {
       if (Object.keys(filtersSelections[key]).length > 0) {
         let _filters = [...filters]
@@ -26,19 +29,64 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
               let obj = { key: row, type: filter.type, label: filtersSelections[key][row], value: filtersSelections[key][row], removable: false, selection_type: selectionType }
               current.splice(0, 0, obj)
 
-              let first = obj.label.split(" to ")[0]
-              let format1 = moment(first).format('MM-DD-YYYY').toString();
-              const last = obj.label.split(" to ")[1]
-              let format2 = moment(last).format('MM-DD-YYYY').toString();
+              // let first = obj.label.split(" to ")[0]
+              // let format1 = moment(first).format('MM-DD-YYYY').toString();
+              // const last = obj.label.split(" to ")[1]
+              // let format2 = moment(last).format('MM-DD-YYYY').toString();
 
 
             }
+
+
             else {
               let field = filter.fields.find(({ name }) => name === row)
               let obj = { key: row, type: filter.type, label: `${field.label_short}: ${filtersSelections[key][row]}`, value: filtersSelections[key][row], removable: true, selection_type: selectionType }
               current.push(obj)
+
             }
           }
+
+          if (filter.type === "account group") {
+
+            let obj = { key: row, type: filter.type, label: filtersSelections[key][row], value: filtersSelections[key][row], removable: false, selection_type: selectionType }
+    // console.log(filtersSelections,  "obj")
+    //
+    //         current.push(obj)
+
+              const currentA = obj.value.split(",").map((d, i) => ({
+              account: d,
+
+
+              }))
+
+              return(
+                currentA.map((val, i) => (
+
+              console.log(val.account)
+
+                  // current.push(val.account)
+
+
+                ))
+              )
+
+
+
+
+
+
+
+
+
+
+
+
+
+          }
+
+
+
+
         })
       }
     })
@@ -46,6 +94,7 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
 
 
   }
+
 
 
   const removeFilter = (selection) => {
@@ -76,11 +125,18 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
     </Tooltip>
   );
 
+console.log("hi elizabeth", currentSelection)
+
   return (
 
 
 
     <Fragment>
+
+
+
+
+
       {updatedSelection?.map((selection) => {
         return (
           <div key={Math.random() * 6} className={!currentSelection.some(c => c.label == selection.label) ? "theOptions" : 'theOptions red'}>

@@ -6836,24 +6836,20 @@ margin: 5px;
 
 .btn-group>.btn-group:not(:last-child)>.btn, .btn-group>.btn.dropdown-toggle-split:first-child, .btn-group>.btn:not(:last-child):not(.dropdown-toggle) {
 
- 
+border-radius: 2rem;
+height: 2rem;
+padding: 0;
+width: 100%;
+min-width:5em
+}
 
-  border-radius: 2rem;
-  height: 2rem;
-  padding: 0;
-  width: 100%;
-  min-width:5em
-  }
-  
-   
-  
-  .btn-group>.btn-group:not(:first-child), .btn-group>:not(.btn-check:first-child)+.btn {
-  border-radius: 2rem;
-  height: 2rem;
-  padding: 0;
-  width: 100%;
-  min-width:5em
-  }
+.btn-group>.btn-group:not(:first-child), .btn-group>:not(.btn-check:first-child)+.btn {
+border-radius: 2rem;
+height: 2rem;
+padding: 0;
+width: 100%;
+min-width:5em
+}
 
 
 .hideThisEnd{
@@ -6870,6 +6866,12 @@ display: none
   font-size: 13px !important;
   display: flex;
   color: var(--black);
+  font-weight: 600;
+}
+
+h6{
+  color: var(--black);
+  font-size: 17px;
 }
 
 .hideThisEnd:hover{
@@ -6881,12 +6883,13 @@ display: none
   position: absolute;
   background-color: white;
   width: 100%;
-  padding: 5px;
+
   max-height: 300px;
-  z-index: 99;
-  margin-top: -15px;
-  box-shadow: 1px 1px 3px lightgray;
-  border-radius: 5px;
+  z-index: 30;
+  top: 47px;
+  box-shadow: 0px 15px 30px 2px rgba(4, 47, 78, 0.16);
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
   overflow: auto;
 }
 
@@ -6924,7 +6927,7 @@ display: none
 
 
 .search-all-container {
-  padding: 0 10px;
+  padding: 1em;
 }
 
 .popover-container {
@@ -6962,10 +6965,15 @@ display: none
 }
 
 .closeSearch {
-  font-size: 24px;
+  font-size: 19px;
   cursor: pointer;
-  margin-left: auto;
-  display: table;
+  display: flex;
+  justify-content: flex-end;
+padding: 0.5em 0.45em 0em 0em;
+  color: var(--black);
+  position: absolute;
+  right:0
+
 }
 
 @media (min-width:1720px){
