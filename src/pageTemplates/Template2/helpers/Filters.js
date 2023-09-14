@@ -33,6 +33,7 @@ const Filters = ({
   isDefault,
   setIsDefault,
   setIsFilterChanged,
+  showActionBtns = true
 }) => {
   const [expandMenu, setExpandMenu] = useState(false)
 
@@ -52,7 +53,20 @@ const Filters = ({
 
   return (
     <>
-      <span className="allOptions clear mt-3 filter-expand"  onClick={() => handleMenuExpand()}>Expand</span>
+
+
+    {showActionBtns?
+      <div className="position-relative d-flex justify-content-end">
+          <>
+
+
+            <span className="allOptions clear mt-3 filter-expand"  onClick={() => handleMenuExpand()}>Expand</span>
+          </>
+      </div>
+      :''
+    }
+
+
       <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
         <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
         {filters.options.map((filterOption) => (
