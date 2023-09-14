@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useContext, useEffect, useRef } from "react";
+import React, { useLayoutEffect, useState, useContext, useEffect, useRef, useMemo } from "react";
 import {
   Accordion,
   Button,
@@ -23,7 +23,7 @@ import AccountGroups from "./helpers/AccountGroups";
 import SearchAll from "./helpers/SearchAll";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
-import CurrentAccountGroup from "./helpers/CurrentAccountGroup";
+
 import { DateRangeSelector } from "./helpers/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 import { CurrentSelection2 } from "./helpers/CurrentSelection2";
@@ -31,6 +31,7 @@ import usePagination from "@mui/material/usePagination/usePagination";
 import SearchAll2 from './helpers/SearchAll2'
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { connection_columns } from "@looker/sdk";
+import _ from "lodash";
 const Template2 = ({
   currentNavTab,
   filters,
@@ -135,7 +136,7 @@ const Template2 = ({
 
           console.log("filter options", _tileFilterOptions)
           let vis = {}
-          console.log("selected tabs",selectedFilters)
+          console.log("selected tabs", selectedFilters)
           let { client_id } = t['result_maker']['query'];
           //let newClientId = await loadDefaultVisualizations(client_id, _selectedFilters)
           //console.log(newClientId)
@@ -164,7 +165,7 @@ const Template2 = ({
     setVisList(_visList)
 
     setSelectedFields(fields);
-    setIsFetchingDefaultDashboard(false); 
+    setIsFetchingDefaultDashboard(false);
     loadDefaults(_visList)
   }
 
@@ -173,7 +174,7 @@ const Template2 = ({
   }
 
   const loadDefaultVisualizations = async (clientId, localFilters) => {
-    let _filters = formatFilters({...selectedFilters})
+    let _filters = formatFilters({ ...selectedFilters })
     const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(clientId));
 
     const { client_id } = await sdk.ok(
@@ -185,7 +186,7 @@ const Template2 = ({
         vis_config,
       })
     );
-    setUpdatedFilters({...selectedFilters})
+    setUpdatedFilters({ ...selectedFilters })
     return client_id
   }
 
@@ -221,7 +222,7 @@ const Template2 = ({
   const handleTabVisUpdate = async (_visList = []) => {
     if (!Array.isArray(_visList)) {
       _visList = [...visList];
-    }    
+    }
     console.log("visList", _visList)
     let currentVis = _visList.find(({ index }) => index === currentInnerTab)
 
@@ -293,7 +294,7 @@ const Template2 = ({
     setUpdateButtonClicked(true);
 
 
-    
+
 
     // setSelectedFilters([])
     // setSelectedAccountGroup([])
@@ -392,7 +393,7 @@ const Template2 = ({
     setShowMenu2(!showMenu2)
   }
 
-  const slideIt3 = () =>{
+  const slideIt3 = () => {
     setShowMenu3(!showMenu3)
   }
   // function handleFieldAll(value) {
@@ -428,7 +429,14 @@ const Template2 = ({
   //   return filters;
   // }
 
-
+  const AccountGroupsFieldOptions = useMemo(() => {
+    let cfilter = _.cloneDeep(filters)
+    let obj = cfilter?.find(({ type }) => type === "account group");
+    if (Array.isArray(obj?.options?.values)) {
+      obj.options.values = obj?.options?.values?.filter(item => item["users.account_name"]?.toLowerCase().includes(keyword?.toLowerCase()))
+    }
+    return obj
+  }, [keyword, filters])
   return (
     <div className={isActive ? "tab-pane active" : "hidden"}>
 
@@ -468,21 +476,21 @@ const Template2 = ({
                 <div className="modal-actions">
                   <div className="position-relative columnStart mb-3">
                     {/*<input value={keyword} onChange={() => {slideIt3(true);handleChangeKeyword();}} placeholder="" type="search" class="form-control" />*/}
-                    {fields?.fields?.length > 0?
-                    <SearchAll2
-                      filters={filters.find(({ type }) => type === "filter")}
-                      setSelectedFilters={setSelectedFilters}
-                      selectedFilters={selectedFilters}
-                      fieldOptions={fields.fields}
-                      setTabList={setVisList}
-                      tabList={visList.filter(({ visId }) => visId === "tabbedVis1")}
-                      currentInnerTab={currentInnerTab}
-                      updateBtn={updateButtonClicked}
-                      selectedFields={selectedFields}
-                      setSelectedFields={setSelectedFields}
-                    />
-                    : ''
-                  }
+                    {fields?.fields?.length > 0 ?
+                      <SearchAll2
+                        filters={filters.find(({ type }) => type === "filter")}
+                        setSelectedFilters={setSelectedFilters}
+                        selectedFilters={selectedFilters}
+                        fieldOptions={fields.fields}
+                        setTabList={setVisList}
+                        tabList={visList.filter(({ visId }) => visId === "tabbedVis1")}
+                        currentInnerTab={currentInnerTab}
+                        updateBtn={updateButtonClicked}
+                        selectedFields={selectedFields}
+                        setSelectedFields={setSelectedFields}
+                      />
+                      : ''
+                    }
                   </div>
 
 
@@ -502,19 +510,26 @@ const Template2 = ({
                     <Row>
                       <Col xs={12} md={12}>
                         <Row>
-
-
                           {/* Account Groups */}
-                          {filters.find(({ type }) => type === "account group").options.values?.length > 0 ?
+                          {Array.isArray(filters.find(({ type }) => type === "account group").options.values) ?
                             <Col xs={12} md={12}>
                               <Accordion.Item eventKey="1">
                                 <Accordion.Header>Account Groups</Accordion.Header>
                                 <Accordion.Body>
+
+
+
+                                  <div className="position-relative mb-3">
+                                    <input value={keyword} onChange={handleChangeKeyword} placeholder="Search" type="search" class="form-control" />
+                                    <i class="far fa-search absoluteSearch"></i>
+                                  </div>
+
                                   <AccountGroups
-                                    //fieldOptions={keyword !=="" ? accountGroupOptions.filter(option => option.indexOf(keyword)!== -1) : accountGroupOptions}
-                                    fieldOptions={filters.find(({ type }) => type === "account group")}
+                                    // fieldOptions={keyword !== "" ? filters.filter(option => option.indexOf(keyword) !== -1) : filters.find(({ type }) => type === "account group")}
+                                    fieldOptions={AccountGroupsFieldOptions}
                                     selectedFilters={selectedFilters}
                                     setSelectedFilters={setSelectedFilters}
+
                                   />
                                 </Accordion.Body>
                               </Accordion.Item>
@@ -584,12 +599,6 @@ const Template2 = ({
                             </Col>
                             : ''
                           }
-
-
-
-
-
-
 
 
                           {/* Bookmarks */}

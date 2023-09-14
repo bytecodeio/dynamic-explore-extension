@@ -683,7 +683,7 @@ const Template1 = ({
                             {/* Filters */}
                             {filterOptions?.length > 0?
                                 <Filters
-                              
+
                                 isLoading={isFetchingFilterSuggestions}
                                 filterOptions={filterOptions}
                                 filterSuggestions={filterSuggestions}
