@@ -6893,6 +6893,39 @@ h6{
   overflow: auto;
 }
 
+.filter-expand {
+    display: block;
+    position: relative !important;
+    width: 75px;
+    margin-left: auto;
+}
+
+.embed-icon-container {
+  display: flex;
+  position: absolute;
+  height: 30px;
+  background-color: white;
+  width: 100%;
+  justify-content: right;
+  align-items: baseline;
+  right:10px;
+}
+
+.embed-icon-container.expand {
+  top:60px;
+}
+
+.embed-icon {
+  padding: 0 10px;
+  font-size: 17px;
+  color: var(--black);
+}
+
+.embed-icon:hover {
+  cursor: pointer;
+}
+
+
 .search-all-container {
   padding: 1em;
 }

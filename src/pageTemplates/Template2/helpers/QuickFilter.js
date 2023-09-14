@@ -37,7 +37,7 @@ const QuickFilter = ({ quickFilters, selectedFilters, selection, setSelectedFilt
           <>
             <div>{f['field']['label']}</div>
             <ButtonGroup>
-              {f['values'].map(v =>
+              {f['values']?.map(v =>
                 <Button
                   key={Object.values(v)}
                   active={isActive(f['field']['name'], Object.values(v))}

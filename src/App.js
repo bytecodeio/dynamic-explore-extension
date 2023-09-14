@@ -18,7 +18,7 @@ export const App = hot(() => {
           <Main2 />
         </Route>
         <Route exact path="/">
-          <Main />
+          <Main2 />
         </Route>
         {/* <Redirect push from="/" to={APP_ROUTE} /> */}
       </Switch>
