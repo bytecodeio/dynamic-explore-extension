@@ -71,17 +71,6 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
               )
 
 
-
-
-
-
-
-
-
-
-
-
-
           }
 
 
