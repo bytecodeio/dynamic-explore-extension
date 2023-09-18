@@ -15,7 +15,7 @@ const Fields = ({
 
   function handleFieldSelection(fieldName) {
     console.log(fieldName)
-    setUpdateBtn(false);
+    // setUpdateBtn(false);
     let tabs = [...tabList];
     let currentTab = tabs[currentInnerTab];
     if (currentTab["selected_fields"].includes(fieldName)) {
