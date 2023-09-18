@@ -55,13 +55,14 @@ const Template2 = ({
   setUpdatedFilters,
   initialLoad,
   setInitialLoad,
-  isActive,
-  application
+  isActive
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
   const [show3, setShow3] = useState();
   const [selectedFields, setSelectedFields] = useState([]);
+  const [selectedAccountGroups, setSelectedAccountGroups] = useState([]);
+//AccountGroupsFieldOptions
   const defaultChecked = true;
   const [isDefaultProduct, setIsDefaultProduct] = useState(defaultChecked);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
@@ -90,7 +91,6 @@ const Template2 = ({
     if (params.path == tabKey) {
       if (!isMounted) {
         console.log("Mounting")
-        console.log("application", application)
         try {
           fetchDefaultFieldsAndFilters();
           setIsMounted(true)
@@ -176,13 +176,13 @@ const Template2 = ({
   }
 
   const loadDefaultVisualizations = async (clientId, localFilters) => {
-    let _filters = formatFilters({...selectedFilters})
-    const { vis_config, fields, model, view } = await sdk.ok(sdk.query_for_slug(clientId));
+    let _filters = formatFilters({ ...selectedFilters })
+    const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(clientId));
 
     const { client_id } = await sdk.ok(
       sdk.create_query({
-        model: model,
-        view: view,
+        model: LOOKER_MODEL,
+        view: LOOKER_EXPLORE,
         fields: fields,
         filters: _filters,
         vis_config,
@@ -213,14 +213,7 @@ const Template2 = ({
     Object.keys(filters).map(key => {
       if (Object.keys(filters[key]).length > 0) {
         if (!(key == "date range" && Object.keys(filters['date filter']).length > 0)) {
-          if (key === "date range") {
-            let val = Object.keys(filters[key]);
-            console.log(val)
-            filters[key][val] = filters[key][val].replace("-","/");
-            filter = {...filter, ...filters[key]}
-          } else {
-            filter = { ...filter, ...filters[key] }
-          }
+          filter = { ...filter, ...filters[key] }
         }
       }
     })
@@ -242,7 +235,7 @@ const Template2 = ({
 
     let newVisList = []
     for await (let vis of _visList) {
-      const { vis_config, fields, model, view } = await sdk.ok(sdk.query_for_slug(vis['query']));
+      const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(vis['query']));
 
       let _fields = []
       if (vis['index'] === currentInnerTab) {
@@ -252,8 +245,8 @@ const Template2 = ({
       }
       const { client_id } = await sdk.ok(
         sdk.create_query({
-          model: model,
-          view: view,
+          model: LOOKER_MODEL,
+          view: LOOKER_EXPLORE,
           fields: _fields,
           filters: vis['localSelectedFilters'] ? { ..._filters, ...vis['localSelectedFilters'] } : _filters,
           vis_config,
@@ -275,15 +268,15 @@ const Template2 = ({
     console.log("currentvis", currentVis)
     _filters = { ..._filters, ...currentVis['localSelectedFilters'] }
 
-    const { vis_config, fields, model, view } = await sdk.ok(sdk.query_for_slug(currentVis['query']));
+    const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(currentVis['query']));
 
     let _fields = []
     _fields = currentVis['selected_fields']
 
     const { client_id } = await sdk.ok(
       sdk.create_query({
-        model: model,
-        view: view,
+        model: LOOKER_MODEL,
+        view: LOOKER_EXPLORE,
         fields: _fields,
         filters: _filters,
         vis_config,
@@ -487,7 +480,10 @@ const Template2 = ({
                     {/*<input value={keyword} onChange={() => {slideIt3(true);handleChangeKeyword();}} placeholder="" type="search" class="form-control" />*/}
                     {fields?.fields?.length > 0 ?
                       <SearchAll2
+                        //accountGroups={}
                         filters={filters.find(({ type }) => type === "filter")}
+                        setSelectedAccountGroups={setSelectedAccountGroups}
+                        selectedAccountGroups={AccountGroupsFieldOptions}
                         setSelectedFilters={setSelectedFilters}
                         selectedFilters={selectedFilters}
                         fieldOptions={fields.fields}
@@ -677,6 +673,7 @@ const Template2 = ({
 
               <Col md={12} lg={12}>
                 {/* Date Range Selector */}
+                {filters.find(({ type }) => type === "date filter").options?.length > 0 ?
                   <DateRangeSelector
                     dateFilter={filters.find(({ type }) => type === "date filter")}
                     dateRange={filters.find(({ type }) => type === "date range")}
@@ -686,8 +683,9 @@ const Template2 = ({
                     handleTabVisUpdate={handleTabVisUpdate}
                     //currentInvoiceCount={properties.find(({ type }) => type === "total invoices")}
                     description={description}
-                    application={application}
                   />
+                  : ''
+                }
                 {/*<DateFilterGroup
               dateFilterOptions={dateFilterOptions}
               setSelectedDateFilter={setSelectedDateFilter}

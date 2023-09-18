@@ -7,7 +7,8 @@ const account_key = 'account group'
 const AccountGroups = ({
   fieldOptions,
   selectedFilters,
-  setSelectedFilters
+  setSelectedFilters,
+  showActionBtns = true
 }) => {
   const [field, setField] = useState("")
   const [expandMenu, setExpandMenu] = useState(false)
@@ -67,13 +68,18 @@ const AccountGroups = ({
 
   return (
     <>
-      <span className="allOptions clear first" onClick={handleFieldsAll}>Select All</span>
 
-      <span className="allOptions clear second" onClick={clearAllAccounts}>Clear All</span>
+    {showActionBtns?
+      <>
+        <span className="allOptions clear first" onClick={handleFieldsAll}>Select All</span>
 
-      <span className="allOptions clear" onClick={() => handleMenuExpand()}>Expand</span>
-      <div className="mb-5"></div>
+        <span className="allOptions clear second" onClick={clearAllAccounts}>Clear All</span>
 
+        <span className="allOptions clear" onClick={() => handleMenuExpand()}>Expand</span>
+        <div className="mb-5"></div>
+      </>
+      :''
+    }
       <div className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters pt-2"}>
         <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
         {Array.isArray(fieldOptions['options']['values']) ?
@@ -90,7 +96,7 @@ const AccountGroups = ({
                     name="accountGroups"
                     // id={fieldOption}
                     value={value}
-                    onChange={() => handleFieldSelection(value)}
+                    onClick={() => handleFieldSelection(value)}
                   />
                 </Form.Group>
               </div>
