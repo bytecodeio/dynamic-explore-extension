@@ -5306,6 +5306,14 @@ left: 36px;
 top: -2px;
 }
 
+
+#slideOut3 .search-all-container .wrapFilters .one .form-check input[type="checkbox"]{
+left: 44px;
+top: -13px;
+}
+
+
+
 #slideOut3 .wrapFilters {
 /*display: flex;*/
 

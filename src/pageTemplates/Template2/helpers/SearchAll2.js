@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,  useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import Filters from './Filters'
 import Fields from "./Fields";
-import { useEffect } from "react";
+import AccountGroups from "./AccountGroups";
 
 const SearchAll2 = ({
   filters,
@@ -13,10 +13,14 @@ const SearchAll2 = ({
   tabList,
   currentInnerTab,
   setSelectedFields,
-  selectedFields
+  selectedFields,
+  selectedAccountGroups,
+  setSelectedAccountsGroups,
+  accountGroups
 }) => {
   const [filteredFields, setFilteredFields] = useState([])
   const [filteredFilters, setFilteredFilters] = useState([])
+    const [accountGroupsList, setAccountGroupsList] = useState([])
 
   const [selection, setSelection] = useState('')
   const [selectOpen, setSelectOpen] = useState(false)
@@ -24,28 +28,37 @@ const SearchAll2 = ({
   useEffect(() => {
     setFilteredFields(fieldOptions)
     setFilteredFilters(filters)
+      setAccountGroupsList(selectedAccountGroups)
   }, [])
 
-  const handleSelectionChange = (v) => {
-    setSelection(v.target.value)
-    let _fieldOptions = [...fieldOptions];
-    let _filterOptions = { ...filters }
-    if (v.target.value != '') {
-      let _fields = _fieldOptions.filter(opt => opt['label_short'].toUpperCase().includes(v.target.value.toUpperCase()))
-      let _filters = _filterOptions['options'].filter(opt => opt['field']['label_short'].toUpperCase().includes(v.target.value.toUpperCase()))
-      _filterOptions['options'] = _filters;
-      setFilteredFilters(_filterOptions)
-      setFilteredFields(_fields)
-    } else {
-      setFilteredFields(_fieldOptions)
-      setFilteredFilters(_filterOptions)
-    }
+useEffect(() => {
+  setAccountGroupsList(selectedAccountGroups)
+}, [selectedAccountGroups])
 
 
+const handleSelectionChange = (v) => {
+  setSelection(v.target.value)
+  let _fieldOptions = [...fieldOptions];
+  let _filterOptions = { ...filters }
+  let _accountGroups = {...selectedAccountGroups}
 
-    //filterSearchOptions(v.target.value)
+  if (v.target.value != '') {
+    let _fields = _fieldOptions.filter(opt => opt['label_short'].toUpperCase().includes(v.target.value.toUpperCase()))
+    let _filters = _filterOptions['options'].filter(opt => opt['field']['label_short'].toUpperCase().includes(v.target.value.toUpperCase()))
+    let _accountGroupsFiltered = _accountGroups['options']['values']?.filter(opt => opt['users.account_name'].toUpperCase().includes(v.target.value.toUpperCase()))
+
+    _filterOptions['options'] = _filters;
+    setFilteredFilters(_filterOptions)
+    setFilteredFields(_fields)
+    setAccountGroupsList({ ...selectedAccountGroups, ['options']: {...selectedAccountGroups['options'], ['values']: _accountGroupsFiltered }})
+  } else {
+    setFilteredFields(_fieldOptions)
+    setFilteredFilters(_filterOptions)
+    setAccountGroupsList({ ...selectedAccountGroups, ['options']: {...selectedAccountGroups['options'], ['values']: _accountGroupsFiltered }})
   }
 
+  //filterSearchOptions(v.target.value)
+}
   const openSearchOptions = () => {
     setSelectOpen(true)
   }
@@ -65,6 +78,15 @@ const SearchAll2 = ({
         {selectOpen && selection ?
           <div className="search-popover">
             <i onClick={closeSearchOptions} class="fal fa-times closeSearch"></i>
+
+            {accountGroupsList['options']?.['values'].length > 0 ?
+                  <div className="search-all-container">
+                <h6 className="mb-2 mt-0">Account Groups</h6>
+                    <AccountGroups fieldOptions={accountGroupsList} setTabList={setTabList} tabList={tabList} currentInnerTab={currentInnerTab} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} showActionBtns={false} />
+                  </div>
+                  : ''
+                }
+
             {filteredFilters['options']?.length > 0 ?
               <div className="search-all-container">
                 <h6 className="mb-2 mt-0">Filters</h6>

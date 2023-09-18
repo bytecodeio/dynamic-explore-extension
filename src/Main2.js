@@ -49,18 +49,12 @@ export const Main2 = () => {
   const [updatedFilters, setUpdatedFilters] = useState({})
 
   const [tabs, setTabs] = useState([])
-  const [applicationInfo, setApplicationInfo] = useState({})
+  const [application, setApplication] = useState({})
   const [isDefaultFilters, setIsDefaultFilters] = useState()
 
   const params = useParams();
 
   const route = useRouteMatch()
-
-  const history = useHistory();
-
-  const getContextData = () => {
-    return extensionContext.extensionSDK.getContextData();
-  }
 
   const slideIt = (show) => {
     setShowMenu(show);
@@ -72,8 +66,7 @@ export const Main2 = () => {
 
   useEffect(() => {
     console.log("updated", updatedFilters)
-  }
-    , [updatedFilters])
+  }, [updatedFilters])
 
   // Initialize the states
   useEffect(() => {
@@ -98,24 +91,20 @@ export const Main2 = () => {
       return fieldsByTag;
     }
 
-    const initializeTabs = async (tabs, tabTags, fieldsByTag, application) => {
+    const initializeTabs = async (tabs, tabTags, fieldsByTag) => {
       if (tabs) {
         if (tabs.length > 0) {
           setTabs(tabs)
           console.log("tabs", tabs)
-          console.log("params", params)
-          if (Object.keys(params).length == 0) {
-            history.push(tabs[0].route)
-          }
 
           let _fields = tabTags.filter(({tag_group}) => tag_group === "fields").map(f => {
             let _tab = f.title;
             let _tag = f.tag_name;
             return { tab: _tab, fields: fieldsByTag[_tag] }
-          })         
-          
+          })
+
           setFields(_fields)
-          
+
 
           let _appProperties = []
           for await (let p of tabTags.filter(({ tag_group }) => tag_group == "property")) {
@@ -127,7 +116,7 @@ export const Main2 = () => {
               let _fields = fieldsByTag[_tag]
               let _options = ""
               if (p.option_type === "single_value") {
-                let value = await getValues(_fields[0], {}, application);
+                let value = await getValues(_fields[0], {});
                 _options = value[0]
               }
               _appProperties.push({ type: _type, text: _text, fields: _fields[0], value: _options, group: _group })
@@ -138,64 +127,55 @@ export const Main2 = () => {
       }
     }
 
-    const createFilters = async (applicationTags, fieldsByTag, application) => {
+    const createFilters = async (applicationTags, fieldsByTag) => {
       let _filters = [];
       let _defaultSelected = {}
       let _defTags = applicationTags.find(({type}) => type === "default_filter");
       console.log(_defTags)
       let _defaultFilterFields = fieldsByTag[_defTags.tag_name]
-      for (let f of applicationTags.filter(({ tag_group }) => tag_group == "filters")) {
+      for await (let f of applicationTags.filter(({ tag_group }) => tag_group == "filters")) {
         let _type = f.type;
         let _tag = f.tag_name;
         let _fields = fieldsByTag[_tag];
         let _options = []
-        let id = f.id
+        if (f.option_type === "date range") {
+          _options = { field: _fields[0], values: await getDefaultDateRange() }
+        }
         console.log("def", _defaultFilterFields)
         let _defFilterType = _defaultFilterFields?.filter(df => _fields.includes(df))
         if (_defFilterType?.length > 0) {
           _defaultSelected[_type] = {}
           _defFilterType.map(f => {
-            if (f['default_filter_value'] !==  null) {              
             _defaultSelected[_type][f['name']] = f['default_filter_value']
-            }
           })
         } else {
           _defaultSelected[_type] = {}
-        }        
-        if (f.option_type === "date range") {
-          let value = await getDefaultDateRange() 
-          _options = { field: _fields[0], values: value }
-          //console.log(_defa)
-          _defaultSelected['date range'] = {}
-          _defaultSelected['date range'][_fields[0]['name']] = value;
         }
-        _filters.push({ id:id,  type: _type, fields: fieldsByTag[_tag], options: _options, option_type: f.option_type })
+        _filters.push({ type: _type, fields: fieldsByTag[_tag], options: _options, option_type: f.option_type })
       }
       setFilters(_filters)
 
       setSelectedFilters(_defaultSelected)
 
-      getOptionValues(_filters, application);
+      getOptionValues(_filters);
     }
 
 
     const createParameters = async (applicationTags, fieldsByTag) => {
       let _appToggles = []
       for await (let p of applicationTags.filter(({ tag_group }) => tag_group == "toggle")) {
+        let _type = p.type;
         let _tag = p.tag_name;
         let _fields = fieldsByTag[_tag]
-        if (_fields?.length > 0) {
-          let _type = p.type;          
-          let _options = _fields[0].enumerations;
-          _appToggles.push({ type: _type, fields: _fields[0], value: _options })
-        }
+        let _options = _fields[0].enumerations;
+        _appToggles.push({ type: _type, fields: _fields[0], value: _options })
       }
       setParameters(_appToggles)
     }
 
-    const initializeAppTags = async (applicationTags, fieldsByTag, application) => {
+    const initializeAppTags = async (applicationTags, fieldsByTag) => {
       if (applicationTags) {
-        createFilters(applicationTags, fieldsByTag, application)
+        createFilters(applicationTags, fieldsByTag)
         createParameters(applicationTags, fieldsByTag)
       }
     }
@@ -223,11 +203,10 @@ export const Main2 = () => {
       console.log("getContext", contextData)
       if (contextData) {
         let { application, application_tags, tabs, tab_tags } = contextData;
-        await initApplication(application)
         let fieldsByTag = await fetchLookMlFields(application.model, application.explore);
         console.log("fieldsByTag", fieldsByTag)
-        initializeTabs(tabs, tab_tags, fieldsByTag, application);
-        initializeAppTags(application_tags, fieldsByTag, application);
+        initializeTabs(tabs, tab_tags, fieldsByTag);
+        initializeAppTags(application_tags, fieldsByTag);
         setIsFetchingLookmlFields(false);
       }
     };
@@ -239,78 +218,38 @@ export const Main2 = () => {
     }
   }, []);
 
-  const initApplication = async (app) => {
-    setApplicationInfo(app)
-  }
-
-  const sortById = (data) => {
-    return data.sort((a,b) => {
-      var x = a.id;
-      var y = b.id;
-          return x < y ? -1 : x > y ? 1 : 0;
-      });
-  }
-
-  const getOptionValues = async (filters, application) => {
-    console.log("get option values", filters)
+  const getOptionValues = async (filters) => {
     let _filters = []
     let filterArr = [...filters]
-    console.log("filters", filterArr)
-    for (let f of sortById(filterArr)) {
+    for await (let f of filterArr) {
       let _options = []
-      console.log("arrayValue", f)
+      console.log(f)
       if (f.option_type === "fields") {
         _options = f.fields;
-        f['options'] = _options;
-        setFilters(prev => [...prev, f])
-        console.log("value of values", f)
       }
       if (f.option_type === "values") {
         for await (let field of f.fields) {
-          console.log("values", field)
-          let values = await getValues(field, {}, application)
-          console.log("values of values", values)
+          let values = await getValues(field, {})
           _options.push({ field: field, values: values })
-          f['options'] = _options;
-          setFilters(prev => [...prev, f])
         }
       }
       if (f.option_type === "single_dimension_value") {
         console.log("account groups", f.fields)
         if (f.fields.length > 0) {
-          let value = await getValues(f.fields[0], {}, application)
+          let value = await getValues(f.fields[0], {})
           console.log("account groups", value)
           _options = ({ field: f.fields[0], values: value })
-          f['options'] = _options;
-          setFilters(prev => [...prev, f])
         }
       }
       if (f.option_type === "date range") {
         _options = f.options
-        f['options'] = _options;
-        setFilters(prev => [...prev, f])
-      }
-      if (f.option_type === "suggestions") {
-        for await (let field of f.fields) {
-          if (field.suggestions) {
-            let values = field.suggestions.map(s => {
-              return {[field['name']]:s}
-            })
-            console.log("suggestions", values)
-            console.log("values of values", values)
-            _options.push({ field: field, values: values })
-            f['options'] = _options;
-          }
-
-          setFilters(prev => [...prev, f])
-        }
       }
       console.log("options", _options)
-      //f['options'] = _options;
-      //_filters.push(f)
+      f['options'] = _options;
+      _filters.push(f)
     }
-    //console.log(_filters)
-    //setFilters(_filters)
+    console.log(_filters)
+    setFilters(_filters)
   }
 
   const getDefaultDateRange = () => {
@@ -323,34 +262,19 @@ export const Main2 = () => {
     return `${startOfMonth} to ${endOfMonth}`;
   };
 
-  const getValues = (field, filters, application=null) => {
-    if (!application) {
-      application = {...applicationInfo}
-    }
-    console.log("application", application)
-    if (Object.keys(application).length > 0) {
-      try {
-        let payload = {
-            model: application.model,
-            view: field['suggest_explore'],
-            fields: [field["suggest_dimension"]],
-            filters: filters,
-            limit: 1000
-          }
-        console.log("getValues", payload)
-        return sdk.ok(
-          sdk.run_inline_query({
-            result_format: "json",
-            body: payload,
-          })
-        );
-      } catch (ex) {
-        console.log(ex);
-        return null
-      }     
-
-    }
-
+  const getValues = (field, filters) => {
+    return sdk.ok(
+      sdk.run_inline_query({
+        result_format: "json",
+        body: {
+          model: LOOKER_MODEL,
+          view: LOOKER_EXPLORE,
+          fields: [field["name"]],
+          filters: filters,
+          limit: 1000
+        },
+      })
+    );
   };
 
   const updateAppProperties = async (filters) => {
@@ -367,7 +291,9 @@ export const Main2 = () => {
     extensionContext.extensionSDK.saveContextData(data)
   }
 
-
+  const getContextData = () => {
+    return extensionContext.extensionSDK.getContextData();
+  }
 
   const handleDataRefresh = async () => {
     let contextData = {}
@@ -434,7 +360,6 @@ export const Main2 = () => {
                       setInitialLoad={setInitialLoad}
                       keyword={keyword}
                       handleChangeKeyword={handleChangeKeyword}
-                      application={applicationInfo}
                     />
                   )}
                   {/* <Route path={`${route.url}/`}>
