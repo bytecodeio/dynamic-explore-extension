@@ -136,9 +136,7 @@ const Template2 = ({
             }
           })
 
-          console.log("filter options", _tileFilterOptions)
           let vis = {}
-          console.log("selected tabs", selectedFilters)
           let { client_id } = t['result_maker']['query'];
           //let newClientId = await loadDefaultVisualizations(client_id, _selectedFilters)
           //console.log(newClientId)
@@ -163,7 +161,6 @@ const Template2 = ({
       } else (setInitialLoad(false))
 
     }
-    console.log("visList", _visList)
     setVisList(_visList)
 
     setSelectedFields(fields);
@@ -265,7 +262,6 @@ const Template2 = ({
 
     let _filters = {};
     _filters = await formatFilters(JSON.parse(JSON.stringify(updatedFilters)));
-    console.log("currentvis", currentVis)
     _filters = { ..._filters, ...currentVis['localSelectedFilters'] }
 
     const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(currentVis['query']));
@@ -291,7 +287,6 @@ const Template2 = ({
 
 
   async function doClearAll() {
-    console.log("baba")
     setIsDefaultProduct(false);
     setUpdateButtonClicked(true);
 
