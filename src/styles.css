@@ -6919,6 +6919,57 @@ h6{
   right:10px;
 }
 
+.saved-filter-item {
+  display: flex;
+}
+
+.saved-filter-action {
+  align-self: center;
+  margin-left: auto;
+}
+
+.saved-filter-action > i {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.saved-filter-control {
+  display: flex;
+  padding-top: 10px;
+}
+
+.saved-filter-control > label.form-label {
+  padding-left: 10px;
+}
+
+.saved-filter-action-bar {
+  display: flex;
+  width: 100%;
+}
+
+.saved-filter-action-bar > button {
+  width: 100% !important;
+  min-width: 10px !important;
+  margin: 5px;
+}
+
+.saved-filter-update-tooltip {
+  padding: 10px;
+  border: 1px solid #d9d9d9;
+  margin: 10px;
+}
+
+.saved-filter-update-tooltip > p {
+  font-size: .7rem;
+}
+
+span.saved-filter-button > i {
+  padding-right: 5px;
+}
+
+.show3 .modal-body {
+  min-height: 300px !important;
+}
 .embed-icon-container.expand {
   top:60px;
 }
@@ -7127,7 +7178,7 @@ align-items: flex-start;
 
 
 .show3 .modal-body {
-  max-height: 460px;
+  max-height: 300px;
   overflow-y: auto;
 }
 

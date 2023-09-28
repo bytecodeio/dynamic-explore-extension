@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
-const Fields = ({
+const SearchAll = ({
   fieldOptions,
   setTabList,
   tabList,
   currentInnerTab,
   updateBtn,
   setUpdateBtn,
-  showActionBtns = true
+  showMenu3,
+  setShowMenu3,
 
 }) => {
   const [expandMenu, setExpandMenu] = useState(false);
 
   function handleFieldSelection(fieldName) {
-    console.log(fieldName)
     setUpdateBtn(false);
     let tabs = [...tabList];
     let currentTab = tabs[currentInnerTab];
@@ -45,23 +45,11 @@ const Fields = ({
     setExpandMenu(true)
   }
 
-  console.log(fieldOptions, "lixxi")
 
   return (
     <>
-    {showActionBtns?
-      <div className="mb-5">      
-          <>
-            <span className="allOptions clear first" onClick={handleFieldsAll}>Select All</span>
 
-            <span className="allOptions clear restore" onClick={handleRestoreDefault}>Restore Defaults</span>
-
-            <span className="allOptions clear" onClick={() => handleMenuExpand()}>Expand</span>
-          </>
-      </div>        
-      :''
-    }
-    <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
+    <div className={showMenu3 ? "wrapFilters pt-4" : "wrapFilters pt-4 hidden"}>
       <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
       {fieldOptions.map((fieldOption) => (
         <div className="one" key={fieldOption.name}>
@@ -73,7 +61,7 @@ const Fields = ({
               checked={tabList.length > 0?tabList[currentInnerTab]["selected_fields"].includes(
                 fieldOption.name
               ):false}
-              name="Fields"
+              name="all"
               // id={fieldOption.name}
               value={fieldOption.fields}
               onChange={() => handleFieldSelection(fieldOption.name)}
@@ -87,4 +75,4 @@ const Fields = ({
   );
 };
 
-export default Fields;
+export default SearchAll;

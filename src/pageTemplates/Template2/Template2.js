@@ -32,6 +32,7 @@ import SearchAll2 from './helpers/SearchAll2'
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { connection_columns } from "@looker/sdk";
 import _ from "lodash";
+import { SavedFilters } from "../../components/SavedFilters";
 const Template2 = ({
   currentNavTab,
   filters,
@@ -55,7 +56,12 @@ const Template2 = ({
   setUpdatedFilters,
   initialLoad,
   setInitialLoad,
-  isActive
+  isActive,
+  application,
+  tabFilters,
+  savedFilters,
+  removeSavedFilter,
+  upsertSavedFilter
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -218,7 +224,7 @@ const Template2 = ({
   }
 
   // Handle run button click
-  const handleTabVisUpdate = async (_visList = []) => {
+  const handleTabVisUpdate = async (_visList = [], filterList={...selectedFilters}) => {
     if (!Array.isArray(_visList)) {
       _visList = [...visList];
     }
@@ -226,13 +232,15 @@ const Template2 = ({
     let currentVis = _visList.find(({ index }) => index === currentInnerTab)
 
     let _filters = {};
-    _filters = await formatFilters(JSON.parse(JSON.stringify(selectedFilters)));
-    setUpdatedFilters(JSON.parse(JSON.stringify(selectedFilters)))
+    _filters = await formatFilters(JSON.parse(JSON.stringify(filterList)));
+    setUpdatedFilters(JSON.parse(JSON.stringify(filterList)))
     updateAppProperties(_filters)
+
+    console.log("saved filters",_filters)
 
     let newVisList = []
     for await (let vis of _visList) {
-      const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(vis['query']));
+      const { vis_config, fields,model, view  } = await sdk.ok(sdk.query_for_slug(vis['query']));
 
       let _fields = []
       if (vis['index'] === currentInnerTab) {
@@ -242,8 +250,8 @@ const Template2 = ({
       }
       const { client_id } = await sdk.ok(
         sdk.create_query({
-          model: LOOKER_MODEL,
-          view: LOOKER_EXPLORE,
+          model: model,
+          view: view,
           fields: _fields,
           filters: vis['localSelectedFilters'] ? { ..._filters, ...vis['localSelectedFilters'] } : _filters,
           vis_config,
@@ -511,7 +519,7 @@ const Template2 = ({
                       <Col xs={12} md={12}>
                         <Row>
                           {/* Account Groups */}
-                          {Array.isArray(filters.find(({ type }) => type === "account group").options.values) ?
+                          {Array.isArray(filters.find(({ type }) => type === "account group")?.options.values) ?
                             <Col xs={12} md={12}>
                               <Accordion.Item eventKey="1">
                                 <Accordion.Header>Account Groups</Accordion.Header>
@@ -562,14 +570,14 @@ const Template2 = ({
                           }
 
                           {/* Filters */}
-                          {filters.find(({ type }) => type === "filter").options?.length > 0 ?
+                          {filters.find(({ type }) => type === "filter")?.options?.length > 0 ?
                             <Col xs={12} md={12}>
                               <Accordion.Item eventKey="5">
                                 <Accordion.Header>Filters</Accordion.Header>
                                 <Accordion.Body>
                                   {/*Quick Filters */}
                                   {
-                                    filters.find(({ type }) => type === "quick filter").options?.length > 0 ?
+                                    filters.find(({ type }) => type === "quick filter")?.options?.length > 0 ?
                                       <QuickFilter
                                         quickFilters={filters.find(({ type }) => type === "quick filter")}
                                         selectedFilters={selectedFilters}
@@ -605,7 +613,15 @@ const Template2 = ({
                           <Col xs={12} md={12}>
                             <Accordion.Item eventKey="4">
                               <Accordion.Header>Saved Filters</Accordion.Header>
-                              <Accordion.Body></Accordion.Body>
+                              <Accordion.Body>
+                                <SavedFilters 
+                                  savedFilters={savedFilters}
+                                  setSelectedFilters={setSelectedFilters}
+                                  handleVisUpdate={handleTabVisUpdate}
+                                  removeSavedFilter={removeSavedFilter}
+                                  upsertSavedFilter={upsertSavedFilter}
+                                />
+                              </Accordion.Body>
                             </Accordion.Item>
                           </Col>
                         </Row>
@@ -668,7 +684,7 @@ const Template2 = ({
 
               <Col md={12} lg={12}>
                 {/* Date Range Selector */}
-                {filters.find(({ type }) => type === "date filter").options?.length > 0 ?
+                {filters.find(({ type }) => type === "date filter")?.options?.length > 0 ?
                   <DateRangeSelector
                     dateFilter={filters.find(({ type }) => type === "date filter")}
                     dateRange={filters.find(({ type }) => type === "date range")}
@@ -694,7 +710,7 @@ const Template2 = ({
               <Col md={12} lg={2}>
                 {properties?.find(({ group }) => group === "property") ?
                   <p>
-                    <b>{properties?.find(({ group }) => group === "property").text}</b> <span className="highlight large">{Object.values(properties?.find(({ group }) => group === "property").value)}</span>
+                    <b>{properties?.find(({ group }) => group === "property")?.text}</b> <span className="highlight large">{Object.values(properties?.find(({ group }) => group === "property")?.value)}</span>
                   </p>
                   : ''
                 }
