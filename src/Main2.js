@@ -131,7 +131,7 @@ export const Main2 = () => {
               }
               if (_options != []) {
                 _appProperties.push({ type: _type, text: _text, fields: _fields[0], value: _options, group: _group })
-              }              
+              }
             }
           }
           setProperties(_appProperties)
@@ -146,7 +146,7 @@ export const Main2 = () => {
             let _options = ""
             if (_fields?.length >0) {
               _tabFilters.push({ tab:_tab, type: _type, fields:_fields[0], group: _group, options:_options})
-            }            
+            }
           }
           setTabFilters(_tabFilters)
         }
@@ -174,7 +174,7 @@ export const Main2 = () => {
           _defFilterType.map(f => {
             if (f['default_filter_value'] != null) {
               _defaultSelected[_type][f['name']] = f['default_filter_value']
-            }            
+            }
           })
         } else {
           _defaultSelected[_type] = {}
@@ -184,24 +184,24 @@ export const Main2 = () => {
       setFilters(_filters)
 
       getSavedFilters(application, user, _filters);
-      
+
       setSelectedFilters(_defaultSelected)
 
       getOptionValues(_filters, application);
-      
+
     }
 
 
     const createParameters = async (applicationTags, fieldsByTag) => {
       let _appToggles = []
-      for await (let p of applicationTags.filter(({ tag_group }) => tag_group == "toggle")) {        
+      for await (let p of applicationTags.filter(({ tag_group }) => tag_group == "toggle")) {
         let _tag = p.tag_name;
         let _fields = fieldsByTag[_tag]
         let _options = []
         let _type = p.type;
-        if (_fields?.length > 0) {          
-         _options = _fields[0]?.enumerations;      
-        _appToggles.push({ type: _type, fields: _fields[0], value: _options }) 
+        if (_fields?.length > 0) {
+         _options = _fields[0]?.enumerations;
+        _appToggles.push({ type: _type, fields: _fields[0], value: _options })
         }
       }
       setParameters(_appToggles)
@@ -312,7 +312,7 @@ export const Main2 = () => {
     let _application = application;
     console.log("app", application + ' '+ _application)
     if (_application == null) {
-      _application = applicationInfo 
+      _application = applicationInfo
     }
     try {
       return sdk.ok(

@@ -76,7 +76,7 @@ export const CurrentSelection2 = ({
               };
 
               obj.value.split(',').map((d, i) => {
-                const tempObect = {...obj, label: `${field.label_short}: ${d}`, value: d};
+                const tempObect = {...obj, label: `${d}`, value: d};
                 current.push(tempObect)
               })
             } else {
