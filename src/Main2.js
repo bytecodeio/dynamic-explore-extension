@@ -91,6 +91,7 @@ export const Main2 = () => {
       return fieldsByTag;
     }
 
+
     const initializeTabs = async (tabs, tabTags, fieldsByTag) => {
       if (tabs) {
         if (tabs.length > 0) {
