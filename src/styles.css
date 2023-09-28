@@ -7035,6 +7035,34 @@ padding: 0.5em 0.45em 0em 0em;
 
 }
 
+.popover{
+  font-family: unset !important
+}
+.popover .one {
+
+    margin-left: -10px;
+}
+
+.popover .one input[type="checkbox"] {
+    opacity: 0;
+    z-index: 1;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 31px;
+    top: 0px;
+}
+
+.popover .one label {
+    padding-left: 28px;
+    padding-top: 3px;
+}
+
+.popover-header{
+  background: transparent;
+  padding-top: 0;
+}
+
 @media (min-width:1720px){
   .grid2 {
       display: flex;

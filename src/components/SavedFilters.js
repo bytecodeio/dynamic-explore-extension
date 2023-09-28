@@ -32,7 +32,7 @@ export const SavedFilters = ({savedFilters, handleVisUpdate, setSelectedFilters,
 
     return (
         <>
-        <div style={{paddingBottom:'30px'}}><span className="allOptions saved-filter-button" ref={target} onClick={handleNewSavedFilterPopover} ><i class="fas fa-plus"></i>   Add</span></div>
+        <div style={{paddingBottom:'30px'}}><span className="allOptions saved-filter-button" ref={target} onClick={handleNewSavedFilterPopover} ><i class="fal fa-plus"></i>   Add</span></div>
         <Overlay target={target.current} show={open} placement="right">
             <div>
                 <NewSavedFilterPanel setOpen={setOpen} upsertSavedFilter={upsertSavedFilter}/>
@@ -44,7 +44,7 @@ export const SavedFilters = ({savedFilters, handleVisUpdate, setSelectedFilters,
 
                             <p className="pb-1 saved-filter-item">
                                 {s.title}
-                                <div className="saved-filter-action">                        
+                                <div className="saved-filter-action">
                                     <OverlayTrigger
                                         placement="right"
                                         overlay={
@@ -65,7 +65,7 @@ export const SavedFilters = ({savedFilters, handleVisUpdate, setSelectedFilters,
                                     <i onClick={() => handleSavedFilterRemoval(s.id)} className="fas fa-trash red"></i>
                                 </div>
                             </p>
-                        
+
                     </div>
                     )
                     })}
@@ -99,24 +99,34 @@ const NewSavedFilterPanel = React.forwardRef(({setOpen, upsertSavedFilter}) => {
 
     return (
         <Popover className="test">
-            <Popover.Header>Add Saved Filter</Popover.Header>
+            <Popover.Header><p>Add Saved Filter</p></Popover.Header>
             <Popover.Body>
                 <div className="saved-filter-body">
                     <Form.Label htmlFor="saved-filter-title">Title</Form.Label>
                     <Form.Control onChange={handleUpdateTitle} value={title} id='saved-filter-title'/>
 
                     <div className="saved-filter-control">
-                        <Form.Check onClick={handleUpdateCheckbox} checked={checkbox} type="checkbox" id='saved-filter-check'/>
-                        <Form.Label htmlFor="saved-filter-check">Save as Global Filter</Form.Label>
+                      <div className="one">
+                        <Form.Group>
+                        <Form.Check
+                        name="saved"
+                        onClick={handleUpdateCheckbox}
+                        checked={checkbox}
+                        type="checkbox"
+                        id='saved-filter-check'
+                        label="Save as Global Filter"
+                        />
+                        </Form.Group>
+                      </div>
                     </div>
 
 
-                    <Form.Text>*Note: This saved filter will be saving the current filter selection</Form.Text>
+                    <Form.Text className="mt-2 mb-2">*Note: This saved filter will be saving the current filter selection</Form.Text>
 
                     <div className="saved-filter-action-bar">
                         <Button onClick={handleSaveClick}>Save</Button>
                         <Button className="btn-clear" onClick={handleCancelClick}>Cancel</Button>
-                    </div> 
+                    </div>
                 </div>
 
             </Popover.Body>
@@ -166,8 +176,21 @@ const UpdateSavedFilterPanel = React.forwardRef(({filterId, setOpenEdit, openEdi
                     <Form.Control onChange={handleUpdateTitle} value={title} id='saved-filter-title'/>
 
                     <div className="saved-filter-control">
-                        <Form.Check onClick={handleUpdateCheckbox} checked={checkbox} type="checkbox" id='saved-filter-check'/>
-                        <Form.Label htmlFor="saved-filter-check">Save as Global Filter</Form.Label>
+
+                    <div className="one">
+                      <Form.Group>
+                      <Form.Check
+                      name="saved"
+                      onClick={handleUpdateCheckbox}
+                      checked={checkbox}
+                      type="checkbox"
+                      id='saved-filter-check'
+                      label="Save as Global Filter"
+                      />
+                      </Form.Group>
+                    </div>
+
+        
                     </div>
 
                     <div>
@@ -184,7 +207,7 @@ const UpdateSavedFilterPanel = React.forwardRef(({filterId, setOpenEdit, openEdi
                     <div className="saved-filter-action-bar">
                         <Button onClick={handleSaveClick}>Update</Button>
                         <Button className="btn-clear" onClick={handleCancelClick}>Cancel</Button>
-                    </div> 
+                    </div>
                 </div>
 
             </Popover.Body>
