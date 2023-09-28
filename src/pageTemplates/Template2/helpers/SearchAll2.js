@@ -20,7 +20,7 @@ const SearchAll2 = ({
 }) => {
   const [filteredFields, setFilteredFields] = useState([])
   const [filteredFilters, setFilteredFilters] = useState([])
-    const [accountGroupsList, setAccountGroupsList] = useState([])
+  const [accountGroupsList, setAccountGroupsList] = useState([])
 
   const [selection, setSelection] = useState('')
   const [selectOpen, setSelectOpen] = useState(false)
@@ -80,9 +80,16 @@ const handleSelectionChange = (v) => {
             <i onClick={closeSearchOptions} class="fal fa-times closeSearch"></i>
 
             {accountGroupsList['options']?.['values'].length > 0 ?
-                  <div className="search-all-container">
-                <h6 className="mb-2 mt-0">Account Groups</h6>
-                    <AccountGroups fieldOptions={accountGroupsList} setTabList={setTabList} tabList={tabList} currentInnerTab={currentInnerTab} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} showActionBtns={false} />
+               <div className="search-all-container">
+                <h6 className="mb-4 mt-0">Account Groups</h6>
+                    <AccountGroups
+                    fieldOptions={accountGroupsList}
+                    setTabList={setTabList}
+                    tabList={tabList}
+                    currentInnerTab={currentInnerTab}
+                    selectedFilters={selectedFilters}
+                    setSelectedFilters={setSelectedFilters}
+                    showActionBtns={false} />
                   </div>
                   : ''
                 }
@@ -90,14 +97,25 @@ const handleSelectionChange = (v) => {
             {filteredFilters['options']?.length > 0 ?
               <div className="search-all-container">
                 <h6 className="mb-2 mt-0">Filters</h6>
-                <Filters filters={filteredFilters} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} showActionBtns={false}/>
+                <Filters
+                filters={filteredFilters}
+                selectedFilters={selectedFilters}
+                setSelectedFilters={setSelectedFilters}
+                showActionBtns={false}/>
               </div>
               : ''
             }
             {filteredFields.length > 0 ?
               <div className="search-all-container">
                 <h6 className="mb-2 mt-0">Fields</h6>
-                <Fields fieldOptions={filteredFields} setTabList={setTabList} tabList={tabList} currentInnerTab={currentInnerTab} selectedFields={selectedFields} setSelectedFields={setSelectedFields} showActionBtns={false} />
+                <Fields
+                fieldOptions={filteredFields}
+                setTabList={setTabList}
+                tabList={tabList}
+                currentInnerTab={currentInnerTab}
+                selectedFields={selectedFields}
+                setSelectedFields={setSelectedFields}
+                showActionBtns={false} />
               </div>
               : ''
             }
@@ -107,7 +125,7 @@ const handleSelectionChange = (v) => {
         }
       </div>
     </>
-    // set value to name
+
   );
 };
 
