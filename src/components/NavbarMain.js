@@ -2,25 +2,22 @@ import React, { useState, useContext, useEffect } from "react";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 
-const NavbarMain = ({handleDataRefresh}) => {
+const NavbarMain = ({user}) => {
   const { core40SDK } = useContext(ExtensionContext);
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState("");
   const [me, setMe] = useState({});
 
   useEffect(() => {
     const initialize = async () => {
       try {
-        const value = await core40SDK.ok(core40SDK.me());
-        setMe(value)
-        console.log(value);
-        setMessage(`${value.display_name}`);
+        setMessage(`${user.display_name}`);
       } catch (error) {
         setMessage("Error occured getting information about me!");
         console.error(error);
       }
     };
     initialize();
-  }, []);
+  }, [user]);
 
   const [faClass, setFaClass] = useState(true);
 
@@ -28,10 +25,6 @@ const NavbarMain = ({handleDataRefresh}) => {
     setFaClass(!faClass);
     document.body.classList.toggle("dark-mode");
   };
-
-  const refreshData = () => {
-    handleDataRefresh()
-  }
 
   return (
     <Container fluid className="padding-0">
@@ -48,7 +41,6 @@ const NavbarMain = ({handleDataRefresh}) => {
             <Nav className="me-auto"></Nav>
             <Nav className="align-items-center">
               <Navbar.Text>
-                {/*<Button onClick={refreshData}>Refresh data</Button>*/}
                 <a className="dark-layout" onClick={handleClick}>
                   <i className={faClass ? "far fa-moon" : "far fa-sun"}></i>
                 </a>

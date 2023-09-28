@@ -9,11 +9,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, Switch } from "react-router-dom/cjs/react-router-dom";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 import { APP_ROUTE } from "./utils/constants2";
+import { AdminPage } from "./components/Admin";
 
 export const App = hot(() => {
   return (
     <ExtensionProvider>
       <Switch>
+        <Route exact path='/admin'>
+          <AdminPage />
+        </Route>
         <Route path='/:path/'>
           <Main2 />
         </Route>

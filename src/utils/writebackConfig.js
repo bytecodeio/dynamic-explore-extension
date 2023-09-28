@@ -1,4 +1,6 @@
-export const connection =  "looker_partner_demo"
-export const scratch_schema = "looker_scratch"
+export const connection =  "bq-jarvis"
+export const scratch_schema = "LOOKER_OE_SCRATCH"
+
+/*edna-rsh-augintel-en-np-cah.LOOKER_OE_SCRATCH*/
 
 

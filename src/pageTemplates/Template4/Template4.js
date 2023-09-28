@@ -32,7 +32,7 @@ import SearchAll2 from './helpers/SearchAll2'
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { connection_columns } from "@looker/sdk";
 import { EmbedContainer } from "../../components/EmbedContainer";
-const Template3 = ({
+const Template4 = ({
   currentNavTab,
   filters,
   fields,
@@ -532,135 +532,10 @@ const Template3 = ({
                             </Col>
                             : ''
                           }
-
-
-                          {/* Fields */}
-                          {fields?.fields?.length > 0 ?
-                            <Col xs={12} md={12}>
-                              <Accordion.Item eventKey="6">
-                                <Accordion.Header>Fields</Accordion.Header>
-                                <Accordion.Body>
-                                  <Fields
-                                    fieldOptions={fields.fields}
-                                    setTabList={setVisList}
-                                    tabList={visList.filter(({ visId }) => visId === "tabbedVis1")}
-                                    currentInnerTab={currentInnerTab}
-                                    updateBtn={updateButtonClicked}
-                                    setUpdateBtn={setUpdateButtonClicked}
-                                    selectedFields={selectedFields}
-
-
-                                  />
-                                </Accordion.Body>
-                              </Accordion.Item>
-                            </Col>
-                            : ''
-                          }
-
-                          {/* Filters */}
-                          {filters.find(({ type }) => type === "filter").options?.length > 0 ?
-                            <Col xs={12} md={12}>
-                              <Accordion.Item eventKey="5">
-                                <Accordion.Header>Filters</Accordion.Header>
-                                <Accordion.Body>
-                                  {/*Quick Filters */}
-                                  {
-                                    filters.find(({ type }) => type === "quick filter").options?.length > 0 ?
-                                      <QuickFilter
-                                        quickFilters={filters.find(({ type }) => type === "quick filter")}
-                                        selectedFilters={selectedFilters}
-                                        setSelectedFilters={setSelectedFilters}
-                                        selection={selection}
-                                        updateBtn={updateButtonClicked}
-                                        setUpdateBtn={setUpdateButtonClicked}
-                                        setIsFilterChanged={setIsFilterChanged}
-                                      />
-                                      :
-                                      ''
-                                  }
-
-                                  <Filters
-                                    //isLoading={isFetchingFilterSuggestions}
-                                    filters={filters.find(({ type }) => type === "filter")}
-                                    setSelectedFilters={setSelectedFilters}
-                                    selectedFilters={selectedFilters}
-                                    isDefault={isDefaultProduct}
-                                    setIsDefault={setIsDefaultProduct}
-                                    updateBtn={updateButtonClicked}
-                                    setUpdateBtn={setUpdateButtonClicked}
-                                    setIsFilterChanged={setIsFilterChanged}
-                                  />
-                                </Accordion.Body>
-                              </Accordion.Item>
-                            </Col>
-                            : ''
-                          }
-
-
-
-
-
-
-
-
-                          {/* Bookmarks */}
-                          <Col xs={12} md={12}>
-                            <Accordion.Item eventKey="4">
-                              <Accordion.Header>Saved Filters</Accordion.Header>
-                              <Accordion.Body></Accordion.Body>
-                            </Accordion.Item>
-                          </Col>
                         </Row>
-                      </Col>
-
+                      </Col> 
                     </Row>
                   </Accordion>
-                  <Col xs={12} md={12}>
-                    <div className="d-flex flex-column text-center position-relative">
-                      <p className="">Top % Products</p>
-
-                      <input
-                        value={value}
-                        onChange={changeEvent => {
-                          setStep(1);
-                          setValue(changeEvent.target.value)
-                        }}
-                        placeholder={value}
-                        type="search"
-                        list="steplist"
-                        min="0" max="100"
-                        from="0"
-                        step="1"
-                        className="value" />
-
-                      <input
-                        value={value}
-                        onChange={changeEvent => {
-                          setStep(25);
-                          setValue(changeEvent.target.value)
-                        }}
-                        type="range"
-                        min="0" max="100"
-                        step={step}
-                        list="steplist"
-                        className="range-slider mt-2" />
-
-                      <datalist id="steplist" className="range">
-                        <option label="0">0</option>
-                        <option label="25">25</option>
-                        <option label="50">50</option>
-                        <option label="75">75</option>
-                        <option label="100">100</option>
-                      </datalist>
-
-
-                    </div>
-                  </Col>
-
-
-
-
-
                 </div>
               </div>
             </div>
@@ -698,15 +573,6 @@ const Template3 = ({
                   </p>
                   : ''
                 }
-                {visList.find(({ visId }) => visId === "vis1")?
-                  <div className="vis1-container">
-                    <EmbedContainer 
-                      vis={visList.find(({ visId }) => visId === "vis1")}
-                      visList={visList}
-                      updateVisList={setVisList}
-                      handleVisUpdate={handleSingleVisUpdate}
-                    />
-                  </div>:''}
 
               </Col>
               {/* <Col md={12} lg={3}>
@@ -756,16 +622,74 @@ const Template3 = ({
                   <span> {active ? "See Less" : "See All"} (<p id="numberCounter"></p>) </span></i>
 
               </div>
-
-
+            </Row>
+            <Row>
+              <Col md={3}>
+                <p>Vis1</p>
+                {visList.find(({ visId }) => visId === "vis1")?
+                  <div className="vis1-container">
+                    <EmbedContainer 
+                      vis={visList.find(({ visId }) => visId === "vis1")}
+                      visList={visList}
+                      updateVisList={setVisList}
+                      handleVisUpdate={handleSingleVisUpdate}
+                    />
+                  </div>:''}
+                <p>Vis2</p>
+                {visList.find(({ visId }) => visId === "vis2")?
+                  <div className="vis1-container">
+                    <EmbedContainer 
+                      vis={visList.find(({ visId }) => visId === "vis2")}
+                      visList={visList}
+                      updateVisList={setVisList}
+                      handleVisUpdate={handleSingleVisUpdate}
+                    />
+                  </div>:''}
+              </Col>
+              <Col md={9}>
+                <p>Vis3</p>
+                {visList.find(({ visId }) => visId === "vis3")?
+                  <div className="vis1-container">
+                    <EmbedContainer 
+                      vis={visList.find(({ visId }) => visId === "vis3")}
+                      visList={visList}
+                      updateVisList={setVisList}
+                      handleVisUpdate={handleSingleVisUpdate}
+                    />
+                  </div>:''}
+              </Col>
             </Row>
 
 
+
             <Row className="mt-3 mb-3">
-              <Col md={12} className="embed-responsive embed-responsive-16by9">
-                {visList.filter(({ visId }) => visId === "tabbedVis1").length > 0 ?
+              <Col md={2}>
+                <p>Vis4</p>
+                {visList.find(({ visId }) => visId === "vis4")?
+                  <div className="vis1-container">
+                    <EmbedContainer 
+                      vis={visList.find(({ visId }) => visId === "vis4")}
+                      visList={visList}
+                      updateVisList={setVisList}
+                      handleVisUpdate={handleSingleVisUpdate}
+                    />
+                  </div>:''}
+                <p>Vis5</p>
+                {visList.find(({ visId }) => visId === "vis5")?
+                  <div className="vis1-container">
+                    <EmbedContainer 
+                      vis={visList.find(({ visId }) => visId === "vis5")}
+                      visList={visList}
+                      updateVisList={setVisList}
+                      handleVisUpdate={handleSingleVisUpdate}
+                    />
+                  </div>:''}
+              </Col>
+              <Col md={10} className="embed-responsive embed-responsive-16by9">
+                <p>Vis6</p>
+                {visList.filter(({ visId }) => visId === "vis6").length > 0 ?
                   <InnerTableTabs
-                    tabs={visList.filter(({ visId }) => visId === "tabbedVis1")}
+                    tabs={visList.filter(({ visId }) => visId === "vis6")}
                     setSelectedFields={setSelectedFields}
                     currentInnerTab={currentInnerTab}
                     setCurrentInnerTab={setCurrentInnerTab}
@@ -804,4 +728,4 @@ const Template3 = ({
   );
 };
 
-export default Template3;
+export default Template4;
