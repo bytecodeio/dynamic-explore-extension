@@ -32,31 +32,17 @@ import SearchAll2 from './helpers/SearchAll2'
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { connection_columns } from "@looker/sdk";
 import { EmbedContainer } from "../../components/EmbedContainer";
+
+import { ApplicationContext } from "../../Main2";
 const Template4 = ({
   currentNavTab,
-  filters,
   fields,
   setFields,
   properties,
-  parameters,
-  updateAppProperties,
-  isFetchingLookmlFields,
   tabKey,
   config,
-  showMenu,
-  setShowMenu,
-  keyword,
-  setKeyword,
-  handleChangeKeyword,
   description,
-  selectedFilters,
-  setSelectedFilters,
-  updatedFilters,
-  setUpdatedFilters,
-  initialLoad,
-  setInitialLoad,
   isActive,
-  application,
   tabFilters
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
@@ -86,6 +72,26 @@ const Template4 = ({
 
 
   const params = useParams()
+  
+  const {filters,
+    parameters,
+    updateAppProperties,
+    isFetchingLookmlFields,
+    showMenu,
+    setShowMenu,
+    keyword,
+    setKeyword,
+    handleChangeKeyword,
+    selectedFilters,
+    setSelectedFilters,
+    updatedFilters,
+    setUpdatedFilters,
+    initialLoad,
+    setInitialLoad,
+    application,
+    savedFilters,
+    removeSavedFilter,
+    upsertSavedFilter} = useContext(ApplicationContext)
 
   useEffect(() => {
     if (params.path == tabKey) {

@@ -33,35 +33,19 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { connection_columns } from "@looker/sdk";
 import _ from "lodash";
 import { SavedFilters } from "../../components/SavedFilters";
+
+import { ApplicationContext } from "../../Main2";
+
 const Template2 = ({
   currentNavTab,
-  filters,
   fields,
   setFields,
   properties,
-  parameters,
-  updateAppProperties,
-  isFetchingLookmlFields,
   tabKey,
   config,
-  showMenu,
-  setShowMenu,
-  keyword,
-  setKeyword,
-  handleChangeKeyword,
   description,
-  selectedFilters,
-  setSelectedFilters,
-  updatedFilters,
-  setUpdatedFilters,
-  initialLoad,
-  setInitialLoad,
   isActive,
-  application,
-  tabFilters,
-  savedFilters,
-  removeSavedFilter,
-  upsertSavedFilter
+  tabFilters
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -93,6 +77,26 @@ const Template2 = ({
 
   const params = useParams()
 
+  const {filters,
+    parameters,
+    updateAppProperties,
+    isFetchingLookmlFields,
+    showMenu,
+    setShowMenu,
+    keyword,
+    setKeyword,
+    handleChangeKeyword,
+    selectedFilters,
+    setSelectedFilters,
+    updatedFilters,
+    setUpdatedFilters,
+    initialLoad,
+    setInitialLoad,
+    application,
+    savedFilters,
+    removeSavedFilter,
+    upsertSavedFilter} = useContext(ApplicationContext)
+
   useEffect(() => {
     if (params.path == tabKey) {
       if (!isMounted) {
@@ -120,12 +124,14 @@ const Template2 = ({
 
 
   async function fetchDefaultFieldsAndFilters() {
+    console.log("fields", fields)
     let _visList = []
     let index = 0
     for await (let visConfig of config) {
       const { dashboard_elements, dashboard_filters } = await sdk.ok(
         sdk.dashboard(visConfig['lookml_id'], 'dashboard_elements, dashboard_filters')
-      )
+      ).catch(ret => {return {dashboard_elements:[], dashboard_filters:{}}})
+      console.log("ele", dashboard_elements)
       if (dashboard_elements.length > 0) {
         for await (let t of dashboard_elements) {
           let tileFilters = t['result_maker']['query']['filters'];
@@ -547,13 +553,16 @@ const Template2 = ({
 
 
                           {/* Fields */}
-                          {fields?.fields?.length > 0 ?
+                          {fields?.length > 0 ?
                             <Col xs={12} md={12}>
                               <Accordion.Item eventKey="6">
                                 <Accordion.Header>Fields</Accordion.Header>
                                 <Accordion.Body>
                                   <Fields
-                                    fieldOptions={fields.fields}
+                                    fieldOptions={ 
+                                      fields.find(f => {return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[currentInnerTab]?.title})
+                                      ? fields.find(f => {return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[currentInnerTab]?.title}).fields
+                                      : fields.find(f => {return f.sub_tab == ""})?.fields}
                                     setTabList={setVisList}
                                     tabList={visList.filter(({ visId }) => visId === "tabbedVis1")}
                                     currentInnerTab={currentInnerTab}

@@ -5465,7 +5465,7 @@ z-index: 99;
 
 .show3 .modal-body {
 /* max-height: 630px; */
-max-height: 592px;
+max-height: 300px;
 overflow-y: auto;
 }
 .show3 .modal-header .close:hover {

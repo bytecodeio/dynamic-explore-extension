@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react"
 import { useState } from "react";
 import { Button, Form, Overlay, OverlayTrigger, Popover, Tooltip } from "react-bootstrap"
+
 export const SavedFilters = ({savedFilters, handleVisUpdate, setSelectedFilters, removeSavedFilter, upsertSavedFilter}) => {
 
     const target = useRef(null);
@@ -49,7 +50,9 @@ export const SavedFilters = ({savedFilters, handleVisUpdate, setSelectedFilters,
                                         placement="right"
                                         overlay={
                                             <Tooltip>
-                                                {s.tooltip}
+                                                {s.tooltip?.map(t => (
+                                                    <p>{t}</p>
+                                                ))}
                                             </Tooltip>
                                         }
                                         className="tooltipHover"

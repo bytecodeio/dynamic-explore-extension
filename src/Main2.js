@@ -25,6 +25,8 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.js";
 import { getApplication, getApplicationTags, getApplicationTabs, getTabVisualizations, getTabTags, getSavedFilterService, removeSavedFilterService, insertSavedFilterService, updateSavedFilterService } from "./utils/writebackService.js";
 import { LayoutSelector } from "./LayoutSelector.js";
 
+export const ApplicationContext = React.createContext({})
+
 export const Main2 = () => {
   const extensionContext = useContext(ExtensionContext);
   const sdk = extensionContext.core40SDK;
@@ -110,7 +112,8 @@ export const Main2 = () => {
           let _fields = tabTags.filter(({tag_group}) => tag_group === "fields").map(f => {
             let _tab = f.title;
             let _tag = f.tag_name;
-            return { tab: _tab, fields: fieldsByTag[_tag] }
+            let _subTab = f.sub_tab_name;
+            return { tab: _tab, fields: fieldsByTag[_tag], sub_tab:_subTab }
           })
 
           setFields(_fields)
@@ -163,6 +166,7 @@ export const Main2 = () => {
         let _type = f.type;
         let _tag = f.tag_name;
         let _fields = fieldsByTag[_tag];
+        console.log("tags", _tag + ' ' + _fields)
         let _options = []
         if (f.option_type === "date range") {
           _options = { field: _fields[0], values: await getDefaultDateRange() }
@@ -402,59 +406,62 @@ export const Main2 = () => {
     <>
       <NavbarMain user={user} />
       <Container fluid className="mt-50 padding-0">
-        <TopNav />
-        <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
-          <div id="nav2">
-            <Tab.Container
-              defaultActiveKey={currentNavTab}
-              onSelect={(k) => setCurrentNavTab(k)}>
-              <Nav className="inner nav nav-tabs nav-fill">
-                {tabs?.map(t =>
-                  <Nav.Item>
-                    <Nav.Link active={t.route === params.path} eventKey={t.route} as={Link} to={`${t.route}`}>{t.title}</Nav.Link>
-                  </Nav.Item>
-                )}
-              </Nav>
-            </Tab.Container>
-            <div className="show">
-              <Tab.Content>
-                <>
-                  {tabs?.map((t, i) =>
-                    <LayoutSelector key={i}
-                      isActive={params.path === t.route}
-                      tabProps={t}
-                      currentNavTab={currentNavTab}
-                      filters={filters}
-                      fields={fields}
-                      properties={properties}
-                      parameters={parameters}
-                      updateAppProperties={updateAppProperties}
-                      isFetchingLookmlFields={isFetchingLookmlFields}
-                      showMenu={showMenu}
-                      setShowMenu={setShowMenu}
-                      selectedFilters={selectedFilters}
-                      setSelectedFilters={setSelectedFilters}
-                      updatedFilters={updatedFilters}
-                      setUpdatedFilters={setUpdatedFilters}
-                      initialLoad={initialLoad}
-                      setInitialLoad={setInitialLoad}
-                      keyword={keyword}
-                      handleChangeKeyword={handleChangeKeyword}
-                      application={applicationInfo}
-                      tabFilters={tabFilters}
-                      savedFilters={savedFilters}
-                      removeSavedFilter={removeSavedFilter}
-                      upsertSavedFilter={upsertSavedFilter}
-                    />
+        <ApplicationContext.Provider 
+          value={{application:applicationInfo,
+            filters:filters,
+            parameters:parameters,
+            updateAppProperties:updateAppProperties,
+            isFetchingLookmlFields:isFetchingLookmlFields,
+            showMenu:showMenu,
+            setShowMenu:setShowMenu,
+            selectedFilters:selectedFilters,
+            setSelectedFilters:setSelectedFilters,
+            updatedFilters:updatedFilters,
+            setUpdatedFilters:setUpdatedFilters,
+            initialLoad:initialLoad,
+            setInitialLoad:setInitialLoad,
+            keyword:keyword,
+            handleChangeKeyword:handleChangeKeyword,
+            savedFilters:savedFilters,
+            removeSavedFilter:removeSavedFilter,
+            upsertSavedFilter:upsertSavedFilter,
+            }}>
+          <TopNav />
+          <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
+            <div id="nav2">
+              <Tab.Container
+                defaultActiveKey={currentNavTab}
+                onSelect={(k) => setCurrentNavTab(k)}>
+                <Nav className="inner nav nav-tabs nav-fill">
+                  {tabs?.map(t =>
+                    <Nav.Item>
+                      <Nav.Link active={t.route === params.path} eventKey={t.route} as={Link} to={`${t.route}`}>{t.title}</Nav.Link>
+                    </Nav.Item>
                   )}
-                  {/* <Route path={`${route.url}/`}>
-                  <Test />
-                  </Route> */}
-                </>
-              </Tab.Content>
+                </Nav>
+              </Tab.Container>
+              <div className="show">
+                <Tab.Content>
+                  <>
+                    {tabs?.map((t, i) =>
+                      <LayoutSelector key={i}
+                        isActive={params.path === t.route}
+                        tabProps={t}
+                        currentNavTab={currentNavTab}
+                        fields={fields}
+                        properties={properties}
+                        tabFilters={tabFilters}
+                      />
+                    )}
+                    {/* <Route path={`${route.url}/`}>
+                    <Test />
+                    </Route> */}
+                  </>
+                </Tab.Content>
+              </div>
             </div>
           </div>
-        </div>
+        </ApplicationContext.Provider>
       </Container>
       <ToTopButton />
       <SideForm />

@@ -4,6 +4,9 @@ import { ExtensionContext } from "@looker/extension-sdk-react";
 import styled from "styled-components";
 import { Spinner } from "react-bootstrap";
 
+import { ApplicationContext } from "../Main2";
+import { useEffect } from "react";
+
 const Explore = styled.div`
   width: 100%;
   min-height: unset;
@@ -22,7 +25,12 @@ const Wrapper = styled.div`
 `;
 
 const EmbedTable = ({ queryId }) => {
+  const { application } = useContext(ApplicationContext)
   const { extensionSDK } = useContext(ExtensionContext);
+
+  useEffect(() => {
+    console.log("application context", application)
+  },[application])
 
   const embedCtrRef = useCallback(
     (el) => {
@@ -32,7 +40,7 @@ const EmbedTable = ({ queryId }) => {
         el.innerHTML = "";
         LookerEmbedSDK.init(hostUrl);
         LookerEmbedSDK.createExploreWithUrl(
-            `${hostUrl}/embed/query/order_express/time_detail_cv
+            `${hostUrl}/embed/query/${application.model}/${application.explore}
             ?qid=${queryId}&sdk=2&embed_domain=${hostUrl}&sandboxed_host=true`
           )
           .appendTo(el)
