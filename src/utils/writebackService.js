@@ -151,3 +151,39 @@ export const updateSavedFilterService = async (id,title,global,sdk) => {
     }
     return asyncFunction(id,title,global,sdk);
 }
+
+export const getApplications = async (sdk) => {
+    const asyncFunction = async (sdk) => {
+        const slugResponse = await sdk
+            .ok(
+            sdk.create_sql_query({
+                connection_name: connection,
+                sql: `select * from ${scratch_schema}.cms_application a
+                    WHERE a.show_in_nav = true
+                    ORDER BY a.sort_order;`,
+            })
+            )
+        const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));
+        console.log("response", response)
+        return response
+    }
+    return asyncFunction(sdk);
+}
+
+export const getTabAttributes = async (id,sdk) => {
+    const asyncFunction = async (id,sdk) => {
+        const slugResponse = await sdk
+            .ok(
+            sdk.create_sql_query({
+                connection_name: connection,
+                sql: `SELECT * FROM ${scratch_schema}.cms_tab_attribute_relationship r
+                LEFT JOIN ${scratch_schema}.cms_tab_attribute a ON a.id = r.attribute_id
+                WHERE r.tab_id = ${id}`,
+            })
+            )
+        const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));
+        console.log("response", response)
+        return response
+    }
+    return asyncFunction(id,sdk);
+}

@@ -29,6 +29,7 @@ export const LayoutSelector = ({
             tabKey={tabProps.route}
             description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
             tabFilters={tabFilters.filter(({tab}) => tab === tabProps.title)}
+            attributes={tabProps.attributes}
             />;
     } else if (tabProps.layout_name === "Template3") {
         return <Template3
@@ -41,6 +42,7 @@ export const LayoutSelector = ({
             tabKey={tabProps.route}
             description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
             tabFilters={tabFilters.filter(({tab}) => tab === tabProps.title)}
+            attributes={tabProps.attributes}
             />;
     } else if (tabProps.layout_name === "Template4") {
         return <Template4
@@ -53,6 +55,7 @@ export const LayoutSelector = ({
             tabKey={tabProps.route}
             description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
             tabFilters={tabFilters.filter(({tab}) => tab === tabProps.title)}
+            attributes={tabProps.attributes}
             />;
     }
     // switch (tabProps.layout_name) {

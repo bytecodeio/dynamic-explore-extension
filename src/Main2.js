@@ -161,7 +161,7 @@ export const Main2 = () => {
       let _defaultSelected = {}
       let _defTags = applicationTags.find(({type}) => type === "default_filter");
       console.log(_defTags)
-      let _defaultFilterFields = fieldsByTag[_defTags.tag_name]
+      let _defaultFilterFields = fieldsByTag[_defTags?.tag_name]
       for await (let f of applicationTags.filter(({ tag_group }) => tag_group == "filters")) {
         let _type = f.type;
         let _tag = f.tag_name;
