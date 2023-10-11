@@ -45,7 +45,8 @@ const Template2 = ({
   config,
   description,
   isActive,
-  tabFilters
+  tabFilters,
+  attributes
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -579,7 +580,8 @@ const Template2 = ({
                           }
 
                           {/* Filters */}
-                          {filters.find(({ type }) => type === "filter")?.options?.length > 0 ?
+                          {attributes?.some(a => a?.attribute_name === "hide_filters") == false?
+                            filters.find(({ type }) => type === "filter")?.options?.length > 0 ?
                             <Col xs={12} md={12}>
                               <Accordion.Item eventKey="5">
                                 <Accordion.Header>Filters</Accordion.Header>
@@ -615,7 +617,9 @@ const Template2 = ({
                               </Accordion.Item>
                             </Col>
                             : ''
+                           :''
                           }
+
 
 
                           {/* Bookmarks */}

@@ -9,3 +9,10 @@ export const sortDateFilterList = (data) => {
            return x < y ? -1 : x > y ? 1 : 0;
        });
    }
+
+export const groupBy = (xs,key) => {
+    return xs.reduce(function(rv,x) {
+        (rv[x[key]] = rv[x[key]] || []).push(x);
+        return rv;
+    },{});
+}
