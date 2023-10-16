@@ -597,7 +597,8 @@ const Template2 = ({
                           )}
 
                           {/* Fields */}
-                          {fields?.length > 0 ?
+                          {filters.find(({ type }) => type === "filter")
+                           ?.options?.length > 0 ? (
                             <Col xs={12} md={12}>
                               <Accordion.Item eventKey="6">
                                 <Accordion.Header>Fields</Accordion.Header>
