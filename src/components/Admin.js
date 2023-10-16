@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect} from "react"
 import { Button } from "react-bootstrap"
 import { ExtensionContext } from "@looker/extension-sdk-react";
-import { getApplication, getApplicationTags, getApplicationTabs, getTabVisualizations, getTabTags} from "./../utils/writebackService";
+import { getApplication, getApplicationTags, getApplicationTabs, getTabVisualizations, getTabTags, getTabAttributes} from "./../utils/writebackService";
 
 export const AdminPage = () => {
 
@@ -27,6 +27,8 @@ export const AdminPage = () => {
             t['config'] = visConfig;
             let _tabTags = await getTabTags(t.id, sdk);
             t['properties'] = _tabTags.filter(({tag_group}) => tag_group === "property")
+            let _tabAttributes = await getTabAttributes(t.id, sdk);
+            t['attributes'] = _tabAttributes;
             _tabTagsList = _tabTagsList.concat(_tabTags)
           }
           contextData['tab_tags'] = _tabTagsList

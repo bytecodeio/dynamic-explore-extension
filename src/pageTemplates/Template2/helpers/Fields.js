@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
 const Fields = ({
@@ -12,6 +13,10 @@ const Fields = ({
 
 }) => {
   const [expandMenu, setExpandMenu] = useState(false);
+
+  useEffect(() => {
+    console.log("fields", fieldOptions)
+  },[fieldOptions])
 
   function handleFieldSelection(fieldName) {
     console.log(fieldName)
@@ -62,7 +67,7 @@ const Fields = ({
     }
     <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
       <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
-      {fieldOptions.map((fieldOption) => (
+      {fieldOptions?.map((fieldOption) => (
         <div className="one" key={fieldOption.name}>
           <Form.Group>
             <Form.Check
