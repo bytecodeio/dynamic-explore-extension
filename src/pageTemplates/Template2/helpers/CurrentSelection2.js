@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from "react";
 import {
   Button,
   Form,
@@ -9,9 +9,9 @@ import {
   Tooltip,
   Container,
   OverlayTrigger,
-} from 'react-bootstrap';
-import * as $ from 'jquery';
-import moment from 'moment';
+} from "react-bootstrap";
+import * as $ from "jquery";
+import moment from "moment";
 
 export const CurrentSelection2 = ({
   filters,
@@ -23,11 +23,12 @@ export const CurrentSelection2 = ({
 }) => {
   const [currentSelection, setCurrentSelection] = useState([]);
   const [updatedSelection, setUpdateSelection] = useState([]);
+
   useEffect(() => {
     setCurrentSelection(
       formatCurrentSelection(
         JSON.parse(JSON.stringify(selectedFilters)),
-        'current'
+        "current"
       )
     );
   }, [selectedFilters]);
@@ -35,10 +36,20 @@ export const CurrentSelection2 = ({
     setUpdateSelection(
       formatCurrentSelection(
         JSON.parse(JSON.stringify(updatedFilters)),
-        'updated'
+        "updated"
       )
     );
   }, [updatedFilters]);
+
+  function removeAccount(fieldName) {
+    setSelectedFilters((prev) => {
+      if (prev.includes(fieldName)) {
+        return prev.filter((selectedFilters) => selectedFilters !== fieldName);
+      } else {
+        return [...prev, fieldName];
+      }
+    });
+  }
 
   const formatCurrentSelection = (filtersSelections, selectionType) => {
     let current = [];
@@ -47,8 +58,8 @@ export const CurrentSelection2 = ({
         let _filters = [...filters];
         let filter = _filters.find(({ type }) => type === key);
         Object.keys(filtersSelections[key]).map((row) => {
-          if (filter.type !== 'date filter') {
-            if (filter.type === 'date range') {
+          if (filter.type !== "date filter") {
+            if (filter.type === "date range") {
               let obj = {
                 key: row,
                 type: filter.type,
@@ -63,22 +74,22 @@ export const CurrentSelection2 = ({
               // let format1 = moment(first).format('MM-DD-YYYY').toString();
               // const last = obj.label.split(' to ')[1];
               // let format2 = moment(last).format('MM-DD-YYYY').toString();
-
-            } else if (filter.type === 'account group') {
+            } else if (filter.type === "account group") {
               let field = filter.fields.find(({ name }) => name === row);
               let obj = {
                 key: row,
                 type: filter.type,
-                label: `${field.label_short}: ${filtersSelections[key][row]}`,
+                // label: `${field.label_short}: ${filtersSelections[key][row]}`,
+                label: ` ${filtersSelections[key][row]}`,
                 value: filtersSelections[key][row],
                 removable: true,
                 selection_type: selectionType,
               };
 
-              obj.value.split(',').map((d, i) => {
-                const tempObect = {...obj, label: `${d}`, value: d};
-                current.push(tempObect)
-              })
+              obj.value.split(",").map((d, i) => {
+                const tempObect = { ...obj, label: `${d}`, value: d };
+                current.push(tempObect);
+              });
             } else {
               let field = filter.fields.find(({ name }) => name === row);
               let obj = {
@@ -92,97 +103,105 @@ export const CurrentSelection2 = ({
               current.push(obj);
             }
           }
-
-
         });
       }
     });
     return current;
   };
 
-
   const removeFilter = (selection) => {
-     let type =
-       selection.selection_type === 'updated'
-         ? JSON.parse(JSON.stringify(updatedFilters))
-         : JSON.parse(JSON.stringify(selectedFilters));
-     if (type[selection.type][selection.key]) {
-       delete type[selection.type][selection.key];
-     } else {
-       type[selection.type][selection.key] = selection.value;
-     }
+    let type =
+      selection.selection_type === "updated"
+        ? JSON.parse(JSON.stringify(updatedFilters))
+        : JSON.parse(JSON.stringify(selectedFilters));
+    if (type[selection.type][selection.key]) {
+      delete type[selection.type][selection.key];
+    } else {
+      type[selection.type][selection.key] = selection.value;
+    }
 
-     if (selection.selection_type === 'updated') {
-       if (
-         JSON.parse(JSON.stringify(selectedFilters))[selection.type][
-           selection.key
-         ]
-       ) {
-         let type = JSON.parse(JSON.stringify(selectedFilters));
-         delete type[selection.type][selection.key];
-         setSelectedFilters(JSON.parse(JSON.stringify(type)));
-       } else {
-         setUpdatedFilters(JSON.parse(JSON.stringify(type)));
-       }
-     } else {
-       setSelectedFilters(JSON.parse(JSON.stringify(type)));
-     }
-   };
-
+    if (selection.selection_type === "updated") {
+      if (
+        JSON.parse(JSON.stringify(selectedFilters))[selection.type][
+          selection.key
+        ]
+      ) {
+        let type = JSON.parse(JSON.stringify(selectedFilters));
+        delete type[selection.type][selection.key];
+        setSelectedFilters(JSON.parse(JSON.stringify(type)));
+      } else {
+        setUpdatedFilters(JSON.parse(JSON.stringify(type)));
+      }
+    } else {
+      setSelectedFilters(JSON.parse(JSON.stringify(type)));
+    }
+  };
 
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
-      These are pending filters you have selected. Please use the "Update Selections" button to update the table.
+      These are pending filters you have selected. Please use the "Update
+      Selections" button to update the table.
     </Tooltip>
   );
 
-
   return (
-
-
-
     <Fragment>
-
-
-
-
-
       {updatedSelection?.map((selection) => {
         return (
-          <div key={Math.random() * 6} className={!currentSelection.some(c => c.label == selection.label) ? "theOptions" : 'theOptions red'}>
-            {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-        <p className={!currentSelection.some(c => c.label == selection.label)? "mb-0 blue strikethrough" : "mb-0 blue" }>{selection.label.replace(/\s*\(.*?\)\s*/g, '')}</p>
-            {selection.removable ?
-              <i onClick={() => removeFilter(selection)} class="fal fa-times blue"></i>
-              : ''
+          <div
+            key={Math.random() * 6}
+            className={
+              !currentSelection.some((c) => c.label == selection.label)
+                ? "theOptions"
+                : "theOptions red"
             }
-
-
-          </div>
-
-        )
-      })}
-      {currentSelection?.filter(s => { return !updatedSelection.some(u => s.label == u.label) }).map((selection) => {
-        return (
-          <OverlayTrigger
-            placement="right"
-            overlay={renderTooltip}
-            className="tooltipHover"
           >
-
-            <div className={"theOptions"} key={selection.label}>
-
-              {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-              <p className="mb-0 blue">{selection.label.replace(/\s*\(.*?\)\s*/g, '')}</p>
-
-              <i onClick={() => removeFilter(selection)} class="fal fa-times blue"></i>
-
-            </div>
-          </OverlayTrigger>
-
-        )
+            {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+            <p
+              className={
+                !currentSelection.some((c) => c.label == selection.label)
+                  ? "mb-0 blue strikethrough"
+                  : "mb-0 blue"
+              }
+            >
+              {selection.label.replace(/\s*\(.*?\)\s*/g, "")}
+            </p>
+            {selection.removable ? (
+              <i
+                onClick={() => removeFilter(selection)}
+                class="fal fa-times blue"
+              ></i>
+            ) : (
+              ""
+            )}
+          </div>
+        );
       })}
-    </Fragment>
+      {currentSelection
+        ?.filter((s) => {
+          return !updatedSelection.some((u) => s.label == u.label);
+        })
+        .map((selection) => {
+          return (
+            <OverlayTrigger
+              placement="right"
+              overlay={renderTooltip}
+              className="tooltipHover"
+            >
+              <div className={"theOptions"} key={selection.label}>
+                {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+                <p className="mb-0 blue">
+                  {selection.label.replace(/\s*\(.*?\)\s*/g, "")}
+                </p>
 
-  )
-}
+                <i
+                  onClick={() => removeFilter(selection)}
+                  class="fal fa-times blue"
+                ></i>
+              </div>
+            </OverlayTrigger>
+          );
+        })}
+    </Fragment>
+  );
+};

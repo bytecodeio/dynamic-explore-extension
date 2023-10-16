@@ -4,17 +4,18 @@ import Template2 from "./pageTemplates/Template2/Template2";
 import Template3 from "./pageTemplates/Template3/Template3";
 import Template4 from "./pageTemplates/Template4/Template4";
 import { PRODUCT_MOVEMENT_VIS_DASHBOARD_ID } from "./utils/constants2";
-import { useLocation, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  useLocation,
+  useParams,
+} from "react-router-dom/cjs/react-router-dom.min";
 import { useRouteMatch } from "react-router-dom/cjs/react-router-dom";
-
-
 
 export const LayoutSelector = ({
     tabProps,
     currentNavTab,
     fields,
     properties,
-    isActive, 
+    isActive,
     tabFilters}) => {
         console.log("props", properties)
         console.log("Tabprops", tabProps)
