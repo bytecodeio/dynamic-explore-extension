@@ -6969,7 +6969,7 @@ span.saved-filter-button > i {
 }
 
 .show3 .modal-body {
-  min-height: 300px !important;
+max-height: unset
 }
 .embed-icon-container.expand {
   top:60px;
