@@ -6968,6 +6968,14 @@ span.saved-filter-button > i {
   padding-right: 5px;
 }
 
+.vis-download-container {
+  padding-left: 20px;
+}
+
+.vis-download-header.popover-header {
+  padding-top: 10px;
+}
+
 .show3 .modal-body {
 max-height: unset
 }
