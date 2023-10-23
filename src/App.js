@@ -10,11 +10,15 @@ import { Route, Switch } from "react-router-dom/cjs/react-router-dom";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 import { APP_ROUTE } from "./utils/constants2";
 import { AdminPage } from "./components/Admin";
+import { PrintPage } from "./components/PrintPage"
 
 export const App = hot(() => {
   return (
     <ExtensionProvider>
       <Switch>
+      <Route exact path='/print'>
+          <PrintPage />
+        </Route>
         <Route exact path='/admin'>
           <AdminPage />
         </Route>
