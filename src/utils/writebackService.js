@@ -187,3 +187,23 @@ export const getTabAttributes = async (id,sdk) => {
     }
     return asyncFunction(id,sdk);
 }
+
+export const getLandingPageApplications = async (sdk) => {
+    const asyncFunction = async (sdk) => {
+        const slugResponse = await sdk
+            .ok(
+            sdk.create_sql_query({
+                connection_name: connection,
+                sql: `SELECT a.*, v.* FROM ${scratch_schema}.cms_application a
+                LEFT JOIN ${scratch_schema}.cms_tab t ON t.application_id = a.id
+                LEFT JOIN ${scratch_schema}.cms_tab_visualization v ON v.tab_id = t.id AND v.sort_order = 1
+                WHERE t.sort_order = 1 AND a.show_in_nav=true
+                ORDER BY a.sort_order;`,
+            })
+            )
+        const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));
+        console.log("response", response)
+        return response
+    }
+    return asyncFunction(sdk);
+}
