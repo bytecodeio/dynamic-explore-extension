@@ -1,5 +1,5 @@
 import React from "react";
-import { ExtensionProvider } from "@looker/extension-sdk-react";
+import { ExtensionProvider, ExtensionContext } from "@looker/extension-sdk-react";
 import { hot } from "react-hot-loader/root";
 
 import { Main } from "./Main";
@@ -11,8 +11,17 @@ import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 import { APP_ROUTE } from "./utils/constants2";
 import { AdminPage } from "./components/Admin";
 import { PrintPage } from "./components/PrintPage"
+import { useContext } from "react";
+import { LandingPage } from "./pages/LandingPage/LandingPage";
+import { InitialPage } from "./InitialPage";
 
 export const App = hot(() => {
+
+
+  const isLandingPage = () => {
+    const extensionContext = useContext(ExtensionContext)
+    console.log("extension", extensionContext)
+  }
   return (
     <ExtensionProvider>
       <Switch>
@@ -26,7 +35,7 @@ export const App = hot(() => {
           <Main2 />
         </Route>
         <Route exact path="/">
-          <Main2 />
+          <InitialPage />
         </Route>
         {/* <Redirect push from="/" to={APP_ROUTE} /> */}
       </Switch>
