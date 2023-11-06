@@ -8,23 +8,32 @@ const QuickFilter = ({ quickFilters, selectedFilters, selection, setSelectedFilt
   const handleSelection = (e, name) => {
     let quickFilters = JSON.parse(JSON.stringify(selectedFilters))
     if (quickFilters[type]?.hasOwnProperty(name)) {
-      if (quickFilters[type][name] === e.target.id) {
-        delete quickFilters[type][name]
+      if (quickFilters[type][name].includes(e.target.id)) {
+        //delete quickFilters[type][name]
+        let index = quickFilters[type][name].indexOf(e.target.id)
+        quickFilters[type][name].splice(index,1)
       } else {
-        quickFilters[type][name] = e.target.id
+        quickFilters[type][name].push(e.target.id)
       }
     } else {
-      quickFilters[type][name] = e.target.id
+      quickFilters[type] = {[name]:[]}
+      quickFilters[type][name].push(e.target.id)
+    }
+    if (quickFilters[type][name].length === 0){
+      delete quickFilters[type][name]
     }
     setSelectedFilters(JSON.parse(JSON.stringify(quickFilters)))
     setIsFilterChanged(true)
   }
 
   const isActive = (key, v) => {
+    console.log("test",selectedFilters[type][key])
+    const val = v.join(',')
+    console.log("test",v.join(','))
     if (!selectedFilters[type]?.hasOwnProperty(key)) {
       return false
     }
-    if (selectedFilters[type][key] == v) {
+    if (selectedFilters[type][key]?.includes(val)) {
       return true
     }
     return false

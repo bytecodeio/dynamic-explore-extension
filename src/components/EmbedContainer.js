@@ -26,24 +26,6 @@ export const EmbedContainer = ({vis, visList, updateVisList, handleVisUpdate}) =
             {vis['tileFilterOptions'].length > 0?
                 vis['tileFilterOptions'].map(o => {
                     return (
-                        // <>
-                        //     <div className="selector-container">                                    
-                        //         <Button onClick={handlePopover}><i class="far fa-redo"></i></Button>
-                        //         <div>{vis['localSelectedFilters'][o['name']]}</div>
-                        //     </div>
-                        //     {openPopover?
-                        //         <div className="popover-container">
-                        //             <ul>
-                        //                 {o.options.map(v => {
-                        //                     return (
-                        //                         <Button className="selector-button" onClick={() => handleToggle(v.value, o['name'])} value={v.value}>{v.label}</Button>
-                        //                     )
-                        //                 })}
-                        //             </ul>
-                        //         </div>
-                        //         :''
-                        //     }
-                        // </>
                         <Form.Select onChange={(el) => handleToggle(el,o['name'])} value={vis['localSelectedFilters'][o['name']]}>
                             {o.options.map(v => {
                                 return (

@@ -228,13 +228,16 @@ const Template2 = ({
     let filter = {};
     Object.keys(filters).map((key) => {
       if (Object.keys(filters[key]).length > 0) {
-        if (
-          !(
-            key == "date range" &&
+        if (!(key == "date range" &&
             Object.keys(filters["date filter"]).length > 0
           )
         ) {
-          filter = { ...filter, ...filters[key] };
+          let obj = {}
+          for (const [key, value] of Object.entries(filters[key])) {
+            obj[key] = value.toString();
+          }
+          filters[key] = obj     
+          filter = {...filter, ...filters[key]}    
         }
       }
     });

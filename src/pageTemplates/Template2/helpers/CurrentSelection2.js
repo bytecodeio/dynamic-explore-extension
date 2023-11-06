@@ -92,15 +92,29 @@ export const CurrentSelection2 = ({
               });
             } else {
               let field = filter.fields.find(({ name }) => name === row);
-              let obj = {
-                key: row,
-                type: filter.type,
-                label: `${field.label_short}: ${filtersSelections[key][row]}`,
-                value: filtersSelections[key][row],
-                removable: true,
-                selection_type: selectionType,
-              };
-              current.push(obj);
+              if (Array.isArray(filtersSelections[key][row])) {
+                filtersSelections[key][row].map(value => {
+                  let obj = {
+                    key: row,
+                    type: filter.type,
+                    label: `${field.label_short}: ${value}`,
+                    value: value,
+                    removable: true,
+                    selection_type: selectionType,
+                  };
+                  current.push(obj);
+                })
+              } else {
+                let obj = {
+                  key: row,
+                  type: filter.type,
+                  label: `${field.label_short}: ${filtersSelections[key][row]}`,
+                  value: filtersSelections[key][row],
+                  removable: true,
+                  selection_type: selectionType,
+                };
+                current.push(obj);
+              }
             }
           }
         });
@@ -114,11 +128,18 @@ export const CurrentSelection2 = ({
       selection.selection_type === "updated"
         ? JSON.parse(JSON.stringify(updatedFilters))
         : JSON.parse(JSON.stringify(selectedFilters));
-    if (type[selection.type][selection.key]) {
-      delete type[selection.type][selection.key];
+    console.log("selection delete",type[selection.type][selection.key])
+    if (Array.isArray(type[selection.type][selection.key])) {
+      let index = type[selection.type][selection.key].indexOf(selection.value);
+      type[selection.type][selection.key].splice(index,1);
     } else {
-      type[selection.type][selection.key] = selection.value;
+      if (type[selection.type][selection.key]) {
+        delete type[selection.type][selection.key];
+      } else {
+        type[selection.type][selection.key] = selection.value;
+      }
     }
+
 
     if (selection.selection_type === "updated") {
       if (
@@ -127,7 +148,13 @@ export const CurrentSelection2 = ({
         ]
       ) {
         let type = JSON.parse(JSON.stringify(selectedFilters));
-        delete type[selection.type][selection.key];
+        if (Array.isArray(type[selection.type][selection.key])) {
+          let index = type[selection.type][selection.key].indexOf(selection.value);
+          type[selection.type][selection.key].splice(index,1)
+        } else {
+          delete type[selection.type][selection.key];
+        }
+
         setSelectedFilters(JSON.parse(JSON.stringify(type)));
       } else {
         setUpdatedFilters(JSON.parse(JSON.stringify(type)));
@@ -182,24 +209,28 @@ export const CurrentSelection2 = ({
           return !updatedSelection.some((u) => s.label == u.label);
         })
         .map((selection) => {
+          console.log("selection",selection)
           return (
+            <>
             <OverlayTrigger
-              placement="right"
-              overlay={renderTooltip}
-              className="tooltipHover"
-            >
-              <div className={"theOptions"} key={selection.label}>
-                {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
-                <p className="mb-0 blue">
-                  {selection.label.replace(/\s*\(.*?\)\s*/g, "")}
-                </p>
+            placement="right"
+            overlay={renderTooltip}
+            className="tooltipHover"
+          >
+            <div className={"theOptions"} key={selection.label}>
+              {/*<p className="mb-0">{currentSelection[selection]}</p>*/}
+              <p className="mb-0 blue">
+                {selection.label.replace(/\s*\(.*?\)\s*/g, "")}
+              </p>
 
-                <i
-                  onClick={() => removeFilter(selection)}
-                  class="fal fa-times blue"
-                ></i>
-              </div>
-            </OverlayTrigger>
+              <i
+                onClick={() => removeFilter(selection)}
+                class="fal fa-times blue"
+              ></i>
+            </div>
+          </OverlayTrigger>
+            
+          </>
           );
         })}
     </Fragment>
