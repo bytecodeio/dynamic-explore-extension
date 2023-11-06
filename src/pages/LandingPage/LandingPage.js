@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react'
+import React, {Fragment, useEffect, useState} from 'react'
 import { getLandingPageApplications } from '../../utils/writebackService'
 import { useContext } from 'react'
 import { ExtensionContext } from '@looker/extension-sdk-react'
-import { ButtonGroup, Button, InputGroup, Form } from 'react-bootstrap'
+import { ButtonGroup, Button, InputGroup, Form, Container, Tooltip, OverlayTrigger, } from 'react-bootstrap';
+import ToTopButton from "../../components/ToTopButton.js";
 
-export const LandingPage = () => {
+export const LandingPage = ( {description} ) => {
     const extensionContext = useContext(ExtensionContext)
-    const sdk = extensionContext.core40SDK;            
+    const sdk = extensionContext.core40SDK;
     const { hostUrl } = extensionContext.extensionSDK.lookerHostData;
 
     const [apps, setApps] = useState([])
@@ -15,7 +16,7 @@ export const LandingPage = () => {
     const [searchTerm, setSearchTerm] = useState("")
 
 
-    useEffect(() => {        
+    useEffect(() => {
         const initialize = async () => {
             let _apps = await getLandingPageApplications(sdk)
             setApps(_apps)
@@ -43,9 +44,17 @@ export const LandingPage = () => {
         let _apps = searchTerm.replace(" ") != ""? data.filter(d => d.name.toUpperCase().includes(searchTerm.toUpperCase())):data;
         setApps(_apps)
     }
+
+console.log(apps, "elizabeth")
+
+
+
+
+
+
     return(
-        <>
-        <div className='landing-page-action'>            
+        <Fragment>
+        <div className='landing-page-action'>
             <ButtonGroup size="sm"  className='landing-page-button-group'>
                 <Button onClick={() => handleButtonGroupClick("grid")} active={selectedButton == "grid"} value={"grid"}>
                     <i className="far fa-th"></i>
@@ -60,18 +69,25 @@ export const LandingPage = () => {
                 <Button onClick={handleSearchButton}>Go</Button>
             </InputGroup>
         </div>
-        <div className='landing-page-container'> 
-            {apps?.map(a => 
+        <Container fluid>
+        <div className='landing-page-container' id="squares">
+            {apps?.map(a =>
             selectedButton == "grid"?
+            <OverlayTrigger
+              placement="right"
+              overlay=<Tooltip>{a.tooltip_description}</Tooltip>
+              className="tooltipHover"
+            >
                 <a className='landing-page-content' href={`#`} onClick={() => handleClick(a)}>
                     <div className='landing-page-item'>
                         {a.thumbnail_base64 != null?
                         <img className='looker-thumbnail' src={a.thumbnail_base64} onError={(e) => {e.target.onError=null; e.target.src="/"}} />
                         :<div className='looker-thumbnail not-available'>Preview Not Available</div>
-                        }                        
-                        <div className='landing-page-item-detail'>{a.name}</div>    
+                        }
+                        <div className='landing-page-item-detail'>{a.name}</div>
                     </div>
                 </a>
+              </OverlayTrigger>
                 :
                 <a href={`#`} className={`landing-page-row ${apps.indexOf(a) % 2? 'even':'odd'}`} onClick={() => handleClick(a)}>
                     <div>
@@ -80,6 +96,8 @@ export const LandingPage = () => {
                 </a>
             )}
         </div>
-        </>
+        </Container>
+       <ToTopButton />
+      </Fragment>
     )
 }
