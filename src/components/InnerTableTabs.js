@@ -49,9 +49,10 @@ const InnerTableTabs = ({
         >
           {tabs?.map((t, i) => (
             <Tab eventKey={i} title={t.title} key={t.title}>
-     
+
               <div id="embedWrapper" className={showMenu3 ? "whole" : ""}>
-                <EmbedActionBar showMenu3={showMenu3} active={active} handleClick={handleClick} faClass={faClass} queryId={t['query']} title={t.title}/>
+                <EmbedActionBar slideIt3={slideIt3} showMenu3={showMenu3} active={active} handleClick={handleClick} faClass={faClass} queryId={t['query']} title={t.title}/>
+
                 <EmbedContainer vis={t} visList={visList} updateVisList={setVisList} handleVisUpdate={handleSingleVisUpdate} />
               </div>
             </Tab>
