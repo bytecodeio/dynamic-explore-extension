@@ -7043,7 +7043,7 @@ background-color: #fff;
 
 border-radius: 0px !important;
 opacity: 1 !important;
-max-width: 300px;
+max-width: 220px;
 
 text-align: left;
 
@@ -7055,6 +7055,11 @@ border-radius: 0.5rem !important;
 z-index: 99999999;
 border:none;
 box-shadow: 0px 6px 25px 2px rgba(4, 47, 78, 0.16);
+
+}
+
+#squares  .tooltip-arrow::before {
+    border-right-color: white !important;
 }
 
 a.landing-page-content:hover{
