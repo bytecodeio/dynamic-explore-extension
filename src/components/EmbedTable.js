@@ -40,13 +40,11 @@ const EmbedTable = ({ queryId }) => {
         el.innerHTML = "";
         LookerEmbedSDK.init(hostUrl);
         LookerEmbedSDK.createExploreWithUrl(
-            `${hostUrl}/embed/query/${application.model}/${application.explore}
-            ?qid=${queryId}&sdk=2&embed_domain=${hostUrl}&sandboxed_host=true`
+            `${hostUrl}/embed/query/${application.model}/${application.explore}?qid=${queryId}&sdk=2&embed_domain=${hostUrl}&sandbox_host=true`
           )
-          .appendTo(el)
+          .appendTo(el)          
           .build()
           .connect()
-
           .catch((error) => {
             console.error("Connection error", error);
           });
@@ -56,7 +54,7 @@ const EmbedTable = ({ queryId }) => {
   );
 
   return (
-    <Wrapper>{queryId ? <Explore ref={embedCtrRef} /> : <Spinner />}</Wrapper>
+    <>{queryId ? <Explore ref={embedCtrRef} /> : <Spinner />}</>
   );
 };
 

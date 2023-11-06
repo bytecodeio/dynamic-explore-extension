@@ -5433,6 +5433,7 @@ overflow-y: auto;
 overflow-x: hidden;
 max-width: 250px;
 max-width: 345px;
+min-height: 500px;
 }
 
 #slideOut3 ::-webkit-scrollbar {
@@ -5627,7 +5628,7 @@ cursor: pointer;
 
 .tab-content iframe {
 max-height: 700px;
-min-height: 550px;
+min-height: 330px;
 }
 
  .tab-content .whole  iframe {

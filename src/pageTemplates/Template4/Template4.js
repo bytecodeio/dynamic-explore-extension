@@ -631,9 +631,8 @@ const Template4 = ({
             </Row>
             <Row>
               <Col md={3}>
-                <p>Vis1</p>
                 {visList.find(({ visId }) => visId === "vis1")?
-                  <div className="vis1-container">
+                  <div className="vis1-container h-50">
                     <EmbedContainer 
                       vis={visList.find(({ visId }) => visId === "vis1")}
                       visList={visList}
@@ -641,9 +640,8 @@ const Template4 = ({
                       handleVisUpdate={handleSingleVisUpdate}
                     />
                   </div>:''}
-                <p>Vis2</p>
                 {visList.find(({ visId }) => visId === "vis2")?
-                  <div className="vis1-container">
+                  <div className="vis1-container h-50">
                     <EmbedContainer 
                       vis={visList.find(({ visId }) => visId === "vis2")}
                       visList={visList}
@@ -653,9 +651,8 @@ const Template4 = ({
                   </div>:''}
               </Col>
               <Col md={9}>
-                <p>Vis3</p>
                 {visList.find(({ visId }) => visId === "vis3")?
-                  <div className="vis1-container">
+                  <div className="vis1-container h-100">
                     <EmbedContainer 
                       vis={visList.find(({ visId }) => visId === "vis3")}
                       visList={visList}
@@ -670,9 +667,8 @@ const Template4 = ({
 
             <Row className="mt-3 mb-3">
               <Col md={2}>
-                <p>Vis4</p>
                 {visList.find(({ visId }) => visId === "vis4")?
-                  <div className="vis1-container">
+                  <div className="vis1-container h-50">
                     <EmbedContainer 
                       vis={visList.find(({ visId }) => visId === "vis4")}
                       visList={visList}
@@ -680,9 +676,8 @@ const Template4 = ({
                       handleVisUpdate={handleSingleVisUpdate}
                     />
                   </div>:''}
-                <p>Vis5</p>
                 {visList.find(({ visId }) => visId === "vis5")?
-                  <div className="vis1-container">
+                  <div className="vis1-container h-50">
                     <EmbedContainer 
                       vis={visList.find(({ visId }) => visId === "vis5")}
                       visList={visList}
@@ -692,7 +687,6 @@ const Template4 = ({
                   </div>:''}
               </Col>
               <Col md={10} className="embed-responsive embed-responsive-16by9">
-                <p>Vis6</p>
                 {visList.filter(({ visId }) => visId === "vis6").length > 0 ?
                   <InnerTableTabs
                     tabs={visList.filter(({ visId }) => visId === "vis6")}
