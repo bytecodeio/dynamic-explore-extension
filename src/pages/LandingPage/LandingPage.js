@@ -69,13 +69,13 @@ console.log(apps, "elizabeth")
                 <Button onClick={handleSearchButton}>Go</Button>
             </InputGroup>
         </div>
-        <Container fluid>
-        <div className='landing-page-container' id="squares">
+        <Container>
+        <div className='landing-page-container'>
             {apps?.map(a =>
             selectedButton == "grid"?
             <OverlayTrigger
               placement="right"
-              overlay=<Tooltip>{a.tooltip_description}</Tooltip>
+              overlay=<Tooltip id="squares"><p style={{fontSize:"12px"}}>{a.tooltip_description}</p></Tooltip>
               className="tooltipHover"
             >
                 <a className='landing-page-content' href={`#`} onClick={() => handleClick(a)}>
