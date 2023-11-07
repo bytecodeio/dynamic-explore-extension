@@ -45,10 +45,20 @@ export const LandingPage = ( {description} ) => {
         setApps(_apps)
     }
 
-console.log(apps, "elizabeth")
 
 
 
+  const sortedApps = apps.sort(function(a, b) {
+   var nameA = a.name.toUpperCase();
+  var nameB = b.name.toUpperCase();
+  if (nameA < nameB) {
+      return -1;
+    }
+   if (nameA > nameB) {
+      return 1;
+    }
+  return 0;
+  });
 
 
 
@@ -101,7 +111,7 @@ console.log(apps, "elizabeth")
         <Container>
           <Row>
         <div className='landing-page-container'>
-            {apps?.map(a =>
+            {sortedApps?.map(a =>
             selectedButton == "grid"?
             <OverlayTrigger
               placement="right"
