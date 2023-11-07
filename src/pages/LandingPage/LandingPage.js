@@ -2,7 +2,7 @@ import React, {Fragment, useEffect, useState} from 'react'
 import { getLandingPageApplications } from '../../utils/writebackService'
 import { useContext } from 'react'
 import { ExtensionContext } from '@looker/extension-sdk-react'
-import { ButtonGroup, Button, InputGroup, Form, Container, Tooltip, OverlayTrigger, } from 'react-bootstrap';
+import { ButtonGroup, Button, InputGroup, Form, Container, Tooltip, OverlayTrigger, Row, Col } from 'react-bootstrap';
 import ToTopButton from "../../components/ToTopButton.js";
 
 export const LandingPage = ( {description} ) => {
@@ -54,22 +54,52 @@ console.log(apps, "elizabeth")
 
     return(
         <Fragment>
+          <Container fluid>
+          <Row>
+
         <div className='landing-page-action'>
-            <ButtonGroup size="sm"  className='landing-page-button-group'>
+          <Col md={1}>
+          <div className="d-flex justify-content-start align-items-baseline">
+          <p className="small mr-1">view</p>
+
+
+            <ButtonGroup size="sm" className='landing-page-button-group'>
                 <Button onClick={() => handleButtonGroupClick("grid")} active={selectedButton == "grid"} value={"grid"}>
                     <i className="far fa-th"></i>
                 </Button>
                 <Button onClick={() => handleButtonGroupClick("list")} active={selectedButton == "list"} value={"list"}>
-                    <i className='far fa-list'></i>
+                    <i className='far fa-bars'></i>
+                </Button>
+
+            </ButtonGroup>
+
+            </div>
+            <div className="d-flex justify-content-start align-items-baseline mt-3">
+            <p className="small mr-1">sort</p>
+            <ButtonGroup size="sm" className='landing-page-button-group'>
+                <Button className="active">
+                    <i className="fal fa-sort-alpha-up"></i>
+                </Button>
+                <Button>
+                    <i className='fal fa-analytics'></i>
                 </Button>
             </ButtonGroup>
+            </div>
+              </Col>
+            <Col md={10}>
             <InputGroup className='landing-page-search'>
                 <Form.Control id='search' placeholder='Search' onChange={handleSearchTerm} onKeyDown={(e) => e.keyCode == "13"? handleSearchButton():''}>
                 </Form.Control>
                 <Button onClick={handleSearchButton}>Go</Button>
             </InputGroup>
+            </Col>
+
         </div>
+
+        </Row>
+        </Container>
         <Container>
+          <Row>
         <div className='landing-page-container'>
             {apps?.map(a =>
             selectedButton == "grid"?
@@ -96,6 +126,7 @@ console.log(apps, "elizabeth")
                 </a>
             )}
         </div>
+        </Row>
         </Container>
        <ToTopButton />
       </Fragment>
