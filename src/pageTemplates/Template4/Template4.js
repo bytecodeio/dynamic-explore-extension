@@ -24,7 +24,8 @@ import SearchAll from "./helpers/SearchAll";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 import CurrentAccountGroup from "./helpers/CurrentAccountGroup";
-import { DateRangeSelector } from "./helpers/DateRangeSelector";
+//import { DateRangeSelector } from "./helpers/DateRangeSelector";
+import { DateRangeSelector } from "../../components/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 import { CurrentSelection2 } from "./helpers/CurrentSelection2";
 import usePagination from "@mui/material/usePagination/usePagination";
@@ -32,6 +33,7 @@ import SearchAll2 from './helpers/SearchAll2'
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { connection_columns } from "@looker/sdk";
 import { EmbedContainer } from "../../components/EmbedContainer";
+import { SavedFilters } from "../../components/SavedFilters";
 
 import { ApplicationContext } from "../../Main2";
 const Template4 = ({
@@ -538,6 +540,22 @@ const Template4 = ({
                             </Col>
                             : ''
                           }
+
+                          {/* Bookmarks */}
+                          <Col xs={12} md={12}>
+                            <Accordion.Item eventKey="4">
+                              <Accordion.Header>Saved Filters</Accordion.Header>
+                              <Accordion.Body>
+                                <SavedFilters
+                                  savedFilters={savedFilters}
+                                  setSelectedFilters={setSelectedFilters}
+                                  handleVisUpdate={handleTabVisUpdate}
+                                  removeSavedFilter={removeSavedFilter}
+                                  upsertSavedFilter={upsertSavedFilter}
+                                />
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Col>
                         </Row>
                       </Col> 
                     </Row>

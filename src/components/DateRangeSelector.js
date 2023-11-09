@@ -2,10 +2,9 @@ import React, { useState, useContext } from "react";
 import DatePicker from "react-datepicker";
 import { Form, Row, Col, Button, Container } from "react-bootstrap";
 import { useEffect } from "react";
-import { sortDateFilterList, updateDateRange } from "../../../utils/globalFunctions";
+//import { sortDateFilterList, updateDateRange } from "../../../utils/globalFunctions";
+import { sortDateFilterList } from "../utils/globalFunctions";
 import { ExtensionContext } from "@looker/extension-sdk-react";
-import { LOOKER_MODEL } from "../../../utils/constants2";
-import { ComparisonDate } from "../../../components/ComparisonDate";
 import moment from "moment";
 
 const date_range_type = 'date range';
@@ -19,11 +18,7 @@ export const DateRangeSelector = ({
   currentInvoiceCount,
   description,
   setUpdatedFilters,
-  application,
-  selectedTabFilters,
-  setSelectedTabFilters,
-  filters,
-  tabFilters
+  application
 }) => {
 
   const [dateRangeField, setDateRangeField] = useState({})
@@ -82,7 +77,6 @@ export const DateRangeSelector = ({
   ]
 
 
-
   useEffect(() => {
     let dRange = Object.assign({}, dateRange)
     let _dateRangeField = dRange['options']['field'];
@@ -92,8 +86,6 @@ export const DateRangeSelector = ({
       filters[date_range_type][_dateRangeField['name']] = dRange['options']['values']
       setUpdatedFilters(JSON.parse(JSON.stringify(selectedFilters)))
     }
-
-    console.log("filter options",dateFilterOptions)
   }, [])
 
   const onDateSelection = (e, type) => {
@@ -137,23 +129,30 @@ export const DateRangeSelector = ({
       let dateFilterField = dateFilters.options.find(
         ({ name }) => name == Object.keys(_filters['date filter'])[0]
       );
-      const newRange = await sdk.ok(
-        sdk.run_inline_query({
-          result_format: "json",
-          body: {
-            model: application.model,
-            view: dateFilterField["view"],
-            fields: [_dateRange['options']['field']["name"]],
-            filters: _filters['date filter'],
-            sorts: [_dateRange['options']['field']["name"]],
-          },
-        })
-      );
-      if (newRange.length > 0) {
-        let max = newRange.length - 1;
-        _filters[date_range_type][_dateRange['options']['field']["name"]] = `${newRange[0][_dateRange['options']['field']["name"]]} to ${newRange[max][_dateRange['options']['field']["name"]]}`
+      console.log('date filter field', dateFilterField)
+      let newRange = dateFilterOptions.find(({title}) => dateFilterField['label_short'].includes(title))
+      console.log("new range",newRange)
+      if (newRange) {
+        _filters[date_range_type][_dateRange['options']['field']["name"]] = newRange.date.join(' to ')
         setSelectedFilters(_filters)
       }
+      // const newRange = await sdk.ok(
+      //   sdk.run_inline_query({
+      //     result_format: "json",
+      //     body: {
+      //       model: application.model,
+      //       view: dateFilterField["view"],
+      //       fields: [_dateRange['options']['field']["name"]],
+      //       filters: _filters['date filter'],
+      //       sorts: [_dateRange['options']['field']["name"]],
+      //     },
+      //   })
+      // );
+      // if (newRange.length > 0) {
+      //   let max = newRange.length - 1;
+      //   _filters[date_range_type][_dateRange['options']['field']["name"]] = `${newRange[0][_dateRange['options']['field']["name"]]} to ${newRange[max][_dateRange['options']['field']["name"]]}`
+      //   setSelectedFilters(_filters)
+      // }
     }
   }
 
@@ -203,7 +202,41 @@ export const DateRangeSelector = ({
         </Col>
 
         <Col md={12} lg={4} className="position-relative">
-          <ComparisonDate selectedFilters={selectedFilters} selectedTabFilters={selectedTabFilters} setSelectedTabFilters={setSelectedTabFilters} tabFilters={tabFilters} filters={filters}/>
+
+          <div className="d-flex mt-1 ml2">
+
+            <div className="columnStart mr2">
+              <label>Start Date</label>
+              <Form.Control
+              type="date"
+              value={splitSelectedDateRange()[0]}
+              onChange={(e) => onDateSelection(e, "start")}
+
+              />
+
+            </div>
+            <div className="columnStart">
+              <label>End Date</label>
+              <Form.Control
+              type="date"
+              value={splitSelectedDateRange()[1]}
+              onChange={(e) => onDateSelection(e, "end")}
+              />
+
+            </div>
+
+
+          </div>
+
+          <div className="endAbsolute">
+
+
+            <Button
+            onClick={handleTabVisUpdate}
+            className="btn">Update Dates
+          </Button>
+        </div>
+
         </Col>
       </Row>
 
