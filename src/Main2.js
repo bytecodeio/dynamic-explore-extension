@@ -75,6 +75,10 @@ export const Main2 = () => {
     setShowMenu(show);
   };
 
+  useEffect(() => {
+    console.log("tabFilters", tabFilters)
+  },[tabFilters])
+
   const handleChangeKeyword = (e) => {
     setKeyword(e.target.value);
   };

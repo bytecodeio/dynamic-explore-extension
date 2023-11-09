@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { sortDateFilterList, updateDateRange } from "../../../utils/globalFunctions";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import { LOOKER_MODEL } from "../../../utils/constants2";
+import moment from "moment";
 
 const date_range_type = 'date range';
 const date_filter_type = 'date filter';
@@ -22,6 +23,58 @@ export const DateRangeSelector = ({
 
   const [dateRangeField, setDateRangeField] = useState({})
   const { core40SDK: sdk } = useContext(ExtensionContext);
+
+  let dateFilterOptions = [
+    {
+      'title':'Previous Month',
+      'date': [
+        moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'),
+        moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')
+      ]
+    },
+    {
+      'title':'Previous Quarter',
+      'date': [
+        moment().subtract(1, 'quarter').startOf('quarter').format('YYYY-MM-DD'),
+        moment().subtract(1, 'quarter').endOf('quarter').format('YYYY-MM-DD')
+      ]
+    },
+    {
+      'title':'Previous Year',
+      'date': [
+        moment().subtract(1, 'year').startOf('year').format('YYYY-MM-DD'),
+        moment().subtract(1, 'year').endOf('year').format('YYYY-MM-DD')
+      ]
+    },
+    {
+      'title':'View All Data (36 Months)',
+      'date': [
+        moment().subtract(3, 'year').format('YYYY-MM-DD'),
+        moment().format('YYYY-MM-DD')
+      ]
+    },
+    {
+      'title':'Month to Date',
+      'date': [
+        moment().startOf('month').format('YYYY-MM-DD'),
+        moment().format('YYYY-MM-DD')
+      ]
+    },
+    {
+      'title':'Quarter to Date',
+      'date': [
+        moment().startOf('quarter').format('YYYY-MM-DD'),
+        moment().format('YYYY-MM-DD')
+      ]
+    },
+    {
+      'title':'Year to Date',
+      'date': [
+        moment().startOf('year').format('YYYY-MM-DD'),
+        moment().format('YYYY-MM-DD')
+      ]
+    }
+  ]
 
 
   useEffect(() => {
@@ -76,23 +129,30 @@ export const DateRangeSelector = ({
       let dateFilterField = dateFilters.options.find(
         ({ name }) => name == Object.keys(_filters['date filter'])[0]
       );
-      const newRange = await sdk.ok(
-        sdk.run_inline_query({
-          result_format: "json",
-          body: {
-            model: application.model,
-            view: dateFilterField["view"],
-            fields: [_dateRange['options']['field']["name"]],
-            filters: _filters['date filter'],
-            sorts: [_dateRange['options']['field']["name"]],
-          },
-        })
-      );
-      if (newRange.length > 0) {
-        let max = newRange.length - 1;
-        _filters[date_range_type][_dateRange['options']['field']["name"]] = `${newRange[0][_dateRange['options']['field']["name"]]} to ${newRange[max][_dateRange['options']['field']["name"]]}`
+      console.log('date filter field', dateFilterField)
+      let newRange = dateFilterOptions.find(({title}) => dateFilterField['label_short'].includes(title))
+      console.log("new range",newRange)
+      if (newRange) {
+        _filters[date_range_type][_dateRange['options']['field']["name"]] = newRange.date.join(' to ')
         setSelectedFilters(_filters)
       }
+      // const newRange = await sdk.ok(
+      //   sdk.run_inline_query({
+      //     result_format: "json",
+      //     body: {
+      //       model: application.model,
+      //       view: dateFilterField["view"],
+      //       fields: [_dateRange['options']['field']["name"]],
+      //       filters: _filters['date filter'],
+      //       sorts: [_dateRange['options']['field']["name"]],
+      //     },
+      //   })
+      // );
+      // if (newRange.length > 0) {
+      //   let max = newRange.length - 1;
+      //   _filters[date_range_type][_dateRange['options']['field']["name"]] = `${newRange[0][_dateRange['options']['field']["name"]]} to ${newRange[max][_dateRange['options']['field']["name"]]}`
+      //   setSelectedFilters(_filters)
+      // }
     }
   }
 

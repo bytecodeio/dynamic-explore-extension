@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
 const Fields = ({
@@ -13,9 +14,13 @@ const Fields = ({
 }) => {
   const [expandMenu, setExpandMenu] = useState(false);
 
+  useEffect(() => {
+    console.log("fields", fieldOptions)
+  },[fieldOptions])
+
   function handleFieldSelection(fieldName) {
     console.log(fieldName)
-    setUpdateBtn(false);
+    // setUpdateBtn(false);
     let tabs = [...tabList];
     let currentTab = tabs[currentInnerTab];
     if (currentTab["selected_fields"].includes(fieldName)) {
@@ -45,12 +50,11 @@ const Fields = ({
     setExpandMenu(true)
   }
 
-  console.log(fieldOptions, "lixxi")
 
   return (
     <>
     {showActionBtns?
-      <div className="mb-5">      
+      <div className="mb-5">
           <>
             <span className="allOptions clear first" onClick={handleFieldsAll}>Select All</span>
 
@@ -58,12 +62,12 @@ const Fields = ({
 
             <span className="allOptions clear" onClick={() => handleMenuExpand()}>Expand</span>
           </>
-      </div>        
+      </div>
       :''
     }
     <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
       <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
-      {fieldOptions.map((fieldOption) => (
+      {fieldOptions?.map((fieldOption) => (
         <div className="one" key={fieldOption.name}>
           <Form.Group>
             <Form.Check
