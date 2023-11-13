@@ -7320,9 +7320,9 @@ padding: 0.5em 0.45em 0em 0em;
 }
 }
 
-@media (max-width:1719px) and (min-width:1420px){
+@media (max-width:1719px) and (min-width:1400px){
 .grid2  .one.radio {
-  min-width: 46%;
+  min-width: 50%;
 }
 .one label {
 
