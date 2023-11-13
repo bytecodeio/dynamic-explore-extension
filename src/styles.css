@@ -7320,9 +7320,19 @@ padding: 0.5em 0.45em 0em 0em;
 }
 }
 
-@media (max-width:1719px) and (min-width:1400px){
-.grid2  .one.radio {
-  min-width: 50%;
+.form-check {
+
+    min-width: 9em;
+}
+
+@media (max-width:1550px) and (min-width:1500px){
+/* .grid2  .one.radio {
+  min-width: 46%;
+} */
+
+.form-check {
+
+    min-width: 11em;
 }
 .one label {
 
