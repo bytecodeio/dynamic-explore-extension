@@ -31,8 +31,8 @@ import SearchAll from "./helpers/SearchAll";
 import { DateFilterGroup } from "./helpers/DateFilterGroup";
 import { CurrentSelection } from "./helpers/CurrentSelection";
 
-//import { DateRangeSelector } from "./helpers/DateRangeSelector";
-import { DateRangeSelector } from "../../components/DateRangeSelector";
+import { DateRangeSelector } from "./helpers/DateRangeSelector";
+//import { DateRangeSelector } from "../../components/DateRangeSelector";
 import EmbedTable from "../../components/EmbedTable";
 import { CurrentSelection2 } from "./helpers/CurrentSelection2";
 import usePagination from "@mui/material/usePagination/usePagination";
@@ -700,49 +700,7 @@ const Template2 = ({
                       </Col>
                     </Row>
                   </Accordion>
-                  <Col xs={12} md={12}>
-                    <div className="d-flex flex-column text-center position-relative">
-                      <p className="">Top % Products</p>
-
-                      <input
-                        value={value}
-                        onChange={(changeEvent) => {
-                          setStep(1);
-                          setValue(changeEvent.target.value);
-                        }}
-                        placeholder={value}
-                        type="search"
-                        list="steplist"
-                        min="0"
-                        max="100"
-                        from="0"
-                        step="1"
-                        className="value"
-                      />
-
-                      <input
-                        value={value}
-                        onChange={(changeEvent) => {
-                          setStep(25);
-                          setValue(changeEvent.target.value);
-                        }}
-                        type="range"
-                        min="0"
-                        max="100"
-                        step={step}
-                        list="steplist"
-                        className="range-slider mt-2"
-                      />
-
-                      <datalist id="steplist" className="range">
-                        <option label="0">0</option>
-                        <option label="25">25</option>
-                        <option label="50">50</option>
-                        <option label="75">75</option>
-                        <option label="100">100</option>
-                      </datalist>
-                    </div>
-                  </Col>
+                
                 </div>
               </div>
             </div>

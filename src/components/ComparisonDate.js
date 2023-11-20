@@ -1,24 +1,32 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Col, Form, Button } from 'react-bootstrap'
+import { Row, Col, Form, Button, Modal } from 'react-bootstrap'
 import moment from 'moment'
 import { forEach } from 'lodash'
 
 export const ComparisonDate = ({tabFilters,selectedTabFilters,setSelectedTabFilters, selectedFilters, filters}) => {
     const [reviewField, setReviewField] = useState({})
     const [compareField, setCompareField] = useState({})
+    const [open, setOpen] = useState(false)
 
     useEffect(() => {
         let _review = tabFilters.find(({type}) => type === "comparison filter review")
         setReviewField(_review)
         let _compare = tabFilters.find(({type}) => type === "comparison filter compare")
         setCompareField(_compare)
-        console.log("selectedTab", tabFilters)
+    },[])
+
+    const handleOpenModal = () => {
+        setOpen(!open)
+    }
+
+    const updateDates = (_review, _compare) => {
         if (selectedFilters) {
             let _filters = [...filters]
             let _selectedTabFilters = {...selectedTabFilters}
             let dateRange = _filters?.find(({type}) => type === 'date range')
-            _selectedTabFilters[_review['fields']['name']] = dateRange?.options.values;
-            let _parseDate = dateRange?.options.values.split(" to ");
+            let currentDateRange = selectedFilters['date range'][dateRange?.options.field.name]                
+            _selectedTabFilters[_review['fields']['name']] = currentDateRange;
+            let _parseDate = currentDateRange.split(" to ");
             let _compareDate = []
             for(const date of _parseDate) {
                 _compareDate.push(moment(date).add('months', 1).format('YYYY-MM-DD'))
@@ -26,11 +34,82 @@ export const ComparisonDate = ({tabFilters,selectedTabFilters,setSelectedTabFilt
             _selectedTabFilters[_compare['fields']['name']] = _compareDate.join(" to ")
             setSelectedTabFilters(_selectedTabFilters)
         }
+    }
+
+    useEffect(() => {
+        if (selectedFilters && Object.keys(reviewField).length > 0 && Object.keys(compareField).length > 0) {
+           updateDates(reviewField,compareField) 
+        }        
+    },[selectedFilters['date range']])
+
+    const CompareSelectedDates = ({selectedTabFilters}) => {
+        return(
+            Object.keys(selectedTabFilters).length>0?
+            <div>
+                <p>Date comparison: </p>
+                {Object.values(selectedTabFilters).map(t => 
+                <p>{t}</p>
+                )
+                }
+            </div>
+            :''
+        )
+    }
+
+    return (
+        <>
+        <div className='comparison-date-button'>
+           <Button onClick={handleOpenModal}>Select date range</Button> 
+        </div>        
+        <Modal size="sm" centered show={open} onHide={handleOpenModal}>
+            <Modal.Header closeButton>
+                Select comparison date range
+            </Modal.Header>
+            <Modal.Body>
+                <ComparisonModal tabFilters={tabFilters} selectedTabFilters={selectedTabFilters} setSelectedTabFilters={setSelectedTabFilters} selectedFilters={selectedFilters} filters={filters} compareField={compareField} reviewField={reviewField} updateDates={updateDates} />
+            </Modal.Body>
+            <Modal.Footer>
+                <Button>Submit</Button>
+            </Modal.Footer>
+        </Modal>
+        <CompareSelectedDates selectedTabFilters={selectedTabFilters}/>
+        <div>
+            <Button
+                //onClick={handleTabVisUpdate}
+                className="btn">Update Dates
+            </Button>
+        </div>
+    </>
+    )
+}
+
+const ComparisonModal = ({tabFilters,selectedTabFilters,setSelectedTabFilters, selectedFilters, filters, compareField, reviewField, updateDates}) => {
+
+    useEffect(() => {
+        if (Object.keys(selectedTabFilters).length == 0) {
+             let _review = {...reviewField}
+             let _compare = {...compareField}
+             updateDates(_review,_compare);
+            // if (selectedFilters) {
+            //     let _filters = [...filters]
+            //     let _selectedTabFilters = {...selectedTabFilters}
+            //     let dateRange = _filters?.find(({type}) => type === 'date range')
+            //     let currentDateRange = selectedFilters['date range'][dateRange?.options.field.name]                
+            //     _selectedTabFilters[_review['fields']['name']] = currentDateRange;
+            //     let _parseDate = currentDateRange.split(" to ");
+            //     let _compareDate = []
+            //     for(const date of _parseDate) {
+            //         _compareDate.push(moment(date).add('months', 1).format('YYYY-MM-DD'))
+            //     }
+            //     _selectedTabFilters[_compare['fields']['name']] = _compareDate.join(" to ")
+            //     setSelectedTabFilters(_selectedTabFilters)
+            // }
+        }
     },[])
 
     useEffect(() => {
         //updateDateRange()
-        console.log("selectedTabFilters", selectedTabFilters)
+        console.log("change to date range", selectedTabFilters)
     },[selectedFilters['date range']])
 
     const updateDateRange = () => {
@@ -57,7 +136,7 @@ export const ComparisonDate = ({tabFilters,selectedTabFilters,setSelectedTabFilt
 
     const splitSelectedDateRange = (type) => {
         let _field = type === "review"? reviewField:compareField
-        if (Object.keys(_field).length > 0) {
+        if (Object.keys(_field).length > 0 && Object.keys(selectedTabFilters).length > 0) {
           return selectedTabFilters[_field['fields']['name']]?.split(" to ");
         }
         return ["", ""];
@@ -81,7 +160,7 @@ export const ComparisonDate = ({tabFilters,selectedTabFilters,setSelectedTabFilt
         //filters[date_filter_type] = {}
         //setSelectedFilters(filters);
       };
-
+    
     return (
         <>
         <Row>
@@ -157,11 +236,8 @@ export const ComparisonDate = ({tabFilters,selectedTabFilters,setSelectedTabFilt
     </div>
 
     </Col>
-    </Row>        
-    <Button
-        //onClick={handleTabVisUpdate}
-        className="btn">Update Dates
-    </Button>
-    </>
+    </Row>
+    </> 
+        //<div>Test</div>
     )
 }
