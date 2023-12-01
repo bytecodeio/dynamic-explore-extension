@@ -54,6 +54,7 @@ export const Main2 = () => {
   const [properties, setProperties] = useState([]);
   const [parameters, setParameters] = useState([]);
   const [tabFilters, setTabFilters] = useState([]);
+  const [fieldGroups, setFieldGroups] = useState([])
 
   const [initialLoad, setInitialLoad] = useState(true);
   //here
@@ -176,6 +177,31 @@ export const Main2 = () => {
             }
           }
           setTabFilters(_tabFilters);
+
+
+          let _fieldGroups = [];
+          for await (let f of tabTags.filter(
+            ({ tag_group }) => tag_group === "field groups"
+          )) {
+            let _tab = f.title;
+            let _type = f.type;
+            let _tag = f.tag_name;
+            let _group = f.tag_group;
+            let _fields = fieldsByTag[_tag];
+            let _options = "";
+            let _label = f.att1;
+            if (_fields?.length > 0) {
+              _fieldGroups.push({
+                tab: _tab,
+                type: _type,
+                fields: _fields,
+                group: _group,
+                options: _options,
+                label: _label
+              });
+            }
+          }
+          setFieldGroups(_fieldGroups);
         }
       }
     };
@@ -210,6 +236,8 @@ export const Main2 = () => {
               _defaultSelected[_type][f["name"]] = f["default_filter_value"];
             }
           });
+        } else if (_type == "date range") {
+          _defaultSelected[_type] = {[_options['field']['name']]:_options.values}
         } else {
           _defaultSelected[_type] = {};
         }
@@ -225,6 +253,8 @@ export const Main2 = () => {
       getSavedFilters(application, user, _filters);
 
       setSelectedFilters(_defaultSelected);
+
+      setInitialLoad(false)
 
       getOptionValues(_filters, application);
     };
@@ -509,6 +539,7 @@ export const Main2 = () => {
                         fields={fields}
                         properties={properties}
                         tabFilters={tabFilters}
+                        fieldGroups={fieldGroups}
                       />
                     )}
                     {/* <Route path={`${route.url}/`}>

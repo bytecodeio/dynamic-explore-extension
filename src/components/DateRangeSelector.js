@@ -78,14 +78,15 @@ export const DateRangeSelector = ({
 
 
   useEffect(() => {
+    console.log("new range", selectedFilters[date_range_type])
     let dRange = Object.assign({}, dateRange)
     let _dateRangeField = dRange['options']['field'];
     setDateRangeField(dRange['options']['field'])
-    if (selectedFilters[date_range_type]) {
-      let filters = Object.assign({}, selectedFilters)
-      filters[date_range_type][_dateRangeField['name']] = dRange['options']['values']
-      setUpdatedFilters(JSON.parse(JSON.stringify(selectedFilters)))
-    }
+    // if (selectedFilters[date_range_type]) {
+    //   let filters = Object.assign({}, selectedFilters)
+    //   filters[date_range_type][_dateRangeField['name']] = dRange['options']['values']
+    //   setUpdatedFilters(JSON.parse(JSON.stringify(selectedFilters)))
+    // }
   }, [])
 
   const onDateSelection = (e, type) => {
