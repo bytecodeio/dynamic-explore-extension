@@ -3,7 +3,7 @@ import { Row, Col, Form, Button, Modal } from 'react-bootstrap'
 import moment from 'moment'
 import { forEach } from 'lodash'
 
-export const ComparisonDate = ({tabFilters,selectedTabFilters,setSelectedTabFilters, selectedFilters, filters}) => {
+export const ComparisonDate = ({tabFilters,selectedTabFilters,setSelectedTabFilters, selectedFilters, filters, handleTabVisUpdate}) => {
     const [reviewField, setReviewField] = useState({})
     const [compareField, setCompareField] = useState({})
     const [open, setOpen] = useState(false)
@@ -42,15 +42,23 @@ export const ComparisonDate = ({tabFilters,selectedTabFilters,setSelectedTabFilt
         }        
     },[selectedFilters['date range']])
 
+    const showLabel = (selectedTabFilters) => {
+        if (selectedTabFilters) {
+            let values = Object.values(selectedTabFilters).map(t => {return t})
+            console.log("values",values)
+            return values.join(" - ")
+        }
+        return ''
+    }
+
     const CompareSelectedDates = ({selectedTabFilters}) => {
         return(
             Object.keys(selectedTabFilters).length>0?
-            <div>
+            <div className='comparison-date-button'>
                 <p>Date comparison: </p>
-                {Object.values(selectedTabFilters).map(t => 
-                <p>{t}</p>
-                )
-                }
+                <div className='theOptions red' style={{color:'white'}}>
+                    {showLabel(selectedTabFilters)}
+                </div>
             </div>
             :''
         )
@@ -59,7 +67,7 @@ export const ComparisonDate = ({tabFilters,selectedTabFilters,setSelectedTabFilt
     return (
         <>
         <div className='comparison-date-button'>
-           <Button onClick={handleOpenModal}>Select date range</Button> 
+           <Button className='btn-clear' onClick={handleOpenModal}>Select date ranges to compare</Button> 
         </div>        
         <Modal size="sm" centered show={open} onHide={handleOpenModal}>
             <Modal.Header closeButton>
@@ -75,7 +83,7 @@ export const ComparisonDate = ({tabFilters,selectedTabFilters,setSelectedTabFilt
         <CompareSelectedDates selectedTabFilters={selectedTabFilters}/>
         <div>
             <Button
-                //onClick={handleTabVisUpdate}
+                onClick={handleTabVisUpdate}
                 className="btn">Update Dates
             </Button>
         </div>

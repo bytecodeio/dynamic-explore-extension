@@ -43,6 +43,7 @@ import _ from "lodash";
 import { SavedFilters } from "../../components/SavedFilters";
 
 import { ApplicationContext } from "../../Main2";
+import { FieldButtonGroup } from "../../components/FieldButtonGroup";
 
 const Template2 = ({
   currentNavTab,
@@ -54,7 +55,8 @@ const Template2 = ({
   description,
   isActive,
   tabFilters,
-  attributes
+  attributes,
+  fieldGroups
 }) => {
   const { core40SDK: sdk } = useContext(ExtensionContext);
   const wrapperRef = useRef(null);
@@ -105,21 +107,29 @@ const Template2 = ({
     removeSavedFilter,
     upsertSavedFilter} = useContext(ApplicationContext)
 
+    useEffect(() => {
+      console.log("initialize", selectedFilters)
+    },[selectedFilters])
+
   useEffect(() => {
-    if (params.path == tabKey) {
-      if (!isMounted) {
-        try {
-          fetchDefaultFieldsAndFilters();
-          setIsMounted(true);
-        } catch (e) {
-          console.error("Error fetching default dashboard", e);
-          setIsMounted(true);
+    const initialize = async () => {
+      console.log("initialize", `${isMounted} + ${initialLoad}`)
+      if (params.path == tabKey) {
+        if (!isMounted && !initialLoad) {
+          try {
+            await fetchDefaultFieldsAndFilters();
+            setIsMounted(true);
+          } catch (e) {
+            console.error("Error fetching default dashboard", e);
+            setIsMounted(true);
+          }
+        } else {
+          //handleTabVisUpdate();
         }
-      } else {
-        //handleTabVisUpdate();
       }
     }
-  }, [currentNavTab]);
+    initialize()
+  }, [currentNavTab, initialLoad]);
 
   // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
   const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] =
@@ -189,25 +199,26 @@ const Template2 = ({
   }
 
   const loadDefaults = async (_visList) => {
+    console.log("load defaults", selectedFilters)
     handleTabVisUpdate(_visList);
   };
 
-  const loadDefaultVisualizations = async (clientId, localFilters) => {
-    let _filters = formatFilters({ ...selectedFilters });
-    const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(clientId));
+  // const loadDefaultVisualizations = async (clientId, localFilters) => {
+  //   let _filters = formatFilters({ ...selectedFilters });
+  //   const { vis_config, fields } = await sdk.ok(sdk.query_for_slug(clientId));
 
-    const { client_id } = await sdk.ok(
-      sdk.create_query({
-        model: LOOKER_MODEL,
-        view: LOOKER_EXPLORE,
-        fields: fields,
-        filters: _filters,
-        vis_config,
-      })
-    );
-    setUpdatedFilters({ ...selectedFilters });
-    return client_id;
-  };
+  //   const { client_id } = await sdk.ok(
+  //     sdk.create_query({
+  //       model: LOOKER_MODEL,
+  //       view: LOOKER_EXPLORE,
+  //       fields: fields,
+  //       filters: _filters,
+  //       vis_config,
+  //     })
+  //   );
+  //   setUpdatedFilters({ ...selectedFilters });
+  //   return client_id;
+  // };
 
   // Page loading state
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -260,6 +271,8 @@ const Template2 = ({
     setUpdatedFilters(JSON.parse(JSON.stringify(filterList)));
     updateAppProperties(_filters);
 
+    console.log("init filters", selectedFilters)
+
     let newVisList = [];
     for await (let vis of _visList) {
       const { vis_config, fields, model, view } = await sdk.ok(
@@ -267,11 +280,12 @@ const Template2 = ({
       );
 
       let _fields = [];
-      if (vis["index"] === currentInnerTab) {
-        _fields = currentVis["selected_fields"];
-      } else {
-        _fields = fields;
-      }
+      console.log('value', vis['index'], currentInnerTab)
+      // if (vis["index"] === currentInnerTab) {
+        _fields = vis["selected_fields"];
+      // } else {
+      //   _fields = fields;
+      // }
       const { client_id } = await sdk.ok(
         sdk.create_query({
           model: model,
@@ -565,6 +579,11 @@ const Template2 = ({
                     <Row>
                       <Col xs={12} md={12}>
                         <Row>
+                          {/*Field Button Groups*/}
+                          {fieldGroups.length > 0?
+                          <FieldButtonGroup fieldGroups={fieldGroups} visList={visList} setVisList={setVisList} handleTabVisUpdate={handleTabVisUpdate}/>
+                          :''
+                          }                        
                           {/* Account Groups */}
                           {Array.isArray(
                             filters.find(({ type }) => type === "account group")

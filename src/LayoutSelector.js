@@ -10,7 +10,8 @@ export const LayoutSelector = ({
     fields,
     properties,
     isActive,
-    tabFilters}) => {
+    tabFilters,
+    fieldGroups}) => {
         console.log("props", properties)
         console.log("Tabprops", tabProps)
     if (tabProps.layout_name === "Template1") {
@@ -25,6 +26,7 @@ export const LayoutSelector = ({
             description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
             tabFilters={tabFilters.filter(({tab}) => tab === tabProps.title)}
             attributes={tabProps.attributes}
+            fieldGroups={fieldGroups.filter(({tab}) => tab === tabProps.title)}
             />;
     } else if (tabProps.layout_name === "Template3") {
         return <Template3
@@ -38,6 +40,7 @@ export const LayoutSelector = ({
             description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
             tabFilters={tabFilters.filter(({tab}) => tab === tabProps.title)}
             attributes={tabProps.attributes}
+            fieldGroups={fieldGroups.filter(({tab}) => tab === tabProps.title)}
             />;
     } else if (tabProps.layout_name === "Template4") {
         return <Template4
@@ -51,6 +54,7 @@ export const LayoutSelector = ({
             description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
             tabFilters={tabFilters.filter(({tab}) => tab === tabProps.title)}
             attributes={tabProps.attributes}
+            fieldGroups={fieldGroups.filter(({tab}) => tab === tabProps.title)}
             />;
     }
     // switch (tabProps.layout_name) {

@@ -203,7 +203,7 @@ export const DateRangeSelector = ({
         </Col>
 
         <Col md={12} lg={4} className="position-relative">
-          <ComparisonDate selectedFilters={selectedFilters} selectedTabFilters={selectedTabFilters} setSelectedTabFilters={setSelectedTabFilters} tabFilters={tabFilters} filters={filters}/>
+          <ComparisonDate selectedFilters={selectedFilters} selectedTabFilters={selectedTabFilters} setSelectedTabFilters={setSelectedTabFilters} tabFilters={tabFilters} filters={filters} handleTabVisUpdate={handleTabVisUpdate}/>
         </Col>
       </Row>
 

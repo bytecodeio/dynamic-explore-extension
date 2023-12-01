@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 
 import { Button, Form, Modal, Spinner } from "react-bootstrap";
+import { Autocomplete, TextField, Typography } from "@mui/material";
 
 const type = 'filter'
 
@@ -38,7 +39,8 @@ const Filters = ({
   const [expandMenu, setExpandMenu] = useState(false)
 
 
-  function handleFilterSelection(filterName, newValue) {
+  function handleFilterSelection(filterName, el, newValue) {
+    console.log(filterName, newValue,el)
     setSelectedFilters((prevFilters) => {
       const newFilters = { ...prevFilters };
       newFilters[type][filterName] = newValue;
@@ -50,6 +52,8 @@ const Filters = ({
   const handleMenuExpand = () => {
     setExpandMenu(true)
   }
+
+  const optionTest = ['Test', 'Test2']
 
   return (
     <>
@@ -71,8 +75,8 @@ const Filters = ({
         <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
         {filters.options.map((filterOption) => (
           <div className="one" key={filterOption.name}>
-            <Form.Group>
-              <FilterDropdown
+            <p variant="h6">{filterOption.field.label_short}</p>
+              {/* <FilterDropdown
                 handleChange={handleFilterSelection}
                 label={filterOption.field.label_short}
                 name={filterOption.field.name}
@@ -80,8 +84,21 @@ const Filters = ({
                   return !(v.includes(null) || v.includes(""))
                 })}
                 //value={isDefault ? selectedFilters[filterOption.name] : "N/A"}
+              /> */}
+              {console.log("value",selectedFilters[type][filterOption['field']['name']])}
+              <Autocomplete name={filterOption.name}
+                multiple
+                onChange={(el,v) => handleFilterSelection(filterOption.field.name,el,v)}
+                renderInput={(params) => <TextField {...params} placeholder="Please select" />}
+                value={selectedFilters[type][filterOption['field']['name']]}
+                //name={filterOption.field.name}
+                options={optionTest}
+                // options={filterOption.values?.map(v => Object.values(v)).filter(v => {
+                //   return !(v.includes(null) || v.includes(""))
+                // })}
+                
+                //value={isDefault ? selectedFilters[filterOption.name] : "N/A"}
               />
-            </Form.Group>
           </div>
         ))}
       </div>
