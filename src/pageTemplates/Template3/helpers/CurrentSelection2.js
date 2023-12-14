@@ -9,7 +9,7 @@ export const CurrentSelection2 = ({ filters, selectedFilters, setSelectedFilters
   useEffect(() => {
     setCurrentSelection(formatCurrentSelection(JSON.parse(JSON.stringify(selectedFilters)), 'current'))
   }, [selectedFilters])
-  console.log('lizzi', selectedFilters)
+  
   useEffect(() => {
     setUpdateSelection(formatCurrentSelection(JSON.parse(JSON.stringify(updatedFilters)), 'updated'))
   }, [updatedFilters])

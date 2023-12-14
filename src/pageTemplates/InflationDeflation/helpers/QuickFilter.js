@@ -32,7 +32,7 @@ const QuickFilter = ({
 
   return (
     <div>
-      {console.log('quickFilterOptions in child component ', quickFilterOptions)}
+      {
       <div className="wrapFilters">
         {quickFilterOptions?.map((fieldOption) => (
 

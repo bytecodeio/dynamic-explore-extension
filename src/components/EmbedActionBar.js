@@ -47,7 +47,7 @@ export const EmbedActionBar = ({ slideIt3, showMenu3, setShowMenu3, active, setA
     }
 
     const handlePrint = async () => {
-        console.log(extensionContext.extensionSDK.lookerHostData)
+        
         let {hostUrl, hostType, extensionId} = extensionContext.extensionSDK.lookerHostData;
         let _hostType = hostType == "spartan"?"spartan":"extensions";
         let url = `${hostUrl}/${_hostType}/${extensionId}/print?qid=${"5Qp9uZMuijraX6hyhGyD3o"}&type=${type.value}`

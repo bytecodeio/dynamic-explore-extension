@@ -28,7 +28,7 @@ export const PrintPage = () => {
     const getUrl = async (_qid, _type) => {
       const {id} = await sdk.ok(sdk.query_for_slug(_qid));
       const res = await sdk.ok(sdk.run_query({query_id:id, result_format:_type}));
-      console.log("res", res)
+      
       let _url = URL.createObjectURL(res)
       setUrl(_url)
       setInitialLoad(false)

@@ -134,12 +134,12 @@ const Template1 = ({
 
 
 
-      // console.log("filter",getAllFilters())
+      // 
       // if (Object.keys(getAllFilters()).length == 0) {
       //   let defaultedFilters = dashboard_filters.filter(f => {
       //    return f.default_value !== null && f.default_value !== undefined && f.field.tags.length > 0
       //   })
-      //   console.log("defaulted", defaultedFilters)
+      //   
       //   if (defaultedFilters.length > 0) {
       //     let filterArr = {...selectedFilters}
       //     defaultedFilters.map(f => {
@@ -150,7 +150,7 @@ const Template1 = ({
       //     //setSelectedFilters(filterArr)
       //   }
       //  }
-      //console.log("tile filters", filters)
+      //
       //if (filters) setSelectedFilters(filters);
       //handleTabVisUpdate()
       //setProductMovementVisQid(client_id);
@@ -165,7 +165,7 @@ const Template1 = ({
   }, []);
 
   const addDefaultFilters = (filter) => {
-    console.log("dashboard Filters", filterOptions)
+    
     if (filterOptions.find(f => {return f['name'] == filter['name']})) {
       let selFilters = {...selectedFilters};
       let key = filter['name'];
@@ -175,7 +175,7 @@ const Template1 = ({
   }
 
   useEffect(() => {
-    console.log("selected filters", selectedFilters)
+    
   },[selectedFilters])
 
 
@@ -337,7 +337,7 @@ const Template1 = ({
               // }
               filters = await getAllFilters();
 
-              console.log("get all filters", filters)
+              
 
               if (isFilterChanged) {
                 updateInnerTabFilters(filters);
@@ -469,7 +469,7 @@ const Template1 = ({
 
 
               // const defaultChosenValue = localStorage.getItem('choseClearAll');
-              // console.log('local storage value first', defaultChosenValue)
+              // 
               //
 
 

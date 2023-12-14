@@ -108,12 +108,12 @@ const Template2 = ({
     upsertSavedFilter} = useContext(ApplicationContext)
 
     useEffect(() => {
-      console.log("initialize", selectedFilters)
+      
     },[selectedFilters])
 
   useEffect(() => {
     const initialize = async () => {
-      console.log("initialize", `${isMounted} + ${initialLoad}`)
+      
       if (params.path == tabKey) {
         if (!isMounted && !initialLoad) {
           try {
@@ -140,14 +140,14 @@ const Template2 = ({
   };
 
   async function fetchDefaultFieldsAndFilters() {
-    console.log("fields", fields)
+    
     let _visList = []
     let index = 0
     for await (let visConfig of config) {
       const { dashboard_elements, dashboard_filters } = await sdk.ok(
         sdk.dashboard(visConfig['lookml_id'], 'dashboard_elements, dashboard_filters')
       ).catch(ret => {return {dashboard_elements:[], dashboard_filters:{}}})
-      console.log("ele", dashboard_elements)
+      
       if (dashboard_elements.length > 0) {
         for await (let t of dashboard_elements) {
           let tileFilters = t["result_maker"]["query"]["filters"];
@@ -170,7 +170,7 @@ const Template2 = ({
           let vis = {};
           let { client_id } = t["result_maker"]["query"];
           //let newClientId = await loadDefaultVisualizations(client_id, _selectedFilters)
-          //console.log(newClientId)
+          //
           vis = {
             visId: visConfig["vis_name"],
             title: t["title"],
@@ -185,7 +185,7 @@ const Template2 = ({
 
           // if (initialLoad && i === 0) {
           //   //Finish default query
-          //   console.log("dashboard element", t.result_maker.query.filters)
+          //   
           //   setInitialLoad(false)
           // }
         }
@@ -199,7 +199,7 @@ const Template2 = ({
   }
 
   const loadDefaults = async (_visList) => {
-    console.log("load defaults", selectedFilters)
+    
     handleTabVisUpdate(_visList);
   };
 
@@ -271,7 +271,7 @@ const Template2 = ({
     setUpdatedFilters(JSON.parse(JSON.stringify(filterList)));
     updateAppProperties(_filters);
 
-    console.log("init filters", selectedFilters)
+    
 
     let newVisList = [];
     for await (let vis of _visList) {
@@ -280,7 +280,7 @@ const Template2 = ({
       );
 
       let _fields = [];
-      console.log('value', vis['index'], currentInnerTab)
+      
       // if (vis["index"] === currentInnerTab) {
         _fields = vis["selected_fields"];
       // } else {
@@ -469,7 +469,7 @@ const Template2 = ({
   // }
 
   const AccountGroupsFieldOptions = useMemo(() => {
-    console.log(filters, "filters");
+    
     let cfilter = _.cloneDeep(filters);
     let obj = cfilter?.find(({ type }) => type === "account group");
     if (Array.isArray(obj?.options?.values)) {

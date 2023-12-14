@@ -7,7 +7,7 @@ export const CurrentSelection = ({ filters, selectedFilters, setSelectedFilters 
   const [currentSelection, setCurrentSelection] = useState([])
 
   useEffect(() => {
-    console.log(selectedFilters)
+    
     let current = []
     Object.keys(selectedFilters).map(key => {
       if (Object.keys(selectedFilters[key]).length > 0) {
@@ -20,7 +20,7 @@ export const CurrentSelection = ({ filters, selectedFilters, setSelectedFilters 
             current.push(`${field.label_short}: ${selectedFilters[key][row]}`)
           }
         })
-        console.log("selected", filters)
+        
       }
     })
     setCurrentSelection(current)
@@ -47,7 +47,7 @@ export const CurrentSelection = ({ filters, selectedFilters, setSelectedFilters 
 
   // const format1 = moment(first).format('MM-DD-YYYY').toString();
 
-  console.log('currentSelection', currentSelection)
+  
 
 
   return (

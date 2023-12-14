@@ -102,7 +102,7 @@ const format2 = moment(last).format('MM-DD-YYYY').toString();
 
 const format1 = moment(first).format('MM-DD-YYYY').toString();
 //
-// console.log('currentSelection', format1, format2)
+// 
 
 
 

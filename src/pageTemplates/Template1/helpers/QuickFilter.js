@@ -31,7 +31,7 @@ const QuickFilter = ({
   }
 
 
-    // console.log("these are quick", quickFilterOptions)
+    // 
 
   return (
 <div>

@@ -31,7 +31,7 @@ const AccountGroups = ({
     setSelectedAccountGroup(fieldOptions)
   }
 // 
-// console.log(fieldOptions)
+// 
 
 
   return (

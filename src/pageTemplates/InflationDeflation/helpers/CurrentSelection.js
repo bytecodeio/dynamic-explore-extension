@@ -56,7 +56,7 @@ export const CurrentSelection = ({
     //         // currentSelectionObj[filter] = selectedFields[filter];
     //     }
     //
-    //         // console.log("one", selectedFields)
+    //         // 
     // }
 
     //   for (const filter in selectedFilters) {
@@ -108,7 +108,7 @@ export const CurrentSelection = ({
 
   //
   // selectedDateRange && selectedDateRange.split().map((selection) => {
-  //   console.log(selection)
+  //   
   //
   //
   //

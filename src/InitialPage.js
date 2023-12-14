@@ -10,6 +10,7 @@ export const InitialPage = () => {
 
     return (
         <>
+            {/*Decide whether to send to Landing Page or main App content*/}
             {extensionId.includes('landing-page')?
             <LandingPage />
             :

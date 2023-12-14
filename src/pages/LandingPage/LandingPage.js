@@ -1,5 +1,5 @@
 import React, {Fragment, useEffect, useState} from 'react'
-import { getLandingPageApplications } from '../../utils/writebackService'
+import { getLandingPageApplications, updatePageViews } from '../../utils/writebackService'
 import { useContext } from 'react'
 import { ExtensionContext } from '@looker/extension-sdk-react'
 import { ButtonGroup, Button, InputGroup, Form, Container, Tooltip, OverlayTrigger, Row, Col } from 'react-bootstrap';
@@ -14,21 +14,38 @@ export const LandingPage = ( {description} ) => {
     const [allApps, setAllApps] = useState([])
     const [selectedButton, setSelectedButton] = useState("grid")
     const [searchTerm, setSearchTerm] = useState("")
+    const [selectedOrder, setSelectedOrder] = useState("alpha")
 
+    //Initial App list loading
+    const getApps = async() => {
+        let _apps = await getLandingPageApplications(sdk)
+        _apps = await orderApps(_apps)
+        setApps(_apps)
+        setAllApps(_apps)
+    }
 
     useEffect(() => {
-        const initialize = async () => {
-            let _apps = await getLandingPageApplications(sdk)
-            setApps(_apps)
-            setAllApps(_apps)
-        }
-        initialize();
+        getApps();
     },[])
 
-    const handleClick = (app) => {
+    //Ordering the apps between either the rank or alphabetical
+    const orderApps = async (apps, order=selectedOrder) => {
+        if (order === "rank") {
+            let _apps = sortApps(apps, 'views')
+            return _apps.reverse()
+        } else {            
+            return sortApps(apps, 'name')
+        }
+    }
+
+    //Click event to add a view to the app in the database and open a new tab in the browser to the url below
+    const handleClick = async (app) => {
         let url = `${hostUrl}/embed/extensions/${app.model}::${app.route}`
-        console.log(url)
+        
         extensionContext.extensionSDK.openBrowserWindow(url)
+
+        await updatePageViews(sdk,app.id)
+        getApps()
     }
 
     const handleButtonGroupClick = (v) => {
@@ -39,26 +56,33 @@ export const LandingPage = ( {description} ) => {
         setSearchTerm(e.target.value)
     }
 
+    //Search functionality
     const handleSearchButton = () => {
         const data = [...allApps];
         let _apps = searchTerm.replace(" ") != ""? data.filter(d => d.name.toUpperCase().includes(searchTerm.toUpperCase())):data;
         setApps(_apps)
     }
 
-
-
-
-  const sortedApps = apps.sort(function(a, b) {
-   var nameA = a.name.toUpperCase();
-  var nameB = b.name.toUpperCase();
-  if (nameA < nameB) {
-      return -1;
+    //When the order button group is selected/changed
+    const handleSortChange = async (type) => {
+        setSelectedOrder(type)
+        let _apps = [...apps];
+        let _allApps = [...allApps];
+        _apps = await orderApps(_apps,type)
+        _allApps = await orderApps(_allApps,type)
+        setApps(_apps)
+        setAllApps(_allApps)
     }
-   if (nameA > nameB) {
-      return 1;
-    }
-  return 0;
-  });
+
+
+    //Sorting based on the type variable
+    const sortApps = (data, type) => {
+        return data.sort((a,b) => {
+           var x = a[type].toString().toLowerCase();
+           var y = b[type].toString().toLowerCase();
+               return x < y ? -1 : x > y ? 1 : 0;
+           });
+       }
 
 
 
@@ -87,10 +111,10 @@ export const LandingPage = ( {description} ) => {
             <div className="d-flex justify-content-start align-items-baseline mt-3">
             <p className="small mr-1">sort</p>
             <ButtonGroup size="sm" className='landing-page-button-group'>
-                <Button className="active">
+                <Button active={selectedOrder === "alpha"} onClick={() => handleSortChange('alpha')}>
                     <i className="fal fa-sort-alpha-up"></i>
                 </Button>
-                <Button>
+                <Button active={selectedOrder === "rank"} onClick={() => handleSortChange('rank')}>
                     <i className='fal fa-analytics'></i>
                 </Button>
             </ButtonGroup>
@@ -111,9 +135,9 @@ export const LandingPage = ( {description} ) => {
         <Container>
           <Row>
         <div className='landing-page-container'>
-            {sortedApps?.map(a =>
+            {apps?.map(a =>
             selectedButton == "grid"?
-            <OverlayTrigger
+            <OverlayTrigger key={a.name}
               placement="right"
               overlay=<Tooltip id="squares"><p style={{fontSize:"12px"}}>{a.tooltip_description}</p></Tooltip>
               className="tooltipHover"
@@ -124,12 +148,15 @@ export const LandingPage = ( {description} ) => {
                         <img className='looker-thumbnail' src={a.thumbnail_base64} onError={(e) => {e.target.onError=null; e.target.src="/"}} />
                         :<div className='looker-thumbnail not-available'>Preview Not Available</div>
                         }
-                        <div className='landing-page-item-detail'>{a.name}</div>
+                        <div className='landing-page-item-detail'>
+                            {a.name}
+                            <p className='rank' dangerouslySetInnerHTML={{__html: a.label}} />
+                        </div>
                     </div>
                 </a>
               </OverlayTrigger>
                 :
-                <a href={`#`} className={`landing-page-row ${apps.indexOf(a) % 2? 'even':'odd'}`} onClick={() => handleClick(a)}>
+                <a key={a.name} href={`#`} className={`landing-page-row ${apps.indexOf(a) % 2? 'even':'odd'}`} onClick={() => handleClick(a)}>
                     <div>
                         <h6>{a.name}</h6>
                     </div>

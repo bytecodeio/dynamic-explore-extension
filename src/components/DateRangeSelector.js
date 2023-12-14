@@ -78,7 +78,7 @@ export const DateRangeSelector = ({
 
 
   useEffect(() => {
-    console.log("new range", selectedFilters[date_range_type])
+    
     let dRange = Object.assign({}, dateRange)
     let _dateRangeField = dRange['options']['field'];
     setDateRangeField(dRange['options']['field'])
@@ -130,9 +130,9 @@ export const DateRangeSelector = ({
       let dateFilterField = dateFilters.options.find(
         ({ name }) => name == Object.keys(_filters['date filter'])[0]
       );
-      console.log('date filter field', dateFilterField)
+      
       let newRange = dateFilterOptions.find(({title}) => dateFilterField['label_short'].includes(title))
-      console.log("new range",newRange)
+      
       if (newRange) {
         _filters[date_range_type][_dateRange['options']['field']["name"]] = newRange.date.join(' to ')
         setSelectedFilters(_filters)

@@ -34,7 +34,7 @@ export const AdminPage = () => {
           contextData['tab_tags'] = _tabTagsList
           contextData['tabs'] = _tabs;
         }
-        console.log(contextData)
+        console.log("context", contextData)
         updateContextData(contextData)
       }
 

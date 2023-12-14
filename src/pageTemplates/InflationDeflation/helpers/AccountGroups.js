@@ -18,7 +18,7 @@ const AccountGroups = ({
 
 
   
-  // console.log("these are fields", fieldOptions)
+  // 
   return (
     <div className="wrapFilters">
       {fieldOptions.map((fieldOption) => (

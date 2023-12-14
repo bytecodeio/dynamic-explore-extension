@@ -44,7 +44,7 @@ const Filters = ({
     setIsFilterChanged(true);
   }
 
-    console.log("filterSuggestions", filterSuggestions)
+    
 
   return (
     <div className="wrapFilters">

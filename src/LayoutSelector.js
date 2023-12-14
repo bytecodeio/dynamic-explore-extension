@@ -1,9 +1,51 @@
 import React from "react";
-import Template1 from "./pageTemplates/Template1/Template1";
-import Template2 from "./pageTemplates/Template2/Template2";
-import Template3 from "./pageTemplates/Template3/Template3";
-import Template4 from "./pageTemplates/Template4/Template4";
+import { ReportContainer } from "./components/ReportContainer";
 
+//These are the layout templates that each tab will have
+const LayoutProperties =     {
+        'Template1':{
+            'date range':true,
+            'date filter':true,
+            'description':true,
+            'filters':true,
+            'account groups':true,
+            'fields':true,
+            'current selection':true,
+            'layout':'OneTabVisualization'
+        },
+        'Template3':{
+            'date range':true,
+            'date filter':true,
+            'description':true,
+            'filters':true,
+            'account groups':true,
+            'fields':true,
+            'current selection':true,
+            'layout':'OneTabVisualization'
+        },
+        'Template4':{
+            'date range':true,
+            'date filter':true,
+            'description':true,
+            'filters':false,
+            'account groups':true,
+            'fields':false,
+            'current selection':true,
+            'layout':'DashboardVisualizations'
+        },
+        'Template5':{
+            'date range':false,
+            'date filter':false,
+            'description':false,
+            'filters':false,
+            'account groups':false,
+            'fields':false,
+            'current selection':false,
+            'layout':'FullLookMLDashboard'
+        }
+    }
+
+//LayoutSelector uses the templates and the context data to dynamically create the specific layout for the tab
 export const LayoutSelector = ({
     tabProps,
     currentNavTab,
@@ -12,10 +54,8 @@ export const LayoutSelector = ({
     isActive,
     tabFilters,
     fieldGroups}) => {
-        console.log("props", properties)
-        console.log("Tabprops", tabProps)
-    if (tabProps.layout_name === "Template1") {
-        return <Template2
+
+        return <ReportContainer
             className="active"
             isActive={isActive}
             currentNavTab={currentNavTab}
@@ -27,62 +67,6 @@ export const LayoutSelector = ({
             tabFilters={tabFilters.filter(({tab}) => tab === tabProps.title)}
             attributes={tabProps.attributes}
             fieldGroups={fieldGroups.filter(({tab}) => tab === tabProps.title)}
+            layoutProps={LayoutProperties[tabProps.layout_name]}
             />;
-    } else if (tabProps.layout_name === "Template3") {
-        return <Template3
-            className="active"
-            isActive={isActive}
-            currentNavTab={currentNavTab}
-            fields={fields.find(({tab}) => tab === tabProps.title)}
-            properties={properties.filter(({type}) => type == tabProps.properties[0]?.type)}
-            config={tabProps.config}
-            tabKey={tabProps.route}
-            description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
-            tabFilters={tabFilters.filter(({tab}) => tab === tabProps.title)}
-            attributes={tabProps.attributes}
-            fieldGroups={fieldGroups.filter(({tab}) => tab === tabProps.title)}
-            />;
-    } else if (tabProps.layout_name === "Template4") {
-        return <Template4
-            className="active"
-            isActive={isActive}
-            currentNavTab={currentNavTab}
-            fields={fields.find(({tab}) => tab === tabProps.title)}
-            properties={properties.filter(({type}) => type == tabProps.properties[0]?.type)}
-            config={tabProps.config}
-            tabKey={tabProps.route}
-            description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
-            tabFilters={tabFilters.filter(({tab}) => tab === tabProps.title)}
-            attributes={tabProps.attributes}
-            fieldGroups={fieldGroups.filter(({tab}) => tab === tabProps.title)}
-            />;
-    }
-    // switch (tabProps.layout_name) {
-    //     case 'Template1':
-    //         return <Template2
-    //             currentNavTab={currentNavTab}
-    //             filters={filters}
-    //             fields={fields.find(({tab}) => tab === "Product Movement Report")}
-    //             properties={properties}
-    //             updateAppProperties={updateAppProperties}
-    //             isFetchingLookmlFields={isFetchingLookmlFields}
-    //             config={tabProps.config}
-    //             tabKey={tabProps.route}
-    //             showMenu={showMenu}
-    //             setShowMenu={setShowMenu}
-    //             description={{description: <div dangerouslySetInnerHTML={{__html:tabProps.description}} />}}
-    //             selectedFilters={selectedFilters}
-    //             setSelectedFilters={setSelectedFilters}
-    //             initialLoad={initialLoad}
-    //             setInitialLoad={setInitialLoad}/>;
-    //         break;
-    //     case 'Template2':
-    //         return <Template2 />;
-    //         break;
-    //     case 'Template3':
-    //         return <Template3 />;
-    //         break;
-    //     default:
-    //         return null;
-    // }
 }

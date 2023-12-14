@@ -6,7 +6,7 @@ export const SearchInput = ({fields, filters}) => {
     const [selectOpen, setSelectOpen] = useState(false)
 
     useEffect(() => {
-        console.log("search fields", fields);
+        
         let _results = []
         if (fields?.fields.length> 0) {
             fields.fields.map((f) => {
@@ -22,7 +22,7 @@ export const SearchInput = ({fields, filters}) => {
         }
         setAllOptions(sortData(_results));
         setSearchOptions(sortData(_results));
-        console.log("search filters", filters);
+        
     },[])
 
     const sortData = (data) => {
