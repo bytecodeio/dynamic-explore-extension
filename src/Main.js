@@ -108,7 +108,7 @@ export const Main = () => {
       ];
       const fieldsByTag = groupFieldsByTags(lookmlFields);
 
-      console.log(fieldsByTag, "hi there")
+      
 
       const _filterOptions = fieldsByTag[LOOKML_FIELD_TAGS.filter];
       const _quickFilterFields = fieldsByTag[LOOKML_FIELD_TAGS.quick_filter];
@@ -121,7 +121,7 @@ export const Main = () => {
 
       const _defaultFilterFields = fieldsByTag[LOOKML_FIELD_TAGS.defaultFilters];
 
-      console.log("default filters", _defaultFilterFields)
+      
 
       if (_defaultFilterFields?.length > 0) {
         let _filterSet = {}
@@ -133,7 +133,7 @@ export const Main = () => {
             setSelectedFilters(_filterSet)
           }
         })
-        console.log("filter set",_filterSet)
+        
 
       } else {
         console.error("No default filters")
@@ -164,7 +164,7 @@ export const Main = () => {
       let _quickFilterOptions = []
       try {
          for await(let f of _quickFilterFields) {
-          console.log("filters",f)
+          
           let values = await getDefaultValues(f);
           let qfOption = {
             label:f['label_short'],
@@ -226,7 +226,7 @@ export const Main = () => {
      //      console.error(`No filter options found using tag ${LOOKML_FIELD_TAGS.quick_filter}`)
      //    }
      //
-     // console.log(defaultQuickFilterSelections)
+     // 
 
 
 
@@ -255,7 +255,7 @@ export const Main = () => {
 
       if (_totalInvoice != undefined) {
         setTotalInvoiceField(_totalInvoice);
-        console.log("total invoice issue", _totalInvoice)
+        
         let values = await getValues(_totalInvoice);
         setCurrentInvoiceCount(values[0][_totalInvoice["name"]]);
       }
@@ -339,15 +339,15 @@ export const Main = () => {
 
   const updateDateRange = async () => {
     let field = { ...dateRange };
-    console.log(selectedDateFilter);
+    
     if (selectedDateFilter != "" && Object.keys(field).length > 0) {
       let dateFilterField = dateFilterOptions.find(
         (df) => df["name"] == selectedDateFilter
       );
-      console.log("date_filter field", field);
+      
       let filter = {};
       filter[selectedDateFilter] = "Yes";
-      console.log(filter);
+      
       const newRange = await sdk.ok(
         sdk.run_inline_query({
           result_format: "json",
@@ -360,7 +360,7 @@ export const Main = () => {
           },
         })
       );
-      console.log("new Range", newRange);
+      
       if (newRange.length > 0) {
         let max = newRange.length - 1;
         setSelectedDateRange(
@@ -371,7 +371,7 @@ export const Main = () => {
   };
 
   const getValues = (field) => {
-    console.log(field)
+    
     return sdk.ok(
       sdk.run_inline_query({
         result_format: "json",
@@ -436,7 +436,7 @@ export const Main = () => {
   };
 
   const updateInvoiceCount = async () => {
-    console.log("total invocie", totalInvoiceField)
+    
     if (totalInvoiceField != undefined) {
       let newCount = await getValues(totalInvoiceField);
       setCurrentInvoiceCount(newCount[0][totalInvoiceField["name"]]);

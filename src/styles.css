@@ -116,15 +116,16 @@ display: flex;
 left: 0;
 right: 0;
 top: 0;
-padding: 1em 0em;
+/*padding: 1em 0em;*/
 padding-left: 1em;
 background: #fff;
-box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
+/*box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);*/
+box-shadow: 0px 1px 5px 0px rgb(215 215 215);
 z-index: 999999;
 }
 
 #nav2 {
-margin-top: 9em;
+/*margin-top: 9em;*/
 }
 
 
@@ -217,9 +218,10 @@ border-top-right-radius: 0.25rem;
 font-weight: 400;
 color: #999;
 position: relative;
-font-size: 1.1em;
+font-size: 1rem !important;
 line-height: 1.1;
-min-height: 4.2em;
+min-height: 2.5rem;
+/*min-height: 4.2em;*/
 padding: 0;
 display: flex;
 flex-direction: column;
@@ -1296,6 +1298,8 @@ margin: 0;
 height: unset;
 top: 0%;
 z-index: 999;
+border-left: 1px solid lightgray;
+box-shadow: -3px 0px 9px 1px lightgray;
 }
 
 #slideOut1 p,
@@ -1328,17 +1332,16 @@ text-align: center;
 top: 0px;
 right: 72px;
 z-index: 87;
-box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.2);
+/*box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.2);*/
 border-top-right-radius: 1rem;
 padding: 0.5rem 0.75rem 1.25rem 0.75rem;
 position: relative !important;
 display: flex;
 align-items: center;
 justify-content: space-around;
-background: linear-gradient(87.17deg, #86e0b0 -12.81%, #61d5ff 123.59%);
 transform: rotate(-90deg);
 
-background: #e2e9ea
+/*background: #e2e9ea*/
 
 }
 
@@ -1348,7 +1351,7 @@ top: 45px;
 right: 72px;
 max-width: 143px;
 z-index: 88;
-box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.3);
+/*box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.3);*/
 padding: 0.5rem 0.75rem 1.25rem 0.75rem;
 border-top-left-radius: 1rem;
 position: absolute !important;
@@ -1358,7 +1361,7 @@ align-items: center;
 justify-content: space-around;
 
 transform: rotate(-90deg);
-background: white;
+/*background: white;*/
 }
 
 .fa-info {
@@ -1798,7 +1801,8 @@ padding-left: 2em;
 color: black;
 
 font-weight: 300;
-font-size: 1em;
+/*font-size: 1em*/;
+font-size: 0.9rem;
 margin: 0em;
 padding: 0em;
 padding-left: 2em;
@@ -3138,7 +3142,7 @@ box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.2);
 }
 
 .openTab {
-background-color: #ff9371;
+background-color: #e2e9ea;
 color: black;
 position: fixed;
 right: -1.8rem;
@@ -4738,7 +4742,8 @@ font-weight: 500;
 background: white;
 }
 .accordion-item {
-margin-bottom: 1em !important;
+/*margin-bottom: 1em !important;*/
+margin-bottom: 0.5rem !important;
 }
 
 .accordion-item {
@@ -4758,7 +4763,8 @@ position: relative;
 z-index: 25;
 margin: 0em;
 border-radius: 0.75rem;
-box-shadow: 0px 15px 30px 2px rgba(4, 47, 78, 0.16);
+/*box-shadow: 0px 15px 30px 2px rgba(4, 47, 78, 0.16);*/
+box-shadow: 0px 1px 12px 1px rgba(4, 47, 78, 0.16);
 }
 
 .accordion-button:not(.collapsed) {
@@ -5160,8 +5166,9 @@ height: auto;
 /* top: 65px; */
 
 z-index: 0;
-top: 288px;
-top: 160px;
+/*top: 288px;*/
+/*top: 160px;*/
+top:130px;
 }
 
 #slideOut3p,
@@ -5187,10 +5194,12 @@ display: none;
 
 #one3 {
 text-align: center;
-top: 328px;
+/*top: 328px;*/
+top:150px;
 left: 0px;
 z-index: 87;
-box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.2);
+/*box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.2);*/
+box-shadow: 0px 1px 9px 1px rgba(0, 0, 0, 0.2);
 
 padding: 1em 0.7em;
 
@@ -5452,7 +5461,7 @@ background: transparent !important;
 color: black !important;
 background: transparent !important;
 color: black !important;
-width: 10px !important;
+/*width: 15px !important;*/
 box-shadow: none;
 position: absolute;
 right: 10px;
@@ -5463,8 +5472,16 @@ padding: 0 !important;
 margin: 0 !important;
 min-width: 15px;
 min-height: 7px;
-height: 10px;
+/*height: 10px;*/
 z-index: 99;
+}
+
+.quick-filter-label {
+  font-size: 0.9rem;
+}
+
+.btn:first-child:active, .close {
+  border-color: white !important;
 }
 
 .show3 .modal-body {
@@ -5506,7 +5523,7 @@ padding: 6px 10px;
 
 .show3 .modal-body button {
 width: 100%;
-margin: 0.5em 0em;
+/*margin: 0.5em 0em;*/
 }
 
 .tab-pane {
@@ -5524,7 +5541,8 @@ text-transform: uppercase;
 }
 
 #slideOut3 .modal-header {
-border-bottom: 1px solid var(--black);
+/*border-bottom: 1px solid var(--black);*/
+border-bottom: 1px solid #e1e1e1;
 text-align: center;
 padding-top: 1em;
 display: flex;
@@ -6140,11 +6158,13 @@ border-top-right-radius: 1rem;
 border-bottom-right-radius: 1rem;
 opacity: 0.9;
 width: auto;
-top: 94px;
+/*top: 94px;*/
+top:75px;
 left: -10px;
 min-width: 167px;
 max-width: 185px;
-box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.3);
+/*box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.3);*/
+box-shadow: 0px 1px 7px 1px rgba(0, 0, 0, 0.3);
 background: var(--red) !important;
 max-height: 40px;
 display: flex;
@@ -6209,7 +6229,8 @@ opacity: 1;
 overflow-y: auto;
 overflow-x: hidden;
 border-bottom-right-radius: 1rem;
-top: 78px;
+/*top: 78px;*/
+top:69px;
 }
 
 .dark-mode #slideOut5 .modal-content,
@@ -6785,8 +6806,19 @@ flex-wrap: nowrap;
 }
 
 .show #slideOut3 {
-top: 192px;
+/*top: 192px;*/
 z-index: 5;
+}
+
+.active-form {
+  background: #FFF !important;
+  border: 1px solid lightgrey;
+  box-shadow: 0px 0px 6px 1px lightgray;
+}
+
+.slideButton {
+  z-index: 1 !important;
+  padding: 0.5rem 0rem !important;
 }
 
 .accordion.mb-3 {
@@ -6798,6 +6830,7 @@ padding: 0em 6.4em;
 max-width: 1900px;
 margin: 0px auto;
 transition: margin-inline-start 0.65s ease, -webkit-margin-start 0.45s ease;
+margin-left: 100px;
 }
 
 .show3 .modal-body {
@@ -6809,7 +6842,7 @@ margin-inline-start: 250px !important;
 }
 .show3 .modal-body button {
 width: 100%;
-margin: 0.35em 0em;
+/*margin: 0.35em 0em;*/
 }
 
 .accordion-header {
@@ -6818,7 +6851,7 @@ padding: 0.2em;
 
 .show3 .modal-body button {
 width: 100%;
-margin: 0.5em 0.25em;
+/*margin: 0.5em 0.25em;*/
 }
 
 .buttons.across button {
@@ -6827,13 +6860,14 @@ margin: 0.5em 0em 0.5em 0.75em;
 }
 
 .mediumFont {
-font-size: 17px;
+font-size: 16px;
 }
 
 /* AaronM 07/25/23 */
 .modal-actions {
-padding: 1rem 1rem 0.5rem 1rem;
-box-shadow: 0px 15px 30px 2px rgba(4, 47, 78, 0.16);
+padding: 0rem 1rem 0.5rem 1rem;
+/*box-shadow: 0px 15px 30px 2px rgba(4, 47, 78, 0.16);*/
+box-shadow: 0px 1px 10px 1px rgba(4, 47, 78, 0.16);
 }
 
 .comparison-date-button {
@@ -7090,9 +7124,15 @@ transform: translateY(-5px);
   border-top: 1px solid lightgray;
   font-weight: 600;
   font-family: system-ui;
-  height: 50px;
+  height: 60px;
   transition: 0.2s;
   color: black;
+}
+
+p.rank {
+  font-size: 0.7rem;
+  color: #a5a5a5;
+  padding-top: 5px;
 }
 
 .landing-page-action {

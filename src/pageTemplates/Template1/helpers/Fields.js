@@ -39,7 +39,7 @@ const Fields = ({
   }
 
   // function handleFieldAll(value) {
-  //   console.log(tabList);
+  //   
   //   let tabs = [...tabList];
   //   tabs[currentInnerTab]['selected_fields'] = fieldOptions?.map(f => {return f['name']});
   //   setTabList(tabs)

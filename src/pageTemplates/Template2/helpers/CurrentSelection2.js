@@ -128,7 +128,7 @@ export const CurrentSelection2 = ({
       selection.selection_type === "updated"
         ? JSON.parse(JSON.stringify(updatedFilters))
         : JSON.parse(JSON.stringify(selectedFilters));
-    console.log("selection delete",type[selection.type][selection.key])
+    
     if (Array.isArray(type[selection.type][selection.key])) {
       let index = type[selection.type][selection.key].indexOf(selection.value);
       type[selection.type][selection.key].splice(index,1);
@@ -209,7 +209,7 @@ export const CurrentSelection2 = ({
           return !updatedSelection.some((u) => s.label == u.label);
         })
         .map((selection) => {
-          console.log("selection",selection)
+          
           return (
             <>
             <OverlayTrigger

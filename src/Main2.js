@@ -1,33 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Container, Tab, Tabs, Nav, NavItem } from "react-bootstrap";
+import { Container, Tab, Tabs, Nav } from "react-bootstrap";
 import SideForm from "./components/nav/Form.js";
-import PurchasesReview from "./pageTemplates/PurchasesReview/PurchasesReview.js";
-import InflationDeflation from "./pageTemplates/InflationDeflation/InflationDeflation.js";
 import ToTopButton from "./components/ToTopButton.js";
 import NavbarMain from "./components/NavbarMain.js";
 import Footer from "./components/Footer.js";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import moment from "moment";
-import Template1 from "./pageTemplates/Template1/Template1.js";
 import TopNav from "./components/nav/TopNav.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-
-import {
-  LOOKER_MODEL,
-  LOOKER_EXPLORE,
-  LOOKML_FIELD_TAGS,
-  PRODUCT_MOVEMENT_VIS_DASHBOARD_ID,
-} from "./utils/constants2.js";
-
 import { Link, useRouteMatch, useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom/cjs/react-router-dom.js";
 import {
-  getApplication,
-  getApplicationTags,
-  getApplicationTabs,
-  getTabVisualizations,
-  getTabTags,
   getSavedFilterService,
   removeSavedFilterService,
   insertSavedFilterService,
@@ -35,8 +19,11 @@ import {
 } from "./utils/writebackService.js";
 import { LayoutSelector } from "./LayoutSelector.js";
 
+//Create context for child components to use states
 export const ApplicationContext = React.createContext({})
 
+
+//Main2 is the main component of the app in which it initializes the application, the tabs and all of the attributes associated with the tabs
 export const Main2 = () => {
   const extensionContext = useContext(ExtensionContext);
   const sdk = extensionContext.core40SDK;
@@ -72,21 +59,11 @@ export const Main2 = () => {
 
   const history = useHistory();
 
-  const slideIt = (show) => {
-    setShowMenu(show);
-  };
-
-  useEffect(() => {
-    console.log("tabFilters", tabFilters)
-  },[tabFilters])
-
   const handleChangeKeyword = (e) => {
     setKeyword(e.target.value);
   };
 
-  useEffect(() => {}, [updatedFilters]);
-
-  // Initialize the states
+  // Group each field with their respective tags
   useEffect(() => {
     function groupFieldsByTags(fields) {
       const fieldsByTag = {};
@@ -109,6 +86,7 @@ export const Main2 = () => {
       return fieldsByTag;
     }
 
+    // Creating the tab state along with tab specific tags
     const initializeTabs = async (tabs, tabTags, fieldsByTag, application) => {
       if (tabs) {
         if (tabs.length > 0) {
@@ -127,12 +105,14 @@ export const Main2 = () => {
           setFields(_fields);
 
           let _appProperties = [];
+          
           for await (let p of tabTags.filter(
             ({ tag_group }) => tag_group == "property"
           )) {
             if (
               !_appProperties.filter((prop) => prop.type == p.type).length > 0
             ) {
+              
               let _type = p.type;
               let _text = p.att1;
               let _tag = p.tag_name;
@@ -141,6 +121,7 @@ export const Main2 = () => {
               let _options = "";
               if (p.option_type === "single_value") {
                 let value = await getValues(_fields[0], {}, application);
+                
                 _options = value[0];
               }
               if (_options != []) {
@@ -154,6 +135,7 @@ export const Main2 = () => {
               }
             }
           }
+          
           setProperties(_appProperties);
 
           let _tabFilters = [];
@@ -206,6 +188,7 @@ export const Main2 = () => {
       }
     };
 
+    //Creating the filter state and adding to the default filters when the app loads
     const createFilters = async (
       applicationTags,
       fieldsByTag,
@@ -215,13 +198,13 @@ export const Main2 = () => {
       let _filters = [];
       let _defaultSelected = {}
       let _defTags = applicationTags.find(({type}) => type === "default_filter");
-      console.log(_defTags)
+      
       let _defaultFilterFields = fieldsByTag[_defTags?.tag_name]
       for await (let f of applicationTags.filter(({ tag_group }) => tag_group == "filters")) {
         let _type = f.type;
         let _tag = f.tag_name;
         let _fields = fieldsByTag[_tag];
-        console.log("tags", _tag + ' ' + _fields)
+        
         let _options = []
         if (f.option_type === "date range") {
           _options = { field: _fields[0], values: await getDefaultDateRange() };
@@ -259,6 +242,7 @@ export const Main2 = () => {
       getOptionValues(_filters, application);
     };
 
+    //Creating the parameter to be able to switch between Looker based parameters for a visualization
     const createParameters = async (applicationTags, fieldsByTag) => {
       let _appToggles = [];
       for await (let p of applicationTags.filter(
@@ -280,6 +264,7 @@ export const Main2 = () => {
       setParameters(_appToggles);
     };
 
+    //Initialize the global tags for the application such as filters and parameters
     const initializeAppTags = async (
       applicationTags,
       fieldsByTag,
@@ -292,6 +277,7 @@ export const Main2 = () => {
       }
     };
 
+    //Get the dimensions, measures and parameters from the LookML
     const fetchLookMlFields = async (model, explore) => {
       const response = await sdk.ok(
         sdk.lookml_model_explore(model, explore, "fields")
@@ -309,6 +295,8 @@ export const Main2 = () => {
       return groupFieldsByTags(lookmlFields);
     };
 
+    //Initial process to load the context data to get the application information that was in the database
+    //Also, starts the creation of the tabs and create the application tags
     const initialize = async () => {
       let userInfo = await getUser();
       setUser(userInfo);
@@ -337,6 +325,7 @@ export const Main2 = () => {
     return await sdk.ok(sdk.me());
   };
 
+  //Once the filter state get created, this gets run to get the values of each field to be placed in the dropdowns
   const getOptionValues = async (filters, application) => {
     let _filters = [];
     let filterArr = [...filters];
@@ -374,6 +363,7 @@ export const Main2 = () => {
     setFilters(_filters);
   };
 
+  //Adding a default to the date range
   const getDefaultDateRange = () => {
     let prevMonth = moment().subtract(1, "month");
     let startOfMonth = prevMonth
@@ -384,6 +374,7 @@ export const Main2 = () => {
     return `${startOfMonth} to ${endOfMonth}`;
   };
 
+  //Generic function to get values for specific fields
   const getValues = (field, filters, application = null) => {
     let _application = application;
     if (_application == null) {
@@ -404,6 +395,7 @@ export const Main2 = () => {
           })
         )
         .catch((ex) => {
+          
           return [];
         });
     } catch {
@@ -411,6 +403,7 @@ export const Main2 = () => {
     }
   };
 
+  //Function that updates the properties that are shown in the tabs
   const updateAppProperties = async (filters) => {
     let newProps = [];
     for await (let prop of properties) {
@@ -421,10 +414,12 @@ export const Main2 = () => {
     setProperties(newProps);
   };
 
+  //Get the extension context data
   const getContextData = () => {
     return extensionContext.extensionSDK.getContextData();
   };
 
+  //Load the saved filters into the app based on user id
   const getSavedFilters = async (
     app = applicationInfo,
     userInfo = user,
@@ -435,6 +430,7 @@ export const Main2 = () => {
     setSavedFilters(_newFilters);
   };
 
+  //Make sure the filter fields are available to show for the saved filters to use
   const parseSavedFilters = async (savedFilters, _filters) => {
     const _newFilters = savedFilters?.map((sf) => {
       const _filter = {};
@@ -469,10 +465,12 @@ export const Main2 = () => {
     return _newFilters;
   };
 
+  //Remove saved filters
   const removeSavedFilter = async (id) => {
     await removeSavedFilterService(id, sdk).then((r) => getSavedFilters());
   };
 
+  //Create or update a saved filter
   const upsertSavedFilter = async (type, obj) => {
     if (type == "update") {
       await updateSavedFilterService(obj.id, obj.title, obj.global, sdk).then(
@@ -512,7 +510,7 @@ export const Main2 = () => {
             handleChangeKeyword:handleChangeKeyword,
             savedFilters:savedFilters,
             removeSavedFilter:removeSavedFilter,
-            upsertSavedFilter:upsertSavedFilter,
+            upsertSavedFilter:upsertSavedFilter
             }}>
           <TopNav />
           <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
@@ -542,9 +540,6 @@ export const Main2 = () => {
                         fieldGroups={fieldGroups}
                       />
                     )}
-                    {/* <Route path={`${route.url}/`}>
-                    <Test />
-                    </Route> */}
                   </>
                 </Tab.Content>
               </div>

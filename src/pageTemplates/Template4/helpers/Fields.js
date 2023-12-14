@@ -14,7 +14,7 @@ const Fields = ({
   const [expandMenu, setExpandMenu] = useState(false);
 
   function handleFieldSelection(fieldName) {
-    console.log(fieldName)
+    
     setUpdateBtn(false);
     let tabs = [...tabList];
     let currentTab = tabs[currentInnerTab];
@@ -45,7 +45,7 @@ const Fields = ({
     setExpandMenu(true)
   }
 
-  console.log(fieldOptions, "lixxi")
+  
 
   return (
     <>

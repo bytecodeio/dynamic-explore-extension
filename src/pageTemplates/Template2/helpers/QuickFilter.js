@@ -27,9 +27,9 @@ const QuickFilter = ({ quickFilters, selectedFilters, selection, setSelectedFilt
   }
 
   const isActive = (key, v) => {
-    console.log("test",selectedFilters[type][key])
+    
     const val = v.join(',')
-    console.log("test",v.join(','))
+    
     if (!selectedFilters[type]?.hasOwnProperty(key)) {
       return false
     }

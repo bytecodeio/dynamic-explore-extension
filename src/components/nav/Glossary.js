@@ -1018,7 +1018,7 @@ const handleLetterClick = (clickedLetter) => {
 //       setItems([...currentlySelected])
   };
   //
-  // console.log("items", items)
+  // 
 
   const filteredItems = items.includes('All') ? dictionary : dictionary.filter((img) => items.includes(img.dataFilter));
   const showItems = keyword === "" ? filteredItems : filteredItems.filter(item => item.definition.indexOf(keyword) !== -1);

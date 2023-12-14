@@ -9,7 +9,7 @@ export const SavedFilters = ({savedFilters, handleVisUpdate, setSelectedFilters,
     const [openEdit, setOpenEdit] = useState(false)
 
     useEffect(() => {
-        console.log("saved filters", savedFilters)
+        
     },[savedFilters])
 
     const handleSavedFilterClick = async (filter) => {
@@ -18,16 +18,16 @@ export const SavedFilters = ({savedFilters, handleVisUpdate, setSelectedFilters,
     }
 
     const handleSavedFilterRemoval = (id) => {
-        console.log("remove saved filter", id)
+        
         removeSavedFilter(id)
     }
 
     const handleNewSavedFilterPopover = () => {
-        console.log("open", target)
+        
         setOpen(!open)
     }
     const handleUpdateSavedFilter = () => {
-        console.log("open", target)
+        
         setOpenEdit(!openEdit)
     }
 

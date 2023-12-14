@@ -5,7 +5,7 @@ import EmbedTable from "./EmbedTable";
 export const EmbedContainer = ({vis, visList, updateVisList, handleVisUpdate}) => {
     const [openPopover, setOpenPopover] = useState(false)
     useEffect(() => {
-        console.log("vis obj", vis)
+        
     },[visList])
 
     const handleToggle = (el, o) => {

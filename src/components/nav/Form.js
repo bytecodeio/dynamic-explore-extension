@@ -35,7 +35,7 @@ function SideForm() {
         <div className="slideOutTab1">
           <div
             id="one1"
-            className="openTab bottomShadow"
+            className={`openTab ${show == 'glossary'? "active-form":''}`}
             role="button"
             tabIndex="0"
             onClick={() => setShow('glossary')}
@@ -48,7 +48,7 @@ function SideForm() {
 
           <div
             id="two"
-            className="openTab bottomShadow"
+            className={`openTab ${show == 'how_to'? "active-form":''}`}
             data-dismiss="modal"
             aria-controls="right-nav-contact"
             onClick={() => setShow('how_to')}

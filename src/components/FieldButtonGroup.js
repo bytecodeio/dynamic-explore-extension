@@ -15,7 +15,7 @@ export const FieldButtonGroup = ({fieldGroups, visList, setVisList, handleTabVis
                 })
             })
             setSelectedFieldGroup({})
-            console.log("visList", _visList)
+            
         } else {
             let _newList = _visList.map(v => {
                 if (v.visId == "tabbedVis1") {
@@ -28,7 +28,7 @@ export const FieldButtonGroup = ({fieldGroups, visList, setVisList, handleTabVis
 
                     v['selected_fields'] = v['selected_fields'].concat(groupList)
                 }
-                console.log("vislist", v)
+                
                 return v
             })
             setSelectedFieldGroup({

@@ -17,7 +17,7 @@ const AccountGroups = ({
 
   useEffect(() => {
     if (fieldOptions['options']) {
-      console.log(fieldOptions)
+      
       setField(fieldOptions['options']['field']['name'])
       setOptions(fieldOptions['options']['values'])
     }
@@ -48,7 +48,7 @@ const AccountGroups = ({
   const handleFieldsAll = () => {
     let filters = {...selectedFilters};
     let allVals =fieldOptions['options']['values'].map(opt => {return Object.values(opt)[0]}) 
-    console.log(allVals)
+    
     setSelectedOptions(allVals)
     filters[account_key][field] = allVals.join(",")
     setSelectedFilters(filters)

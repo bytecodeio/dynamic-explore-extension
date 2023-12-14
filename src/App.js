@@ -20,20 +20,23 @@ export const App = hot(() => {
 
   const isLandingPage = () => {
     const extensionContext = useContext(ExtensionContext)
-    console.log("extension", extensionContext)
+    
   }
   return (
     <ExtensionProvider>
       <Switch>
-      <Route exact path='/print'>
+        {/*Route for Print page for exporting a visualization*/}
+        <Route exact path='/print'>
           <PrintPage />
         </Route>
+        {/*Route for Admin page for updating the context data*/}
         <Route exact path='/admin'>
           <AdminPage />
         </Route>
         <Route path='/:path/'>
           <Main2 />
         </Route>
+        {/*Route for InitialPage page which decides whether to go to Main2 or Landing Page*/}
         <Route exact path="/">
           <InitialPage />
         </Route>

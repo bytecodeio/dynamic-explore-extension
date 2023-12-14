@@ -26,7 +26,7 @@ function TopNav(props) {
           apps['tabs'] = tabs
           appList.push(apps)
         }
-        console.log("sitemap",appList)
+        
         setNavList(appList);
       }
     }    
@@ -48,7 +48,7 @@ function TopNav(props) {
     let host = extensionContext.extensionSDK.lookerHostData;
     let type = host.hostType == "spartan"? "spartan":"extensions"
     let url = `${host.hostUrl}/${type}/order_express::${app['route']}/${tab['route']}`
-    console.log(url)
+    
     extensionContext.extensionSDK.openBrowserWindow(url)
   }
 

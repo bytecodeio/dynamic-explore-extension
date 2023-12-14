@@ -130,7 +130,7 @@ export const insertSavedFilterService = async (user,app,filters,title,global,sdk
             })
             )
         const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));
-        console.log("response", response)
+        
         return response
     }
     return asyncFunction(user,app,filters,title,global,sdk);
@@ -146,7 +146,7 @@ export const updateSavedFilterService = async (id,title,global,sdk) => {
             })
             )
         const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));
-        console.log("response", response)
+        
         return response
     }
     return asyncFunction(id,title,global,sdk);
@@ -164,7 +164,7 @@ export const getApplications = async (sdk) => {
             })
             )
         const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));
-        console.log("response", response)
+        
         return response
     }
     return asyncFunction(sdk);
@@ -182,7 +182,7 @@ export const getTabAttributes = async (id,sdk) => {
             })
             )
         const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));
-        console.log("response", response)
+        
         return response
     }
     return asyncFunction(id,sdk);
@@ -202,8 +202,26 @@ export const getLandingPageApplications = async (sdk) => {
             })
             )
         const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));
-        console.log("response", response)
+        
         return response
     }
     return asyncFunction(sdk);
+}
+
+export const updatePageViews = async (sdk,id) => {
+    const asyncFunction = async (sdk,id) => {
+        const slugResponse = await sdk
+            .ok(
+            sdk.create_sql_query({
+                connection_name: connection,
+                sql: `UPDATE ${scratch_schema}.cms_application
+                    SET views = views + 1
+                    WHERE id = ${id};`,
+            })
+            )
+        const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));
+        
+        return response
+    }
+    return asyncFunction(sdk,id);
 }

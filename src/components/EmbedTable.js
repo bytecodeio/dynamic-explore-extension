@@ -29,7 +29,7 @@ const EmbedTable = ({ queryId }) => {
   const { extensionSDK } = useContext(ExtensionContext);
 
   useEffect(() => {
-    console.log("application context", application)
+    
   },[application])
 
   const embedCtrRef = useCallback(

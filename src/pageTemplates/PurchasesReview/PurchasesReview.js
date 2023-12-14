@@ -510,7 +510,7 @@ const PurchasesReview = ({
 
 
     const defaultChosenValue = localStorage.getItem('choseClearAll');
-    console.log('local storage value first', defaultChosenValue)
+    
 
 
 

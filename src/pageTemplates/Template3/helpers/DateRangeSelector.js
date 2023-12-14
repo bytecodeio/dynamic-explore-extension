@@ -93,7 +93,7 @@ export const DateRangeSelector = ({
       setUpdatedFilters(JSON.parse(JSON.stringify(selectedFilters)))
     }
 
-    console.log("filter options",dateFilterOptions)
+    
   }, [])
 
   const onDateSelection = (e, type) => {

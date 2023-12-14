@@ -98,8 +98,8 @@ const Template4 = ({
   useEffect(() => {
     if (params.path == tabKey) {
       if (!isMounted) {
-        console.log("Mounting")
-        console.log("application", application)
+        
+        
         try {
           fetchDefaultFieldsAndFilters();
           setIsMounted(true)
@@ -145,12 +145,12 @@ const Template4 = ({
             }
           })
 
-          console.log("filter options", _tileFilterOptions)
+          
           let vis = {}
-          console.log("selected tabs",selectedFilters)
+          
           let { client_id } = t['result_maker']['query'];
           //let newClientId = await loadDefaultVisualizations(client_id, _selectedFilters)
-          //console.log(newClientId)
+          //
           vis = {
             visId: visConfig['vis_name'],
             title: t['title'],
@@ -165,14 +165,14 @@ const Template4 = ({
 
           // if (initialLoad && i === 0) {
           //   //Finish default query
-          //   console.log("dashboard element", t.result_maker.query.filters)
+          //   
           //   setInitialLoad(false)
           // }
         }
       } else (setInitialLoad(false))
 
     }
-    console.log("visList", _visList)
+    
     setVisList(_visList)
 
     setSelectedFields(fields);
@@ -224,7 +224,7 @@ const Template4 = ({
         if (!(key == "date range" && Object.keys(filters['date filter']).length > 0)) {
           if (key === "date range") {
             let val = Object.keys(filters[key]);
-            console.log(val)
+            
             filters[key][val] = filters[key][val].replace("-","/");
             filter = {...filter, ...filters[key]}
           } else {
@@ -241,7 +241,7 @@ const Template4 = ({
     if (!Array.isArray(_visList)) {
       _visList = [...visList];
     }    
-    console.log("visList", _visList)
+    
     let currentVis = _visList.find(({ index }) => index === currentInnerTab)
 
     let _filters = {};
@@ -281,7 +281,7 @@ const Template4 = ({
 
     let _filters = {};
     _filters = await formatFilters(JSON.parse(JSON.stringify(updatedFilters)));
-    console.log("currentvis", currentVis)
+    
     _filters = { ..._filters, ...currentVis['localSelectedFilters'] }
 
     const { vis_config, fields, model, view } = await sdk.ok(sdk.query_for_slug(currentVis['query']));
@@ -307,7 +307,7 @@ const Template4 = ({
 
 
   async function doClearAll() {
-    console.log("baba")
+    
     setIsDefaultProduct(false);
     setUpdateButtonClicked(true);
 
@@ -379,7 +379,7 @@ const Template4 = ({
 
 
   // const defaultChosenValue = localStorage.getItem('choseClearAll');
-  // console.log('local storage value first', defaultChosenValue)
+  // 
   //
 
 

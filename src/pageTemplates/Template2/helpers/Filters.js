@@ -40,7 +40,7 @@ const Filters = ({
 
 
   function handleFilterSelection(filterName, el, newValue) {
-    console.log(filterName, newValue,el)
+    
     setSelectedFilters((prevFilters) => {
       const newFilters = { ...prevFilters };
       newFilters[type][filterName] = newValue;
@@ -85,7 +85,7 @@ const Filters = ({
                 })}
                 //value={isDefault ? selectedFilters[filterOption.name] : "N/A"}
               /> */}
-              {console.log("value",selectedFilters[type][filterOption['field']['name']])}
+              
               <Autocomplete name={filterOption.name}
                 multiple
                 onChange={(el,v) => handleFilterSelection(filterOption.field.name,el,v)}

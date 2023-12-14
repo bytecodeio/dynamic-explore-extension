@@ -160,7 +160,7 @@ const InflationDeflation = ({
   }, []);
 
   // const addDefaultFilters = (filter) => {
-  //   console.log("dashboard Filters", filterOptions)
+  //   
   //   if (filterOptions.find(f => {return f['name'] == filter['name']})) {
   //     let selFilters = {...selectedFilters};
   //     let key = filter['name'];
@@ -229,7 +229,7 @@ const InflationDeflation = ({
   }, [filterOptions, isFetchingLookmlFields]);
 
 
-  // console.log("one", filterSuggestions)
+  // 
 
 
 
@@ -292,7 +292,7 @@ const InflationDeflation = ({
   }, [quickFilterOptions, isFetchingLookmlFields]);
 
 
-  // console.log("two", quickFilterSuggestions)
+  // 
 
 
 
@@ -465,7 +465,7 @@ const InflationDeflation = ({
 
 
               const defaultChosenValue = localStorage.getItem('choseClearAll');
-              console.log('local storage value first', defaultChosenValue)
+              
 
 
 
