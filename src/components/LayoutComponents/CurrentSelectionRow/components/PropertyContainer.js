@@ -1,9 +1,17 @@
 import React from 'react'
+import { LoadingComponent } from '../../../LoadingComponent'
+import { waveform } from 'ldrs'
+waveform.register()
 
-export const PropertyContainer = ({properties}) => {
+export const PropertyContainer = ({properties,propertiesLoading}) => {
+    const formatNumber = (value) => {
+        let number = value.toLocaleString()
+        return number
+    }
     return(
         <>
-            {properties?.find(({ group }) => group === "property") ? (
+            {properties?.find(({ group }) => group === "property") && Object.values(properties?.find(({group}) => group === "property").value).length > 0 ? (
+                
                 <p>
                     <b>
                         {
@@ -12,10 +20,13 @@ export const PropertyContainer = ({properties}) => {
                         }
                     </b>{" "}
                     <span className="highlight large">
-                        {Object.values(
-                        properties?.find(({ group }) => group === "property")
-                            ?.value
-                        )}
+                        {propertiesLoading?
+                            <l-waveform size="20" stroke="2" speed="1" color="black" />                    
+                        :                        
+                            formatNumber(Object.values(
+                                properties?.find(({ group }) => group === "property")
+                                    ?.value)
+                                )}
                     </span>
                 </p>
             ) : (

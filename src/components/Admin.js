@@ -5,12 +5,27 @@ import { getApplication, getApplicationTags, getApplicationTabs, getTabVisualiza
 
 export const AdminPage = () => {
 
+    const [application, setApplication] = useState([])
+    const [applicationTags, setApplicationTags] = useState([])
+
     const extensionContext = useContext(ExtensionContext);
     const sdk = extensionContext.core40SDK;
 
     const updateContextData = (data) => {
         extensionContext.extensionSDK.saveContextData(data)
       }
+
+    useEffect(() => {
+      const initialize = async () => {
+        let extensionId = extensionContext.extensionSDK.lookerHostData.extensionId.split("::")[1];
+        let _app = await getApplication(extensionId,sdk)
+        setApplication(_app)
+        let _appTags = await getApplicationTags(_app[0].id, sdk);
+        console.log(_appTags)
+        setApplicationTags(_appTags)
+      }
+      initialize();
+    },[])
 
     const handleDataRefresh = async () => {
         let extensionId = extensionContext.extensionSDK.lookerHostData.extensionId.split("::")[1];
@@ -41,6 +56,49 @@ export const AdminPage = () => {
     return (
         <div>
             <Button onClick={handleDataRefresh}>Refresh data</Button>
+            <h3>Application Info</h3>
+            <Table data={application} />
+            <h3>Application Tags</h3>
+            <Table data={applicationTags} />
         </div>
     )
+}
+
+const Table = ({data}) => {
+  const [keys, setKeys] = useState({})
+  useEffect(() => {
+    if (data.length > 0) {
+      setKeys(data[0])
+    }
+  },[])
+return (
+  <>
+  {data?
+        <table>
+        <thead>
+          {Object.keys(keys).map(head => {
+            return (
+              <th>{head}</th>
+            )
+          })}
+        </thead>
+      <tbody>
+        {data.map(row => {
+          return(
+          <tr>
+            {Object.values(row).map(val => {
+              return (
+                <td>{val}</td>
+              )
+            })}
+          </tr>
+          )
+
+        })}
+
+      </tbody>
+    </table>
+  :''}
+</>
+)
 }

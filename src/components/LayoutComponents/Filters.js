@@ -40,7 +40,6 @@ const Filters = ({
 
 
   function handleFilterSelection(filterName, el, newValue) {
-    
     setSelectedFilters((prevFilters) => {
       const newFilters = { ...prevFilters };
       newFilters[type][filterName] = newValue;
@@ -54,6 +53,16 @@ const Filters = ({
   }
 
   const optionTest = ['Test', 'Test2']
+
+  const formatValues = (name,val) => {
+    let ret = val.map(v => {
+      return v[name]
+    })
+    let _filtered = ret.filter(v => {
+      return v != null || v != undefined
+    })
+    return _filtered
+  }
 
   return (
     <>
@@ -74,36 +83,29 @@ const Filters = ({
       <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
         <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
         {filters.options.map((filterOption) => (
-          //filterOption.values.length > 0?
+          formatValues(filterOption.field.name,filterOption.values)?.length > 0?
           <div className="one" key={filterOption.name}>
             <p variant="h6">{filterOption.field.label_short}</p>
-              {/* <FilterDropdown
-                handleChange={handleFilterSelection}
-                label={filterOption.field.label_short}
-                name={filterOption.field.name}
-                options={filterOption.values?.map(v => Object.values(v)).filter(v => {
-                  return !(v.includes(null) || v.includes(""))
-                })}
-                //value={isDefault ? selectedFilters[filterOption.name] : "N/A"}
-              /> */}
-              
-                <Autocomplete name={filterOption.name}
+             
+                <Autocomplete name={filterOption.name} className="filter-input"
+                  id="disable-clearable"
+                  PopperComponent={"bottom-start"}                  
                   multiple
                   onChange={(el,v) => handleFilterSelection(filterOption.field.name,el,v)}
                   renderInput={(params) => <TextField {...params} placeholder="Please select" />}
-                  value={selectedFilters[type][filterOption['field']['name']]}
+                  value={selectedFilters[type][filterOption['field']['name']] ?? []}
                   //name={filterOption.field.name}
-                  options={optionTest}
                   // options={filterOption.values?.map(v => Object.values(v)).filter(v => {
-                  //   return !(v.includes(null) || v.includes(""))
+                  //   if (!v.includes(null) || !v.includes("")) {
+                  //     return v[0]
+                  //   }
                   // })}
-                  
-                  //value={isDefault ? selectedFilters[filterOption.name] : "N/A"}
+                  options={formatValues(filterOption.field.name,filterOption.values)}
                 />
               
 
           </div>
-        //:''
+        :''
         )
         )}
       </div>

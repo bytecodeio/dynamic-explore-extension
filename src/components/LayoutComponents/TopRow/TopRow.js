@@ -113,7 +113,7 @@ export const TopRow = ({
                     <DateRangeSelector  dateRange={dateRange} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters}/>
                         <div className="endAbsolute">
                         <Button
-                            onClick={handleTabVisUpdate}
+                            onClick={() => handleTabVisUpdate({},selectedFilters,'date')}
                             className="btn">Update Dates
                         </Button>
                     </div>

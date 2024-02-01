@@ -1,30 +1,65 @@
-import React from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import { Row,Col } from 'react-bootstrap'
 import { CurrentSelection2 } from '../CurrentSelection2'
 import { PropertyContainer } from './components/PropertyContainer';
+import * as $ from "jquery";
 
-export const CurrentSelectionRow = ({toggle,properties, active,filters,selectedFilters,setSelectedFilters,updatedFilters,setUpdatedFilters,formatFilters,faClass,layoutProps}) => {
-    const handleClick = () => {
-        setToggle(!toggle);
-    
-        setTimeout(() => {
-          setActive(!active);
-    
-          setFaClass(!faClass);
-        }, 600);
+
+export const CurrentSelectionRow = ({properties,filters,selectedFilters,setSelectedFilters,updatedFilters,setUpdatedFilters,formatFilters,faClass,layoutProps,propertiesLoading}) => {
+  const [toggle, setToggle] = useState(true);
+  const [active, setActive] = useState(false);
+  const selectionRef = useRef(null)
+  const [listLength, setListLength] = useState(0)
+  const [selectionHeight, setSelectionHeight] = useState(0)
+  const [showToggle, setShowToggle] = useState(false);
+  const handleClick = () => {
+        setToggle(!toggle);    
+        setActive(!active);    
+        setFaClass(!faClass);
       };
+  useEffect(() => {
+    console.log("height",selectionRef)
+    setSelectionHeight(selectionRef.current.clientHeight)
+    let _updated = document.querySelectorAll('.tab-pane.active .theSelected .theOptions');
+    let _selected = document.querySelectorAll('.tab-pane.active.show .theSelected .dateChoice');
+    setListLength(_updated.length + _selected.length);
+  })
+
+                  // //jquery will be removed and changed, leave for now
+    
+                  // $(document).on("click", function () {
+                  //   if ($(".theSelected").height() > 74.8) {
+                  //     $(".theSelected")
+                  //       .addClass("theEnd")
+                  //       .css({ maxHeight: "76px", overflow: "hidden" });
+                  //     $(".hideThisEnd, .whiteBar").show();
+                  //   } else {
+                  //     $(".theSelected")
+                  //       .removeClass("theEnd")
+                  //       .css({ maxHeight: "unset", overflow: "unset" });
+                  //     $(".hideThisEnd, .whiteBar").hide();
+                  //   }
+                
+                  //   $("#numberCounter").html(
+                  //     $(".tab-pane.active .theSelected .theOptions").length +
+                  //       $(".tab-pane.active.show .theSelected .dateChoice").length
+                  //   );
+                  // });
+                  // $(window).resize(function () {
+                  //   $(document).trigger("click");
+                  // });
 
     return (
         <>
             <Row className="fullW d-flex align-items-center">
-              <Col md={12} lg={2}>
-                <PropertyContainer properties={properties} />
+              <Col md={12} lg={12}>
+                <PropertyContainer properties={properties} propertiesLoading={propertiesLoading} />
               </Col>
             </Row>            
             {layoutProps['current selection']?
             <Row className="fullW mt-1 position-relative">
               <Col xs={12} md={11}>
-                <div
+                <div ref={selectionRef}
                   className={
                     toggle
                       ? "d-flex justify-content-start align-items-center flex-wrap theSelected slide-up"
@@ -46,20 +81,22 @@ export const CurrentSelectionRow = ({toggle,properties, active,filters,selectedF
 
                 </div>
               </Col>
-              <div className="hideThisEnd" onClick={handleClick}>
-                <i
-                  className={
-                    faClass ? "fas fa-plus-circle" : "fas fa-minus-circle"
-                  }
-                >
-                  &nbsp;
-                  <span>
-                    {" "}
-                    {active ? "See Less" : "See All"} (
-                    <p id="numberCounter"></p>){" "}
-                  </span>
-                </i>
-              </div>
+              {selectionHeight >= 76?
+                <div className="see-all-toggle" onClick={handleClick}>
+                  <i
+                    className={
+                      faClass ? "fas fa-plus-circle" : "fas fa-minus-circle"
+                    }
+                  >
+                    &nbsp;
+                    <span className='see-all-text'>
+                      {" "}
+                      {active ? "See Less" : "See All"}({listLength}){" "}
+                    </span>
+                  </i>
+                </div>
+              :''}
+
             </Row>
             :''}
         </>

@@ -2,6 +2,7 @@ import React, {useContext, useState, useEffect} from "react"
 import { Button, Spinner } from "react-bootstrap"
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { LoadingComponent } from "./LoadingComponent";
 
 export const PrintPage = () => {
   const extensionContext = useContext(ExtensionContext)
@@ -26,8 +27,11 @@ export const PrintPage = () => {
     },[])
 
     const getUrl = async (_qid, _type) => {
+      console.log("qid", _qid)
       const {id} = await sdk.ok(sdk.query_for_slug(_qid));
-      const res = await sdk.ok(sdk.run_query({query_id:id, result_format:_type}));
+      console.log("id",id)
+      //const res = await sdk.ok(sdk.run_inline_query({value}, {timeout:3600}));
+      const res = await sdk.ok(sdk.run_query({query_id:id, result_format:_type, limit:5000}));
       
       let _url = URL.createObjectURL(res)
       setUrl(_url)
@@ -41,7 +45,7 @@ export const PrintPage = () => {
      return (
         <div>
             {initialLoad?            
-            <LoadingSpace />
+            <LoadingComponent />
             :
             <img src={url} onLoad={handlePrint} />
             }

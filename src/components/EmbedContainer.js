@@ -1,17 +1,23 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Form, Row, Col, Button, Container } from "react-bootstrap";
 import EmbedTable from "./EmbedTable";
+import {EmbedActionBar} from './EmbedActionBar'
 
 export const EmbedContainer = ({vis, visList, updateVisList, handleVisUpdate}) => {
     const [openPopover, setOpenPopover] = useState(false)
-    useEffect(() => {
-        
-    },[visList])
+    const [showMenu3, setShowMenu3] = useState(false)
+    const [active, setActive] = useState(false);
+    const [faClass, setFaClass] = useState(true);
+    const [toggle, setToggle] = useState(true);
+
+    console.log("vis list", vis);
 
     const handleToggle = (el, o) => {
         let _visList = [...visList];
         let currentVis = _visList.find(({index}) => index === vis.index);
         currentVis['localSelectedFilters'][o] = el.target.value;
+        console.log(currentVis)
+        console.log(_visList)
         updateVisList(_visList)
         handleVisUpdate(currentVis.index);
     }
@@ -19,27 +25,47 @@ export const EmbedContainer = ({vis, visList, updateVisList, handleVisUpdate}) =
     const handlePopover = () => {
         setOpenPopover(!openPopover)
     }
+
+    const slideIt3 = () =>{
+        setShowMenu3(!showMenu3)
+      }
+      const handleClick = () => {
+          setToggle(!toggle);
+    
+        setTimeout(() => {
+          setActive(!active);
+    
+          setFaClass(!faClass);
+        }, 600);
+    };
+
     return(
         <>
-        <Row>
-        <Col md={12} lg={5}>
+        <div id="embedWrapper" style={{position:'relative'}} className={showMenu3 ? "whole" : ""}>
+            <div className="embed-action-section">                    
+                <EmbedActionBar slideIt3={slideIt3} showMenu3={showMenu3} active={active} handleClick={handleClick} faClass={faClass} queryId={vis['query']} title={vis.title}/>
+            </div>
             {vis['tileFilterOptions'].length > 0?
-                vis['tileFilterOptions'].map(o => {
-                    return (
-                        <Form.Select onChange={(el) => handleToggle(el,o['name'])} value={vis['localSelectedFilters'][o['name']]}>
-                            {o.options.map(v => {
-                                return (
-                                <option key={v.value} value={v.value}> {v.label}</option>
-                                )
-                            })}
-                        </Form.Select>
-                    )
-                })
-                :''
+            <Row className="dimension-selector">
+                <Col md={12} lg={5}>            
+                    {vis['tileFilterOptions'].map(o => {
+                        return (
+                            <Form.Select onChange={(el) => handleToggle(el,o['name'])} value={vis['localSelectedFilters'][o['name']]}>
+                                {o.options.map(v => {
+                                    return (
+                                    <option key={v.value} value={v.value}> {v.label}</option>
+                                    )
+                                })}
+                            </Form.Select>
+                        )
+                    })}
+                </Col>
+            </Row>                
+            :''
             }
-            </Col>
-        </Row>
-        <EmbedTable queryId={vis.query} />
+            {/* <div class="embed-hide-run"></div> */}
+            <EmbedTable queryId={vis.query} vis={vis} />
+        </div>
         </>
     )
 }

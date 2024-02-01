@@ -15,7 +15,7 @@ const Fields = ({
   const [expandMenu, setExpandMenu] = useState(false);
 
   useEffect(() => {
-    
+    console.log("fields options", fieldOptions)
   },[fieldOptions])
 
   function handleFieldSelection(fieldName) {
@@ -50,6 +50,17 @@ const Fields = ({
     setExpandMenu(true)
   }
 
+  const sortData= (data) => {
+    if (data) {
+      return data.sort((a,b) => {
+       var x = a.label_short.toLowerCase();
+       var y = b.label_short.toLowerCase();
+           return x < y ? -1 : x > y ? 1 : 0;
+       });
+    }
+    return null
+   }
+
 
   return (
     <>
@@ -67,7 +78,7 @@ const Fields = ({
     }
     <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
       <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
-      {fieldOptions?.map((fieldOption) => (
+      {sortData(fieldOptions)?.map((fieldOption) => (
         <div className="one" key={fieldOption.name}>
           <Form.Group>
             <Form.Check

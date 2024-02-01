@@ -8,7 +8,8 @@ const LayoutProperties =     {
             'date filter':true,
             'description':true,
             'filters':true,
-            'account groups':true,
+            'account group':true,
+            'account filter':true,
             'fields':true,
             'current selection':true,
             'layout':'OneTabVisualization'
@@ -18,17 +19,19 @@ const LayoutProperties =     {
             'date filter':true,
             'description':true,
             'filters':true,
-            'account groups':true,
+            'account group':true,
+            'account filter':true,
             'fields':true,
             'current selection':true,
-            'layout':'OneTabVisualization'
+            'layout':'OneTabVisualizationWithVizAbove'
         },
         'Template4':{
             'date range':true,
             'date filter':true,
             'description':true,
-            'filters':false,
-            'account groups':true,
+            'filters':true,
+            'account group':true,
+            'account filter':true,
             'fields':false,
             'current selection':true,
             'layout':'DashboardVisualizations'
@@ -38,7 +41,8 @@ const LayoutProperties =     {
             'date filter':false,
             'description':false,
             'filters':false,
-            'account groups':false,
+            'account group':false,
+            'account filter':false,
             'fields':false,
             'current selection':false,
             'layout':'FullLookMLDashboard'

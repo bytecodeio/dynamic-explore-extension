@@ -6,23 +6,22 @@ const type = 'quick filter'
 
 const QuickFilter = ({ quickFilters, selectedFilters, selection, setSelectedFilters, updateBtn, setUpdateBtn, setIsFilterChanged }) => {
   const handleSelection = (e, name) => {
-    let quickFilters = JSON.parse(JSON.stringify(selectedFilters))
+    let quickFilters = {...selectedFilters}
     if (quickFilters[type]?.hasOwnProperty(name)) {
       if (quickFilters[type][name].includes(e.target.id)) {
-        //delete quickFilters[type][name]
         let index = quickFilters[type][name].indexOf(e.target.id)
         quickFilters[type][name].splice(index,1)
       } else {
         quickFilters[type][name].push(e.target.id)
       }
     } else {
-      quickFilters[type] = {[name]:[]}
+      quickFilters[type] = {...quickFilters[type],...{[name]:[]}}
       quickFilters[type][name].push(e.target.id)
     }
     if (quickFilters[type][name].length === 0){
       delete quickFilters[type][name]
     }
-    setSelectedFilters(JSON.parse(JSON.stringify(quickFilters)))
+    setSelectedFilters(quickFilters)
     setIsFilterChanged(true)
   }
 
@@ -42,7 +41,7 @@ const QuickFilter = ({ quickFilters, selectedFilters, selection, setSelectedFilt
       {quickFilters?.options.map(f => {
         return (
           <>
-            <div className="quick-filter-label">{f['field']['label']}</div>
+            {/* <div className="quick-filter-label">{f['field']['label']}</div> */}
             <ButtonGroup key={f['field']['label']} className="pb-2">
               {f['values']?.map(v =>
                 <Button

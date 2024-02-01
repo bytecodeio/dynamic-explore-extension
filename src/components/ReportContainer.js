@@ -10,7 +10,6 @@ import {
     Row,
     Spinner,
 } from "react-bootstrap";
-import * as $ from "jquery";
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import _ from "lodash";
@@ -21,6 +20,10 @@ import { CurrentSelectionRow } from "./LayoutComponents/CurrentSelectionRow/Curr
 import { OneTabVisualization } from "./VisualizationLayouts/OneTabVisualization";
 import { DashboardVisualizations } from "./VisualizationLayouts/DashboardVisualizations";
 import { FullLookMLDashboard } from "./VisualizationLayouts/FullLookMLDashboard";
+import { LoadingComponent } from "./LoadingComponent";
+import { OneTabVisualizationWithVizAbove } from "./VisualizationLayouts/OneTabVisualizationWithVizAbove";
+
+export const TabContext = React.createContext({})
 
 //ReportContainer is the parent component of each tab that controls each tabs' states
 export const ReportContainer = ({
@@ -36,7 +39,7 @@ export const ReportContainer = ({
     fieldGroups,
     layoutProps
 }) => {
-    const { core40SDK: sdk } = useContext(ExtensionContext);
+    const { extensionSDK,core40SDK: sdk } = useContext(ExtensionContext);
     const wrapperRef = useRef(null);
     const [selectedFields, setSelectedFields] = useState([]);
     //AccountGroupsFieldOptions
@@ -45,15 +48,20 @@ export const ReportContainer = ({
     const [currentInnerTab, setCurrentInnerTab] = useState(0);
     const [visList, setVisList] = useState([]);
     const [isMounted, setIsMounted] = useState(false);
-    const [active, setActive] = useState(false);
+   
     const [faClass, setFaClass] = useState(true);
-    const [toggle, setToggle] = useState(true);
+    // const [toggle, setToggle] = useState(true);
+    // const [active, setActive] = useState(false);
     
     const [selectedTabFilters,setSelectedTabFilters] = useState({})
+
+    const [selectedInnerTab, setSelectedInnerTab] = useState({})
     
     const [isFilterChanged,setIsFilterChanged] = useState(false)
     // Fetch default selected fields and filters + query for embedded visualization from Looker dashboard on load
     const [isFetchingDefaultDashboard, setIsFetchingDefaultDashboard] = useState(true);
+
+    const [isLoading, setIsLoading] = useState({})
   
     const params = useParams();
   
@@ -71,7 +79,9 @@ export const ReportContainer = ({
       savedFilters,
       removeSavedFilter,
       upsertSavedFilter,
-      showMenu, setShowMenu} = useContext(ApplicationContext)
+      showMenu, setShowMenu, propertiesLoading} = useContext(ApplicationContext)
+
+      console.log("tab filters", tabFilters)
 
     //Runs everytime the tab is clicked on
     useEffect(() => {
@@ -91,7 +101,7 @@ export const ReportContainer = ({
         }
     }
     initialize()
-    }, [currentNavTab, initialLoad]);   
+    }, [currentNavTab,initialLoad]);   
 
     
     //Getting the tiles of each dashboard
@@ -99,19 +109,27 @@ export const ReportContainer = ({
         
         let _visList = []
         let index = 0
+        let _defaultSelectedInnerTabs = {}
         for await (let visConfig of config) {
-          const { dashboard_elements, dashboard_filters } = await sdk.ok(
-            sdk.dashboard(visConfig['lookml_id'], 'dashboard_elements, dashboard_filters')
+          const { id, dashboard_elements, dashboard_filters } = await sdk.ok(
+            sdk.dashboard(visConfig['lookml_id'], 'dashboard_elements, dashboard_filters, id')
           ).catch(ret => {return {dashboard_elements:[], dashboard_filters:{}}})
           
           if (dashboard_elements.length > 0) {
+            //if (dashboard_elements.length > 1){
+              //console.log("test", _defaultSelectedInnerTabs)
+              _defaultSelectedInnerTabs[id] = 0;
+            //} 
             for await (let t of dashboard_elements) {
               let tileFilters = t["result_maker"]["query"]["filters"];
               let _tileFilterOptions = [];
               let _selectedFilters = {};
-              parameters?.map((p) => {
-                if (tileFilters) {
-                  Object.keys(tileFilters).map((key) => {
+              if (tileFilters) {
+               for await(let key of Object.keys(tileFilters)) {
+                    //let list = parameters.filter(({fields}) => fields['name'] === key)  
+                    //console.log("parameters", parameters) 
+                   for await(let p of parameters){
+                    //console.log("parameters", key + ' ' + p.fields['name']);
                     if (key === p.fields["name"]) {
                       _selectedFilters[key] = tileFilters[key];
                       _tileFilterOptions.push({
@@ -119,27 +137,38 @@ export const ReportContainer = ({
                         options: p["value"],
                       });
                     }
-                  });
+                  };
                 }
-              });
+              };
     
               let vis = {};
-              let { client_id } = t["result_maker"]["query"];
+              let { client_id, vis_config, fields, model, view, pivots } = t["result_maker"]["query"];
+              console.log("client id", client_id)
               vis = {
                 visId: visConfig["vis_name"],
                 title: t["title"],
                 query: client_id,
-                default_fields: [...t.result_maker.query.fields],
-                selected_fields: [...t.result_maker.query.fields],
+                default_fields: [...fields],
+                selected_fields: [...fields],
                 tileFilterOptions: _tileFilterOptions,
                 localSelectedFilters: _selectedFilters,
                 index: index++,
+                dashboard_id: id,
+                error:false,
+                query_values : {
+                  vis_config, fields, model, view, pivots
+                },
+                isLoading:false,
+                visUrl:"",
+                query_id:''
               };
               _visList.push(vis);
     
             }
           } else setInitialLoad(false);
         }
+        
+        setSelectedInnerTab(_defaultSelectedInnerTabs)
         setVisList(_visList);
     
         setSelectedFields(fields);
@@ -147,8 +176,7 @@ export const ReportContainer = ({
         loadDefaults(_visList);
       }
     
-      const loadDefaults = async (_visList) => {
-        
+      const loadDefaults = async (_visList) => {        
         handleTabVisUpdate(_visList);
       };
         
@@ -161,96 +189,207 @@ export const ReportContainer = ({
       }, [isFetchingDefaultDashboard, isFetchingLookmlFields]);
         
       //Formatting the filters for a Looker Query
-      const formatFilters = (filters) => {
+      const formatFilters = (filters,type) => {
         let filter = {};
         Object.keys(filters).map((key) => {
           if (Object.keys(filters[key]).length > 0) {
-            if (!(key == "date range" &&
-                Object.keys(filters["date filter"]).length > 0
-              )
-            ) {
+            if (!(key == "date range" &&Object.keys(filters["date filter"]).length > 0)) {
               let obj = {}
               for (const [key, value] of Object.entries(filters[key])) {
                 obj[key] = value.toString();
               }
-              filters[key] = obj     
-              filter = {...filter, ...filters[key]}    
+                filters[key] = obj     
+                filter = {...filter, ...filters[key]}             
+              
             }
           }
         });
         return filter;
       };
+
+      const queryValidator = async (query) => {
+        query['limit'] = 1;
+        let {id} = await sdk.ok(sdk.create_query(query));
+        return id
+        // if (result.length > 0) {
+        //   return {status:false}
+        // }
+        // if (result.length == 0) {
+        //   return {status:true, reason:'empty'};
+        // }
+        // return {status:true, reason:'error'};
+      }
+
+      useEffect(() => {
+        console.log("list of vis",visList)
+      },[visList])
+
+      const createVisualizationUrl = async (payload) => {
+        let urlString="";
+        if (payload['fields']?.length > 0) {
+          urlString += `&fields=${payload['fields'].toString()}`
+        }
+        if (Object.keys(payload['filters'])?.length > 0) {
+          for await (let [key,value] of Object.entries(payload['filters'])) {
+            urlString+= `&f[${key}]=${value}`
+          }
+        }
+        if (payload['limit']) {
+          urlString += `&limit=${payload['limit']}`
+        }
+
+        if (payload['pivots']?.length > 0) {
+          urlString += `&pivots=${payload['pivots'].toString()}`
+        }
+
+        if (payload['vis_config']) {
+          urlString += `&vis=${encodeURIComponent(JSON.stringify(payload['vis_config']))}`
+        }
+        return urlString
+      }
     
       // Handle run button click for visualizations on the page
       const handleTabVisUpdate = async (
         _visList = [],
-        filterList = { ...selectedFilters }
+        filterList = { ...selectedFilters },
+        type=""
       ) => {
         if (!Array.isArray(_visList)) {
           _visList = [...visList];
         }
-    
-        let _filters = {};
-        _filters = await formatFilters(JSON.parse(JSON.stringify(filterList)));
-        setUpdatedFilters(JSON.parse(JSON.stringify(filterList)));
-        updateAppProperties(_filters);
-        _filters = {..._filters, ...selectedTabFilters}
-    
+        let _updatedFilters = {...updatedFilters};
         
+        let _filteredFilters = {}
+        for await(let key of Object.keys(filterList)){
+          if (type=="date") {
+            if (key.includes('date')) {
+              _filteredFilters[key] = filterList[key]
+            } else {
+              _filteredFilters[key] = _updatedFilters[key]
+            }
+          } else if (type=="selections") {
+            if (!key.includes('date')) {
+              _filteredFilters[key] = filterList[key]
+            } else {
+              _filteredFilters[key] = _updatedFilters[key]
+            }
+          } else {
+            _filteredFilters[key] = filterList[key]
+          }
+        }
+        console.log("filtered filters", JSON.parse(JSON.stringify(_filteredFilters)))
+        let _filters = {};
+        _visList = _visList.map((vis) => {vis.isLoading=true; return vis});
+        setVisList(_visList)
+        _filters = await formatFilters(JSON.parse(JSON.stringify(_filteredFilters)));
+
+
+        setUpdatedFilters(JSON.parse(JSON.stringify(_filteredFilters)))
+        // setUpdatedFilters(JSON.parse(JSON.stringify(filterList)));
+        updateAppProperties(_filters);
+        _filters = {..._filters, ...selectedTabFilters}          
     
         let newVisList = [];
-        for await (let vis of _visList) {
-          const { vis_config, fields, model, view } = await sdk.ok(
-            sdk.query_for_slug(vis["query"])
-          );
-    
+        for (let vis of _visList) {
+          const { vis_config, model, view, pivots } = vis['query_values'];
+          let index = _visList.indexOf(vis)          
+
           let _fields = [];
+
+          console.log("pivots", pivots)
           
-            _fields = vis["selected_fields"];
-          const { client_id } = await sdk.ok(
-            sdk.create_query({
-              model: model,
-              view: view,
-              fields: _fields,
-              filters: vis["localSelectedFilters"]
-                ? { ..._filters, ...vis["localSelectedFilters"] }
-                : _filters,
-              vis_config,
-            })
-          );
-          vis["query"] = client_id;
-          newVisList.push(vis);
+          _fields = vis["selected_fields"];
+
+          let _query = {
+            model: model,
+            view: view,
+            fields: _fields,
+            filters: vis["localSelectedFilters"]
+              ? { ..._filters, ...vis["localSelectedFilters"] }
+              : _filters,
+            vis_config,
+            pivots,
+            limit:5000
+          }
+          let _queryVal = {..._query}
+
+          let _urlParams = await createVisualizationUrl(_query)
+          //let _error = await queryValidator(..._query);          
+          //let _error = await queryValidator(_queryVal);
+          //console.log("vis validate", _error)
+          //console.log("vis validate", _error)
+          // const { client_id } = await sdk.ok(
+          //   sdk.create_query(_query)
+          // );
+          //vis["query"] = client_id;           
+          let id = await queryValidator(_queryVal);
+          vis['query_id'] = id
+          vis['visUrl'] = _urlParams;
+          vis['isLoading'] = false;
+          //vis['error'] = _error;
+          _visList[index] = vis;
+          setVisList(_visList)
+
+
+          //setIsLoading(false)
+          //setVisList(prev => [...prev, vis]);
+          //newVisList.push(vis);
         }
-        setVisList(newVisList);
+        //setVisList(newVisList);
+        //
       };
+
+      useEffect(() => {
+        console.log("Is Loading", isLoading)
+      },[isLoading])
     
       //Handles update for a single viz with something like a parameter
-      const handleSingleVisUpdate = async (index) => {
+      const handleSingleVisUpdate = async (_index) => {
         let _visList = [...visList];
-        let currentVis = _visList.find(({ index }) => index === index);
-    
+        let currentVis = _visList.find(({ index }) => index === _index);
+        currentVis['isLoading'] = true;
+        setVisList(_visList)
+
         let _filters = {};
         _filters = await formatFilters(JSON.parse(JSON.stringify(updatedFilters)));
         _filters = { ..._filters, ...currentVis["localSelectedFilters"] };
     
-        const { vis_config, fields } = await sdk.ok(
-          sdk.query_for_slug(currentVis["query"])
-        );
+        // const { vis_config, fields, model, view, pivots } = await sdk.ok(
+        //   sdk.query_for_slug(currentVis["query"])
+        // );
+
+        const { vis_config, model, view, pivots } = currentVis['query_values'];
     
         let _fields = [];
         _fields = currentVis["selected_fields"];
+
+        const _query = {
+              model: model,
+              view: view,
+              fields: _fields,
+              filters: _filters,
+              vis_config,
+              pivots:pivots,
+              limit:5000
+            }
     
-        const { client_id } = await sdk.ok(
-          sdk.create_query({
-            model: LOOKER_MODEL,
-            view: LOOKER_EXPLORE,
-            fields: _fields,
-            filters: _filters,
-            vis_config,
-          })
-        );
-        currentVis["query"] = client_id;
-        setVisList(_visList);
+        // const { client_id } = await sdk.ok(
+        //   sdk.create_query({
+        //     model: model,
+        //     view: view,
+        //     fields: _fields,
+        //     filters: _filters,
+        //     vis_config,
+        //     pivots:pivots,
+        //     limit:5000
+        //   })
+        // );
+
+        let _urlParams = await createVisualizationUrl(_query)
+        //currentVis["query"] = client_id;
+        currentVis['visUrl'] = _urlParams;
+        currentVis["isLoading"] = false;
+        setVisList([..._visList]);
       };
     
       // async function doClearAll() {
@@ -278,33 +417,9 @@ export const ReportContainer = ({
         if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         }
       };
-    
-    
-      //jquery will be removed and changed, leave for now
-    
-      $(document).on("click", function () {
-        if ($(".theSelected").height() > 74.8) {
-          $(".theSelected")
-            .addClass("theEnd")
-            .css({ maxHeight: "76px", overflow: "hidden" });
-          $(".hideThisEnd, .whiteBar").show();
-        } else {
-          $(".theSelected")
-            .removeClass("theEnd")
-            .css({ maxHeight: "unset", overflow: "unset" });
-          $(".hideThisEnd, .whiteBar").hide();
-        }
-    
-        $("#numberCounter").html(
-          $(".tab-pane.active .theSelected .theOptions").length +
-            $(".tab-pane.active.show .theSelected .dateChoice").length
-        );
-      });
-      $(window).resize(function () {
-        $(document).trigger("click");
-      });
-    
 
+
+  
     
    
       // const AccountGroupsFieldOptions = useMemo(() => {
@@ -325,25 +440,24 @@ export const ReportContainer = ({
     <div className={isActive ? "tab-pane active" : "hidden"}>
       <Container fluid className="test">
         {isPageLoading ? (
-          <Spinner />
+          <LoadingComponent />
         ) : (
           <>
-            <SelectionOptions filters={filters} 
+            <SelectionOptions filters={filters} tabFilters={tabFilters}
                 fields={fields} handleTabVisUpdate={handleTabVisUpdate}
                 visList={visList}setVisList={setVisList} 
                 selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} 
                 fieldGroups={fieldGroups} savedFilters={savedFilters} 
                 removeSavedFilter={removeSavedFilter} upsertSavedFilter={upsertSavedFilter} 
-                attributes={attributes} currentInnerTab={currentInnerTab}
+                attributes={attributes} selectedInnerTab={selectedInnerTab}
                 updateButtonClicked={updateButtonClicked} setUpdateButtonClicked={setUpdateButtonClicked}
                 setIsFilterChanged={setIsFilterChanged}
                 layoutProps={layoutProps}
                 showMenu={showMenu} setShowMenu={setShowMenu}
+                setUpdatedFilters={setUpdatedFilters}
             />
             <Row className="fullW">
               <Col md={12} lg={12}>
-                {filters.find(({ type }) => type === "date filter")?.options
-                  ?.length > 0 ? (
                   <TopRow
                     dateFilter={filters.find(
                       ({ type }) => type === "date filter"
@@ -361,62 +475,54 @@ export const ReportContainer = ({
                     tabFilters={tabFilters}
                     layoutProps={layoutProps}
                   />
-                ) : (
-                  ""
-                )}
               </Col>
             </Row>
 
-            <CurrentSelectionRow toggle={toggle} properties={properties}
-             active={active} filters={filters}
+            <CurrentSelectionRow  properties={properties} propertiesLoading={propertiesLoading}
+             filters={filters}
              selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters}
              updatedFilters={updatedFilters} setUpdatedFilters={setUpdatedFilters}
              formatFilters={formatFilters}  faClass={faClass}
              layoutProps={layoutProps}/>
 
-            {layoutProps.layout === "OneTabVisualization"?
-              <OneTabVisualization 
-                  setSelectedFields={setSelectedFields}
-                  currentInnerTab={currentInnerTab}
-                  setCurrentInnerTab={setCurrentInnerTab}
-                  setVisList={setVisList}
-                  visList={visList}
-                  handleSingleVisUpdate={handleSingleVisUpdate}/>
-              :''}
-
-            {layoutProps.layout === "DashboardVisualizations"?
-              <DashboardVisualizations 
-                  setSelectedFields={setSelectedFields}
-                  currentInnerTab={currentInnerTab}
-                  setCurrentInnerTab={setCurrentInnerTab}
-                  setVisList={setVisList}
-                  visList={visList}
-                  handleSingleVisUpdate={handleSingleVisUpdate}/>
-              :''}
-            {layoutProps.layout === "FullLookMLDashboard"?
-              <FullLookMLDashboard 
-                  config={config}
-                />
-              :''}
-            
-            {/* <Row className="mt-3 mb-3">
-              <Col md={12} className="embed-responsive embed-responsive-16by9">
-                {visList.filter(({ visId }) => visId === "tabbedVis1").length >
-                0 ? (
-                  <InnerTableTabs
-                    tabs={visList.filter(({ visId }) => visId === "tabbedVis1")}
+            <TabContext.Provider value={{isLoading, setIsLoading}}>
+              {layoutProps.layout === "OneTabVisualization"?
+                <OneTabVisualization 
                     setSelectedFields={setSelectedFields}
-                    currentInnerTab={currentInnerTab}
-                    setCurrentInnerTab={setCurrentInnerTab}
+                    selectedInnerTab={selectedInnerTab}
+                    setSelectedInnerTab={setSelectedInnerTab}
                     setVisList={setVisList}
                     visList={visList}
-                    handleSingleVisUpdate={handleSingleVisUpdate}
+                    handleSingleVisUpdate={handleSingleVisUpdate}/>
+                :''}
+
+              {layoutProps.layout === "OneTabVisualizationWithVizAbove"?
+                <OneTabVisualizationWithVizAbove 
+                    setSelectedFields={setSelectedFields}
+                    selectedInnerTab={selectedInnerTab}
+                    setSelectedInnerTab={setSelectedInnerTab}
+                    setVisList={setVisList}
+                    visList={visList}
+                    handleSingleVisUpdate={handleSingleVisUpdate}/>
+                :''}
+
+              {layoutProps.layout === "DashboardVisualizations"?
+                <DashboardVisualizations 
+                    setSelectedFields={setSelectedFields}
+                    selectedInnerTab={selectedInnerTab}
+                    setSelectedInnerTab={setSelectedInnerTab}
+                    setVisList={setVisList}
+                    visList={visList}
+                    handleSingleVisUpdate={handleSingleVisUpdate}/>
+                :''}
+              {layoutProps.layout === "FullLookMLDashboard"?
+                <FullLookMLDashboard 
+                    config={config}
                   />
-                ) : (
-                  ""
-                )}
-              </Col>
-            </Row> */}
+                :''}
+            </TabContext.Provider>
+
+            
           </>
         )}
       </Container>

@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { ExtensionContext } from "@looker/extension-sdk-react";
+import {Moon, Sun} from '@styled-icons/bootstrap'
 
 const NavbarMain = ({user}) => {
   const { core40SDK } = useContext(ExtensionContext);
@@ -40,9 +41,16 @@ const NavbarMain = ({user}) => {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>
             <Nav className="align-items-center">
-              <Navbar.Text>
+              <Navbar.Text style={{display:'flex', alignItems:'center'}}>
                 <a className="dark-layout" onClick={handleClick}>
-                  <i className={faClass ? "far fa-moon" : "far fa-sun"}></i>
+                  <i style={{marginRight:'0'}}>
+                    {faClass?
+                      <Moon />
+                    :
+                      <Sun />
+                    }
+                  </i>
+
                 </a>
 
                 <i className="fal fa-user me-1 blue"></i>

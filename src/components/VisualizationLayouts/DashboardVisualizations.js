@@ -2,84 +2,96 @@ import React, { useContext } from 'react'
 import InnerTableTabs from '../InnerTableTabs'
 import { Row,Col, Container } from 'react-bootstrap'
 import { EmbedContainer } from '../EmbedContainer'
+import { EmbedSection } from '../EmbedSection/EmbedSection'
 
-export const DashboardVisualizations = ({visList,setSelectedFields,setCurrentInnerTab,currentInnerTab,setVisList,handleSingleVisUpdate}) => {
+export const DashboardVisualizations = ({visList,setSelectedFields,setSelectedInnerTab,selectedInnerTab,setVisList,handleSingleVisUpdate}) => {
     return(
         <>
-        <Container className='grid'>
-            <Row>
-              <Col md={3}>
+        <Container className='grid dashboard-grid-layout' style={{minHeight:'1500px', maxWidth:'95%'}}>
+            
+            <div className="mt-3 mb-3 dashboard-grid-left" style={{paddingTop:'10px'}}>
+              <div className="embed-responsive embed-responsive-16by9">
+                {visList.find(({ visId }) => visId === "vis5")?
+                  <div className="vis-container">
+                    <EmbedSection
+                        vis={visList.filter(({ visId }) => visId === "vis5")}
+                        visList={visList}
+                        setVisList={setVisList}
+                        setSelectedFields={setSelectedFields}
+                        selectedInnerTab={selectedInnerTab}
+                        setSelectedInnerTab={setSelectedInnerTab}
+                        handleSingleVisUpdate={handleSingleVisUpdate}
+                    />
+                  </div>:''}
+                {visList.filter(({ visId }) => visId === "vis6").length > 0 ?
+                  <div className="vis-container">
+                    <EmbedSection
+                        vis={visList.filter(({ visId }) => visId === "vis6")}
+                        visList={visList}
+                        setVisList={setVisList}
+                        setSelectedFields={setSelectedFields}
+                        selectedInnerTab={selectedInnerTab}
+                        setSelectedInnerTab={setSelectedInnerTab}
+                        handleSingleVisUpdate={handleSingleVisUpdate}
+                    />
+                  </div>
+                  : ''                  
+                }
+
+              </div>
+            </div>
+            <div className='dashboard-grid-right' style={{paddingTop:'10px'}}>
+              <div>
                 {visList.find(({ visId }) => visId === "vis1")?
-                  <div className="vis1-container h-50">
-                    <EmbedContainer 
-                      vis={visList.find(({ visId }) => visId === "vis1")}
-                      visList={visList}
-                      updateVisList={setVisList}
-                      handleVisUpdate={handleSingleVisUpdate}
+                  <div className="vis-container">
+                    <EmbedSection
+                        vis={visList.filter(({ visId }) => visId === "vis1")}
+                        visList={visList}
+                        setVisList={setVisList}
+                        setSelectedFields={setSelectedFields}
+                        selectedInnerTab={selectedInnerTab}
+                        setSelectedInnerTab={setSelectedInnerTab}
+                        handleSingleVisUpdate={handleSingleVisUpdate}
                     />
                   </div>:''}
                 {visList.find(({ visId }) => visId === "vis2")?
-                  <div className="vis1-container h-50">
-                    <EmbedContainer 
-                      vis={visList.find(({ visId }) => visId === "vis2")}
-                      visList={visList}
-                      updateVisList={setVisList}
-                      handleVisUpdate={handleSingleVisUpdate}
+                  <div className="vis-container">
+                    <EmbedSection
+                        vis={visList.filter(({ visId }) => visId === "vis2")}
+                        visList={visList}
+                        setVisList={setVisList}
+                        setSelectedFields={setSelectedFields}
+                        selectedInnerTab={selectedInnerTab}
+                        setSelectedInnerTab={setSelectedInnerTab}
+                        handleSingleVisUpdate={handleSingleVisUpdate}
                     />
                   </div>:''}
-              </Col>
-              <Col md={9}>
                 {visList.find(({ visId }) => visId === "vis3")?
-                  <div className="vis1-container h-100">
-                    <InnerTableTabs
-                      tabs={visList.filter(({ visId }) => visId === "vis3")}
-                      setSelectedFields={setSelectedFields}
-                      currentInnerTab={currentInnerTab}
-                      setCurrentInnerTab={setCurrentInnerTab}
-                      setVisList={setVisList}
-                      visList={visList}
-                      handleSingleVisUpdate={handleSingleVisUpdate}
+                  <div className="vis-container">
+                    <EmbedSection
+                        vis={visList.filter(({ visId }) => visId === "vis3")}
+                        visList={visList}
+                        setVisList={setVisList}
+                        setSelectedFields={setSelectedFields}
+                        selectedInnerTab={selectedInnerTab}
+                        setSelectedInnerTab={setSelectedInnerTab}
+                        handleSingleVisUpdate={handleSingleVisUpdate}
                     />
                   </div>:''}
-              </Col>
-            </Row>
-            <Row className="mt-3 mb-3">
-              <Col md={3}>
                 {visList.find(({ visId }) => visId === "vis4")?
-                  <div className="vis1-container h-50">
-                    <EmbedContainer 
-                      vis={visList.find(({ visId }) => visId === "vis4")}
-                      visList={visList}
-                      updateVisList={setVisList}
-                      handleVisUpdate={handleSingleVisUpdate}
+                  <div className="vis-container">
+                    <EmbedSection
+                        vis={visList.filter(({ visId }) => visId === "vis4")}
+                        visList={visList}
+                        setVisList={setVisList}
+                        setSelectedFields={setSelectedFields}
+                        selectedInnerTab={selectedInnerTab}
+                        setSelectedInnerTab={setSelectedInnerTab}
+                        handleSingleVisUpdate={handleSingleVisUpdate}
                     />
                   </div>:''}
-                {visList.find(({ visId }) => visId === "vis5")?
-                  <div className="vis1-container h-50">
-                    <EmbedContainer 
-                      vis={visList.find(({ visId }) => visId === "vis5")}
-                      visList={visList}
-                      updateVisList={setVisList}
-                      handleVisUpdate={handleSingleVisUpdate}
-                    />
-                  </div>:''}
-              </Col>
-              <Col md={9} className="embed-responsive embed-responsive-16by9">
-                {visList.filter(({ visId }) => visId === "vis6").length > 0 ?
-                  <InnerTableTabs
-                    tabs={visList.filter(({ visId }) => visId === "vis6")}
-                    setSelectedFields={setSelectedFields}
-                    currentInnerTab={currentInnerTab}
-                    setCurrentInnerTab={setCurrentInnerTab}
-                    setVisList={setVisList}
-                    visList={visList}
-                    handleSingleVisUpdate={handleSingleVisUpdate}
-                  />
-                  : ''
-                }
-
-              </Col>
-            </Row>          
+              </div>
+            </div>          
         </Container>
         </>
     )

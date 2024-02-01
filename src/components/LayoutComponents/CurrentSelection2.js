@@ -58,11 +58,11 @@ export const CurrentSelection2 = ({
         let _filters = [...filters];
         let filter = _filters.find(({ type }) => type === key);
         Object.keys(filtersSelections[key]).map((row) => {
-          if (filter.type !== "date filter") {
-            if (filter.type === "date range") {
+          if (key !== "date filter") {
+            if (key === "date range") {
               let obj = {
                 key: row,
-                type: filter.type,
+                type: key,
                 label: filtersSelections[key][row],
                 value: filtersSelections[key][row],
                 removable: false,
@@ -74,30 +74,35 @@ export const CurrentSelection2 = ({
               // let format1 = moment(first).format('MM-DD-YYYY').toString();
               // const last = obj.label.split(' to ')[1];
               // let format2 = moment(last).format('MM-DD-YYYY').toString();
-            } else if (filter.type === "account group") {
-              let field = filter.fields.find(({ name }) => name === row);
-              let obj = {
-                key: row,
-                type: filter.type,
-                // label: `${field.label_short}: ${filtersSelections[key][row]}`,
-                label: ` ${filtersSelections[key][row]}`,
-                value: filtersSelections[key][row],
-                removable: true,
-                selection_type: selectionType,
-              };
+            } 
+            // else if (filter.type === "account group" || filter.type === "account filter") {
+            //   let field = filter.fields.find(({ name }) => name === row);
+            //   let obj = {
+            //     key: row,
+            //     type: filter.type,
+            //     // label: `${field.label_short}: ${filtersSelections[key][row]}`,
+            //     label: ` ${filtersSelections[key][row]}`,
+            //     value: filtersSelections[key][row],
+            //     removable: true,
+            //     selection_type: selectionType,
+            //   };
 
-              obj.value.split(",").map((d, i) => {
-                const tempObect = { ...obj, label: `${d}`, value: d };
-                current.push(tempObect);
-              });
-            } else {
-              let field = filter.fields.find(({ name }) => name === row);
+            //   obj.value.split(",").map((d, i) => {
+            //     const tempObect = { ...obj, label: `${d}`, value: d };
+            //     current.push(tempObect);
+            //   });
+            // }
+             else {
+              console.log("row", row)
+              console.log('filters', filter)
+              //let field = filter.fields.find(({ name }) => name === row);
+              //console.log("field", field)
               if (Array.isArray(filtersSelections[key][row])) {
                 filtersSelections[key][row].map(value => {
                   let obj = {
                     key: row,
-                    type: filter.type,
-                    label: `${field.label_short}: ${value}`,
+                    type: key,
+                    label: `${value}`,
                     value: value,
                     removable: true,
                     selection_type: selectionType,
@@ -107,8 +112,9 @@ export const CurrentSelection2 = ({
               } else {
                 let obj = {
                   key: row,
-                  type: filter.type,
-                  label: `${field.label_short}: ${filtersSelections[key][row]}`,
+                  type: key,
+                  label: `${filtersSelections[key][row]}`,
+                  //label: `${field.label_short}: ${filtersSelections[key][row]}`,
                   value: filtersSelections[key][row],
                   removable: true,
                   selection_type: selectionType,
@@ -130,7 +136,11 @@ export const CurrentSelection2 = ({
         : JSON.parse(JSON.stringify(selectedFilters));
     
     if (Array.isArray(type[selection.type][selection.key])) {
+      
       let index = type[selection.type][selection.key].indexOf(selection.value);
+      
+      console.log("current selection",type[selection.type])
+      console.log("current selection",selection.value)
       type[selection.type][selection.key].splice(index,1);
     } else {
       if (type[selection.type][selection.key]) {

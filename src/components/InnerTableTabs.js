@@ -9,17 +9,22 @@ const InnerTableTabs = ({
   setVisList,
   visList,
   setSelectedFields,
-  currentInnerTab,
-  setCurrentInnerTab,
+  selectedInnerTab,
+  setSelectedInnerTab,
   handleSingleVisUpdate
 }) => {
+
+  console.log("tabs",tabs)
 
   const [showMenu3, setShowMenu3] = useState();
   const [active, setActive] = useState(false);
   const [faClass, setFaClass] = useState(true);
   const [toggle, setToggle] = useState(true);
   const handleTabChange = (event) => {
-    setCurrentInnerTab(event);
+    console.log(selectedInnerTab)
+    let _tab = tabs[event]
+    selectedInnerTab[_tab.dashboard_id] = event
+    setSelectedInnerTab(selectedInnerTab);
     setSelectedFields(tabs[event]["selected_fields"]);
   };
 
@@ -44,15 +49,14 @@ const InnerTableTabs = ({
         <Tabs
           className="inner"
           fill
-          activeKey={currentInnerTab}
+          activeKey={selectedInnerTab?selectedInnerTab[tabs[0].dashboard_id]:0}
           onSelect={(e) => handleTabChange(e)}
         >
           {tabs?.map((t, i) => (
             <Tab eventKey={i} title={t.title} key={t.title}>
 
               <div id="embedWrapper" className={showMenu3 ? "whole" : ""}>
-                <EmbedActionBar slideIt3={slideIt3} showMenu3={showMenu3} active={active} handleClick={handleClick} faClass={faClass} queryId={t['query']} title={t.title}/>
-
+                {/* <EmbedActionBar slideIt3={slideIt3} showMenu3={showMenu3} active={active} handleClick={handleClick} faClass={faClass} queryId={t['query']} title={t.title}/> */}
                 <EmbedContainer vis={t} visList={visList} updateVisList={setVisList} handleVisUpdate={handleSingleVisUpdate} />
               </div>
             </Tab>

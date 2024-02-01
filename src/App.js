@@ -1,8 +1,6 @@
 import React from "react";
 import { ExtensionProvider, ExtensionContext } from "@looker/extension-sdk-react";
 import { hot } from "react-hot-loader/root";
-
-import { Main } from "./Main";
 import { Main2 } from "./Main2";
 import "./styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -23,7 +21,7 @@ export const App = hot(() => {
     
   }
   return (
-    <ExtensionProvider>
+    <ExtensionProvider chattyTimeout={10000000}>
       <Switch>
         {/*Route for Print page for exporting a visualization*/}
         <Route exact path='/print'>

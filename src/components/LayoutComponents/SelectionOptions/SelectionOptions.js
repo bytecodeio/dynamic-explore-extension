@@ -5,11 +5,15 @@ import QuickFilter from '../QuickFilter';
 import Fields from '../Fields';
 import Filters from '../Filters';
 import {FieldButtonGroup} from '../../FieldButtonGroup'
+import AccountFilter from '../AccountFilter';
+import AccountGroup from '../AccountGroup';
+import ShortReasons from '../ShortReasons';
+import { TopProducts } from '../TopProducts';
 
 
 
 //SelectionOptions is the side panel that includes filters and field selections
-export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilterChanged,visList,setVisList, selectedFilters, setSelectedFilters, fieldGroups, savedFilters,removeSavedFilter,upsertSavedFilter,attributes,currentInnerTab,updateButtonClicked,setUpdateButtonClicked, layoutProps, showMenu, setShowMenu}) => {
+export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilterChanged,visList,setVisList, selectedFilters, setSelectedFilters, fieldGroups, savedFilters,removeSavedFilter,upsertSavedFilter,attributes,selectedInnerTab,updateButtonClicked,setUpdateButtonClicked, layoutProps, showMenu, setShowMenu, setUpdatedFilters,tabFilters}) => {
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const wrapperRef = useRef(null);
@@ -22,6 +26,20 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
         doClearAll();
         setShow(true);
       };
+
+    const doClearAll = () => {
+        //setIsDefaultProduct(false);
+        setUpdateButtonClicked(true);
+    
+        let filters = JSON.parse(JSON.stringify(selectedFilters));
+        for (let name in filters) {
+          if (name !== "date range") filters[name] = {};
+        }
+        setSelectedFilters(filters);
+        setUpdatedFilters(filters);
+    
+        setIsFilterChanged(true);
+      }
 
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
@@ -108,9 +126,9 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
 
                     <div className="across">
                         <Button onClick={handleClearAll} className="btn-clear">
-                            Clear All
+                            Clear All Selections
                         </Button>
-                        <Button onClick={handleTabVisUpdate} className="btn">
+                        <Button onClick={() => handleTabVisUpdate(visList, selectedFilters,'selections')} className="btn">
                             Update Selections
                         </Button>
                     </div>
@@ -124,18 +142,45 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
                                     {fieldGroups.length > 0 ?
                                         <FieldButtonGroup fieldGroups={fieldGroups} visList={visList} setVisList={setVisList} handleTabVisUpdate={handleTabVisUpdate} />
                                         : ''}
-                                    {/* Account Groups */}
+                                    {/* Account Group */}
                                     {Array.isArray(
                                         filters.find(({ type }) => type === "account group")
                                             ?.options.values
-                                    ) && layoutProps['account groups']  ? (
+                                    ) && layoutProps['account group']  ? (
                                         <Col xs={12} md={12}>
                                             <Accordion.Item eventKey="1">
                                                 <Accordion.Header>
-                                                    Account Groups
+                                                    Account Group
                                                 </Accordion.Header>
                                                 <Accordion.Body>
-                                                    <div className="position-relative mb-3">
+                                                    <AccountGroup
+                                                        // fieldOptions={keyword !== "" ? filters.filter(option => option.indexOf(keyword) !== -1) : filters.find(({ type }) => type === "account group")}
+                                                        fieldOptions={filters.find(
+                                                            ({ type }) => type === "account group"
+                                                        )}
+                                                        selectedFilters={selectedFilters}
+                                                        setSelectedFilters={setSelectedFilters} />
+                                                </Accordion.Body>
+                                            </Accordion.Item>
+                                        </Col>
+                                    ) : (
+                                        ""
+                                    )}
+
+
+
+                                    {/* Account Filter */}
+                                    {Array.isArray(
+                                        filters.find(({ type }) => type === "account filter")
+                                            ?.options.values
+                                    ) && layoutProps['account filter']  ? (
+                                        <Col xs={12} md={12}>
+                                            <Accordion.Item eventKey="2">
+                                                <Accordion.Header>
+                                                    Account Filter
+                                                </Accordion.Header>
+                                                <Accordion.Body>
+                                                    {/* <div className="position-relative mb-3">
                                                         <input
                                                             value={keyword}
                                                             onChange={handleChangeKeyword}
@@ -143,11 +188,13 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
                                                             type="search"
                                                             class="form-control" />
                                                         <i class="far fa-search absoluteSearch"></i>
-                                                    </div>
+                                                    </div> */}
 
-                                                    <AccountGroups
+                                                    <AccountFilter
                                                         // fieldOptions={keyword !== "" ? filters.filter(option => option.indexOf(keyword) !== -1) : filters.find(({ type }) => type === "account group")}
-                                                        fieldOptions={AccountGroupsFieldOptions}
+                                                        fieldOptions={filters.find(
+                                                            ({ type }) => type === "account filter"
+                                                        )}
                                                         selectedFilters={selectedFilters}
                                                         setSelectedFilters={setSelectedFilters} />
                                                 </Accordion.Body>
@@ -158,20 +205,20 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
                                     )}
 
                                     {/* Fields */}
-                                    {fields?.length > 0 && layoutProps['fields'] ? (
+                                    {fields?.length > 0 && layoutProps['fields'] && visList.length > 0 ? (
                                         <Col xs={12} md={12}>
                                             <Accordion.Item eventKey="6">
                                                 <Accordion.Header>Fields</Accordion.Header>
                                                 <Accordion.Body>
                                                     <Fields
-                                                        fieldOptions={fields.find(f => { return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[currentInnerTab]?.title; })
-                                                            ? fields.find(f => { return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[currentInnerTab]?.title; }).fields
+                                                        fieldOptions={fields.find(f => { return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[selectedInnerTab[visList[0].dashboard_id]]?.title; })
+                                                            ? fields.find(f => { return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[selectedInnerTab[visList[0].dashboard_id]]?.title; }).fields
                                                             : fields.find(f => { return f.sub_tab == ""; })?.fields}
                                                         setTabList={setVisList}
                                                         tabList={visList.filter(
                                                             ({ visId }) => visId === "tabbedVis1"
                                                         )}
-                                                        currentInnerTab={currentInnerTab}
+                                                        currentInnerTab={selectedInnerTab[visList[0].dashboard_id]}
                                                         updateBtn={updateButtonClicked}
                                                         setUpdateBtn={setUpdateButtonClicked} />
                                                 </Accordion.Body>
@@ -220,12 +267,46 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
                                             </Col>
                                             : ''
                                         : ''}
+                                    {/* Short Reasons */}
+                                    {tabFilters?.filter(({type}) => type=="short reason filter").length > 0 &&  visList.length > 0 ? (
+                                    <Col xs={12} md={12}>
+                                        <Accordion.Item eventKey="4">
+                                            <Accordion.Header>Short Reasons</Accordion.Header>
+                                            <Accordion.Body>
+                                                <ShortReasons
+                                                    fieldOptions={tabFilters.find(f => { return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[selectedInnerTab[visList[0].dashboard_id]]?.title; })
+                                                    ? tabFilters.find(f => { return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[selectedInnerTab[visList[0].dashboard_id]]?.title; })
+                                                    : tabFilters.find(f => { return f.sub_tab == ""; })}
+                                                    setSelectedFilters={setSelectedFilters}
+                                                    selectedFilters={selectedFilters}
+                                                    />
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                    </Col>)
+                                    :''} 
 
+                                    {/* Top Products */}
+                                    {tabFilters?.find(({type}) => type=="top products") &&  visList.length > 0 ? (
+                                    <Col xs={12} md={12}>
+                                        <Accordion.Item eventKey="7">
+                                            <Accordion.Header>Top Products</Accordion.Header>
+                                            <Accordion.Body>
+                                                <TopProducts
+                                                    filterOption={tabFilters.find(f => { return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[selectedInnerTab[visList[0].dashboard_id]]?.title; })
+                                                    ? tabFilters.find(f => { return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[selectedInnerTab[visList[0].dashboard_id]]?.title; })
+                                                    : tabFilters.find(f => { return f.sub_tab == ""; })}
+                                                    setSelectedFilters={setSelectedFilters}
+                                                    selectedFilters={selectedFilters}
+                                                    />
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                    </Col>)
+                                    :''}   
 
 
                                     {/* Bookmarks */}
                                     <Col xs={12} md={12}>
-                                        <Accordion.Item eventKey="4">
+                                        <Accordion.Item eventKey="8">
                                             <Accordion.Header>Saved Filters</Accordion.Header>
                                             <Accordion.Body>
                                                 <SavedFilters
@@ -286,7 +367,8 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
     </Col> */}
                 </div>
             </div>
-        </div><Modal show={show} onHide={handleClose} className="clearAllModal">
+        </div>
+            <Modal show={show} onHide={handleClose} className="clearAllModal">
                 <Modal.Header closeButton></Modal.Header>
                 <Modal.Body>
                     <p>Are you sure you want to clear all selections?</p>
