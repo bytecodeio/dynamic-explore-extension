@@ -53,6 +53,8 @@ export const Main2 = () => {
   const [savedFilters, setSavedFilters] = useState([]);
   const [isDefaultFilters, setIsDefaultFilters] = useState();
 
+  const [propertiesLoading, setPropertiesLoading] = useState(false);
+
   const params = useParams();
 
   const route = useRouteMatch();
@@ -83,6 +85,7 @@ export const Main2 = () => {
             });
         }
       });
+      console.log("fields", fieldsByTag)
       return fieldsByTag;
     }
 
@@ -95,12 +98,13 @@ export const Main2 = () => {
             history.push(tabs[0].route);
           }
 
-          let _fields = tabTags.filter(({tag_group}) => tag_group === "fields").map(f => {
+          let _fields = tabTags.filter(({tag_group}) => tag_group === "fields").map(f => {            
             let _tab = f.title;
             let _tag = f.tag_name;
             let _subTab = f.sub_tab_name;
             return { tab: _tab, fields: fieldsByTag[_tag], sub_tab:_subTab }
           })
+          console.log("fields", _fields)
 
           setFields(_fields);
 
@@ -112,17 +116,18 @@ export const Main2 = () => {
             if (
               !_appProperties.filter((prop) => prop.type == p.type).length > 0
             ) {
-              
               let _type = p.type;
               let _text = p.att1;
               let _tag = p.tag_name;
+              console.log("prop", p)
               let _group = p.tag_group;
               let _fields = fieldsByTag[_tag];
               let _options = "";
-              if (p.option_type === "single_value") {
-                let value = await getValues(_fields[0], {}, application);
-                
-                _options = value[0];
+              if (p.option === "single_value") {
+                //let value = await getValues(_fields[0], {}, application);
+                //console.log("prop value", value)
+                //_options = value[0];
+                _options = {}
               }
               if (_options != []) {
                 _appProperties.push({
@@ -135,7 +140,7 @@ export const Main2 = () => {
               }
             }
           }
-          
+          console.log("properties", _appProperties)
           setProperties(_appProperties);
 
           let _tabFilters = [];
@@ -147,10 +152,15 @@ export const Main2 = () => {
             let _tag = f.tag_name;
             let _group = f.tag_group;
             let _fields = fieldsByTag[_tag];
+            let _subTab = f.sub_tab_name
             let _options = "";
+            if (f.option == "single_dimension_value") {
+              _options = await getValues(_fields[0],{},application)
+            }            
             if (_fields?.length > 0) {
               _tabFilters.push({
                 tab: _tab,
+                sub_tab:_subTab,
                 type: _type,
                 fields: _fields[0],
                 group: _group,
@@ -188,6 +198,16 @@ export const Main2 = () => {
       }
     };
 
+    const priorityOrder = ['date range', 'date filter', 'default_filter'];
+
+    const sortPriority = (tags) => {
+      return tags.sort((a,b) => {
+        let index1 = priorityOrder.indexOf(a['type']);
+        let index2 = priorityOrder.indexOf(b['type']);
+        return index1 == -1?1:index2== -1? -1 :index1 - index2;
+      })
+    }
+
     //Creating the filter state and adding to the default filters when the app loads
     const createFilters = async (
       applicationTags,
@@ -197,17 +217,21 @@ export const Main2 = () => {
     ) => {
       let _filters = [];
       let _defaultSelected = {}
-      let _defTags = applicationTags.find(({type}) => type === "default_filter");
+      let sortedTags = sortPriority(applicationTags)
+      let _defTags = sortedTags.find(({type}) => type === "default_filter");
       
       let _defaultFilterFields = fieldsByTag[_defTags?.tag_name]
-      for await (let f of applicationTags.filter(({ tag_group }) => tag_group == "filters")) {
+      for await (let f of sortedTags.filter(({ tag_group }) => tag_group == "filters")) {
         let _type = f.type;
         let _tag = f.tag_name;
         let _fields = fieldsByTag[_tag];
         
         let _options = []
         if (f.option_type === "date range") {
-          _options = { field: _fields[0], values: await getDefaultDateRange() };
+          if (_fields?.length > 0) {
+            _options = { field: _fields[0], values: await getDefaultDateRange() };
+          }          
+          console.log("date range", _options)
         }
         let _defFilterType = _defaultFilterFields?.filter((df) =>
           _fields?.includes(df)
@@ -220,17 +244,23 @@ export const Main2 = () => {
             }
           });
         } else if (_type == "date range") {
-          _defaultSelected[_type] = {[_options['field']['name']]:_options.values}
+          if (_fields?.length > 0) {
+            _defaultSelected[_type] = {[_options['field']['name']]:_options.values}
+          }          
         } else {
           _defaultSelected[_type] = {};
         }
-        _filters.push({
-          type: _type,
-          fields: fieldsByTag[_tag],
-          options: _options,
-          option_type: f.option_type,
-        });
+        if (fieldsByTag[_tag]) {
+          _filters.push({
+            type: _type,
+            fields: fieldsByTag[_tag],
+            options: _options,
+            option_type: f.option_type,
+          });
+        }
+
       }
+      console.log("filters",_filters)
       setFilters(_filters);
 
       getSavedFilters(application, user, _filters);
@@ -248,19 +278,25 @@ export const Main2 = () => {
       for await (let p of applicationTags.filter(
         ({ tag_group }) => tag_group == "toggle"
       )) {
+        //console.log("parameters", p)
         let _tag = p.tag_name;
         let _fields = fieldsByTag[_tag];
+        console.log("parameters",_fields)
         let _options = [];
         let _type = p.type;
         if (_fields?.length > 0) {
-          _options = _fields[0]?.enumerations;
-          _appToggles.push({
-            type: _type,
-            fields: _fields[0],
-            value: _options,
-          });
+          for await (let field of _fields) {
+            _options = field?.enumerations;
+            _appToggles.push({
+              type: _type,
+              fields: field,
+              value: _options,
+            });
+          }
+
         }
       }
+      console.log("parameters", _appToggles)
       setParameters(_appToggles);
     };
 
@@ -342,6 +378,7 @@ export const Main2 = () => {
       }
       if (f.option_type === "single_dimension_value") {
         if (f.fields?.length > 0) {
+          console.log(f.fields[0])
           let value = await getValues(f.fields[0], {}, application);
           _options = { field: f.fields[0], values: value };
         }
@@ -351,7 +388,7 @@ export const Main2 = () => {
       }
       if (f.option_type === "suggestions") {
         for await (let field of f.fields) {
-          let values = field.suggestions.map((s) => {
+          let values = field.suggestions?.map((s) => {
             return { [field["name"]]: s };
           });
           _options.push({ field: field, values: values });
@@ -387,15 +424,17 @@ export const Main2 = () => {
             result_format: "json",
             body: {
               model: _application.model,
-              view: field["view"],
-              fields: [field["name"]],
+              view:field['suggest_explore'],
+              fields: [field['suggest_dimension']],
+              //view: _application.explore,
+              //fields: [field["name"]],
               filters: filters,
-              limit: 1000,
+              limit: 500,
             },
           })
         )
         .catch((ex) => {
-          
+          console.log(ex)
           return [];
         });
     } catch {
@@ -405,13 +444,17 @@ export const Main2 = () => {
 
   //Function that updates the properties that are shown in the tabs
   const updateAppProperties = async (filters) => {
+    console.log("prop filters", filters)
+    setPropertiesLoading(true)
     let newProps = [];
     for await (let prop of properties) {
       let _value = await getValues(prop["fields"], filters);
       prop.value = _value[0];
       newProps.push(prop);
     }
+    console.log("prop filters", newProps)
     setProperties(newProps);
+    setPropertiesLoading(false)
   };
 
   //Get the extension context data
@@ -468,6 +511,7 @@ export const Main2 = () => {
   //Remove saved filters
   const removeSavedFilter = async (id) => {
     await removeSavedFilterService(id, sdk).then((r) => getSavedFilters());
+    return true
   };
 
   //Create or update a saved filter
@@ -476,6 +520,7 @@ export const Main2 = () => {
       await updateSavedFilterService(obj.id, obj.title, obj.global, sdk).then(
         (r) => getSavedFilters()
       );
+      return true
     } else if (type == "insert") {
       await insertSavedFilterService(
         user.id,
@@ -485,6 +530,7 @@ export const Main2 = () => {
         obj.global,
         sdk
       ).then((r) => getSavedFilters());
+      return true
     }
   };
 
@@ -510,12 +556,13 @@ export const Main2 = () => {
             handleChangeKeyword:handleChangeKeyword,
             savedFilters:savedFilters,
             removeSavedFilter:removeSavedFilter,
-            upsertSavedFilter:upsertSavedFilter
+            upsertSavedFilter:upsertSavedFilter,
+            propertiesLoading:propertiesLoading
             }}>
           <TopNav />
           <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
             <div id="nav2">
-              <Tab.Container
+              <Tab.Container mountOnEnter
                 defaultActiveKey={currentNavTab}
                 onSelect={(k) => setCurrentNavTab(k)}>
                 <Nav className="inner nav nav-tabs nav-fill">

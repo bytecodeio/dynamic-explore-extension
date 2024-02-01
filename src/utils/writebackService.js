@@ -22,7 +22,9 @@ export const getApplicationTags = async (id,sdk) => {
             .ok(
             sdk.create_sql_query({
                 connection_name: connection,
-                sql: `SELECT * from ${scratch_schema}.cms_application_tag where application_id = ${id}`,
+                sql: `SELECT * from ${scratch_schema}.cms_application_tag a where a.application_id = ${id}
+                UNION ALL
+                SELECT * FROM ${scratch_schema}.cms_application_tag g where g.application_id = 0 and type NOT IN (select type from ${scratch_schema}.cms_application_tag where application_id = ${id})`,
             })
             )
         const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));
@@ -160,7 +162,7 @@ export const getApplications = async (sdk) => {
                 connection_name: connection,
                 sql: `select * from ${scratch_schema}.cms_application a
                     WHERE a.show_in_nav = true
-                    ORDER BY a.sort_order;`,
+                    ORDER BY a.name;`,
             })
             )
         const response = await sdk.ok(sdk.run_sql_query(slugResponse.slug, "inline_json"));

@@ -8,13 +8,17 @@ import ToTopButton from "../../components/ToTopButton.js";
 export const LandingPage = ( {description} ) => {
     const extensionContext = useContext(ExtensionContext)
     const sdk = extensionContext.core40SDK;
-    const { hostUrl } = extensionContext.extensionSDK.lookerHostData;
+    const { hostUrl, extensionId } = extensionContext.extensionSDK.lookerHostData;
+
+    console.log(extensionContext.extensionSDK.lookerHostData)
+
 
     const [apps, setApps] = useState([])
     const [allApps, setAllApps] = useState([])
     const [selectedButton, setSelectedButton] = useState("grid")
     const [searchTerm, setSearchTerm] = useState("")
     const [selectedOrder, setSelectedOrder] = useState("alpha")
+    const [project, setProject] = useState(extensionId.split("::")[0])
 
     //Initial App list loading
     const getApps = async() => {
@@ -40,7 +44,7 @@ export const LandingPage = ( {description} ) => {
 
     //Click event to add a view to the app in the database and open a new tab in the browser to the url below
     const handleClick = async (app) => {
-        let url = `${hostUrl}/embed/extensions/${app.model}::${app.route}`
+        let url = `${hostUrl}/embed/extensions/${project}::${app.route}`
         
         extensionContext.extensionSDK.openBrowserWindow(url)
 
