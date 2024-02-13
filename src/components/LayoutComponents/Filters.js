@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import { Button, Form, Modal, Spinner } from "react-bootstrap";
 import { Autocomplete, TextField, Typography } from "@mui/material";
+import { OpenInFull, OpenInNew } from "@styled-icons/material-outlined";
 
 const type = 'filter'
 
@@ -71,9 +72,9 @@ const Filters = ({
     {showActionBtns?
       <div className="position-relative d-flex justify-content-end">
           <>
-
-
-            <span className="allOptions clear mt-3 filter-expand"  onClick={() => handleMenuExpand()}>Expand</span>
+            <a className="allOptions clear filter-expand"  onClick={() => handleMenuExpand()}>
+              <OpenInNew />
+            </a>
           </>
       </div>
       :''
@@ -82,7 +83,7 @@ const Filters = ({
 
       <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
         <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
-        {filters.options.map((filterOption) => (
+        {filters?.options.map((filterOption) => (
           formatValues(filterOption.field.name,filterOption.values)?.length > 0?
           <div className="one" key={filterOption.name}>
             <p variant="h6">{filterOption.field.label_short}</p>

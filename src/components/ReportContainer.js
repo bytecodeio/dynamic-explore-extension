@@ -13,7 +13,7 @@ import {
 import { ExtensionContext } from "@looker/extension-sdk-react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import _ from "lodash";
-import { ApplicationContext } from "../Main2";
+import { ApplicationContext } from "../Main";
 import { TopRow } from "./LayoutComponents/TopRow/TopRow";
 import { SelectionOptions } from "./LayoutComponents/SelectionOptions/SelectionOptions";
 import { CurrentSelectionRow } from "./LayoutComponents/CurrentSelectionRow/CurrentSelectionRow";
@@ -225,6 +225,7 @@ export const ReportContainer = ({
       },[visList])
 
       const createVisualizationUrl = async (payload) => {
+        console.log("payload", payload)
         let urlString="";
         if (payload['fields']?.length > 0) {
           urlString += `&fields=${payload['fields'].toString()}`
@@ -245,6 +246,7 @@ export const ReportContainer = ({
         if (payload['vis_config']) {
           urlString += `&vis=${encodeURIComponent(JSON.stringify(payload['vis_config']))}`
         }
+        console.log("payload", urlString)
         return urlString
       }
     
@@ -323,12 +325,15 @@ export const ReportContainer = ({
           // );
           //vis["query"] = client_id;           
           let id = await queryValidator(_queryVal);
+          console.log("payload", id)
           vis['query_id'] = id
+          console.log("payload", _urlParams)
           vis['visUrl'] = _urlParams;
           vis['isLoading'] = false;
           //vis['error'] = _error;
           _visList[index] = vis;
-          setVisList(_visList)
+          console.log("payload",_visList)
+          setVisList([..._visList])
 
 
           //setIsLoading(false)

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import DatePicker from "react-datepicker";
-import { Form, Row, Col, Button, Container } from "react-bootstrap";
+import { Form, Row, Col, Button, Container, ButtonGroup } from "react-bootstrap";
 import { useEffect } from "react";
 //import { sortDateFilterList, updateDateRange } from "../../../utils/globalFunctions";
 import { sortDateFilterList } from "../utils/globalFunctions";
@@ -172,29 +172,35 @@ export const DateRangeSelector = ({
         <Col md={12} lg={4}>
 
           <div className="grid2">
-
+            <ButtonGroup>
             {sortDateFilterList(dateFilter.options)?.map(filter => {
               return (
+                <Button
+                  active={Object.keys(selectedFilters[date_filter_type]).find(key => key === filter['name'])? true:false}
+                  value={filter['name']}
+                  onClick={handleSelection}
+                  >
+                  {filter['label_short'].replace('(Yes / No)','')}
+                </Button>
+                // <div className="one radio">
+                //   <Form.Group
+                //     controlId={filter['name']}>
+                //     <Form.Check
+                //       checked={Object.keys(selectedFilters[date_filter_type]).find(key => key === filter['name'])? true:false}
+                //       id={filter['name']}
+                //       value={filter['name']}
+                //       type="radio"
+                //       // name="dateFilters"
+                //       onChange={handleSelection}
+                //       label={filter['label_short'].replace('(Yes / No)', '')}
+                //     />
 
-                <div className="one radio">
-                  <Form.Group
-                    controlId={filter['name']}>
-                    <Form.Check
-                      checked={Object.keys(selectedFilters[date_filter_type]).find(key => key === filter['name'])? true:false}
-                      id={filter['name']}
-                      value={filter['name']}
-                      type="radio"
-                      // name="dateFilters"
-                      onChange={handleSelection}
-                      label={filter['label_short'].replace('(Yes / No)', '')}
-                    />
-
-                  </Form.Group>
-                </div>
+                //   </Form.Group>
+                // </div>
 
               )
             })}
-
+            </ButtonGroup>
 
           </div>
 

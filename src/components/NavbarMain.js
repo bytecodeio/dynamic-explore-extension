@@ -1,31 +1,32 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { ExtensionContext } from "@looker/extension-sdk-react";
-import {Moon, Sun} from '@styled-icons/bootstrap'
+import {Moon, Sun, ThreeDots} from '@styled-icons/bootstrap'
+import { Popover } from "@mui/material";
+import {Tab} from "react-bootstrap";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 
-const NavbarMain = ({user}) => {
+const NavbarMain = ({user, tabs, currentNavTab, setCurrentNavTab, params}) => {
   const { core40SDK } = useContext(ExtensionContext);
-  const [message, setMessage] = useState("");
-  const [me, setMe] = useState({});
-
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        setMessage(`${user.display_name}`);
-      } catch (error) {
-        setMessage("Error occured getting information about me!");
-        console.error(error);
-      }
-    };
-    initialize();
-  }, [user]);
 
   const [faClass, setFaClass] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  useEffect(() => {
+    console.log("user",user)
+  },[user])
 
-  const handleClick = () => {
-    setFaClass(!faClass);
-    document.body.classList.toggle("dark-mode");
+  const handleClick = (val) => {
+    if (val !== faClass) {      
+      setFaClass(val);
+      document.body.classList.toggle("dark-mode");
+    }
   };
+
+  const handleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen(true)
+  }
 
   return (
     <Container fluid className="padding-0">
@@ -37,26 +38,36 @@ const NavbarMain = ({user}) => {
 
           <div className="white-logo"></div>
 
+          <Tab.Container mountOnEnter
+                defaultActiveKey={currentNavTab}
+                onSelect={(k) => setCurrentNavTab(k)}>
+                <Nav className="inner nav nav-tabs nav-fill">
+                  {tabs?.map(t =>
+                    <Nav.Item>
+                      <Nav.Link active={t.route === params.path} eventKey={t.route} as={Link} to={`${t.route}`}>{t.title}</Nav.Link>
+                    </Nav.Item>
+                  )}
+                </Nav>
+          </Tab.Container>
+
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>
-            <Nav className="align-items-center">
+            <Nav className="align-items-center">                    
+              <a className={!faClass? "dark-layout active":"dark-layout"} onClick={() => handleClick(false)}>                    
+                    <Moon />
+              </a>
+              <a className={faClass? "dark-layout active":"dark-layout"} onClick={() => handleClick(true)}>                    
+                    <Sun />                
+              </a>
               <Navbar.Text style={{display:'flex', alignItems:'center'}}>
-                <a className="dark-layout" onClick={handleClick}>
-                  <i style={{marginRight:'0'}}>
-                    {faClass?
-                      <Moon />
-                    :
-                      <Sun />
-                    }
-                  </i>
-
-                </a>
-
-                <i className="fal fa-user me-1 blue"></i>
-                <a href="#login" className="me-2 blue">
-                  {message}
-                </a>
+                <div className="avatar-icon">
+                  <img src={user.avatar_url} />
+                </div>                
+                {/* <i className="fal fa-user me-1 blue"></i> */}
+                <div className="me-2 blue">
+                  {user.display_name}
+                </div>
               </Navbar.Text>
             </Nav>
           </Navbar.Collapse>

@@ -44,7 +44,7 @@ const InnerTableTabs = ({
 
   return (
     <Container fluid className="padding-0">
-      <Container fluid className={showMenu3 ? "padding-0 innerTab highIndex" : "padding-0 innerTab"}>
+      <Container fluid className={showMenu3 ? "padding-0 innerTab highIndex h-100" : "padding-0 innerTab h-100"} style={{height:'100%'}}>
 
         <Tabs
           className="inner"
@@ -53,9 +53,9 @@ const InnerTableTabs = ({
           onSelect={(e) => handleTabChange(e)}
         >
           {tabs?.map((t, i) => (
-            <Tab eventKey={i} title={t.title} key={t.title}>
+            <Tab eventKey={i} title={t.title} key={t.title} style={{height:'100%'}}>
 
-              <div id="embedWrapper" className={showMenu3 ? "whole" : ""}>
+              <div id="embedWrapper" className={showMenu3 ? "whole" : ""} style={{height:'100%'}}>
                 {/* <EmbedActionBar slideIt3={slideIt3} showMenu3={showMenu3} active={active} handleClick={handleClick} faClass={faClass} queryId={t['query']} title={t.title}/> */}
                 <EmbedContainer vis={t} visList={visList} updateVisList={setVisList} handleVisUpdate={handleSingleVisUpdate} />
               </div>

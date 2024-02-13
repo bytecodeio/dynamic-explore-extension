@@ -1,0 +1,80 @@
+{
+    "application": {
+        "name": "Data Block",
+        "model": "dynamic_explore_model",
+        "explore": "sdt_all_dates"
+    },
+    "application_tags": [
+        {
+            "tag_group": "filters",
+            "tag_name": "date range",
+            "type": "date range",
+            "option_type": "date range",
+            "misc": ""
+        },
+        {
+            "tag_group": "filters",
+            "tag_name": "date filter",
+            "type": "date filter",
+            "option_type": "fields",
+            "misc": ""
+        },
+        {
+            "tag_group": "filters",
+            "tag_name": "quick_filter: product_movement",
+            "type": "quick filter",
+            "option_type": "suggestions",
+            "misc": ""
+        }
+
+    ],
+    "tab_tags":[
+        {
+            "tag_group": "fields",
+            "tag_name": "field: purchases_review_dashboard",
+            "type": "field",
+            "sub_tab_name": "",
+            "title": "Sample Tab 1"
+        }
+    ],
+    "tabs": [
+        {
+            "title": "Sample Tab 1",
+            "template_id": "1",
+            "route": "tab-1",
+            "sort_order": "1",
+            "description": "This is a sample tab",
+            "layout_name": "Template1",
+            "config": [
+                {
+                    "id": "18",
+                    "tab_id": "11",
+                    "vis_name": "tabbedVis1",
+                    "lookml_id": "892",
+                    "sort_order": "1"
+                }
+            ],
+            "properties": [],
+            "attributes": []
+        },
+        {
+            "title": "Sample Tab 2",
+            "template_id": "1",
+            "route": "tab-2",
+            "sort_order": "2",
+            "description": "This is a sample tab two",
+            "layout_name": "Template1",
+            "config": [
+                {
+                    "id": "18",
+                    "tab_id": "11",
+                    "vis_name": "tabbedVis1",
+                    "lookml_id": "order_express::department_billing",
+                    "sort_order": "1"
+                }
+            ],
+            "properties": [],
+            "attributes": []
+        }
+    ]
+}

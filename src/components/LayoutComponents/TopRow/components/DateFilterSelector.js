@@ -14,7 +14,8 @@ export const DateFilterSelector = ({dateFilter,selectedFilters, updateDateRange,
 
     return(
           <div className="grid2">
-            {sortDateFilterList(dateFilter.options)?.map(filter => {
+            {dateFilter?.options?
+            sortDateFilterList(dateFilter?.options)?.map(filter => {
               return (
                 <div className="one radio">
                   <Form.Group
@@ -31,7 +32,7 @@ export const DateFilterSelector = ({dateFilter,selectedFilters, updateDateRange,
                   </Form.Group>
                 </div>
               )
-            })}
+            }):''}
           </div>
     )
 }

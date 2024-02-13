@@ -171,8 +171,8 @@ export const DateRangeSelector = ({
         <Col md={12} lg={4}>
 
           <div className="grid2">
-
-            {sortDateFilterList(dateFilter.options)?.map(filter => {
+            {dateFilter?.options?
+            sortDateFilterList(dateFilter?.options)?.map(filter => {
               return (
 
                 <div className="one radio">
@@ -192,7 +192,7 @@ export const DateRangeSelector = ({
                 </div>
 
               )
-            })}
+            }):''}
 
 
           </div>

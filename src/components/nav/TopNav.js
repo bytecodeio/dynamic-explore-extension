@@ -16,21 +16,21 @@ function TopNav(props) {
   const wrapperRef = React.useRef(null);
 
   React.useEffect(() => {
-    const initialize = async () => {
-      let applications = await getApplications(sdk)
-      setNavList(applications)
-      if (applications.length > 0) {
-        let appList = []
-        for await (let apps of applications) {
-          let tabs = await getApplicationTabs(apps['id'], sdk)
-          apps['tabs'] = tabs
-          appList.push(apps)
-        }
+    //const initialize = async () => {
+    //   let applications = await getApplications(sdk)
+    //   setNavList(applications)
+    //   if (applications.length > 0) {
+    //     let appList = []
+    //     for await (let apps of applications) {
+    //       let tabs = await getApplicationTabs(apps['id'], sdk)
+    //       apps['tabs'] = tabs
+    //       appList.push(apps)
+    //     }
         
-        setNavList(appList);
-      }
-    }    
-    initialize()
+    //     setNavList(appList);
+    //   }
+    // }    
+    // initialize()
     document.addEventListener("click", handleClickOutside, false);
     return () => {
       document.removeEventListener("click", handleClickOutside, false);

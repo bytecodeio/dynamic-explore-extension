@@ -1,4 +1,4 @@
-import React, {useState,useRef} from 'react'
+import React, {useState,useRef, useEffect} from 'react'
 import { OverlayTrigger, Col, Row ,Button,Accordion,Modal,Tooltip} from 'react-bootstrap';
 import { SavedFilters } from '../../SavedFilters';
 import QuickFilter from '../QuickFilter';
@@ -9,6 +9,8 @@ import AccountFilter from '../AccountFilter';
 import AccountGroup from '../AccountGroup';
 import ShortReasons from '../ShortReasons';
 import { TopProducts } from '../TopProducts';
+import { Bookmark, BookmarkFill, Filter } from '@styled-icons/bootstrap';
+import { TextFields } from '@styled-icons/material-outlined';
 
 
 
@@ -17,6 +19,13 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
     const [show, setShow] = useState(false)
     const handleClose = () => setShow(false);
     const wrapperRef = useRef(null);
+
+    const [activeKey, setActiveKey] = useState()
+
+    useEffect(() => {
+        console.log("activeKey",activeKey)
+    },[activeKey])
+
 
     const handleClearAll = () => {
         setShow(true);
@@ -76,19 +85,18 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
         >
             <div className="modal-content">
                 <div className="modal-header">
-                    <OverlayTrigger
+                    {/* <OverlayTrigger
                         placement="right"
                         overlay={renderTooltip}
                         className="tooltipHover"
                     >
-                        <p className="pb-1">
+                        <p className="pb-1" style={{width:'100%'}}>
                             Selection Options{" "}
                             <i className="fal fa-info-circle red"></i>
                         </p>
-                    </OverlayTrigger>
-                    <div className="closeThisPlease" id="close1">
-                        <Button
-                            role="button"
+                    </OverlayTrigger> */}
+                    <div className="closeThisPlease" id="close1" style={{margin:'0 10px 10px auto'}}>
+                        <a
                             className="close"
                             data-dismiss="modal"
                             id="closeThisPlease1"
@@ -98,7 +106,7 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
                         >
                             {/*onClick={() => setShow3(false)}>*/}
                             &#10005;
-                        </Button>
+                        </a>
                     </div>
                 </div>
                 <div className="modal-actions">
@@ -134,7 +142,7 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
                     </div>
                 </div>
                 <div className="modal-body">
-                    <Accordion defaultActiveKey={0} className="mt-3 mb-3">
+                    <Accordion defaultActiveKey={0} className="mt-3 mb-3" activeKey={activeKey} onSelect={(e) => setActiveKey(e)}>
                         <Row>
                             <Col xs={12} md={12}>
                                 <Row>
@@ -147,7 +155,7 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
                                         filters.find(({ type }) => type === "account group")
                                             ?.options.values
                                     ) && layoutProps['account group']  ? (
-                                        <Col xs={12} md={12}>
+                                        <Col xs={12} md={12} className={activeKey == '1'?'accordion-container open':'accordion-container close'}>
                                             <Accordion.Item eventKey="1">
                                                 <Accordion.Header>
                                                     Account Group
@@ -174,7 +182,7 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
                                         filters.find(({ type }) => type === "account filter")
                                             ?.options.values
                                     ) && layoutProps['account filter']  ? (
-                                        <Col xs={12} md={12}>
+                                        <Col xs={12} md={12} className={activeKey == '2'?'accordion-container open':'accordion-container close'}>
                                             <Accordion.Item eventKey="2">
                                                 <Accordion.Header>
                                                     Account Filter
@@ -206,9 +214,14 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
 
                                     {/* Fields */}
                                     {fields?.length > 0 && layoutProps['fields'] && visList.length > 0 ? (
-                                        <Col xs={12} md={12}>
+                                        <Col xs={12} md={12} className={activeKey == '6'?'accordion-container open':'accordion-container close'}>
                                             <Accordion.Item eventKey="6">
-                                                <Accordion.Header>Fields</Accordion.Header>
+                                                <Accordion.Header>
+                                                    <span className='accordion-logo'>                                                    
+                                                        <TextFields />
+                                                    </span>
+                                                    Fields
+                                                </Accordion.Header>
                                                 <Accordion.Body>
                                                     <Fields
                                                         fieldOptions={fields.find(f => { return f.sub_tab === visList.filter(({ visId }) => visId === "tabbedVis1")[selectedInnerTab[visList[0].dashboard_id]]?.title; })
@@ -230,10 +243,15 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
 
                                     {/* Filters */}
                                     {layoutProps['filters'] ?
-                                        filters.find(({ type }) => type === "filter")?.options?.length > 0 ?
-                                            <Col xs={12} md={12}>
+                                        filters.find(({ type }) => type === "filter" || type === "quick filter")?.options?.length > 0 ?
+                                            <Col xs={12} md={12} className={activeKey == '5'?'accordion-container open':'accordion-container close'}>
                                                 <Accordion.Item eventKey="5">
-                                                    <Accordion.Header>Filters</Accordion.Header>
+                                                    <Accordion.Header>
+                                                    <span className='accordion-logo'>                                                    
+                                                        <Filter />
+                                                    </span>
+                                                        Filters
+                                                    </Accordion.Header>
                                                     <Accordion.Body>
                                                         {/*Quick Filters */}
                                                         {filters.find(
@@ -269,7 +287,7 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
                                         : ''}
                                     {/* Short Reasons */}
                                     {tabFilters?.filter(({type}) => type=="short reason filter").length > 0 &&  visList.length > 0 ? (
-                                    <Col xs={12} md={12}>
+                                    <Col xs={12} md={12} className={activeKey == '4'?'accordion-container open':'accordion-container close'}>
                                         <Accordion.Item eventKey="4">
                                             <Accordion.Header>Short Reasons</Accordion.Header>
                                             <Accordion.Body>
@@ -287,7 +305,7 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
 
                                     {/* Top Products */}
                                     {tabFilters?.find(({type}) => type=="top products") &&  visList.length > 0 ? (
-                                    <Col xs={12} md={12}>
+                                    <Col xs={12} md={12} className={activeKey == '7'?'accordion-container open':'accordion-container close'}>
                                         <Accordion.Item eventKey="7">
                                             <Accordion.Header>Top Products</Accordion.Header>
                                             <Accordion.Body>
@@ -305,9 +323,13 @@ export const SelectionOptions = ({filters, fields, handleTabVisUpdate,setIsFilte
 
 
                                     {/* Bookmarks */}
-                                    <Col xs={12} md={12}>
+                                    <Col xs={12} md={12} className={activeKey == '8'?'accordion-container open':'accordion-container close'}>
                                         <Accordion.Item eventKey="8">
-                                            <Accordion.Header>Saved Filters</Accordion.Header>
+                                            <Accordion.Header>
+                                                <span className='accordion-logo'>                                                    
+                                                    <Bookmark />
+                                                </span>
+                                                Saved Filters</Accordion.Header>
                                             <Accordion.Body>
                                                 <SavedFilters
                                                     savedFilters={savedFilters}

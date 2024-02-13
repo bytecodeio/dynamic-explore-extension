@@ -41,7 +41,7 @@ export const EmbedContainer = ({vis, visList, updateVisList, handleVisUpdate}) =
 
     return(
         <>
-        <div id="embedWrapper" style={{position:'relative'}} className={showMenu3 ? "whole" : ""}>
+        <div id="embedWrapper" style={{position:'relative', height:'100%'}} className={showMenu3 ? "whole" : ""}>
             <div className="embed-action-section">                    
                 <EmbedActionBar slideIt3={slideIt3} showMenu3={showMenu3} active={active} handleClick={handleClick} faClass={faClass} queryId={vis['query']} title={vis.title}/>
             </div>

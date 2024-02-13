@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Spinner } from "react-bootstrap";
 import { waveform } from "ldrs";
 
-import { ApplicationContext } from "../Main2";
+import { ApplicationContext } from "../Main";
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
 import { LoadingComponent } from "./LoadingComponent";
 import { TabContext } from "./ReportContainer";
@@ -15,6 +15,7 @@ waveform.register()
 const Explore = styled.div`
   width: 100%;
   min-height: unset;
+  height:100%;
   margin-top: -30px;
   & > iframe {
     width: 100%;
@@ -111,7 +112,7 @@ const EmbedTable = ({ queryId, vis }) => {
   const embedCtrRef = useCallback(
     (el) => {
       const hostUrl = extensionSDK.lookerHostData.hostUrl;
-
+      console.log("visualization", vis)
       if (el && hostUrl && queryId) {
         el.innerHTML = "";
         LookerEmbedSDK.init(hostUrl);

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Container, Tab, Tabs, Nav } from "react-bootstrap";
+import { Container, Tab, Nav } from "react-bootstrap";
 import SideForm from "./components/nav/Form.js";
 import ToTopButton from "./components/ToTopButton.js";
 import NavbarMain from "./components/NavbarMain.js";
@@ -18,13 +18,14 @@ import {
   updateSavedFilterService,
 } from "./utils/writebackService.js";
 import { LayoutSelector } from "./LayoutSelector.js";
+let _contextData = require('../example.json')
 
 //Create context for child components to use states
 export const ApplicationContext = React.createContext({})
 
 
 //Main2 is the main component of the app in which it initializes the application, the tabs and all of the attributes associated with the tabs
-export const Main2 = () => {
+export const Main = () => {
   const extensionContext = useContext(ExtensionContext);
   const sdk = extensionContext.core40SDK;
 
@@ -336,7 +337,8 @@ export const Main2 = () => {
     const initialize = async () => {
       let userInfo = await getUser();
       setUser(userInfo);
-      let contextData = getContextData();
+      let contextData = _contextData
+      //let contextData = getContextData();
       if (contextData) {
         let { application, application_tags, tabs, tab_tags } = contextData;
         setApplicationInfo(application);
@@ -468,9 +470,9 @@ export const Main2 = () => {
     userInfo = user,
     _filters = filters
   ) => {
-    let res = await getSavedFilterService(app.id, userInfo.id, sdk);
-    const _newFilters = await parseSavedFilters(res, _filters);
-    setSavedFilters(_newFilters);
+    // let res = await getSavedFilterService(app.id, userInfo.id, sdk);
+    // const _newFilters = await parseSavedFilters(res, _filters);
+    // setSavedFilters(_newFilters);
   };
 
   //Make sure the filter fields are available to show for the saved filters to use
@@ -536,7 +538,7 @@ export const Main2 = () => {
 
   return (
     <>
-      <NavbarMain user={user} />
+      <NavbarMain user={user} tabs={tabs} currentNavTab={currentNavTab} setCurrentNavTab={setCurrentNavTab} params={params} />
       <Container fluid className="mt-50 padding-0">
         <ApplicationContext.Provider
           value={{application:applicationInfo,
@@ -559,20 +561,9 @@ export const Main2 = () => {
             upsertSavedFilter:upsertSavedFilter,
             propertiesLoading:propertiesLoading
             }}>
-          <TopNav />
+          {/* <TopNav /> */}
           <div className={showMenu ? "largePadding" : "slideOver largePadding"}>
             <div id="nav2">
-              <Tab.Container mountOnEnter
-                defaultActiveKey={currentNavTab}
-                onSelect={(k) => setCurrentNavTab(k)}>
-                <Nav className="inner nav nav-tabs nav-fill">
-                  {tabs?.map(t =>
-                    <Nav.Item>
-                      <Nav.Link active={t.route === params.path} eventKey={t.route} as={Link} to={`${t.route}`}>{t.title}</Nav.Link>
-                    </Nav.Item>
-                  )}
-                </Nav>
-              </Tab.Container>
               <div className="show">
                 <Tab.Content>
                   <>
@@ -595,8 +586,8 @@ export const Main2 = () => {
         </ApplicationContext.Provider>
       </Container>
       <ToTopButton />
-      <SideForm />
-      <Footer />
+      {/* <SideForm /> */}
+      {/* <Footer /> */}
     </>
   );
 };

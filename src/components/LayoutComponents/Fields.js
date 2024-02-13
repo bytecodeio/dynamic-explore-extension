@@ -1,6 +1,7 @@
+import { OpenInNew } from "@styled-icons/material-outlined";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, ButtonGroup, Form, Modal } from "react-bootstrap";
 
 const Fields = ({
   fieldOptions,
@@ -19,7 +20,7 @@ const Fields = ({
   },[fieldOptions])
 
   function handleFieldSelection(fieldName) {
-    
+    console.log(fieldName)    
     // setUpdateBtn(false);
     let tabs = [...tabList];
     let currentTab = tabs[currentInnerTab];
@@ -65,37 +66,47 @@ const Fields = ({
   return (
     <>
     {showActionBtns?
-      <div className="mb-5">
+      <div className="mb-2" style={{display:'flex', justifyContent:'space-between'}}>
           <>
-            <span className="allOptions clear first" onClick={handleFieldsAll}>Select All</span>
+            <a className="allOptions clear first" onClick={handleFieldsAll}>Select All</a>
 
-            <span className="allOptions clear restore" onClick={handleRestoreDefault}>Restore Defaults</span>
+            <a className="allOptions clear restore" onClick={handleRestoreDefault}>Restore Defaults</a>
 
-            <span className="allOptions clear" onClick={() => handleMenuExpand()}>Expand</span>
+            <a className="allOptions clear filter-expand" onClick={() => handleMenuExpand()}><OpenInNew /></a>
           </>
       </div>
       :''
     }
     <div  className={expandMenu ? "wrapFilters fullScreen" : "wrapFilters"}>
       <i class="fal fa-times closeOptions" onClick={() => setExpandMenu(false)} ></i>
-      {sortData(fieldOptions)?.map((fieldOption) => (
-        <div className="one" key={fieldOption.name}>
-          <Form.Group>
-            <Form.Check
-              type="checkbox"
-              className=""
-              label={fieldOption.label_short}
-              checked={tabList.length > 0?tabList[currentInnerTab]["selected_fields"].includes(
-                fieldOption.name
-              ):false}
-              name="Fields"
-              // id={fieldOption.name}
-              value={fieldOption.fields}
-              onChange={() => handleFieldSelection(fieldOption.name)}
-            />
-          </Form.Group>
-        </div>
-      ))}
+      <ButtonGroup>
+        {sortData(fieldOptions)?.map((fieldOption) => (
+          
+            <Button active={tabList.length > 0?tabList[currentInnerTab]["selected_fields"].includes(
+                  fieldOption.name):false}
+              onClick={() => handleFieldSelection(fieldOption.name)}
+              value={fieldOption.label_short}
+              >
+                {fieldOption.label_short}
+            </Button>
+          // <div className="one" key={fieldOption.name}>
+          //   <Form.Group>
+          //     <Form.Check
+          //       type="checkbox"
+          //       className=""
+          //       label={fieldOption.label_short}
+          //       checked={tabList.length > 0?tabList[currentInnerTab]["selected_fields"].includes(
+          //         fieldOption.name
+          //       ):false}
+          //       name="Fields"
+          //       // id={fieldOption.name}
+          //       value={fieldOption.fields}
+          //       onChange={() => handleFieldSelection(fieldOption.name)}
+          //     />
+          //   </Form.Group>
+          // </div>
+        ))}      
+      </ButtonGroup>
     </div>
   </>
     // set value to name

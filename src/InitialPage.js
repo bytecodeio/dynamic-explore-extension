@@ -2,7 +2,7 @@ import { ExtensionContext } from '@looker/extension-sdk-react';
 import React from 'react';
 import { useContext } from 'react';
 import { LandingPage } from './pages/LandingPage/LandingPage';
-import { Main2 } from './Main2';
+import { Main } from './Main';
 
 export const InitialPage = () => {
     const extensionContext = useContext(ExtensionContext)
@@ -14,7 +14,7 @@ export const InitialPage = () => {
             {extensionId.includes('landing-page')?
             <LandingPage />
             :
-            <Main2 />
+            <Main />
             }
         </>
     )

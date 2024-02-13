@@ -18,7 +18,7 @@ export const DateRangeSelector = ({
   useEffect(() => {
     
     let dRange = Object.assign({}, dateRange)
-    setDateRangeField(dRange['options']['field'])
+    setDateRangeField(dRange?.['options']?.['field'])
   }, [])
 
   const onDateSelection = (e, type) => {
@@ -40,7 +40,7 @@ export const DateRangeSelector = ({
   };
 
   const splitSelectedDateRange = () => {
-    if (selectedFilters[date_range_type][dateRangeField['name']]) {
+    if (selectedFilters?.[date_range_type]?.[dateRangeField['name']]) {
       return selectedFilters[date_range_type][dateRangeField['name']].split(" to ");
     }
     return ["", ""];

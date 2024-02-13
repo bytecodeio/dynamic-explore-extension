@@ -4,7 +4,7 @@ import { ExtensionContext } from "@looker/extension-sdk-react";
 import styled from "styled-components";
 import { Spinner } from "react-bootstrap";
 
-import { ApplicationContext } from "../Main2";
+import { ApplicationContext } from "../Main";
 import { useEffect } from "react";
 
 const Explore = styled.div`
